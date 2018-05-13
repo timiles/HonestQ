@@ -25,6 +25,21 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
+        public static Topic CreateTopic(User user)
+        {
+            var name = Utils.GenerateRandomString(10);
+            var topic = new Topic(name, name, user, DateTime.UtcNow);
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(user);
+                dbContext.Topics.Add(topic);
+                dbContext.SaveChanges();
+            }
+
+            return topic;
+        }
+
         public static bool DeleteUser(int id)
         {
             using (var dbContext = TestSetup.CreateDbContext())

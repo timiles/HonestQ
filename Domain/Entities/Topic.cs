@@ -1,12 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
 {
     public class Topic
     {
-        public Topic() { }
-        public Topic(string urlFragment, string name, User postedByUser, DateTime postedAt)
+        public Topic()
+        {
+            this.Opinions = new Collection<Opinion>();
+        }
+        public Topic(string urlFragment, string name, User postedByUser, DateTime postedAt) : this()
         {
             UrlFragment = urlFragment;
             Name = name;
@@ -27,5 +32,8 @@ namespace Pobs.Domain.Entities
         public virtual User PostedByUser { get; set; }
 
         public DateTime PostedAt { get; set; }
+
+
+        public virtual ICollection<Opinion> Opinions { get; set; }
     }
 }
