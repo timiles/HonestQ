@@ -10,6 +10,8 @@ namespace Pobs.Domain
         {
         }
 
+        public DbSet<Topic> Topics { get; set; }
+
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,6 +22,7 @@ namespace Pobs.Domain
                 entityType.Relational().TableName = entityType.DisplayName();
             }
 
+            modelBuilder.Entity<Topic>().HasIndex(x => x.UrlFragment).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
         }
     }

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pobs.Domain.Entities
 {
@@ -20,5 +22,8 @@ namespace Pobs.Domain.Entities
 
         [Required, MaxLength(128)]
         public byte[] PasswordSalt { get; set; }
+
+
+        public virtual ICollection<Topic> Topics { get; set; }
     }
 }

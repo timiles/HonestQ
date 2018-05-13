@@ -57,6 +57,7 @@ namespace Pobs.Web
             });
 
             // Configure DI for application services
+            services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IUserService, UserService>();
 
 
