@@ -55,7 +55,7 @@ namespace WebApi.Controllers
             {
                 // save 
                 _userService.Create(user, userModel.Password);
-                return Ok();
+                return Authenticate(userModel);
             }
             catch (AppException ex)
             {
