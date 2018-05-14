@@ -13,16 +13,18 @@ namespace Pobs.Tests.Integration.Topics
 {
     public class PostOpinionsTests : IDisposable
     {
-        private readonly string _url;
+        private string _generateOpinionsUrl(string topicUrlFragment) => $"/api/topics/{topicUrlFragment}/opinions";
         private readonly int _userId;
         private readonly int _topicId;
+        private readonly string _topicUrlFragment;
 
         public PostOpinionsTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
-            _topicId = DataHelpers.CreateTopic(user).Id;
-            _url = $"/api/topics/{_topicId}/opinions";
+            var topic = DataHelpers.CreateTopic(user);
+            _topicId = topic.Id;
+            _topicUrlFragment = topic.UrlFragment;
         }
 
         [Fact]
@@ -38,7 +40,8 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_userId);
 
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                var url = _generateOpinionsUrl(_topicUrlFragment);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
             }
 
@@ -67,7 +70,8 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                var url = _generateOpinionsUrl(_topicUrlFragment);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
 
@@ -80,6 +84,26 @@ namespace Pobs.Tests.Integration.Topics
                 Assert.Empty(topic.Opinions);
             }
         }
+
+        [Fact]
+        public async Task UnknownUrlFragment_ShouldReturnNotFound()
+        {
+            var payload = new
+            {
+                Text = "My insightful opinion on this topic"
+            };
+            using (var server = new TestServer(new WebHostBuilder()
+                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateOpinionsUrl("INCORRECT_URL_FRAGMENT");
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            }
+        }
+
         public void Dispose()
         {
             DataHelpers.DeleteUser(_userId);

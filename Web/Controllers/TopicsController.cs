@@ -38,11 +38,18 @@ namespace Pobs.Web.Controllers
             public string Name { get; set; }
         }
 
-        [HttpPost, Route("{topicId}/opinions")]
-        public async Task<IActionResult> AddOpinion(int topicId, [FromBody] PostOpinionModel payload)
+        [HttpPost, Route("{topicUrlFragment}/opinions")]
+        public async Task<IActionResult> AddOpinion(string topicUrlFragment, [FromBody] PostOpinionModel payload)
         {
-            await _topicService.SaveOpinion(topicId, payload.Text, User.Identity.ParseUserId());
-            return Ok();
+            try
+            {
+                await _topicService.SaveOpinion(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
+                return Ok();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         public class PostOpinionModel

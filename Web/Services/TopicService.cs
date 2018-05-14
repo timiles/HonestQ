@@ -1,14 +1,17 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
+using Pobs.Web.Helpers;
 
 namespace Pobs.Web.Services
 {
     public interface ITopicService
     {
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
-        Task SaveOpinion(int topicId, string text, int postedByUserId);
+        Task SaveOpinion(string topicUrlFragment, string text, int postedByUserId);
     }
 
     public class TopicService : ITopicService
@@ -27,11 +30,16 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveOpinion(int topicId, string text, int postedByUserId)
+        public async Task SaveOpinion(string topicUrlFragment, string text, int postedByUserId)
         {
-            var topic = await _context.Topics.FindAsync(topicId);
-            var postedByUser = await _context.Users.FindAsync(postedByUserId);
-            topic.Opinions.Add(new Opinion(text, postedByUser, DateTime.UtcNow));
+            var topicTask = _context.Topics.FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
+            var postedByUserTask = _context.Users.FindAsync(postedByUserId);
+            var topic = await topicTask;
+            if (topic == null)
+            {
+                throw new EntityNotFoundException();
+            }
+            topic.Opinions.Add(new Opinion(text, await postedByUserTask, DateTime.UtcNow));
             await _context.SaveChangesAsync();
         }
     }
