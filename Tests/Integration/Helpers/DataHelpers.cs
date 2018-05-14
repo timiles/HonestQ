@@ -25,10 +25,15 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(User user)
+        public static Topic CreateTopic(User user, int numberOfOpinions = 0)
         {
             var name = Utils.GenerateRandomString(10);
             var topic = new Topic(name, name, user, DateTime.UtcNow);
+
+            for (int i = 0; i < numberOfOpinions; i++)
+            {
+                topic.Opinions.Add(new Opinion(Utils.GenerateRandomString(10), user, DateTime.UtcNow));
+            }
 
             using (var dbContext = TestSetup.CreateDbContext())
             {

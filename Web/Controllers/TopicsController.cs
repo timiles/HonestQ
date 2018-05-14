@@ -21,6 +21,31 @@ namespace Pobs.Web.Controllers
             _topicService = topicService;
         }
 
+        [Route("{topicUrlFragment}"), AllowAnonymous]
+        public async Task<IActionResult> Get(string topicUrlFragment)
+        {
+            try
+            {
+                var topicModel = await _topicService.Get(topicUrlFragment);
+                return Ok(topicModel);
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        public class GetTopicModel
+        {
+            public string Name { get; set; }
+            public IEnumerable<OpinionModel> Opinions { get; set; }
+
+            public class OpinionModel
+            {
+                public string Text { get; set; }
+            }
+        }
+
         public async Task<IActionResult> Post([FromBody] PostTopicModel payload)
         {
             if (!User.IsInRole(Role.Admin))

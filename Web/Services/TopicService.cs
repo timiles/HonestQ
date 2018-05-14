@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
+using Pobs.Web.Controllers;
 using Pobs.Web.Helpers;
+using static Pobs.Web.Controllers.TopicsController;
 
 namespace Pobs.Web.Services
 {
     public interface ITopicService
     {
+        Task<GetTopicModel> Get(string topicUrlFragment);
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
         Task SaveOpinion(string topicUrlFragment, string text, int postedByUserId);
     }
@@ -21,6 +24,25 @@ namespace Pobs.Web.Services
         public TopicService(PobsDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<GetTopicModel> Get(string topicUrlFragment)
+        {
+            var topic = await _context.Topics
+                .Include(x => x.Opinions)
+                .FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
+            if (topic == null)
+            {
+                throw new EntityNotFoundException();
+            }
+            return new GetTopicModel
+            {
+                Name = topic.Name,
+                Opinions = topic.Opinions.Select(x => new GetTopicModel.OpinionModel
+                {
+                    Text = x.Text
+                })
+            };
         }
 
         public async Task SaveTopic(string urlFragment, string name, int postedByUserId)
