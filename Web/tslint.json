@@ -1,0 +1,25 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:latest",
+        "tslint-react"
+    ],
+    "jsRules": {},
+    "rules": {
+        "jsx-boolean-value": [
+            "never"
+        ],
+        "ordered-imports": [
+            true,
+            {
+                "named-imports-order": "lowercase-last"
+            }
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "jsx-double"
+        ]
+    },
+    "rulesDirectory": []
+}

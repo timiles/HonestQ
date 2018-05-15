@@ -1,14 +1,14 @@
-import './css/site.css';
 import 'bootstrap';
+import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
-import { createBrowserHistory } from 'history';
 import configureStore from './configureStore';
-import { ApplicationState }  from './store';
+import './css/site.css';
 import * as RoutesModule from './routes';
+import { ApplicationState } from './store';
 let routes = RoutesModule.routes;
 
 // Create browser history to use in the Redux store
@@ -24,11 +24,11 @@ function renderApp() {
     // and injects the app into a DOM element.
     ReactDOM.render(
         <AppContainer>
-            <Provider store={ store }>
-                <ConnectedRouter history={ history } children={ routes } />
+            <Provider store={store}>
+                <ConnectedRouter history={history} children={routes} />
             </Provider>
         </AppContainer>,
-        document.getElementById('react-app')
+        document.getElementById('react-app'),
     );
 }
 
