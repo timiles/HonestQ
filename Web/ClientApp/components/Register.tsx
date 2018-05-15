@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
+import { AuthHelper, IAuthenticatedUser } from '../helpers/auth-helper';
 import * as Utils from '../utils';
 
 // tslint:disable-next-line:interface-name
@@ -14,15 +15,6 @@ interface State {
     user: UserState;
     registering: boolean;
     submitted: boolean;
-}
-
-// tslint:disable-next-line:interface-name
-interface AuthenticatedUser {
-    id: number;
-    firstName: string;
-    lastName: string;
-    username: string;
-    token: string;
 }
 
 export default class Register extends React.Component<RouteComponentProps<{}>, State> {
@@ -132,12 +124,11 @@ export default class Register extends React.Component<RouteComponentProps<{}>, S
             };
 
             fetch('/api/users/register', requestOptions)
-                .then((response) => Utils.handleResponse<AuthenticatedUser>(response), Utils.handleError)
+                .then((response) => Utils.handleResponse<IAuthenticatedUser>(response), Utils.handleError)
                 .then((authenticatedUser) => {
                     // login successful if there's a jwt token in the response
                     if (authenticatedUser && authenticatedUser.token) {
-                        // store details and jwt token in local storage to keep user logged in between page refreshes
-                        localStorage.setItem('user', JSON.stringify(authenticatedUser));
+                        AuthHelper.login(authenticatedUser);
                     }
 
                     this.setState({ registering: false });
