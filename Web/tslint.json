@@ -6,9 +6,6 @@
     ],
     "jsRules": {},
     "rules": {
-        "jsx-boolean-value": [
-            "never"
-        ],
         "ordered-imports": [
             true,
             {

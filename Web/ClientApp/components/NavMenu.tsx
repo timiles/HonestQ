@@ -24,7 +24,7 @@ export class NavMenu extends React.Component<{}, {}> {
                     <div className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
                             <li>
-                                <NavLink exact to={'/'} activeClassName="active">
+                                <NavLink exact={true} to={'/'} activeClassName="active">
                                     <span className="glyphicon glyphicon-home" /> Home
                                 </NavLink>
                             </li>

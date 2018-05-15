@@ -7,7 +7,7 @@ import Register from './components/Register';
 
 export const routes = (
     <Layout>
-        <Route exact path="/" component={Home} />
+        <Route exact={true} path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
     </Layout>
