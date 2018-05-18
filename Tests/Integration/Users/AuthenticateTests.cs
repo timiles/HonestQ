@@ -63,10 +63,16 @@ namespace Pobs.Tests.Integration.Users
                 Assert.Equal(_user.LastName, (string)responseModel.lastName);
                 Assert.Equal(_user.Username, (string)responseModel.username);
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var decodedToken = tokenHandler.ReadJwtToken((string)responseModel.token);
+                var token = (string)responseModel.token;
+                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 Assert.Equal((int)responseModel.id, int.Parse(identityClaim.Value));
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.NotNull(idTokenCookie);
+                Assert.Equal(token, idTokenCookie.Value);
+                Assert.Equal("/", idTokenCookie.Path);
+                Assert.True(idTokenCookie.HttpOnly);
             }
         }
 
@@ -87,6 +93,9 @@ namespace Pobs.Tests.Integration.Users
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal("Username or password is incorrect", responseContent);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.Null(idTokenCookie);
             }
         }
 
@@ -107,6 +116,9 @@ namespace Pobs.Tests.Integration.Users
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal("Username or password is incorrect", responseContent);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.Null(idTokenCookie);
             }
         }
 

@@ -82,8 +82,9 @@ export default class Login extends React.Component<RouteComponentProps<{}>, Stat
         const { username, password } = this.state;
         if (username && password) {
             this.setState({ loggingIn: true });
-            const requestOptions = {
+            const requestOptions: RequestInit = {
                 body: JSON.stringify({ username, password }),
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 method: 'POST',
             };

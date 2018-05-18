@@ -117,8 +117,9 @@ export default class Register extends React.Component<RouteComponentProps<{}>, S
         const { user } = this.state;
         if (user.firstName && user.lastName && user.username && user.password) {
             this.setState({ registering: true });
-            const requestOptions = {
+            const requestOptions: RequestInit = {
                 body: JSON.stringify(user),
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 method: 'POST',
             };

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Pobs.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Pobs.Web.Helpers;
+using Microsoft.AspNetCore.Http;
 
 namespace WebApi.Controllers
 {
@@ -29,6 +30,9 @@ namespace WebApi.Controllers
                 return BadRequest("Username or password is incorrect");
 
             var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id);
+
+            // Put token into Cookies to enable Server Side Rendering
+            this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true });
 
             // Return basic user info (without password) and token to store client side
             return Ok(new AuthenticatedUserResponseModel
