@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -12,15 +12,15 @@ using Pobs.Web;
 using Pobs.Web.Helpers;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Users
+namespace Pobs.Tests.Integration.Account
 {
-    public class AuthenticateTests : IDisposable
+    public class LoginTests : IDisposable
     {
-        private const string Url = "/api/users/authenticate";
+        private const string Url = "/api/account/login";
         private readonly string _password;
         private readonly User _user;
 
-        public AuthenticateTests()
+        public LoginTests()
         {
             _password = "Password1";
             _user = new User
@@ -42,7 +42,7 @@ namespace Pobs.Tests.Integration.Users
         }
 
         [Fact]
-        public async Task CorrectCredentials_ShouldAuthenticate()
+        public async Task CorrectCredentials_ShouldLogin()
         {
             var payload = new
             {
@@ -77,7 +77,7 @@ namespace Pobs.Tests.Integration.Users
         }
 
         [Fact]
-        public async Task IncorrectPassword_ShouldNotAuthenticate()
+        public async Task IncorrectPassword_ShouldBeDenied()
         {
             var payload = new
             {
@@ -100,7 +100,7 @@ namespace Pobs.Tests.Integration.Users
         }
 
         [Fact]
-        public async Task InvalidUsername_ShouldNotAuthenticate()
+        public async Task InvalidUsername_ShouldBeDenied()
         {
             var payload = new
             {

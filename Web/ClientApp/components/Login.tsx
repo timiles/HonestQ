@@ -89,7 +89,7 @@ export default class Login extends React.Component<RouteComponentProps<{}>, Stat
                 method: 'POST',
             };
 
-            fetch('/api/users/authenticate', requestOptions)
+            fetch('/api/account/login', requestOptions)
                 .then((response) => Utils.handleResponse<IAuthenticatedUser>(response), Utils.handleError)
                 .then((authenticatedUser) => {
                     // login successful if there's a jwt token in the response

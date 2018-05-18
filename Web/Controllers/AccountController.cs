@@ -9,20 +9,20 @@ using Microsoft.AspNetCore.Http;
 namespace WebApi.Controllers
 {
     [AllowAnonymous]
-    [Route("api/[controller]")]
-    public class UsersController : Controller
+    [Route("api/[controller]/[action]")]
+    public class AccountController : Controller
     {
         private readonly IUserService _userService;
         private readonly AppSettings _appSettings;
 
-        public UsersController(IUserService userService, IOptions<AppSettings> appSettings)
+        public AccountController(IUserService userService, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
             _appSettings = appSettings.Value;
         }
 
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]UserModel userModel)
+        [HttpPost]
+        public IActionResult Login([FromBody]UserModel userModel)
         {
             var user = _userService.Authenticate(userModel.Username, userModel.Password);
 
@@ -45,7 +45,7 @@ namespace WebApi.Controllers
             });
         }
 
-        [HttpPost("register")]
+        [HttpPost]
         public IActionResult Register([FromBody]UserModel userModel)
         {
             var user = new User
@@ -59,7 +59,7 @@ namespace WebApi.Controllers
             {
                 // save 
                 _userService.Create(user, userModel.Password);
-                return Authenticate(userModel);
+                return Login(userModel);
             }
             catch (AppException ex)
             {

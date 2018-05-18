@@ -11,11 +11,11 @@ using Pobs.Web;
 using Pobs.Web.Helpers;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Users
+namespace Pobs.Tests.Integration.Account
 {
     public class RegisterTests : IDisposable
     {
-        private const string Url = "/api/users/register";
+        private const string Url = "/api/account/register";
         private readonly string _username = "mary_coffeemug_" + Utils.GenerateRandomString(10);
 
         [Fact]

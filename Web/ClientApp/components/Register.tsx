@@ -124,7 +124,7 @@ export default class Register extends React.Component<RouteComponentProps<{}>, S
                 method: 'POST',
             };
 
-            fetch('/api/users/register', requestOptions)
+            fetch('/api/account/register', requestOptions)
                 .then((response) => Utils.handleResponse<IAuthenticatedUser>(response), Utils.handleError)
                 .then((authenticatedUser) => {
                     // login successful if there's a jwt token in the response
