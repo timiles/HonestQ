@@ -46,6 +46,13 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        public IActionResult Logout()
+        {
+            this.Response.Cookies.Delete("id_token");
+            return Ok();
+        }
+
+        [HttpPost]
         public IActionResult Register([FromBody]UserModel userModel)
         {
             var user = new User
