@@ -1,11 +1,9 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
 using Pobs.Web.Helpers;
@@ -35,24 +33,6 @@ namespace Pobs.Tests.Integration.Account
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = (dynamic)JsonConvert.DeserializeObject(responseContent);
-                Assert.True(responseModel.id > 0);
-                Assert.Equal(payload.FirstName, (string)responseModel.firstName);
-                Assert.Equal(payload.LastName, (string)responseModel.lastName);
-                Assert.Equal(payload.Username, (string)responseModel.username);
-
-                var token = (string)responseModel.token;
-                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-                var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
-                Assert.Equal((int)responseModel.id, int.Parse(identityClaim.Value));
-
-                var idTokenCookie = response.Headers.GetIdTokenCookie();
-                Assert.NotNull(idTokenCookie);
-                Assert.Equal(token, idTokenCookie.Value);
-                Assert.Equal("/", idTokenCookie.Path);
-                Assert.True(idTokenCookie.HttpOnly);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -91,9 +71,6 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response2.Content.ReadAsStringAsync();
                 Assert.Equal($"Username '{_username}' is already taken", responseContent);
-
-                var idTokenCookie = response2.Headers.GetIdTokenCookie();
-                Assert.Null(idTokenCookie);
             }
         }
 

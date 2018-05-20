@@ -58,15 +58,14 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = (dynamic)JsonConvert.DeserializeObject(responseContent);
-                Assert.True(responseModel.id > 0);
                 Assert.Equal(_user.FirstName, (string)responseModel.firstName);
-                Assert.Equal(_user.LastName, (string)responseModel.lastName);
                 Assert.Equal(_user.Username, (string)responseModel.username);
 
                 var token = (string)responseModel.token;
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
-                Assert.Equal((int)responseModel.id, int.Parse(identityClaim.Value));
+                int.TryParse(identityClaim.Value, out int userId);
+                Assert.True(userId > 0);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.NotNull(idTokenCookie);

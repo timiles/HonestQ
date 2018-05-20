@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody]UserModel userModel)
+        public IActionResult Login([FromBody]LoginFormModel userModel)
         {
             var user = _userService.Authenticate(userModel.Username, userModel.Password);
 
@@ -34,13 +34,11 @@ namespace WebApi.Controllers
             // Put token into Cookies to enable Server Side Rendering
             this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true });
 
-            // Return basic user info (without password) and token to store client side
-            return Ok(new AuthenticatedUserResponseModel
+            // Return basic user info and token to store client side
+            return Ok(new LoginResponseModel
             {
-                Id = user.Id,
                 Username = user.Username,
                 FirstName = user.FirstName,
-                LastName = user.LastName,
                 Token = token
             });
         }
@@ -53,20 +51,20 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromBody]UserModel userModel)
+        public IActionResult Register([FromBody]RegisterFormModel registerFormModel)
         {
             var user = new User
             {
-                FirstName = userModel.FirstName,
-                LastName = userModel.LastName,
-                Username = userModel.Username
+                FirstName = registerFormModel.FirstName,
+                LastName = registerFormModel.LastName,
+                Username = registerFormModel.Username
             };
 
             try
             {
                 // save 
-                _userService.Create(user, userModel.Password);
-                return Login(userModel);
+                _userService.Create(user, registerFormModel.Password);
+                return Ok();
             }
             catch (AppException ex)
             {
@@ -75,22 +73,25 @@ namespace WebApi.Controllers
             }
         }
 
-        public class UserModel
+        public class LoginFormModel
         {
-            public int Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
             public string Username { get; set; }
             public string Password { get; set; }
         }
 
-        public class AuthenticatedUserResponseModel
+        public class LoginResponseModel
         {
-            public int Id { get; set; }
+            public string FirstName { get; set; }
+            public string Username { get; set; }
+            public string Token { get; set; }
+        }
+
+        public class RegisterFormModel
+        {
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Username { get; set; }
-            public string Token { get; set; }
+            public string Password { get; set; }
         }
     }
 }
