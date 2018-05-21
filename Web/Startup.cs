@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
@@ -15,9 +16,14 @@ namespace Pobs.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment env;
+        private readonly ILoggerFactory loggerFactory;
+
+        public Startup(IHostingEnvironment env, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
+            this.env = env;
             Configuration = configuration;
+            this.loggerFactory = loggerFactory;
         }
 
         public IConfiguration Configuration { get; }
@@ -54,6 +60,18 @@ namespace Pobs.Web
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+
+            services.AddSpaPrerenderer();
+
+            services.AddNodeServices(options =>
+            {
+                if (this.env.IsDevelopment())
+                {
+                    options.LaunchWithDebugging = true;
+                    options.DebuggingPort = 9229;
+                }
+                options.NodeInstanceOutputLogger = this.loggerFactory.CreateLogger("Node Console Logger");
             });
 
             // Configure DI for application services

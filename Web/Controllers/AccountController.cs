@@ -35,12 +35,7 @@ namespace WebApi.Controllers
             this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true });
 
             // Return basic user info and token to store client side
-            return Ok(new LoginResponseModel
-            {
-                Username = user.Username,
-                FirstName = user.FirstName,
-                Token = token
-            });
+            return Ok(new LoginResponseModel(user, token));
         }
 
         [HttpPost]
@@ -81,6 +76,13 @@ namespace WebApi.Controllers
 
         public class LoginResponseModel
         {
+            public LoginResponseModel(User user, string token)
+            {
+                this.FirstName = user.FirstName;
+                this.Username = user.Username;
+                this.Token = token;
+            }
+
             public string FirstName { get; set; }
             public string Username { get; set; }
             public string Token { get; set; }

@@ -1,8 +1,15 @@
+@model Microsoft.AspNetCore.SpaServices.Prerendering.RenderToStringResult
 @{
     ViewData["Title"] = "Home Page";
 }
+<div id="react-app">@Html.Raw(Model.Html)</div>
 
-<div id="react-app" asp-prerender-module="ClientApp/dist/main-server">Loading...</div>
+@if (Model.Globals != null)
+{
+<script>
+window.initialReduxState = @Html.Raw(Model.Globals.ToString(Newtonsoft.Json.Formatting.None));
+</script>                    
+}
 
 @section scripts {
     <script src="~/dist/main-client.js" asp-append-version="true"></script>

@@ -18,6 +18,10 @@ export default createServerRenderer((params) => {
         const store = configureStore(createMemoryHistory());
         store.dispatch(replace(urlAfterBasename));
 
+        if (params.data.login.loggedInUser) {
+            store.dispatch({ type: 'LOGIN_SUCCESS', payload: params.data.login.loggedInUser });
+        }
+
         // Prepare an instance of the application and perform an inital render that will
         // cause any async tasks (e.g., data access) to begin
         const routerContext: any = {};
@@ -35,7 +39,10 @@ export default createServerRenderer((params) => {
 
         // If there's a redirection, just send this information back to the host application
         if (routerContext.url) {
-            resolve({ redirectUrl: routerContext.url });
+            resolve({
+                redirectUrl: routerContext.url,
+                statusCode: routerContext.status,
+            });
             return;
         }
 
@@ -43,8 +50,9 @@ export default createServerRenderer((params) => {
         // We also send the redux store state, so the client can continue execution where the server left off
         params.domainTasks.then(() => {
             resolve({
-                globals: { initialReduxState: store.getState() },
+                globals: store.getState(),
                 html: renderToString(app),
+                statusCode: routerContext.status,
             });
         }, reject); // Also propagate any errors back into the host application
     });
