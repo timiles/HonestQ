@@ -1,11 +1,13 @@
 import * as Login from './Login';
 import * as Register from './Register';
+import * as Topic from './Topic';
 
 // The top-level state object
 // tslint:disable-next-line:interface-name
 export interface ApplicationState {
     login: Login.LoginState;
     register: Register.RegisterState;
+    topic: Topic.TopicState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -14,6 +16,7 @@ export interface ApplicationState {
 export const reducers = {
     login: Login.reducer,
     register: Register.reducer,
+    topic: Topic.reducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
