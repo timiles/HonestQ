@@ -12,6 +12,7 @@ namespace Pobs.Web.Services
 {
     public interface ITopicService
     {
+        Task<GetTopicsListModel> GetAll();
         Task<GetTopicModel> Get(string topicUrlFragment);
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
         Task SaveStatement(string topicUrlFragment, string text, int postedByUserId);
@@ -24,6 +25,19 @@ namespace Pobs.Web.Services
         public TopicService(PobsDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<GetTopicsListModel> GetAll()
+        {
+            var topics = await _context.Topics.ToListAsync();
+            return new GetTopicsListModel
+            {
+                Topics = topics.Select(x => new GetTopicsListModel.TopicListItemModel
+                {
+                    UrlFragment = x.UrlFragment,
+                    Name = x.Name
+                })
+            };
         }
 
         public async Task<GetTopicModel> Get(string topicUrlFragment)

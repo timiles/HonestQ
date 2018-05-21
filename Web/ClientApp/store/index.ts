@@ -1,3 +1,4 @@
+import * as Home from './Home';
 import * as Login from './Login';
 import * as Register from './Register';
 import * as Topic from './Topic';
@@ -5,6 +6,7 @@ import * as Topic from './Topic';
 // The top-level state object
 // tslint:disable-next-line:interface-name
 export interface ApplicationState {
+    home: Home.HomeState;
     login: Login.LoginState;
     register: Register.RegisterState;
     topic: Topic.TopicState;
@@ -14,6 +16,7 @@ export interface ApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
+    home: Home.reducer,
     login: Login.reducer,
     register: Register.reducer,
     topic: Topic.reducer,

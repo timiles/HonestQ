@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +8,7 @@ using Pobs.Web.Services;
 
 namespace Pobs.Web.Controllers
 {
-    [Route("api/[controller]"), Authorize]
+    [Route("api/[controller]")]
     public class TopicsController : Controller
     {
         private readonly ITopicService _topicService;
@@ -21,7 +18,25 @@ namespace Pobs.Web.Controllers
             _topicService = topicService;
         }
 
-        [Route("{topicUrlFragment}"), AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var topicsListModel = await _topicService.GetAll();
+            return Ok(topicsListModel);
+        }
+
+        public class GetTopicsListModel
+        {
+            public IEnumerable<TopicListItemModel> Topics { get; set; }
+
+            public class TopicListItemModel
+            {
+                public string UrlFragment { get; set; }
+                public string Name { get; set; }
+            }
+        }
+
+        [Route("{topicUrlFragment}")]
         public async Task<IActionResult> Get(string topicUrlFragment)
         {
             try
@@ -46,6 +61,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
+        [Authorize]
         public async Task<IActionResult> Post([FromBody] PostTopicModel payload)
         {
             if (!User.IsInRole(Role.Admin))
@@ -63,7 +79,7 @@ namespace Pobs.Web.Controllers
             public string Name { get; set; }
         }
 
-        [HttpPost, Route("{topicUrlFragment}/statements")]
+        [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
         public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] PostStatementModel payload)
         {
             try
