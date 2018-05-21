@@ -9,7 +9,7 @@ namespace Pobs.Domain.Entities
     {
         public Topic()
         {
-            this.Opinions = new Collection<Opinion>();
+            this.Statements = new Collection<Statement>();
         }
         public Topic(string urlFragment, string name, User postedByUser, DateTime postedAt) : this()
         {
@@ -34,6 +34,6 @@ namespace Pobs.Domain.Entities
         public DateTime PostedAt { get; set; }
 
 
-        public virtual ICollection<Opinion> Opinions { get; set; }
+        public virtual ICollection<Statement> Statements { get; set; }
     }
 }

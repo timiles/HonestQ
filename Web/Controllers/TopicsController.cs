@@ -38,9 +38,9 @@ namespace Pobs.Web.Controllers
         public class GetTopicModel
         {
             public string Name { get; set; }
-            public IEnumerable<OpinionModel> Opinions { get; set; }
+            public IEnumerable<StatementModel> Statements { get; set; }
 
-            public class OpinionModel
+            public class StatementModel
             {
                 public string Text { get; set; }
             }
@@ -63,12 +63,12 @@ namespace Pobs.Web.Controllers
             public string Name { get; set; }
         }
 
-        [HttpPost, Route("{topicUrlFragment}/opinions")]
-        public async Task<IActionResult> AddOpinion(string topicUrlFragment, [FromBody] PostOpinionModel payload)
+        [HttpPost, Route("{topicUrlFragment}/statements")]
+        public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] PostStatementModel payload)
         {
             try
             {
-                await _topicService.SaveOpinion(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
+                await _topicService.SaveStatement(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
                 return Ok();
             }
             catch (EntityNotFoundException)
@@ -77,7 +77,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        public class PostOpinionModel
+        public class PostStatementModel
         {
             public string Text { get; set; }
         }

@@ -14,7 +14,7 @@ namespace Pobs.Web.Services
     {
         Task<GetTopicModel> Get(string topicUrlFragment);
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
-        Task SaveOpinion(string topicUrlFragment, string text, int postedByUserId);
+        Task SaveStatement(string topicUrlFragment, string text, int postedByUserId);
     }
 
     public class TopicService : ITopicService
@@ -29,7 +29,7 @@ namespace Pobs.Web.Services
         public async Task<GetTopicModel> Get(string topicUrlFragment)
         {
             var topic = await _context.Topics
-                .Include(x => x.Opinions)
+                .Include(x => x.Statements)
                 .FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
             if (topic == null)
             {
@@ -38,7 +38,7 @@ namespace Pobs.Web.Services
             return new GetTopicModel
             {
                 Name = topic.Name,
-                Opinions = topic.Opinions.Select(x => new GetTopicModel.OpinionModel
+                Statements = topic.Statements.Select(x => new GetTopicModel.StatementModel
                 {
                     Text = x.Text
                 })
@@ -52,7 +52,7 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveOpinion(string topicUrlFragment, string text, int postedByUserId)
+        public async Task SaveStatement(string topicUrlFragment, string text, int postedByUserId)
         {
             var topicTask = _context.Topics.FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
@@ -61,7 +61,7 @@ namespace Pobs.Web.Services
             {
                 throw new EntityNotFoundException();
             }
-            topic.Opinions.Add(new Opinion(text, await postedByUserTask, DateTime.UtcNow));
+            topic.Statements.Add(new Statement(text, await postedByUserTask, DateTime.UtcNow));
             await _context.SaveChangesAsync();
         }
     }

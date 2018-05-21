@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
 {
-    public class Opinion
+    public class Statement
     {
-        public Opinion() { }
-        public Opinion(string text, User postedByUser, DateTime postedAt)
+        public Statement() { }
+        public Statement(string text, User postedByUser, DateTime postedAt)
         {
             Text = text;
             PostedByUser = postedByUser;

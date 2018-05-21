@@ -11,14 +11,14 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Topics
 {
-    public class PostOpinionsTests : IDisposable
+    public class PostStatementsTests : IDisposable
     {
-        private string _generateOpinionsUrl(string topicUrlFragment) => $"/api/topics/{topicUrlFragment}/opinions";
+        private string _generateStatementsUrl(string topicUrlFragment) => $"/api/topics/{topicUrlFragment}/statements";
         private readonly int _userId;
         private readonly int _topicId;
         private readonly string _topicUrlFragment;
 
-        public PostOpinionsTests()
+        public PostStatementsTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
@@ -28,11 +28,11 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task Authenticated_ShouldAddOpinion()
+        public async Task Authenticated_ShouldAddStatement()
         {
             var payload = new
             {
-                Text = "My insightful opinion on this topic"
+                Text = "My insightful statement on this topic"
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
@@ -40,7 +40,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_userId);
 
-                var url = _generateOpinionsUrl(_topicUrlFragment);
+                var url = _generateStatementsUrl(_topicUrlFragment);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
             }
@@ -48,14 +48,14 @@ namespace Pobs.Tests.Integration.Topics
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var topic = dbContext.Topics
-                    .Include(x => x.Opinions)
+                    .Include(x => x.Statements)
                         .ThenInclude(x => x.PostedByUser)
                     .Single(x => x.Id == _topicId);
 
-                var opinion = topic.Opinions.Single();
-                Assert.Equal(payload.Text, opinion.Text);
-                Assert.Equal(_userId, opinion.PostedByUser.Id);
-                Assert.True(opinion.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                var statement = topic.Statements.Single();
+                Assert.Equal(payload.Text, statement.Text);
+                Assert.Equal(_userId, statement.PostedByUser.Id);
+                Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
             }
         }
 
@@ -64,13 +64,13 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful opinion on this topic"
+                Text = "My insightful statement on this topic"
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateOpinionsUrl(_topicUrlFragment);
+                var url = _generateStatementsUrl(_topicUrlFragment);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
@@ -78,10 +78,10 @@ namespace Pobs.Tests.Integration.Topics
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var topic = dbContext.Topics
-                    .Include(x => x.Opinions)
+                    .Include(x => x.Statements)
                     .Single(x => x.Id == _topicId);
 
-                Assert.Empty(topic.Opinions);
+                Assert.Empty(topic.Statements);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful opinion on this topic"
+                Text = "My insightful statement on this topic"
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
@@ -98,7 +98,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_userId);
 
-                var url = _generateOpinionsUrl("INCORRECT_URL_FRAGMENT");
+                var url = _generateStatementsUrl("INCORRECT_URL_FRAGMENT");
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }

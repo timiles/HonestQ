@@ -40,18 +40,18 @@ namespace Pobs.Tests.Integration.Topics
                 var responseModel = (dynamic)JsonConvert.DeserializeObject(responseContent);
                 Assert.Equal(_topic.Name, (string)responseModel.name);
 
-                Assert.Equal(3, _topic.Opinions.Count);
-                Assert.Equal(_topic.Opinions.Count, responseModel.opinions.Count);
-                var opinionTexts = new List<string>();
-                foreach (var opinion in responseModel.opinions)
+                Assert.Equal(3, _topic.Statements.Count);
+                Assert.Equal(_topic.Statements.Count, responseModel.statements.Count);
+                var statementTexts = new List<string>();
+                foreach (var statement in responseModel.statements)
                 {
-                    opinionTexts.Add((string)opinion.text);
+                    statementTexts.Add((string)statement.text);
                 }
-                foreach (var opinion in _topic.Opinions)
+                foreach (var statement in _topic.Statements)
                 {
-                    Assert.Contains(opinion.Text, opinionTexts);
+                    Assert.Contains(statement.Text, statementTexts);
                 }
-                Assert.Equal(_topic.Opinions.Count, responseModel.opinions.Count);
+                Assert.Equal(_topic.Statements.Count, responseModel.statements.Count);
             }
         }
 
