@@ -1,37 +1,35 @@
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { AuthHelper, IAuthenticatedUser } from '../helpers/auth-helper';
-import * as Utils from '../utils';
+import { connect } from 'react-redux';
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
+import { LoginFormModel } from '../server-models/LoginFormModel';
+import { ApplicationState } from '../store';
+import * as LoginStore from '../store/Login';
 
-// tslint:disable-next-line:interface-name
-interface State {
-    username: string;
-    password: string;
-    loggingIn: boolean;
-    submitted: boolean;
-}
+type LoginProps = LoginStore.LoginState
+    & typeof LoginStore.actionCreators
+    & RouteComponentProps<{}>;
 
-export default class Login extends React.Component<RouteComponentProps<{}>, State> {
+class Login extends React.Component<LoginProps, LoginFormModel> {
 
-    constructor(props: RouteComponentProps<{}>) {
+    constructor(props: LoginProps) {
         super(props);
 
-        this.state = {
-            loggingIn: false,
-            password: '',
-            submitted: false,
-            username: '',
-        };
+        this.state = new LoginFormModel();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public render() {
-        const { username, password, loggingIn, submitted } = this.state;
+        if (this.props.loggedInUser) {
+            return <Redirect to="/" />;
+        }
+        const { username, password, rememberMe } = this.state;
+        const { submitting, submitted, error } = this.props;
         return (
             <div className="col-md-6">
                 <h2>Login</h2>
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
                         <label htmlFor="username">Username</label>
@@ -56,9 +54,21 @@ export default class Login extends React.Component<RouteComponentProps<{}>, Stat
                         {submitted && !password && <div className="help-block">Password is required</div>}
                     </div>
                     <div className="form-group">
+                        <div className="checkbox">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="rememberMe"
+                                    checked={rememberMe}
+                                    onChange={this.handleChange}
+                                /> Remember me
+                            </label>
+                        </div>
+                    </div>
+                    <div className="form-group">
                         <button className="btn btn-primary">Login</button>
                         {/* tslint:disable-next-line:max-line-length */}
-                        {loggingIn && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />}
+                        {submitting && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />}
                         <Link to="/register" className="btn btn-link">Register</Link>
                     </div>
                 </form>
@@ -67,44 +77,21 @@ export default class Login extends React.Component<RouteComponentProps<{}>, Stat
     }
 
     private handleChange(event: React.FormEvent<HTMLInputElement>): void {
-        const { name, value } = event.currentTarget;
-        if (name === 'username') {
-            this.setState({ username: value });
-        } else if (name === 'password') {
-            this.setState({ password: value });
+        const { name, value, checked } = event.currentTarget;
+        if (name === 'rememberMe') {
+            this.setState({ ...this.state, [name]: checked });
+        } else {
+            this.setState({ ...this.state, [name]: value });
         }
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
-
-        this.setState({ submitted: true });
-        const { username, password } = this.state;
-        if (username && password) {
-            this.setState({ loggingIn: true });
-            const requestOptions: RequestInit = {
-                body: JSON.stringify({ username, password }),
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                method: 'POST',
-            };
-
-            fetch('/api/account/login', requestOptions)
-                .then((response) => Utils.handleResponse<IAuthenticatedUser>(response), Utils.handleError)
-                .then((authenticatedUser) => {
-                    // login successful if there's a jwt token in the response
-                    if (authenticatedUser && authenticatedUser.token) {
-                        AuthHelper.login(authenticatedUser);
-                    }
-
-                    this.setState({ loggingIn: false });
-                    location.href = '/';
-                })
-                .catch((reason) => {
-                    this.setState({ loggingIn: false });
-                    // TODO: better
-                    alert(reason);
-                });
-        }
+        this.props.login(this.state);
     }
 }
+
+export default connect(
+    (state: ApplicationState) => state.login,
+    LoginStore.actionCreators,
+)(Login) as typeof Login;

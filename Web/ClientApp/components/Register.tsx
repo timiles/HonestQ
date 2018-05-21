@@ -1,97 +1,82 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { AuthHelper, IAuthenticatedUser } from '../helpers/auth-helper';
-import * as Utils from '../utils';
+import { RegisterFormModel } from '../server-models/RegisterFormModel';
+import { ApplicationState } from '../store';
+import * as RegisterStore from '../store/Register';
 
-// tslint:disable-next-line:interface-name
-interface UserState {
-    firstName: string;
-    lastName: string;
-    username: string;
-    password: string;
-}
-// tslint:disable-next-line:interface-name
-interface State {
-    user: UserState;
-    registering: boolean;
-    submitted: boolean;
-}
+type RegisterProps = RegisterStore.RegisterState
+    & typeof RegisterStore.actionCreators
+    & RouteComponentProps<{}>;
 
-export default class Register extends React.Component<RouteComponentProps<{}>, State> {
+class Register extends React.Component<RegisterProps, RegisterFormModel> {
 
-    constructor(props: RouteComponentProps<{}>) {
+    constructor(props: RegisterProps) {
         super(props);
 
-        this.state = {
-            registering: false,
-            submitted: false,
-            user: {
-                firstName: '',
-                lastName: '',
-                password: '',
-                username: '',
-            },
-        };
+        this.state = new RegisterFormModel();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public render() {
-        const { user, registering, submitted } = this.state;
+        const { firstName, lastName, username, password } = this.state;
+        const { error, submitting, submitted } = this.props;
 
         return (
             <div className="col-md-6">
                 <h2>Register</h2>
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
+                    <div className={'form-group' + (submitted && !firstName ? ' has-error' : '')}>
                         <label htmlFor="firstName">First Name</label>
                         <input
                             type="text"
                             className="form-control"
                             name="firstName"
-                            value={user.firstName}
+                            value={firstName}
                             onChange={this.handleChange}
                         />
-                        {submitted && !user.firstName && <div className="help-block">First Name is required</div>}
+                        {submitted && !firstName && <div className="help-block">First Name is required</div>}
                     </div>
-                    <div className={'form-group' + (submitted && !user.lastName ? ' has-error' : '')}>
+                    <div className={'form-group' + (submitted && !lastName ? ' has-error' : '')}>
                         <label htmlFor="lastName">Last Name</label>
                         <input
                             type="text"
                             className="form-control"
                             name="lastName"
-                            value={user.lastName}
+                            value={lastName}
                             onChange={this.handleChange}
                         />
-                        {submitted && !user.lastName && <div className="help-block">Last Name is required</div>}
+                        {submitted && !lastName && <div className="help-block">Last Name is required</div>}
                     </div>
-                    <div className={'form-group' + (submitted && !user.username ? ' has-error' : '')}>
+                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
                             className="form-control"
                             name="username"
-                            value={user.username}
+                            value={username}
                             onChange={this.handleChange}
                         />
-                        {submitted && !user.username && <div className="help-block">Username is required</div>}
+                        {submitted && !username && <div className="help-block">Username is required</div>}
                     </div>
-                    <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
+                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
                             className="form-control"
                             name="password"
-                            value={user.password}
+                            value={password}
                             onChange={this.handleChange}
                         />
-                        {submitted && !user.password && <div className="help-block">Password is required</div>}
+                        {submitted && !password && <div className="help-block">Password is required</div>}
                     </div>
                     <div className="form-group">
                         <button className="btn btn-primary">Register</button>
                         {/* tslint:disable-next-line:max-line-length */}
-                        {registering && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />}
+                        {submitting && <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />}
                         <Link to="/login" className="btn btn-link">Cancel</Link>
                     </div>
                 </form>
@@ -101,45 +86,16 @@ export default class Register extends React.Component<RouteComponentProps<{}>, S
 
     private handleChange(event: React.FormEvent<HTMLInputElement>): void {
         const { name, value } = event.currentTarget;
-        const { user } = this.state;
-        this.setState({
-            user: {
-                ...user,
-                [name]: value,
-            },
-        });
+        this.setState({ ...this.state, [name]: value });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
-
-        this.setState({ submitted: true });
-        const { user } = this.state;
-        if (user.firstName && user.lastName && user.username && user.password) {
-            this.setState({ registering: true });
-            const requestOptions: RequestInit = {
-                body: JSON.stringify(user),
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                method: 'POST',
-            };
-
-            fetch('/api/account/register', requestOptions)
-                .then((response) => Utils.handleResponse<IAuthenticatedUser>(response), Utils.handleError)
-                .then((authenticatedUser) => {
-                    // login successful if there's a jwt token in the response
-                    if (authenticatedUser && authenticatedUser.token) {
-                        AuthHelper.login(authenticatedUser);
-                    }
-
-                    this.setState({ registering: false });
-                    location.href = '/';
-                })
-                .catch((reason) => {
-                    this.setState({ registering: false });
-                    // TODO: better
-                    alert(reason);
-                });
-        }
+        this.props.submitRegistrationForm(this.state);
     }
 }
+
+export default connect(
+    (state: ApplicationState) => state.register,
+    RegisterStore.actionCreators,
+)(Register) as typeof Register;

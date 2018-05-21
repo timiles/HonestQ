@@ -5,6 +5,7 @@
   "dependencies": {
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "3.3.7",
+    "domain-task": "^3.0.3",
     "history": "4.6.3",
     "react": "15.6.1",
     "react-dom": "15.6.1",
@@ -30,7 +31,6 @@
     "aspnet-webpack-react": "^3.0.0",
     "awesome-typescript-loader": "3.2.1",
     "css-loader": "0.28.4",
-    "domain-task": "^3.0.3",
     "event-source-polyfill": "0.0.9",
     "extract-text-webpack-plugin": "2.1.2",
     "file-loader": "0.11.2",
