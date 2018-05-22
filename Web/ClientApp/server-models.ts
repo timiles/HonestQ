@@ -37,11 +37,11 @@ export interface GetTopicModel {
     statements: StatementModel[];
 }
 
-export interface PostTopicModel {
+export interface PostTopicFormModel {
     urlFragment: string;
     name: string;
 }
 
-export interface PostStatementModel {
+export interface PostStatementFormModel {
     text: string;
 }

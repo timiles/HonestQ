@@ -61,7 +61,7 @@ namespace Pobs.Web.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Post([FromBody] PostTopicModel payload)
+        public async Task<IActionResult> Post([FromBody] PostTopicFormModel payload)
         {
             if (!User.IsInRole(Role.Admin))
             {
@@ -72,14 +72,14 @@ namespace Pobs.Web.Controllers
             return Ok();
         }
 
-        public class PostTopicModel
+        public class PostTopicFormModel
         {
             public string UrlFragment { get; set; }
             public string Name { get; set; }
         }
 
         [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
-        public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] PostStatementModel payload)
+        public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] PostStatementFormModel payload)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        public class PostStatementModel
+        public class PostStatementFormModel
         {
             public string Text { get; set; }
         }
