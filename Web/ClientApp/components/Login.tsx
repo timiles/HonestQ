@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
-import { LoginFormModel } from '../server-models/LoginFormModel';
+import { LoginFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as LoginStore from '../store/Login';
 
@@ -14,7 +14,11 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
     constructor(props: LoginProps) {
         super(props);
 
-        this.state = new LoginFormModel();
+        this.state = {
+            username: '',
+            password: '',
+            rememberMe: true
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

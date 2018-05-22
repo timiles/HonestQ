@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { RegisterFormModel } from '../server-models/RegisterFormModel';
+import { RegisterFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as RegisterStore from '../store/Register';
 
@@ -14,7 +14,12 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
     constructor(props: RegisterProps) {
         super(props);
 
-        this.state = new RegisterFormModel();
+        this.state = {
+            firstName: '',
+            lastName: '',
+            password: '',
+            username: ''
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

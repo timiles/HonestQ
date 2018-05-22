@@ -1,7 +1,7 @@
 ﻿import { fetch } from 'domain-task';
 import { push } from 'react-router-redux';
 import { Reducer } from 'redux';
-import { RegisterFormModel } from '../server-models/RegisterFormModel';
+import { RegisterFormModel } from '../server-models';
 import { AppThunkAction } from './';
 
 // tslint:disable:interface-name

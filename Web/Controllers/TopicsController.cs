@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pobs.Domain;
@@ -27,7 +26,7 @@ namespace Pobs.Web.Controllers
 
         public class GetTopicsListModel
         {
-            public IEnumerable<TopicListItemModel> Topics { get; set; }
+            public TopicListItemModel[] Topics { get; set; }
 
             public class TopicListItemModel
             {
@@ -53,7 +52,7 @@ namespace Pobs.Web.Controllers
         public class GetTopicModel
         {
             public string Name { get; set; }
-            public IEnumerable<StatementModel> Statements { get; set; }
+            public StatementModel[] Statements { get; set; }
 
             public class StatementModel
             {

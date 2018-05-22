@@ -36,7 +36,7 @@ namespace Pobs.Web.Services
                 {
                     UrlFragment = x.UrlFragment,
                     Name = x.Name
-                })
+                }).ToArray()
             };
         }
 
@@ -55,7 +55,7 @@ namespace Pobs.Web.Services
                 Statements = topic.Statements.Select(x => new GetTopicModel.StatementModel
                 {
                     Text = x.Text
-                })
+                }).ToArray()
             };
         }
 

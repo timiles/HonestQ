@@ -1,8 +1,8 @@
 ﻿import { addTask, fetch } from 'domain-task';
 import { Reducer } from 'redux';
+import { GetTopicModel } from '../server-models';
 import * as Utils from '../utils';
 import { AppThunkAction } from './';
-import { GetTopicModel } from './../server-models/GetTopicModel';
 
 // tslint:disable:interface-name
 

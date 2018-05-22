@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { TopicListItemModel } from '../server-models/GetTopicsListModel';
+import { TopicListItemModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as HomeStore from '../store/Home';
 

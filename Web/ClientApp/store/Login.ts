@@ -1,9 +1,8 @@
 ﻿import { fetch } from 'domain-task';
 import { Reducer } from 'redux';
-import { LoginFormModel } from '../server-models/LoginFormModel';
+import { LoginFormModel, LoginResponseModel } from '../server-models';
 import * as Utils from '../utils';
 import { AppThunkAction } from './';
-import { LoggedInModel } from './../server-models/LoggedInModel';
 
 // tslint:disable:interface-name
 
@@ -11,7 +10,7 @@ import { LoggedInModel } from './../server-models/LoggedInModel';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface LoginState {
-    loggedInUser?: LoggedInModel;
+    loggedInUser?: LoginResponseModel;
     submitting?: boolean;
     submitted?: boolean;
     error?: string | null;
@@ -23,7 +22,7 @@ export interface LoginState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface StartLoginAction { type: 'START_LOGIN'; }
-interface LoginSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInModel; }
+interface LoginSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoginResponseModel; }
 interface LoginFailedAction { type: 'LOGIN_FAILED'; payload: { error: string | null; }; }
 interface StartLogoutAction { type: 'START_LOGOUT'; }
 interface LogoutSuccessAction { type: 'LOGOUT_SUCCESS'; }
@@ -57,7 +56,7 @@ export const actionCreators = {
                 };
 
                 fetch('/api/account/login', requestOptions)
-                    .then((response) => Utils.handleResponse<LoggedInModel>(response), Utils.handleError)
+                    .then((response) => Utils.handleResponse<LoginResponseModel>(response), Utils.handleError)
                     .then((loginResponse) => {
                         // Login successful if there's a jwt token in the response
                         if (loginResponse && loginResponse.token) {

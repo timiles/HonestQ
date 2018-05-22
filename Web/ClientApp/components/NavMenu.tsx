@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import { LoggedInModel } from '../server-models/LoggedInModel';
+import { LoginResponseModel } from '../server-models';
 import { ApplicationState } from '../store';
 
 // tslint:disable-next-line:interface-name
 interface NavMenuProps {
-    loggedInUser: LoggedInModel;
+    loggedInUser: LoginResponseModel;
 }
 
 class NavMenu extends React.Component<NavMenuProps, {}> {

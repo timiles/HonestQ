@@ -1,6 +1,6 @@
 ﻿import { addTask, fetch } from 'domain-task';
 import { Reducer } from 'redux';
-import { GetTopicsListModel } from '../server-models/GetTopicsListModel';
+import { GetTopicsListModel } from '../server-models';
 import * as Utils from '../utils';
 import { AppThunkAction } from './';
 
