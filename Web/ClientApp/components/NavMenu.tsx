@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import { LoginResponseModel } from '../server-models';
 import { ApplicationState } from '../store';
+import { isUserInRole } from '../utils';
 
 // tslint:disable-next-line:interface-name
 interface NavMenuProps {
@@ -11,6 +12,8 @@ interface NavMenuProps {
 
 class NavMenu extends React.Component<NavMenuProps, {}> {
     public render() {
+        const isAuthenticated = !!this.props.loggedInUser;
+        const isAdmin = isUserInRole(this.props.loggedInUser, 'Admin');
         return (
             <div className="main-nav">
                 <div className="navbar navbar-inverse">
@@ -30,7 +33,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                     </div>
                     <div className="clearfix" />
                     <div className="navbar-collapse collapse">
-                        {this.props.loggedInUser && (
+                        {isAuthenticated && (
                             <span className="navbar-text">
                                 Hi, {this.props.loggedInUser.firstName} ({this.props.loggedInUser.username})!
                             </span>
@@ -41,25 +44,32 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                                     <span className="glyphicon glyphicon-home" /> Home
                                 </NavLink>
                             </li>
-                            {!this.props.loggedInUser && (
+                            {isAdmin && (
+                                <li>
+                                    <NavLink to={'/admin'} activeClassName="active">
+                                        <span className="glyphicon glyphicon-flash" /> Admin
+                                    </NavLink>
+                                </li>
+                            )}
+                            {!isAuthenticated && (
                                 <li>
                                     <NavLink to={'/login'} activeClassName="active">
                                         <span className="glyphicon glyphicon-log-in" /> Login
-                                </NavLink>
+                                    </NavLink>
                                 </li>
                             )}
-                            {!this.props.loggedInUser && (
+                            {!isAuthenticated && (
                                 <li>
                                     <NavLink to={'/register'} activeClassName="active">
                                         <span className="glyphicon glyphicon-user" /> Register
-                                </NavLink>
+                                    </NavLink>
                                 </li>
                             )}
-                            {this.props.loggedInUser && (
+                            {isAuthenticated && (
                                 <li>
                                     <NavLink to={'/logout'} activeClassName="active">
                                         <span className="glyphicon glyphicon-log-out" /> Log out
-                                </NavLink>
+                                    </NavLink>
                                 </li>
                             )}
                         </ul>

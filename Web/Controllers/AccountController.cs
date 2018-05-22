@@ -5,6 +5,9 @@ using Pobs.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Pobs.Web.Helpers;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using Pobs.Domain;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -29,7 +32,13 @@ namespace WebApi.Controllers
             if (user == null)
                 return BadRequest("Username or password is incorrect");
 
-            var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id);
+            var roles = new List<Role>();
+            // TODO: proper roles in the database, this is a poor hack for now.
+            if (user.Id == 1)
+            {
+                roles.Add(Role.Admin);
+            }
+            var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, roles.ToArray());
 
             // Put token into Cookies to enable Server Side Rendering
             this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true });
