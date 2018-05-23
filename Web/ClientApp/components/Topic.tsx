@@ -6,18 +6,13 @@ import * as TopicStore from '../store/Topic';
 
 type TopicProps = TopicStore.TopicState
     & typeof TopicStore.actionCreators
-    & RouteComponentProps<{}>;
-
-interface TopicRouteParams {
-    topic: string;
-}
+    & RouteComponentProps<{ topicUrlFragment: string }>;
 
 class Topic extends React.Component<TopicProps> {
 
     public componentWillMount() {
-        const routeParams = this.props.match.params as TopicRouteParams;
-        if (this.props.urlFragment !== routeParams.topic) {
-            this.props.getTopic(routeParams.topic);
+        if (this.props.urlFragment !== this.props.match.params.topicUrlFragment) {
+            this.props.getTopic(this.props.match.params.topicUrlFragment);
         }
     }
 
