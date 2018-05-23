@@ -5,7 +5,6 @@ import * as Register from './Register';
 import * as Topic from './Topic';
 
 // The top-level state object
-// tslint:disable-next-line:interface-name
 export interface ApplicationState {
     home: Home.HomeState;
     login: Login.LoginState;

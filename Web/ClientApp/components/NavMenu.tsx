@@ -5,7 +5,6 @@ import { LoginResponseModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils';
 
-// tslint:disable-next-line:interface-name
 interface NavMenuProps {
     loggedInUser: LoginResponseModel;
 }

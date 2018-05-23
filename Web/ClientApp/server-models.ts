@@ -1,5 +1,3 @@
-// tslint:disable:interface-name
-
 export interface LoginFormModel {
     username: string;
     password: string;

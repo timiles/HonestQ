@@ -8,7 +8,6 @@ type TopicProps = TopicStore.TopicState
     & typeof TopicStore.actionCreators
     & RouteComponentProps<{}>;
 
-// tslint:disable-next-line:interface-name
 interface TopicRouteParams {
     topic: string;
 }

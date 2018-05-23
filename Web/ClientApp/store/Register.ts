@@ -4,8 +4,6 @@ import { Reducer } from 'redux';
 import { RegisterFormModel } from '../server-models';
 import { AppThunkAction } from './';
 
-// tslint:disable:interface-name
-
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 

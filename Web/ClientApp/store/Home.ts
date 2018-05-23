@@ -4,8 +4,6 @@ import { GetTopicsListModel } from '../server-models';
 import * as Utils from '../utils';
 import { AppThunkAction } from './';
 
-// tslint:disable:interface-name
-
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 

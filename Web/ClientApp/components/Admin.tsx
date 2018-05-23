@@ -6,7 +6,6 @@ import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils';
 import NewTopic from './NewTopic';
 
-// tslint:disable-next-line:interface-name
 interface AdminProps {
     loggedInUser: LoginResponseModel;
 }
