@@ -1,5 +1,6 @@
 import * as Home from './Home';
 import * as Login from './Login';
+import * as NewTopic from './NewTopic';
 import * as Register from './Register';
 import * as Topic from './Topic';
 
@@ -8,6 +9,7 @@ import * as Topic from './Topic';
 export interface ApplicationState {
     home: Home.HomeState;
     login: Login.LoginState;
+    newTopic: NewTopic.NewTopicState;
     register: Register.RegisterState;
     topic: Topic.TopicState;
 }
@@ -18,6 +20,7 @@ export interface ApplicationState {
 export const reducers = {
     home: Home.reducer,
     login: Login.reducer,
+    newTopic: NewTopic.reducer,
     register: Register.reducer,
     topic: Topic.reducer,
 };

@@ -4,6 +4,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { LoginResponseModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils';
+import NewTopic from './NewTopic';
 
 // tslint:disable-next-line:interface-name
 interface AdminProps {
@@ -19,6 +20,7 @@ class Admin extends React.Component<AdminProps & RouteComponentProps<{}>, {}> {
         return (
             <div>
                 <h1>Admin</h1>
+                <NewTopic />
             </div>
         );
     }
