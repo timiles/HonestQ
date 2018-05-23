@@ -32,6 +32,5 @@ export default function configureStore(history: History, initialState?: StoreMod
 }
 
 function buildRootReducer(allReducers: ReducersMapObject) {
-    // tslint:disable-next-line
-    return combineReducers<StoreModule.ApplicationState>(Object.assign({}, allReducers, { routing: routerReducer }));
+    return combineReducers<StoreModule.ApplicationState>({ ...allReducers, routing: routerReducer });
 }
