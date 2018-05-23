@@ -81,7 +81,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState) => ({ loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any) => ({ loggedInUser: state.login.loggedInUser }),
     {},
     null,
     // REVIEW: mark this component as not pure, so that activeClassName updates every time the parent element renders.

@@ -26,6 +26,6 @@ class Logout extends React.Component<LogoutProps> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.login,
+    (state: ApplicationState, ownProps: any) => (state.login),
     LoginStore.actionCreators,
-)(Logout) as typeof Logout;
+)(Logout);

@@ -25,6 +25,6 @@ class Admin extends React.Component<AdminProps & RouteComponentProps<{}>, {}> {
 }
 
 export default connect(
-    (state: ApplicationState) => ({ loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any) => ({ loggedInUser: state.login.loggedInUser }),
     {},
-)(Admin) as typeof Admin;
+)(Admin);

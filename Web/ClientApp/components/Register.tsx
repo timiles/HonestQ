@@ -18,7 +18,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
             firstName: '',
             lastName: '',
             password: '',
-            username: ''
+            username: '',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -101,6 +101,6 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.register,
+    (state: ApplicationState, ownProps: any) => (state.register),
     RegisterStore.actionCreators,
-)(Register) as typeof Register;
+)(Register);

@@ -34,6 +34,6 @@ class Home extends React.Component<HomeProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.home,
+    (state: ApplicationState, ownProps: any) => (state.home),
     HomeStore.actionCreators,
-)(Home) as typeof Home;
+)(Home);

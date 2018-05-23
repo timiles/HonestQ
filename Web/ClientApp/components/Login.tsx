@@ -17,7 +17,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
         this.state = {
             username: '',
             password: '',
-            rememberMe: true
+            rememberMe: true,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -96,6 +96,6 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.login,
+    (state: ApplicationState, ownProps: any) => (state.login),
     LoginStore.actionCreators,
-)(Login) as typeof Login;
+)(Login);

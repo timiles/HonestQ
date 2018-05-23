@@ -37,6 +37,6 @@ class Topic extends React.Component<TopicProps> {
 }
 
 export default connect(
-    (state: ApplicationState) => state.topic,
+    (state: ApplicationState, ownProps: any) => (state.topic),
     TopicStore.actionCreators,
-)(Topic) as typeof Topic;
+)(Topic);
