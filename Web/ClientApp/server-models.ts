@@ -1,13 +1,13 @@
+export interface LoggedInUserModel {
+    firstName: string;
+    username: string;
+    token: string;
+}
+
 export interface LoginFormModel {
     username: string;
     password: string;
     rememberMe: boolean;
-}
-
-export interface LoginResponseModel {
-    firstName: string;
-    username: string;
-    token: string;
 }
 
 export interface RegisterFormModel {
@@ -17,29 +17,29 @@ export interface RegisterFormModel {
     password: string;
 }
 
-export interface TopicListItemModel {
-    urlFragment: string;
-    name: string;
-}
-
-export interface GetTopicsListModel {
-    topics: TopicListItemModel[];
-}
-
-export interface GetTopicModel {
-    name: string;
-    statements: StatementListItemModel[];
+export interface StatementFormModel {
+    text: string;
 }
 
 export interface StatementListItemModel {
     text: string;
 }
 
-export interface PostTopicFormModel {
+export interface TopicFormModel {
     urlFragment: string;
     name: string;
 }
 
-export interface PostStatementFormModel {
-    text: string;
+export interface TopicModel {
+    name: string;
+    statements: StatementListItemModel[];
+}
+
+export interface TopicListItemModel {
+    urlFragment: string;
+    name: string;
+}
+
+export interface TopicsListModel {
+    topics: TopicListItemModel[];
 }

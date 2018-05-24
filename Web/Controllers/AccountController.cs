@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Pobs.Web.Helpers;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using Pobs.Domain;
-using System.Linq;
+using Pobs.Web.Models.Account;
 
 namespace WebApi.Controllers
 {
@@ -32,11 +31,11 @@ namespace WebApi.Controllers
             if (user == null)
                 return BadRequest("Username or password is incorrect");
 
-            var roles = new List<Role>();
+            var roles = new List<Pobs.Domain.Role>();
             // TODO: proper roles in the database, this is a poor hack for now.
             if (user.Id == 1)
             {
-                roles.Add(Role.Admin);
+                roles.Add(Pobs.Domain.Role.Admin);
             }
             var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, roles.ToArray());
 
@@ -44,7 +43,7 @@ namespace WebApi.Controllers
             this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true });
 
             // Return basic user info and token to store client side
-            return Ok(new LoginResponseModel(user, token));
+            return Ok(new LoggedInUserModel(user, token));
         }
 
         [HttpPost]
@@ -75,35 +74,6 @@ namespace WebApi.Controllers
                 // return error message if there was an exception
                 return BadRequest(ex.Message);
             }
-        }
-
-        public class LoginFormModel
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
-            public bool RememberMe { get; set; }
-        }
-
-        public class LoginResponseModel
-        {
-            public LoginResponseModel(User user, string token)
-            {
-                this.FirstName = user.FirstName;
-                this.Username = user.Username;
-                this.Token = token;
-            }
-
-            public string FirstName { get; set; }
-            public string Username { get; set; }
-            public string Token { get; set; }
-        }
-
-        public class RegisterFormModel
-        {
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
         }
     }
 }

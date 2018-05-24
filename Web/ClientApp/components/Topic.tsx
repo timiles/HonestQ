@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { PostStatementFormModel } from '../server-models';
+import { StatementFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as TopicStore from '../store/Topic';
 import SubmitButton from './shared/SubmitButton';
@@ -10,7 +10,7 @@ type TopicProps = TopicStore.TopicState
     & typeof TopicStore.actionCreators
     & RouteComponentProps<{ topicUrlFragment: string }>;
 
-class Topic extends React.Component<TopicProps, PostStatementFormModel> {
+class Topic extends React.Component<TopicProps, StatementFormModel> {
 
     constructor(props: TopicProps) {
         super(props);

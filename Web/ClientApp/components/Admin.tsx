@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { LoginResponseModel } from '../server-models';
+import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils';
 import NewTopic from './NewTopic';
 
 interface AdminProps {
-    loggedInUser: LoginResponseModel;
+    loggedInUser: LoggedInUserModel;
 }
 
 class Admin extends React.Component<AdminProps & RouteComponentProps<{}>, {}> {

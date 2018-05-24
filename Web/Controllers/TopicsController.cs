@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
+using Pobs.Web.Models.Topics;
 using Pobs.Web.Services;
 
 namespace Pobs.Web.Controllers
@@ -24,17 +25,6 @@ namespace Pobs.Web.Controllers
             return Ok(topicsListModel);
         }
 
-        public class GetTopicsListModel
-        {
-            public TopicListItemModel[] Topics { get; set; }
-
-            public class TopicListItemModel
-            {
-                public string UrlFragment { get; set; }
-                public string Name { get; set; }
-            }
-        }
-
         [Route("{topicUrlFragment}")]
         public async Task<IActionResult> Get(string topicUrlFragment)
         {
@@ -49,19 +39,8 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        public class GetTopicModel
-        {
-            public string Name { get; set; }
-            public StatementListItemModel[] Statements { get; set; }
-        }
-
-        public class StatementListItemModel
-        {
-            public string Text { get; set; }
-        }
-
         [Authorize]
-        public async Task<IActionResult> Post([FromBody] PostTopicFormModel payload)
+        public async Task<IActionResult> Post([FromBody] TopicFormModel payload)
         {
             if (!User.IsInRole(Role.Admin))
             {
@@ -72,14 +51,8 @@ namespace Pobs.Web.Controllers
             return Ok();
         }
 
-        public class PostTopicFormModel
-        {
-            public string UrlFragment { get; set; }
-            public string Name { get; set; }
-        }
-
         [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
-        public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] PostStatementFormModel payload)
+        public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] StatementFormModel payload)
         {
             try
             {
@@ -90,11 +63,6 @@ namespace Pobs.Web.Controllers
             {
                 return NotFound();
             }
-        }
-
-        public class PostStatementFormModel
-        {
-            public string Text { get; set; }
         }
     }
 }

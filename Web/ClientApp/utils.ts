@@ -1,5 +1,5 @@
 import * as jwt_decode from 'jwt-decode';
-import { LoginResponseModel } from './server-models';
+import { LoggedInUserModel } from './server-models';
 
 export function handleResponse<T>(response: Response): Promise<T> {
     return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ export function handleError(error: any) {
     return Promise.reject(error && error.message);
 }
 
-export function isUserInRole(loggedInUser: LoginResponseModel, role: string): boolean {
+export function isUserInRole(loggedInUser: LoggedInUserModel, role: string): boolean {
     if (!loggedInUser || !loggedInUser.token) {
         return false;
     }

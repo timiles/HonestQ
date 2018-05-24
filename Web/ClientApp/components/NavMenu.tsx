@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
-import { LoginResponseModel } from '../server-models';
+import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils';
 
 interface NavMenuProps {
-    loggedInUser: LoginResponseModel;
+    loggedInUser: LoggedInUserModel;
 }
 
 class NavMenu extends React.Component<NavMenuProps, {}> {

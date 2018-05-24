@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Prerendering;
+using Pobs.Web.Models.Account;
 using Pobs.Web.Services;
-using WebApi.Controllers;
 
 namespace Pobs.Web.Controllers
 {
@@ -22,7 +22,7 @@ namespace Pobs.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            AccountController.LoginResponseModel loggedInModel = null;
+            LoggedInUserModel loggedInModel = null;
             if (Request.Cookies.TryGetValue("id_token", out string token))
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
@@ -33,7 +33,7 @@ namespace Pobs.Web.Controllers
                     var user = this.userService.GetById(userId);
                     if (user != null)
                     {
-                        loggedInModel = new AccountController.LoginResponseModel(user, token);
+                        loggedInModel = new LoggedInUserModel(user, token);
                     }
                 }
             }

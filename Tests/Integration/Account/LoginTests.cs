@@ -10,6 +10,7 @@ using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
 using Pobs.Web.Helpers;
+using Pobs.Web.Models.Account;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Account
@@ -57,19 +58,18 @@ namespace Pobs.Tests.Integration.Account
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = (dynamic)JsonConvert.DeserializeObject(responseContent);
-                Assert.Equal(_user.FirstName, (string)responseModel.firstName);
-                Assert.Equal(_user.Username, (string)responseModel.username);
+                var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
+                Assert.Equal(_user.FirstName, responseModel.FirstName);
+                Assert.Equal(_user.Username, responseModel.Username);
 
-                var token = (string)responseModel.token;
-                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 int.TryParse(identityClaim.Value, out int userId);
                 Assert.True(userId > 0);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.NotNull(idTokenCookie);
-                Assert.Equal(token, idTokenCookie.Value);
+                Assert.Equal(responseModel.Token, idTokenCookie.Value);
                 Assert.Equal("/", idTokenCookie.Path);
                 Assert.True(idTokenCookie.HttpOnly);
             }

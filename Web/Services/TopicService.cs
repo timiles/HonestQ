@@ -4,16 +4,15 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
-using Pobs.Web.Controllers;
 using Pobs.Web.Helpers;
-using static Pobs.Web.Controllers.TopicsController;
+using Pobs.Web.Models.Topics;
 
 namespace Pobs.Web.Services
 {
     public interface ITopicService
     {
-        Task<GetTopicsListModel> GetAll();
-        Task<GetTopicModel> Get(string topicUrlFragment);
+        Task<TopicsListModel> GetAll();
+        Task<TopicModel> Get(string topicUrlFragment);
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
         Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId);
     }
@@ -27,12 +26,12 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<GetTopicsListModel> GetAll()
+        public async Task<TopicsListModel> GetAll()
         {
             var topics = await _context.Topics.ToListAsync();
-            return new GetTopicsListModel
+            return new TopicsListModel
             {
-                Topics = topics.Select(x => new GetTopicsListModel.TopicListItemModel
+                Topics = topics.Select(x => new TopicsListModel.TopicListItemModel
                 {
                     UrlFragment = x.UrlFragment,
                     Name = x.Name
@@ -40,7 +39,7 @@ namespace Pobs.Web.Services
             };
         }
 
-        public async Task<GetTopicModel> Get(string topicUrlFragment)
+        public async Task<TopicModel> Get(string topicUrlFragment)
         {
             var topic = await _context.Topics
                 .Include(x => x.Statements)
@@ -49,7 +48,7 @@ namespace Pobs.Web.Services
             {
                 throw new EntityNotFoundException();
             }
-            return new GetTopicModel
+            return new TopicModel
             {
                 Name = topic.Name,
                 Statements = topic.Statements.Select(x => new StatementListItemModel

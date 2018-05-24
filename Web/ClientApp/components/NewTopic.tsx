@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { PostTopicFormModel } from '../server-models';
+import { TopicFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewTopicStore from '../store/NewTopic';
 import SubmitButton from './shared/SubmitButton';
@@ -10,7 +10,7 @@ type NewTopicProps = NewTopicStore.NewTopicState
     & typeof NewTopicStore.actionCreators
     & RouteComponentProps<{}>;
 
-class NewTopic extends React.Component<NewTopicProps, PostTopicFormModel> {
+class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
 
     constructor(props: NewTopicProps) {
         super(props);

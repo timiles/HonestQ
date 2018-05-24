@@ -1,6 +1,6 @@
 ﻿import { addTask, fetch } from 'domain-task';
 import { Reducer } from 'redux';
-import { GetTopicModel, PostStatementFormModel, StatementListItemModel } from '../server-models';
+import { TopicModel, StatementFormModel, StatementListItemModel } from '../server-models';
 import * as Utils from '../utils';
 import { AppThunkAction } from './';
 
@@ -10,7 +10,7 @@ import { AppThunkAction } from './';
 export interface TopicState {
     loading: boolean;
     urlFragment?: string;
-    topic?: GetTopicModel;
+    topic?: TopicModel;
     submittingStatement?: boolean;
     submittedStatement?: boolean;
     error?: string | null;
@@ -22,7 +22,7 @@ export interface TopicState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface GetTopicRequestedAction { type: 'GET_TOPIC_REQUESTED'; }
-interface GetTopicSuccessAction { type: 'GET_TOPIC_SUCCESS'; payload: { topic: GetTopicModel; urlFragment: string; }; }
+interface GetTopicSuccessAction { type: 'GET_TOPIC_SUCCESS'; payload: { topic: TopicModel; urlFragment: string; }; }
 interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { error: string; }; }
 interface StatementFormSubmittedAction { type: 'STATEMENT_FORM_SUBMITTED'; }
 interface StatementFormReceivedAction {
@@ -55,7 +55,7 @@ export const actionCreators = {
             };
 
             const fetchTask = fetch(`/api/topics/${topicUrlFragment}`, requestOptions)
-                .then((response) => Utils.handleResponse<GetTopicModel>(response), Utils.handleError)
+                .then((response) => Utils.handleResponse<TopicModel>(response), Utils.handleError)
                 .then((topicResponse) => {
                     dispatch({
                         type: 'GET_TOPIC_SUCCESS',
@@ -69,7 +69,7 @@ export const actionCreators = {
             addTask(fetchTask);
         })();
     },
-    submit: (topicUrlFragment: string, statementForm: PostStatementFormModel):
+    submit: (topicUrlFragment: string, statementForm: StatementFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'STATEMENT_FORM_SUBMITTED' });

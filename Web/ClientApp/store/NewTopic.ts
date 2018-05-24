@@ -1,13 +1,13 @@
 ﻿import { fetch } from 'domain-task';
 import { Reducer } from 'redux';
 import { AppThunkAction } from './';
-import { PostTopicFormModel } from './../server-models';
+import { TopicFormModel } from './../server-models';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface NewTopicState {
-    previouslySubmittedTopicFormModel?: PostTopicFormModel;
+    previouslySubmittedTopicFormModel?: TopicFormModel;
     submitting?: boolean;
     submitted?: boolean;
     error?: string | null;
@@ -19,7 +19,7 @@ export interface NewTopicState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface TopicFormSubmittedAction { type: 'TOPIC_FORM_SUBMITTED'; }
-interface TopicFormReceivedAction { type: 'TOPIC_FORM_RECEIVED'; payload: { topic: PostTopicFormModel; }; }
+interface TopicFormReceivedAction { type: 'TOPIC_FORM_RECEIVED'; payload: { topic: TopicFormModel; }; }
 interface TopicFormFailedAction { type: 'TOPIC_FORM_FAILED'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -33,7 +33,7 @@ type KnownAction = TopicFormSubmittedAction
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    submit: (topicForm: PostTopicFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    submit: (topicForm: TopicFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             dispatch({ type: 'TOPIC_FORM_SUBMITTED' });
 

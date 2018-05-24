@@ -1,6 +1,6 @@
 ﻿import { addTask, fetch } from 'domain-task';
 import { Reducer } from 'redux';
-import { GetTopicsListModel } from '../server-models';
+import { TopicsListModel } from '../server-models';
 import * as Utils from '../utils';
 import { AppThunkAction } from './';
 
@@ -9,7 +9,7 @@ import { AppThunkAction } from './';
 
 export interface HomeState {
     loading: boolean;
-    topicsList?: GetTopicsListModel;
+    topicsList?: TopicsListModel;
     error?: string;
 }
 
@@ -19,7 +19,7 @@ export interface HomeState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface GetTopicsListRequestedAction { type: 'GET_TOPICS_LIST_REQUESTED'; }
-interface GetTopicsListSuccessAction { type: 'GET_TOPICS_LIST_SUCCESS'; payload: GetTopicsListModel; }
+interface GetTopicsListSuccessAction { type: 'GET_TOPICS_LIST_SUCCESS'; payload: TopicsListModel; }
 interface GetTopicsListFailedAction { type: 'GET_TOPICS_LIST_FAILED'; payload: { error: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -43,7 +43,7 @@ export const actionCreators = {
             };
 
             const fetchTask = fetch('/api/topics', requestOptions)
-                .then((response) => Utils.handleResponse<GetTopicsListModel>(response), Utils.handleError)
+                .then((response) => Utils.handleResponse<TopicsListModel>(response), Utils.handleError)
                 .then((topicsListResponse) => {
                     dispatch({ type: 'GET_TOPICS_LIST_SUCCESS', payload: topicsListResponse });
                 })

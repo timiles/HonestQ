@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
+using Pobs.Web.Models.Topics;
 using Xunit;
-using static Pobs.Web.Controllers.TopicsController;
 
 namespace Pobs.Tests.Integration.Topics
 {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
+using Pobs.Web.Models.Topics;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Topics
@@ -37,21 +39,17 @@ namespace Pobs.Tests.Integration.Topics
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = (dynamic)JsonConvert.DeserializeObject(responseContent);
-                Assert.Equal(_topic.Name, (string)responseModel.name);
+                var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
+                Assert.Equal(_topic.Name, responseModel.Name);
 
                 Assert.Equal(3, _topic.Statements.Count);
-                Assert.Equal(_topic.Statements.Count, responseModel.statements.Count);
-                var statementTexts = new List<string>();
-                foreach (var statement in responseModel.statements)
-                {
-                    statementTexts.Add((string)statement.text);
-                }
+                Assert.Equal(_topic.Statements.Count, responseModel.Statements.Length);
+
+                var statementTexts = responseModel.Statements.Select(x => x.Text);
                 foreach (var statement in _topic.Statements)
                 {
                     Assert.Contains(statement.Text, statementTexts);
                 }
-                Assert.Equal(_topic.Statements.Count, responseModel.statements.Count);
             }
         }
 
