@@ -1,7 +1,6 @@
-﻿import { addTask, fetch } from 'domain-task';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { TopicsListModel } from '../server-models';
-import * as Utils from '../utils';
+import { getJson } from '../utils';
 import { AppThunkAction } from './';
 
 // -----------------
@@ -37,14 +36,8 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'GET_TOPICS_LIST_REQUESTED' });
 
-            const requestOptions: RequestInit = {
-                headers: { 'Content-Type': 'application/json' },
-                method: 'GET',
-            };
-
-            const fetchTask = fetch('/api/topics', requestOptions)
-                .then((response) => Utils.handleResponse<TopicsListModel>(response), Utils.handleError)
-                .then((topicsListResponse) => {
+            getJson<TopicsListModel>('/api/topics')
+                .then((topicsListResponse: TopicsListModel) => {
                     dispatch({ type: 'GET_TOPICS_LIST_SUCCESS', payload: topicsListResponse });
                 })
                 .catch((reason) => {
@@ -55,8 +48,6 @@ export const actionCreators = {
                         },
                     });
                 });
-
-            addTask(fetchTask);
         })();
     },
 };

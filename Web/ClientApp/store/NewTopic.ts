@@ -1,5 +1,5 @@
-﻿import { fetch } from 'domain-task';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
+import { postJson } from '../utils';
 import { AppThunkAction } from './';
 import { TopicFormModel } from './../server-models';
 
@@ -37,31 +37,19 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'TOPIC_FORM_SUBMITTED' });
 
-            if (topicForm.name && topicForm.urlFragment) {
-                const requestOptions: RequestInit = {
-                    body: JSON.stringify(topicForm),
-                    headers: {
-                        'Authorization': 'Bearer ' + getState().login.loggedInUser!.token,
-                        'Content-Type': 'application/json',
-                    },
-                    method: 'POST',
-                };
-
-                fetch('/api/topics', requestOptions)
-                    .then((response) => {
-                        if (response.ok) {
-                            dispatch({ type: 'TOPIC_FORM_RECEIVED', payload: { topic: topicForm } });
-                        } else {
-                            dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: response.statusText } });
-                        }
-                    })
-                    .catch((reason) => {
-                        dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: reason || 'Posting topic failed' } });
-                    });
-            } else {
+            if (!topicForm.name || !topicForm.urlFragment) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: null } });
+                return;
             }
+
+            postJson('/api/topics', topicForm, getState().login.loggedInUser!)
+                .then(() => {
+                    dispatch({ type: 'TOPIC_FORM_RECEIVED', payload: { topic: topicForm } });
+                })
+                .catch((reason: string) => {
+                    dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: reason } });
+                });
         })();
     },
 };

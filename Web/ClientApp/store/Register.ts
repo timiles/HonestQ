@@ -1,7 +1,7 @@
-﻿import { fetch } from 'domain-task';
-import { push } from 'react-router-redux';
+﻿import { push } from 'react-router-redux';
 import { Reducer } from 'redux';
 import { RegisterFormModel } from '../server-models';
+import { postJson } from '../utils';
 import { AppThunkAction } from './';
 
 // -----------------
@@ -40,29 +40,25 @@ export const actionCreators = {
             dispatch({ type: 'SUBMIT_REGISTRATION', payload: form });
 
             const user = form;
-            if (user.firstName && user.lastName && user.username && user.password) {
-                const requestOptions: RequestInit = {
-                    body: JSON.stringify(user),
-                    // Ensure cookie is stored from response
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    method: 'POST',
-                };
-
-                fetch('/api/account/register', requestOptions)
-                    .then((response) => {
-                        dispatch({ type: 'REGISTRATION_SUCCESS' });
-
-                        setTimeout(() => {
-                            // REVIEW: `KnownActions | RouterAction` causes other type inference issues. Investigate?
-                            dispatch(push('/login') as any);
-                            dispatch({ type: 'RESET_REGISTRATION' });
-                        }, 2000);
-                    })
-                    .catch((reason) => {
-                        dispatch({ type: 'REGISTRATION_FAILED', payload: { reason } });
-                    });
+            if (!user.firstName || !user.lastName || !user.username || !user.password) {
+                // Don't set an error message, the validation properties will display instead
+                dispatch({ type: 'REGISTRATION_FAILED', payload: { reason: '' } });
+                return;
             }
+
+            postJson('/api/account/register', user, null, true)
+                .then((response) => {
+                    dispatch({ type: 'REGISTRATION_SUCCESS' });
+
+                    setTimeout(() => {
+                        // REVIEW: `KnownActions | RouterAction` causes other type inference issues. Investigate?
+                        dispatch(push('/login') as any);
+                        dispatch({ type: 'RESET_REGISTRATION' });
+                    }, 2000);
+                })
+                .catch((reason) => {
+                    dispatch({ type: 'REGISTRATION_FAILED', payload: { reason } });
+                });
         })();
     },
 };

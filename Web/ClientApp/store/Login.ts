@@ -1,7 +1,6 @@
-﻿import { fetch } from 'domain-task';
-import { Reducer } from 'redux';
-import { LoginFormModel, LoggedInUserModel } from '../server-models';
-import * as Utils from '../utils';
+﻿import { Reducer } from 'redux';
+import { LoggedInUserModel, LoginFormModel } from '../server-models';
+import { postJson } from '../utils';
 import { AppThunkAction } from './';
 
 // -----------------
@@ -44,50 +43,31 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'START_LOGIN' });
 
-            if (loginForm.username && loginForm.password) {
-                const requestOptions: RequestInit = {
-                    body: JSON.stringify(loginForm),
-                    // Ensure cookie is stored from response
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    method: 'POST',
-                };
-
-                fetch('/api/account/login', requestOptions)
-                    .then((response) => Utils.handleResponse<LoggedInUserModel>(response), Utils.handleError)
-                    .then((loginResponse) => {
-                        // Login successful if there's a jwt token in the response
-                        if (loginResponse && loginResponse.token) {
-                            dispatch({ type: 'LOGIN_SUCCESS', payload: loginResponse });
-                        } else {
-                            dispatch({
-                                type: 'LOGIN_FAILED',
-                                payload: {
-                                    error: 'An error occurred, please try again',
-                                },
-                            });
-                        }
-                    })
-                    .catch((reason) => {
-                        dispatch({ type: 'LOGIN_FAILED', payload: { error: reason || 'Login failed' } });
-                    });
-            } else {
+            if (!loginForm.username || !loginForm.password) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'LOGIN_FAILED', payload: { error: null } });
+                return;
             }
+
+            postJson<LoggedInUserModel>('/api/account/login', loginForm, null, true)
+                .then((loginResponse: LoggedInUserModel) => {
+                    // Login successful if there's a jwt token in the response
+                    if (loginResponse && loginResponse.token) {
+                        dispatch({ type: 'LOGIN_SUCCESS', payload: loginResponse });
+                    } else {
+                        dispatch({ type: 'LOGIN_FAILED', payload: { error: 'An error occurred, please try again' } });
+                    }
+                })
+                .catch((reason: string) => {
+                    dispatch({ type: 'LOGIN_FAILED', payload: { error: reason || 'Login failed' } });
+                });
         })();
     },
     logout: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             dispatch({ type: 'START_LOGOUT' });
 
-            const requestOptions: RequestInit = {
-                // Ensure cookie is wiped in response
-                credentials: 'include',
-                method: 'POST',
-            };
-
-            fetch('/api/account/logout', requestOptions)
+            postJson('/api/account/logout', null, null, true)
                 .then(() => {
                     dispatch({ type: 'LOGOUT_SUCCESS' });
                 })

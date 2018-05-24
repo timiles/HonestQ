@@ -1,7 +1,6 @@
-﻿import { addTask, fetch } from 'domain-task';
-import { Reducer } from 'redux';
-import { TopicModel, StatementFormModel, StatementListItemModel } from '../server-models';
-import * as Utils from '../utils';
+﻿import { Reducer } from 'redux';
+import { StatementFormModel, StatementListItemModel, TopicModel } from '../server-models';
+import { getJson, postJson } from '../utils';
 import { AppThunkAction } from './';
 
 // -----------------
@@ -49,14 +48,8 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'GET_TOPIC_REQUESTED' });
 
-            const requestOptions: RequestInit = {
-                headers: { 'Content-Type': 'application/json' },
-                method: 'GET',
-            };
-
-            const fetchTask = fetch(`/api/topics/${topicUrlFragment}`, requestOptions)
-                .then((response) => Utils.handleResponse<TopicModel>(response), Utils.handleError)
-                .then((topicResponse) => {
+            getJson<TopicModel>(`/api/topics/${topicUrlFragment}`)
+                .then((topicResponse: TopicModel) => {
                     dispatch({
                         type: 'GET_TOPIC_SUCCESS',
                         payload: { topic: topicResponse, urlFragment: topicUrlFragment },
@@ -65,8 +58,6 @@ export const actionCreators = {
                 .catch((reason) => {
                     dispatch({ type: 'GET_TOPIC_FAILED', payload: { error: reason || 'Get topic failed' } });
                 });
-
-            addTask(fetchTask);
         })();
     },
     submit: (topicUrlFragment: string, statementForm: StatementFormModel):
@@ -74,41 +65,23 @@ export const actionCreators = {
             return (async () => {
                 dispatch({ type: 'STATEMENT_FORM_SUBMITTED' });
 
-                if (statementForm.text) {
-                    const requestOptions: RequestInit = {
-                        body: JSON.stringify(statementForm),
-                        headers: {
-                            'Authorization': 'Bearer ' + getState().login.loggedInUser!.token,
-                            'Content-Type': 'application/json',
-                        },
-                        method: 'POST',
-                    };
-
-                    fetch(`/api/topics/${topicUrlFragment}/statements`, requestOptions)
-                        .then((response: Response) => {
-                            if (response.ok) {
-                                response.json().then((responseModel: StatementListItemModel) => {
-                                    dispatch({
-                                        type: 'STATEMENT_FORM_RECEIVED',
-                                        payload: { statementListItem: responseModel },
-                                    });
-                                });
-                            } else {
-                                response.text().then((text) => {
-                                    dispatch({ type: 'STATEMENT_FORM_FAILED', payload: { error: text } });
-                                });
-                            }
-                        })
-                        .catch((reason: string) => {
-                            dispatch({
-                                type: 'STATEMENT_FORM_FAILED',
-                                payload: { error: reason || 'Posting statement failed' },
-                            });
-                        });
-                } else {
+                if (!statementForm.text) {
                     // Don't set an error message, the validation properties will display instead
                     dispatch({ type: 'STATEMENT_FORM_FAILED', payload: { error: null } });
+                    return;
                 }
+
+                postJson<StatementListItemModel>(
+                    `/api/topics/${topicUrlFragment}/statements`, statementForm, getState().login.loggedInUser!)
+                    .then((responseModel: StatementListItemModel) => {
+                        dispatch({ type: 'STATEMENT_FORM_RECEIVED', payload: { statementListItem: responseModel } });
+                    })
+                    .catch((reason: string) => {
+                        dispatch({
+                            type: 'STATEMENT_FORM_FAILED',
+                            payload: { error: reason || 'Posting statement failed' },
+                        });
+                    });
             })();
         },
 };
