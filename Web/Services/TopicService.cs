@@ -15,7 +15,7 @@ namespace Pobs.Web.Services
         Task<GetTopicsListModel> GetAll();
         Task<GetTopicModel> Get(string topicUrlFragment);
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
-        Task SaveStatement(string topicUrlFragment, string text, int postedByUserId);
+        Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId);
     }
 
     public class TopicService : ITopicService
@@ -52,7 +52,7 @@ namespace Pobs.Web.Services
             return new GetTopicModel
             {
                 Name = topic.Name,
-                Statements = topic.Statements.Select(x => new GetTopicModel.StatementModel
+                Statements = topic.Statements.Select(x => new StatementListItemModel
                 {
                     Text = x.Text
                 }).ToArray()
@@ -66,7 +66,7 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveStatement(string topicUrlFragment, string text, int postedByUserId)
+        public async Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId)
         {
             var topicTask = _context.Topics.FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
@@ -77,6 +77,11 @@ namespace Pobs.Web.Services
             }
             topic.Statements.Add(new Statement(text, await postedByUserTask, DateTime.UtcNow));
             await _context.SaveChangesAsync();
+
+            return new StatementListItemModel
+            {
+                Text = text
+            };
         }
     }
 }

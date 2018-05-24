@@ -26,13 +26,13 @@ export interface GetTopicsListModel {
     topics: TopicListItemModel[];
 }
 
-export interface StatementModel {
-    text: string;
-}
-
 export interface GetTopicModel {
     name: string;
-    statements: StatementModel[];
+    statements: StatementListItemModel[];
+}
+
+export interface StatementListItemModel {
+    text: string;
 }
 
 export interface PostTopicFormModel {

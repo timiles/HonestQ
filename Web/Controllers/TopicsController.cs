@@ -52,12 +52,12 @@ namespace Pobs.Web.Controllers
         public class GetTopicModel
         {
             public string Name { get; set; }
-            public StatementModel[] Statements { get; set; }
+            public StatementListItemModel[] Statements { get; set; }
+        }
 
-            public class StatementModel
-            {
-                public string Text { get; set; }
-            }
+        public class StatementListItemModel
+        {
+            public string Text { get; set; }
         }
 
         [Authorize]
@@ -83,8 +83,8 @@ namespace Pobs.Web.Controllers
         {
             try
             {
-                await _topicService.SaveStatement(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
-                return Ok();
+                var statementModel = await _topicService.SaveStatement(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
+                return Ok(statementModel);
             }
             catch (EntityNotFoundException)
             {

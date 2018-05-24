@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
 using Xunit;
+using static Pobs.Web.Controllers.TopicsController;
 
 namespace Pobs.Tests.Integration.Topics
 {
@@ -43,6 +45,11 @@ namespace Pobs.Tests.Integration.Topics
                 var url = _generateStatementsUrl(_topicUrlFragment);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
+
+                Assert.Equal(payload.Text, responseModel.Text);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
