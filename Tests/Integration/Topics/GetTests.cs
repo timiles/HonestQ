@@ -45,10 +45,10 @@ namespace Pobs.Tests.Integration.Topics
                 Assert.Equal(3, _topic.Statements.Count);
                 Assert.Equal(_topic.Statements.Count, responseModel.Statements.Length);
 
-                var statementTexts = responseModel.Statements.Select(x => x.Text);
                 foreach (var statement in _topic.Statements)
                 {
-                    Assert.Contains(statement.Text, statementTexts);
+                    var responseStatement = responseModel.Statements.Single(x => x.Id == statement.Id);
+                    Assert.Equal(statement.Text, responseStatement.Text);
                 }
             }
         }

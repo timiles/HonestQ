@@ -22,6 +22,7 @@ export interface StatementFormModel {
 }
 
 export interface StatementListItemModel {
+    id: number;
     text: string;
 }
 

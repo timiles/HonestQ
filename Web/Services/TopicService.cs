@@ -53,6 +53,7 @@ namespace Pobs.Web.Services
                 Name = topic.Name,
                 Statements = topic.Statements.Select(x => new StatementListItemModel
                 {
+                    Id = x.Id,
                     Text = x.Text
                 }).ToArray()
             };
