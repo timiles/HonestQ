@@ -11,11 +11,11 @@ namespace Pobs.Web.Services
 {
     public interface ITopicService
     {
-        Task<TopicsListModel> GetAll();
-        Task<TopicModel> Get(string topicUrlFragment);
+        Task<TopicsListModel> GetAllTopics();
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
-        Task<StatementModel> GetStatement(string topicUrlFragment, int statementId);
+        Task<TopicModel> GetTopic(string topicUrlFragment);
         Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId);
+        Task<StatementModel> GetStatement(string topicUrlFragment, int statementId);
         Task<CommentListItemModel> SaveComment(string topicUrlFragment, int statementId, string text, int postedByUserId);
     }
 
@@ -28,7 +28,7 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<TopicsListModel> GetAll()
+        public async Task<TopicsListModel> GetAllTopics()
         {
             var topics = await _context.Topics.ToListAsync();
             return new TopicsListModel
@@ -41,7 +41,18 @@ namespace Pobs.Web.Services
             };
         }
 
-        public async Task<TopicModel> Get(string topicUrlFragment)
+        public async Task SaveTopic(string urlFragment, string name, int postedByUserId)
+        {
+            if (_context.Topics.Any(x => x.UrlFragment == urlFragment))
+            {
+                throw new AppException($"A topic already exists at /{urlFragment}");
+            }
+            var postedByUser = await _context.Users.FindAsync(postedByUserId);
+            _context.Topics.Add(new Topic(urlFragment, name, postedByUser, DateTime.UtcNow));
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<TopicModel> GetTopic(string topicUrlFragment)
         {
             var topic = await _context.Topics
                 .Include(x => x.Statements)
@@ -61,32 +72,6 @@ namespace Pobs.Web.Services
             };
         }
 
-        public async Task SaveTopic(string urlFragment, string name, int postedByUserId)
-        {
-            if (_context.Topics.Any(x => x.UrlFragment == urlFragment))
-            {
-                throw new AppException($"A topic already exists at /{urlFragment}");
-            }
-            var postedByUser = await _context.Users.FindAsync(postedByUserId);
-            _context.Topics.Add(new Topic(urlFragment, name, postedByUser, DateTime.UtcNow));
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<StatementModel> GetStatement(string topicUrlFragment, int statementId)
-        {
-            var statement = await _context.Topics
-                .SelectMany(x => x.Statements)
-                .FirstOrDefaultAsync(x => x.Topic.UrlFragment == topicUrlFragment && x.Id == statementId);
-            if (statement == null)
-            {
-                return null;
-            }
-            return new StatementModel
-            {
-                Text = statement.Text
-            };
-        }
-
         public async Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId)
         {
             var topicTask = _context.Topics.FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
@@ -102,6 +87,21 @@ namespace Pobs.Web.Services
             return new StatementListItemModel
             {
                 Text = text
+            };
+        }
+
+        public async Task<StatementModel> GetStatement(string topicUrlFragment, int statementId)
+        {
+            var statement = await _context.Topics
+                .SelectMany(x => x.Statements)
+                .FirstOrDefaultAsync(x => x.Topic.UrlFragment == topicUrlFragment && x.Id == statementId);
+            if (statement == null)
+            {
+                return null;
+            }
+            return new StatementModel
+            {
+                Text = statement.Text
             };
         }
 

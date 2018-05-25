@@ -21,19 +21,8 @@ namespace Pobs.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var topicsListModel = await _topicService.GetAll();
+            var topicsListModel = await _topicService.GetAllTopics();
             return Ok(topicsListModel);
-        }
-
-        [Route("{topicUrlFragment}")]
-        public async Task<IActionResult> Get(string topicUrlFragment)
-        {
-            var topicModel = await _topicService.Get(topicUrlFragment);
-            if (topicModel != null)
-            {
-                return Ok(topicModel);
-            }
-            return NotFound();
         }
 
         [Authorize]
@@ -53,6 +42,17 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [Route("{topicUrlFragment}")]
+        public async Task<IActionResult> Get(string topicUrlFragment)
+        {
+            var topicModel = await _topicService.GetTopic(topicUrlFragment);
+            if (topicModel != null)
+            {
+                return Ok(topicModel);
+            }
+            return NotFound();
         }
 
         [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
