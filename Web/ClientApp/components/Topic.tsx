@@ -40,7 +40,6 @@ class Topic extends React.Component<TopicProps, StatementFormModel> {
         return (
             <div>
                 {loading && <p>Loading...</p>}
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {topic && (
                     <div>
                         <h1>{topic.name}</h1>
