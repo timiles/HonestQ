@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
 {
     public class Statement
     {
-        public Statement() { }
-        public Statement(string text, User postedByUser, DateTime postedAt)
+        public Statement()
+        {
+            this.Comments = new Collection<Comment>();
+        }
+        public Statement(string text, User postedByUser, DateTime postedAt) : this()
         {
             Text = text;
             PostedByUser = postedByUser;

@@ -66,6 +66,7 @@ namespace Pobs.Tests.Integration.Topics
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
 
+                    Assert.Equal(comment.Id, responseModel.Id);
                     Assert.Equal(comment.Text, responseModel.Text);
                     Assert.Equal(comment.PostedAt, responseModel.PostedAt);
                     Assert.Equal(comment.PostedByUser.Username, responseModel.PostedByUsername);

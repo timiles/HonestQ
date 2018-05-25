@@ -25,14 +25,19 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(User user, int numberOfStatements = 0)
+        public static Topic CreateTopic(User user, int numberOfStatements = 0, int numberOfCommentsPerStatement = 0)
         {
             var name = Utils.GenerateRandomString(10);
             var topic = new Topic(name, name, user, DateTime.UtcNow);
 
-            for (int i = 0; i < numberOfStatements; i++)
+            for (int s = 0; s < numberOfStatements; s++)
             {
-                topic.Statements.Add(new Statement(Utils.GenerateRandomString(10), user, DateTime.UtcNow));
+                var statement = new Statement(Utils.GenerateRandomString(10), user, DateTime.UtcNow);
+                for (int c = 0; c < numberOfCommentsPerStatement; c++)
+                {
+                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), user, DateTime.UtcNow));
+                }
+                topic.Statements.Add(statement);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

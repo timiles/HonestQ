@@ -94,6 +94,8 @@ namespace Pobs.Web.Services
         {
             var statement = await _context.Topics
                 .SelectMany(x => x.Statements)
+                .Include(x => x.Comments)
+                .Include(x => x.PostedByUser)
                 .FirstOrDefaultAsync(x => x.Topic.UrlFragment == topicUrlFragment && x.Id == statementId);
             if (statement == null)
             {
@@ -101,7 +103,14 @@ namespace Pobs.Web.Services
             }
             return new StatementModel
             {
-                Text = statement.Text
+                Text = statement.Text,
+                Comments = statement.Comments.Select(x => new CommentListItemModel
+                {
+                    Id = x.Id,
+                    Text = x.Text,
+                    PostedAt = x.PostedAt,
+                    PostedByUsername = x.PostedByUser.Username
+                }).ToArray()
             };
         }
 
@@ -119,11 +128,13 @@ namespace Pobs.Web.Services
             }
             var postedAt = DateTime.UtcNow;
             var postedByUser = await postedByUserTask;
-            statement.Comments.Add(new Comment(text, postedByUser, postedAt));
+            var comment = new Comment(text, postedByUser, postedAt);
+            statement.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
             return new CommentListItemModel
             {
+                Id = comment.Id,
                 Text = text,
                 PostedAt = postedAt,
                 PostedByUsername = postedByUser.Username

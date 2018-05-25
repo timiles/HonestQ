@@ -26,7 +26,7 @@ namespace Pobs.Tests.Integration.Topics
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
             // Create 3 statements so we can be sure we get the one we request
-            _topic = DataHelpers.CreateTopic(user, 3);
+            _topic = DataHelpers.CreateTopic(user, 3, 3);
         }
 
         [Fact]
@@ -46,6 +46,15 @@ namespace Pobs.Tests.Integration.Topics
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<StatementModel>(responseContent);
                 Assert.Equal(statement.Text, responseModel.Text);
+
+                Assert.Equal(3, statement.Comments.Count);
+                Assert.Equal(statement.Comments.Count, responseModel.Comments.Length);
+
+                foreach (var comment in statement.Comments)
+                {
+                    var responseComment = responseModel.Comments.Single(x => x.Id == comment.Id);
+                    Assert.Equal(comment.Text, responseComment.Text);
+                }
             }
         }
 
