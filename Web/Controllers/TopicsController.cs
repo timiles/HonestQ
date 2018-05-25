@@ -28,15 +28,12 @@ namespace Pobs.Web.Controllers
         [Route("{topicUrlFragment}")]
         public async Task<IActionResult> Get(string topicUrlFragment)
         {
-            try
+            var topicModel = await _topicService.Get(topicUrlFragment);
+            if (topicModel != null)
             {
-                var topicModel = await _topicService.Get(topicUrlFragment);
                 return Ok(topicModel);
             }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
 
         [Authorize]
@@ -61,15 +58,12 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
         public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] StatementFormModel payload)
         {
-            try
+            var statementModel = await _topicService.SaveStatement(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
+            if (statementModel != null)
             {
-                var statementModel = await _topicService.SaveStatement(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
                 return Ok(statementModel);
             }
-            catch (EntityNotFoundException)
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Pobs.Web.Services
                 .FirstOrDefaultAsync(x => x.UrlFragment == topicUrlFragment);
             if (topic == null)
             {
-                throw new EntityNotFoundException();
+                return null;
             }
             return new TopicModel
             {
@@ -77,7 +77,7 @@ namespace Pobs.Web.Services
             var topic = await topicTask;
             if (topic == null)
             {
-                throw new EntityNotFoundException();
+                return null;
             }
             topic.Statements.Add(new Statement(text, await postedByUserTask, DateTime.UtcNow));
             await _context.SaveChangesAsync();
