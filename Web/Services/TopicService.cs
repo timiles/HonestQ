@@ -16,6 +16,7 @@ namespace Pobs.Web.Services
         Task SaveTopic(string urlFragment, string name, int postedByUserId);
         Task<StatementModel> GetStatement(string topicUrlFragment, int statementId);
         Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId);
+        Task<CommentListItemModel> SaveComment(string topicUrlFragment, int statementId, string text, int postedByUserId);
     }
 
     public class TopicService : ITopicService
@@ -101,6 +102,31 @@ namespace Pobs.Web.Services
             return new StatementListItemModel
             {
                 Text = text
+            };
+        }
+
+        public async Task<CommentListItemModel> SaveComment(string topicUrlFragment, int statementId, string text, int postedByUserId)
+        {
+            var statementTask = _context.Topics
+                .SelectMany(x => x.Statements)
+                .Include(x => x.Comments)
+                .FirstOrDefaultAsync(x => x.Topic.UrlFragment == topicUrlFragment && x.Id == statementId);
+            var postedByUserTask = _context.Users.FindAsync(postedByUserId);
+            var statement = await statementTask;
+            if (statement == null)
+            {
+                return null;
+            }
+            var postedAt = DateTime.UtcNow;
+            var postedByUser = await postedByUserTask;
+            statement.Comments.Add(new Comment(text, postedByUser, postedAt));
+            await _context.SaveChangesAsync();
+
+            return new CommentListItemModel
+            {
+                Text = text,
+                PostedAt = postedAt,
+                PostedByUsername = postedByUser.Username
             };
         }
     }

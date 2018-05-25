@@ -25,8 +25,10 @@ namespace Pobs.Domain
             modelBuilder.Entity<Topic>().HasIndex(x => x.UrlFragment).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
 
-            // Don't cascase deletes from Statement to Topic
+            // Don't cascase deletes from Collection to Parent
             modelBuilder.Entity<Statement>().HasOne(x => x.Topic).WithMany(x => x.Statements)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            modelBuilder.Entity<Comment>().HasOne(x => x.Statement).WithMany(x => x.Comments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
         }
     }

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
 {
-    public class Statement
+    public class Comment
     {
-        public Statement() { }
-        public Statement(string text, User postedByUser, DateTime postedAt)
+        public Comment() { }
+        public Comment(string text, User postedByUser, DateTime postedAt)
         {
             Text = text;
             PostedByUser = postedByUser;
@@ -16,18 +15,17 @@ namespace Pobs.Domain.Entities
 
         public int Id { get; set; }
 
+
         [Required, MaxLength(280)]
         public string Text { get; set; }
 
         [Required]
-        public virtual User PostedByUser { get; set; }
+        public User PostedByUser { get; set; }
 
         public DateTime PostedAt { get; set; }
 
 
         [Required]
-        public virtual Topic Topic { get; set; }
-
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual Statement Statement { get; set; }
     }
 }

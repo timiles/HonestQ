@@ -76,5 +76,16 @@ namespace Pobs.Web.Controllers
             }
             return NotFound();
         }
+
+        [HttpPost, Route("{topicUrlFragment}/statements/{statementId}/comments"), Authorize]
+        public async Task<IActionResult> AddComment(string topicUrlFragment, int statementId, [FromBody] CommentFormModel payload)
+        {
+            var commentModel = await _topicService.SaveComment(topicUrlFragment, statementId, payload.Text, User.Identity.ParseUserId());
+            if (commentModel != null)
+            {
+                return Ok(commentModel);
+            }
+            return NotFound();
+        }
     }
 }
