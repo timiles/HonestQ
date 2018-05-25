@@ -60,6 +60,10 @@ namespace Pobs.Web.Services
 
         public async Task SaveTopic(string urlFragment, string name, int postedByUserId)
         {
+            if (_context.Topics.Any(x => x.UrlFragment == urlFragment))
+            {
+                throw new AppException($"A topic already exists at /{urlFragment}");
+            }
             var postedByUser = await _context.Users.FindAsync(postedByUserId);
             _context.Topics.Add(new Topic(urlFragment, name, postedByUser, DateTime.UtcNow));
             await _context.SaveChangesAsync();

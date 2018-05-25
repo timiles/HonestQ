@@ -47,8 +47,15 @@ namespace Pobs.Web.Controllers
                 return Forbid();
             }
 
-            await _topicService.SaveTopic(payload.UrlFragment, payload.Name, User.Identity.ParseUserId());
-            return Ok();
+            try
+            {
+                await _topicService.SaveTopic(payload.UrlFragment, payload.Name, User.Identity.ParseUserId());
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
