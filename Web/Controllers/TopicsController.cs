@@ -65,5 +65,16 @@ namespace Pobs.Web.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet, Route("{topicUrlFragment}/statements/{statementId}")]
+        public async Task<IActionResult> GetStatement(string topicUrlFragment, int statementId)
+        {
+            var statementModel = await _topicService.GetStatement(topicUrlFragment, statementId);
+            if (statementModel != null)
+            {
+                return Ok(statementModel);
+            }
+            return NotFound();
+        }
     }
 }

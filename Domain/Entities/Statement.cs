@@ -22,5 +22,9 @@ namespace Pobs.Domain.Entities
         public virtual User PostedByUser { get; set; }
 
         public DateTime PostedAt { get; set; }
+
+
+        [Required]
+        public virtual Topic Topic { get; set; }
     }
 }
