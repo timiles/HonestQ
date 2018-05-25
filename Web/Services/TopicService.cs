@@ -31,14 +31,7 @@ namespace Pobs.Web.Services
         public async Task<TopicsListModel> GetAllTopics()
         {
             var topics = await _context.Topics.ToListAsync();
-            return new TopicsListModel
-            {
-                Topics = topics.Select(x => new TopicsListModel.TopicListItemModel
-                {
-                    UrlFragment = x.UrlFragment,
-                    Name = x.Name
-                }).ToArray()
-            };
+            return new TopicsListModel(topics);
         }
 
         public async Task SaveTopic(string urlFragment, string name, int postedByUserId)
@@ -61,15 +54,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return new TopicModel
-            {
-                Name = topic.Name,
-                Statements = topic.Statements.Select(x => new StatementListItemModel
-                {
-                    Id = x.Id,
-                    Text = x.Text
-                }).ToArray()
-            };
+            return new TopicModel(topic);
         }
 
         public async Task<StatementListItemModel> SaveStatement(string topicUrlFragment, string text, int postedByUserId)
@@ -81,13 +66,11 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            topic.Statements.Add(new Statement(text, await postedByUserTask, DateTime.UtcNow));
+            var statement = new Statement(text, await postedByUserTask, DateTime.UtcNow);
+            topic.Statements.Add(statement);
             await _context.SaveChangesAsync();
 
-            return new StatementListItemModel
-            {
-                Text = text
-            };
+            return new StatementListItemModel(statement);
         }
 
         public async Task<StatementModel> GetStatement(string topicUrlFragment, int statementId)
@@ -101,17 +84,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return new StatementModel
-            {
-                Text = statement.Text,
-                Comments = statement.Comments.Select(x => new CommentListItemModel
-                {
-                    Id = x.Id,
-                    Text = x.Text,
-                    PostedAt = x.PostedAt,
-                    PostedByUsername = x.PostedByUser.Username
-                }).ToArray()
-            };
+            return new StatementModel(statement);
         }
 
         public async Task<CommentListItemModel> SaveComment(string topicUrlFragment, int statementId, string text, int postedByUserId)
@@ -126,19 +99,11 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            var postedAt = DateTime.UtcNow;
-            var postedByUser = await postedByUserTask;
-            var comment = new Comment(text, postedByUser, postedAt);
+            var comment = new Comment(text, await postedByUserTask, DateTime.UtcNow);
             statement.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return new CommentListItemModel
-            {
-                Id = comment.Id,
-                Text = text,
-                PostedAt = postedAt,
-                PostedByUsername = postedByUser.Username
-            };
+            return new CommentListItemModel(comment);
         }
     }
 }

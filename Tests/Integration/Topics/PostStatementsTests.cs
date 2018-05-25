@@ -46,23 +46,25 @@ namespace Pobs.Tests.Integration.Topics
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var topic = dbContext.Topics
+                        .Include(x => x.Statements)
+                            .ThenInclude(x => x.PostedByUser)
+                        .Single(x => x.Id == _topicId);
 
-                Assert.Equal(payload.Text, responseModel.Text);
-            }
+                    var statement = topic.Statements.Single();
+                    Assert.Equal(payload.Text, statement.Text);
+                    Assert.Equal(_userId, statement.PostedByUser.Id);
+                    Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                var topic = dbContext.Topics
-                    .Include(x => x.Statements)
-                        .ThenInclude(x => x.PostedByUser)
-                    .Single(x => x.Id == _topicId);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
 
-                var statement = topic.Statements.Single();
-                Assert.Equal(payload.Text, statement.Text);
-                Assert.Equal(_userId, statement.PostedByUser.Id);
-                Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.Equal(statement.Id, responseModel.Id);
+                    Assert.Equal(statement.Text, responseModel.Text);
+                }
+
             }
         }
 
