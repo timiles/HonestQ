@@ -54,7 +54,19 @@ function fetchJson<T>(
                     }
                 } else {
                     // return error message from response body
-                    response.text().then((text) => reject(text));
+                    response.text().then((text) => {
+                        if (text) {
+                            reject(text);
+                        } else {
+                            switch (response.status) {
+                                case 500:
+                                    reject('An unexpected error has occurred. If it persists, please contact support.');
+                                    break;
+                                default:
+                                    reject(response.statusText);
+                            }
+                        }
+                    });
                 }
             }, (reason: any) => {
                 reject(reason.toString());
