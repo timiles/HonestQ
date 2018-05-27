@@ -17,6 +17,17 @@ export interface RegisterFormModel {
     password: string;
 }
 
+export interface CommentFormModel {
+    text: string;
+}
+
+export interface CommentListItemModel {
+    id: number;
+    text: string;
+    postedAt: Date;
+    postedByUsername: string;
+}
+
 export interface StatementFormModel {
     text: string;
 }
@@ -24,6 +35,11 @@ export interface StatementFormModel {
 export interface StatementListItemModel {
     id: number;
     text: string;
+}
+
+export interface StatementModel {
+    text: string;
+    comments: CommentListItemModel[];
 }
 
 export interface TopicFormModel {

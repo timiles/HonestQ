@@ -16,7 +16,7 @@ export const routes = (
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
             <Route path="/register" component={Register} />
-            <Route path="/:topicUrlFragment" component={Topic} />
+            <Route path="/:topicUrlFragment/:statementId?" component={Topic} />
         </Switch>
     </Layout>
 );
