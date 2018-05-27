@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { CommentFormModel, StatementFormModel } from '../server-models';
-import { ApplicationState } from '../store';
-import * as TopicStore from '../store/Topic';
-import CommentForm from './Topic/CommentForm';
-import Statement from './Topic/Statement';
-import StatementForm from './Topic/StatementForm';
-import Topic from './Topic/Topic';
+import { CommentFormModel, StatementFormModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as TopicStore from '../../store/Topic';
+import CommentForm from './../Topic/CommentForm';
+import Statement from './../Topic/Statement';
+import StatementForm from './../Topic/StatementForm';
+import Topic from './../Topic/Topic';
 
 type ContainerProps = TopicStore.ContainerState
     & typeof TopicStore.actionCreators
