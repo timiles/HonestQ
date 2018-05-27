@@ -1,4 +1,6 @@
 ﻿import { Reducer } from 'redux';
+import { TopicProps } from '../components/Topic/Topic';
+import { FormProps } from '../components/shared/FormProps';
 import { StatementFormModel, StatementListItemModel, TopicModel } from '../server-models';
 import { getJson, postJson } from '../utils';
 import { AppThunkAction } from './';
@@ -6,13 +8,10 @@ import { AppThunkAction } from './';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface TopicState {
-    loading: boolean;
-    urlFragment?: string;
-    topic?: TopicModel;
-    submittingStatement?: boolean;
-    submittedStatement?: boolean;
-    error?: string | null;
+export interface ContainerState {
+    currentUrlFragment?: string;
+    topic: TopicProps;
+    statementForm: FormProps<StatementFormModel>;
 }
 
 // -----------------
@@ -60,7 +59,7 @@ export const actionCreators = {
                 });
         })();
     },
-    submit: (topicUrlFragment: string, statementForm: StatementFormModel):
+    submitStatement: (topicUrlFragment: string, statementForm: StatementFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'STATEMENT_FORM_SUBMITTED' });
@@ -90,45 +89,55 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: TopicState = { loading: false };
+const defaultState: ContainerState = { topic: {}, statementForm: {} };
 
-export const reducer: Reducer<TopicState> = (state: TopicState, action: KnownAction) => {
+export const reducer: Reducer<ContainerState> = (state: ContainerState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_TOPIC_REQUESTED':
-            return { loading: true };
+            return {
+                topic: { loading: true },
+                statementForm: state.statementForm,
+            };
         case 'GET_TOPIC_SUCCESS':
-            return { loading: false, topic: action.payload.topic, urlFragment: action.payload.urlFragment };
+            return {
+                currentUrlFragment: action.payload.urlFragment,
+                topic: { model: action.payload.topic },
+                statementForm: state.statementForm,
+            };
         case 'GET_TOPIC_FAILED':
-            return { loading: false, error: action.payload.error };
+            return {
+                topic: { error: action.payload.error },
+                statementForm: state.statementForm,
+            };
         case 'STATEMENT_FORM_SUBMITTED':
             return {
-                loading: false,
-                submittingStatement: true,
-                submittedStatement: true,
+                currentUrlFragment: state.currentUrlFragment,
                 topic: state.topic,
-                urlFragment: state.urlFragment,
+                statementForm: {
+                    submitting: true,
+                    submitted: true,
+                },
             };
         case 'STATEMENT_FORM_RECEIVED': {
+            const topicModel = state.topic!.model!;
             // Slice for immutability
-            const newStatements = state.topic!.statements.slice();
-            newStatements.push(action.payload.statementListItem);
-            const newTopic = { ...state.topic!, statements: newStatements };
+            const statementsNext = topicModel.statements.slice();
+            statementsNext.push(action.payload.statementListItem);
+            const topicNext = { ...topicModel, statements: statementsNext };
             return {
-                loading: false,
-                submittingStatement: false,
-                submittedStatement: false,
-                topic: newTopic,
-                urlFragment: state.urlFragment,
+                currentUrlFragment: state.currentUrlFragment,
+                topic: { model: topicNext },
+                statementForm: {},
             };
         }
         case 'STATEMENT_FORM_FAILED':
             return {
-                loading: false,
-                submittingStatement: false,
-                submittedStatement: true,
-                error: action.payload.error,
+                currentUrlFragment: state.currentUrlFragment,
                 topic: state.topic,
-                urlFragment: state.urlFragment,
+                statementForm: {
+                    submitted: true,
+                    error: action.payload.error,
+                },
             };
 
         default:
