@@ -196,6 +196,8 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     submitting: true,
                     submitted: true,
                 },
+                statement: state.statement,
+                commentForm: state.commentForm,
             };
         case 'STATEMENT_FORM_RECEIVED': {
             const topicModel = state.topic!.model!;
@@ -218,6 +220,8 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     submitted: true,
                     error: action.payload.error,
                 },
+                statement: state.statement,
+                commentForm: state.commentForm,
             };
         case 'GET_STATEMENT_REQUESTED':
             return {
