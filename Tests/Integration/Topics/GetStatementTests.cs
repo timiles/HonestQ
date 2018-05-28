@@ -16,8 +16,8 @@ namespace Pobs.Tests.Integration.Topics
 {
     public class GetStatementTests : IDisposable
     {
-        private string _generateUrl(string topicUrlFragment, int statementId) =>
-            $"/api/topics/{topicUrlFragment}/statements/{statementId}";
+        private string _generateUrl(string topicSlug, int statementId) =>
+            $"/api/topics/{topicSlug}/statements/{statementId}";
         private readonly int _userId;
         private readonly Topic _topic;
 
@@ -39,7 +39,7 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl(_topic.UrlFragment, statement.Id);
+                var url = _generateUrl(_topic.Slug, statement.Id);
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -59,13 +59,13 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task UnknownUrlFragment_ShouldReturnNotFound()
+        public async Task UnknownSlug_ShouldReturnNotFound()
         {
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl("INCORRECT_URL_FRAGMENT", _topic.Statements.First().Id);
+                var url = _generateUrl("INCORRECT_SLUG", _topic.Statements.First().Id);
                 var response = await client.GetAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
@@ -78,7 +78,7 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl(_topic.UrlFragment, 0);
+                var url = _generateUrl(_topic.Slug, 0);
                 var response = await client.GetAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }

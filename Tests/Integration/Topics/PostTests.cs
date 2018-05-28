@@ -27,7 +27,7 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                UrlFragment = "Topic_(1984)_" + Utils.GenerateRandomString(10),
+                Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
                 Name = "Topic (1982)"
             };
             using (var server = new TestServer(new WebHostBuilder()
@@ -46,7 +46,7 @@ namespace Pobs.Tests.Integration.Topics
                 dbContext.Entry(user).Collection(b => b.Topics).Load();
 
                 var topic = user.Topics.Single();
-                Assert.Equal(payload.UrlFragment, topic.UrlFragment);
+                Assert.Equal(payload.Slug, topic.Slug);
                 Assert.Equal(payload.Name, topic.Name);
                 Assert.Equal(_user.Id, topic.PostedByUser.Id);
                 Assert.True(topic.PostedAt > DateTime.UtcNow.AddMinutes(-1));
@@ -54,13 +54,13 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task TopicUrlFragmentAlreadyExists_ShouldGetBadRequest()
+        public async Task TopicSlugAlreadyExists_ShouldGetBadRequest()
         {
             var topic = DataHelpers.CreateTopic(_user);
 
             var payload = new
             {
-                UrlFragment = topic.UrlFragment,
+                Slug = topic.Slug,
                 Name = "Another topic with the same url"
             };
             using (var server = new TestServer(new WebHostBuilder()
@@ -73,7 +73,7 @@ namespace Pobs.Tests.Integration.Topics
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"A topic already exists at /{topic.UrlFragment}", responseContent);
+                Assert.Equal($"A topic already exists at /{topic.Slug}", responseContent);
             }
         }
 
@@ -82,7 +82,7 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                UrlFragment = "Topic_(1984)_" + Utils.GenerateRandomString(10),
+                Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
                 Name = "Topic (1982)"
             };
             using (var server = new TestServer(new WebHostBuilder()

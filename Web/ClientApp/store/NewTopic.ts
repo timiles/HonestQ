@@ -37,7 +37,7 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'TOPIC_FORM_SUBMITTED' });
 
-            if (!topicForm.name || !topicForm.urlFragment) {
+            if (!topicForm.name || !topicForm.slug) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: null } });
                 return;

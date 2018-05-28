@@ -45,9 +45,9 @@ namespace Pobs.Tests.Integration.Topics
                 // Check that all of our Topics are in the response. (There may be more too.)
                 foreach (var topic in _topics)
                 {
-                    var responseTopic = responseModel.Topics.Single(x => x.UrlFragment == topic.UrlFragment);
+                    var responseTopic = responseModel.Topics.Single(x => x.Slug == topic.Slug);
                     Assert.Equal(topic.Name, responseTopic.Name);
-                    Assert.Equal(topic.UrlFragment, responseTopic.UrlFragment);
+                    Assert.Equal(topic.Slug, responseTopic.Slug);
                 }
             }
         }

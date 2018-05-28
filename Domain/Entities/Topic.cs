@@ -11,9 +11,9 @@ namespace Pobs.Domain.Entities
         {
             this.Statements = new Collection<Statement>();
         }
-        public Topic(string urlFragment, string name, User postedByUser, DateTime postedAt) : this()
+        public Topic(string slug, string name, User postedByUser, DateTime postedAt) : this()
         {
-            UrlFragment = urlFragment;
+            Slug = slug;
             Name = name;
             PostedByUser = postedByUser;
             PostedAt = postedAt;
@@ -22,7 +22,7 @@ namespace Pobs.Domain.Entities
         public int Id { get; set; }
 
         [Required, MaxLength(100)]
-        public string UrlFragment { get; set; }
+        public string Slug { get; set; }
 
         [Required, MaxLength(100)]
         public string Name { get; set; }

@@ -5,7 +5,7 @@ import { TopicModel } from '../../server-models';
 export interface TopicProps {
     loading?: boolean;
     error?: string;
-    urlFragment?: string;
+    slug?: string;
     model?: TopicModel;
 }
 
@@ -16,7 +16,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
     }
 
     public render() {
-        const { loading, error, urlFragment, model } = this.props;
+        const { loading, error, slug, model } = this.props;
         return (
             <div className="col-md-6">
                 {loading && <p>Loading...</p>}
@@ -27,7 +27,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         {this.props.children}
                         {model.statements.map((x, i) =>
                             <div key={`statement_${i}`}>
-                                <Link to={`/${urlFragment}/${x.id}`} className="btn btn-lg btn-default" role="button">
+                                <Link to={`/${slug}/${x.id}`} className="btn btn-lg btn-default" role="button">
                                     &ldquo;{x.text}&rdquo; &rarr;
                                 </Link>
                             </div>)}

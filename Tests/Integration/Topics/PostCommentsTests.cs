@@ -16,8 +16,8 @@ namespace Pobs.Tests.Integration.Topics
 {
     public class PostCommentsTests : IDisposable
     {
-        private string _generateUrl(string topicUrlFragment, int statementId) =>
-            $"/api/topics/{topicUrlFragment}/statements/{statementId}/comments";
+        private string _generateUrl(string topicSlug, int statementId) =>
+            $"/api/topics/{topicSlug}/statements/{statementId}/comments";
         private readonly int _userId;
         private Topic _topic;
 
@@ -44,7 +44,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_userId);
 
-                var url = _generateUrl(_topic.UrlFragment, statementId);
+                var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -86,7 +86,7 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl(_topic.UrlFragment, statementId);
+                var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
@@ -105,7 +105,7 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task UnknownUrlFragment_ShouldReturnNotFound()
+        public async Task UnknownSlug_ShouldReturnNotFound()
         {
             var payload = new
             {
@@ -117,7 +117,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_userId);
 
-                var url = _generateUrl("INCORRECT_URL_FRAGMENT", _topic.Statements.First().Id);
+                var url = _generateUrl("INCORRECT_SLUG", _topic.Statements.First().Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
@@ -136,7 +136,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_userId);
 
-                var url = _generateUrl(_topic.UrlFragment, 0);
+                var url = _generateUrl(_topic.Slug, 0);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }

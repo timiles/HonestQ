@@ -22,10 +22,10 @@ export interface ContainerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetTopicRequestedAction { type: 'GET_TOPIC_REQUESTED'; payload: { topicUrlFragment: string; }; }
+interface GetTopicRequestedAction { type: 'GET_TOPIC_REQUESTED'; payload: { topicSlug: string; }; }
 interface GetTopicSuccessAction {
     type: 'GET_TOPIC_SUCCESS';
-    payload: { topic: TopicModel; topicUrlFragment: string; };
+    payload: { topic: TopicModel; topicSlug: string; };
 }
 interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { error: string; }; }
 interface StatementFormSubmittedAction { type: 'STATEMENT_FORM_SUBMITTED'; }
@@ -43,7 +43,7 @@ interface GetStatementSuccessAction {
     type: 'GET_STATEMENT_SUCCESS';
     payload: {
         statement: StatementModel;
-        topicUrlFragment: string;
+        topicSlug: string;
         statementId: number;
     };
 }
@@ -75,15 +75,15 @@ type KnownAction = GetTopicRequestedAction
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getTopic: (topicUrlFragment: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    getTopic: (topicSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_TOPIC_REQUESTED', payload: { topicUrlFragment } });
+            dispatch({ type: 'GET_TOPIC_REQUESTED', payload: { topicSlug } });
 
-            getJson<TopicModel>(`/api/topics/${topicUrlFragment}`)
+            getJson<TopicModel>(`/api/topics/${topicSlug}`)
                 .then((topicResponse: TopicModel) => {
                     dispatch({
                         type: 'GET_TOPIC_SUCCESS',
-                        payload: { topic: topicResponse, topicUrlFragment },
+                        payload: { topic: topicResponse, topicSlug },
                     });
                 })
                 .catch((reason) => {
@@ -91,7 +91,7 @@ export const actionCreators = {
                 });
         })();
     },
-    submitStatement: (topicUrlFragment: string, statementForm: StatementFormModel):
+    submitStatement: (topicSlug: string, statementForm: StatementFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'STATEMENT_FORM_SUBMITTED' });
@@ -103,7 +103,7 @@ export const actionCreators = {
                 }
 
                 postJson<StatementListItemModel>(
-                    `/api/topics/${topicUrlFragment}/statements`, statementForm, getState().login.loggedInUser!)
+                    `/api/topics/${topicSlug}/statements`, statementForm, getState().login.loggedInUser!)
                     .then((responseModel: StatementListItemModel) => {
                         dispatch({ type: 'STATEMENT_FORM_RECEIVED', payload: { statementListItem: responseModel } });
                     })
@@ -115,16 +115,16 @@ export const actionCreators = {
                     });
             })();
         },
-    getStatement: (topicUrlFragment: string, statementId: number): AppThunkAction<KnownAction> =>
+    getStatement: (topicSlug: string, statementId: number): AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'GET_STATEMENT_REQUESTED', payload: { statementId } });
 
-                getJson<StatementModel>(`/api/topics/${topicUrlFragment}/statements/${statementId}`)
+                getJson<StatementModel>(`/api/topics/${topicSlug}/statements/${statementId}`)
                     .then((statementResponse: StatementModel) => {
                         dispatch({
                             type: 'GET_STATEMENT_SUCCESS',
-                            payload: { statement: statementResponse, topicUrlFragment, statementId },
+                            payload: { statement: statementResponse, topicSlug, statementId },
                         });
                     })
                     .catch((reason) => {
@@ -135,7 +135,7 @@ export const actionCreators = {
                     });
             })();
         },
-    submitComment: (topicUrlFragment: string, statementId: number, commentForm: CommentFormModel):
+    submitComment: (topicSlug: string, statementId: number, commentForm: CommentFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'COMMENT_FORM_SUBMITTED' });
@@ -147,7 +147,7 @@ export const actionCreators = {
                 }
 
                 postJson<CommentListItemModel>(
-                    `/api/topics/${topicUrlFragment}/statements/${statementId}/comments`,
+                    `/api/topics/${topicSlug}/statements/${statementId}/comments`,
                     commentForm, getState().login.loggedInUser!)
                     .then((responseModel: CommentListItemModel) => {
                         dispatch({ type: 'COMMENT_FORM_RECEIVED', payload: { commentListItem: responseModel } });
@@ -174,13 +174,13 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
             return {
                 topic: {
                     loading: true,
-                    urlFragment: action.payload.topicUrlFragment,
+                    slug: action.payload.topicSlug,
                 },
             };
         case 'GET_TOPIC_SUCCESS':
             return {
                 topic: {
-                    urlFragment: action.payload.topicUrlFragment,
+                    slug: action.payload.topicSlug,
                     model: action.payload.topic,
                 },
                 statementForm: {},
@@ -207,7 +207,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
             const topicNext = { ...topicModel, statements: statementsNext };
             return {
                 topic: {
-                    urlFragment: state.topic!.urlFragment,
+                    slug: state.topic!.slug,
                     model: topicNext,
                 },
                 statementForm: {},

@@ -11,7 +11,7 @@ import Topic from './../Topic/Topic';
 
 type ContainerProps = TopicStore.ContainerState
     & typeof TopicStore.actionCreators
-    & RouteComponentProps<{ topicUrlFragment: string, statementId?: number }>;
+    & RouteComponentProps<{ topicSlug: string, statementId?: number }>;
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -22,17 +22,17 @@ class Container extends React.Component<ContainerProps, {}> {
     public componentWillMount() {
         // This will also run on server side render
         if (this.shouldGetTopic()) {
-            this.props.getTopic(this.props.match.params.topicUrlFragment);
+            this.props.getTopic(this.props.match.params.topicSlug);
         }
         if (this.shouldGetStatement()) {
-            this.props.getStatement(this.props.match.params.topicUrlFragment, this.props.match.params.statementId!);
+            this.props.getStatement(this.props.match.params.topicSlug, this.props.match.params.statementId!);
         }
     }
 
     public componentDidUpdate(prevProps: ContainerProps) {
         // This is run every time the route changes
         if (this.shouldGetStatement()) {
-            this.props.getStatement(this.props.match.params.topicUrlFragment, this.props.match.params.statementId!);
+            this.props.getStatement(this.props.match.params.topicSlug, this.props.match.params.statementId!);
         }
     }
 
@@ -41,11 +41,11 @@ class Container extends React.Component<ContainerProps, {}> {
         // REVIEW: Is there a better place to do these?
         if (statementForm && !statementForm.submit) {
             statementForm.submit = (form: StatementFormModel) =>
-                this.props.submitStatement(topic!.urlFragment!, form);
+                this.props.submitStatement(topic!.slug!, form);
         }
         if (commentForm && !commentForm.submit) {
             commentForm.submit = (form: CommentFormModel) =>
-                this.props.submitComment(topic!.urlFragment!, statement!.statementId!, form);
+                this.props.submitComment(topic!.slug!, statement!.statementId!, form);
         }
         return (
             <div>
@@ -63,7 +63,7 @@ class Container extends React.Component<ContainerProps, {}> {
         if (!this.props.topic) {
             return true;
         }
-        return (this.props.topic.urlFragment !== this.props.match.params.topicUrlFragment);
+        return (this.props.topic.slug !== this.props.match.params.topicSlug);
     }
 
     private shouldGetStatement(): boolean {

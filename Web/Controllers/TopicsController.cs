@@ -35,7 +35,7 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                await _topicService.SaveTopic(payload.UrlFragment, payload.Name, User.Identity.ParseUserId());
+                await _topicService.SaveTopic(payload.Slug, payload.Name, User.Identity.ParseUserId());
                 return Ok();
             }
             catch (AppException ex)
@@ -44,10 +44,10 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        [Route("{topicUrlFragment}")]
-        public async Task<IActionResult> Get(string topicUrlFragment)
+        [Route("{topicSlug}")]
+        public async Task<IActionResult> Get(string topicSlug)
         {
-            var topicModel = await _topicService.GetTopic(topicUrlFragment);
+            var topicModel = await _topicService.GetTopic(topicSlug);
             if (topicModel != null)
             {
                 return Ok(topicModel);
@@ -55,10 +55,10 @@ namespace Pobs.Web.Controllers
             return NotFound();
         }
 
-        [HttpPost, Route("{topicUrlFragment}/statements"), Authorize]
-        public async Task<IActionResult> AddStatement(string topicUrlFragment, [FromBody] StatementFormModel payload)
+        [HttpPost, Route("{topicSlug}/statements"), Authorize]
+        public async Task<IActionResult> AddStatement(string topicSlug, [FromBody] StatementFormModel payload)
         {
-            var statementModel = await _topicService.SaveStatement(topicUrlFragment, payload.Text, User.Identity.ParseUserId());
+            var statementModel = await _topicService.SaveStatement(topicSlug, payload.Text, User.Identity.ParseUserId());
             if (statementModel != null)
             {
                 return Ok(statementModel);
@@ -66,10 +66,10 @@ namespace Pobs.Web.Controllers
             return NotFound();
         }
 
-        [HttpGet, Route("{topicUrlFragment}/statements/{statementId}")]
-        public async Task<IActionResult> GetStatement(string topicUrlFragment, int statementId)
+        [HttpGet, Route("{topicSlug}/statements/{statementId}")]
+        public async Task<IActionResult> GetStatement(string topicSlug, int statementId)
         {
-            var statementModel = await _topicService.GetStatement(topicUrlFragment, statementId);
+            var statementModel = await _topicService.GetStatement(topicSlug, statementId);
             if (statementModel != null)
             {
                 return Ok(statementModel);
@@ -77,10 +77,10 @@ namespace Pobs.Web.Controllers
             return NotFound();
         }
 
-        [HttpPost, Route("{topicUrlFragment}/statements/{statementId}/comments"), Authorize]
-        public async Task<IActionResult> AddComment(string topicUrlFragment, int statementId, [FromBody] CommentFormModel payload)
+        [HttpPost, Route("{topicSlug}/statements/{statementId}/comments"), Authorize]
+        public async Task<IActionResult> AddComment(string topicSlug, int statementId, [FromBody] CommentFormModel payload)
         {
-            var commentModel = await _topicService.SaveComment(topicUrlFragment, statementId, payload.Text, User.Identity.ParseUserId());
+            var commentModel = await _topicService.SaveComment(topicSlug, statementId, payload.Text, User.Identity.ParseUserId());
             if (commentModel != null)
             {
                 return Ok(commentModel);

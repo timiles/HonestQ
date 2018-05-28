@@ -22,7 +22,7 @@ namespace Pobs.Domain
                 entityType.Relational().TableName = entityType.DisplayName();
             }
 
-            modelBuilder.Entity<Topic>().HasIndex(x => x.UrlFragment).IsUnique();
+            modelBuilder.Entity<Topic>().HasIndex(x => x.Slug).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
 
             // Don't cascase deletes from Collection to Parent

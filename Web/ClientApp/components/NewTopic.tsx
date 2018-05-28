@@ -17,7 +17,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
 
         this.state = {
             name: '',
-            urlFragment: '',
+            slug: '',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -29,13 +29,13 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
         if (!nextProps.submitted) {
             this.setState({
                 name: '',
-                urlFragment: '',
+                slug: '',
             });
         }
     }
 
     public render() {
-        const { name, urlFragment } = this.state;
+        const { name, slug } = this.state;
         const { submitting, submitted, error } = this.props;
         const previous = this.props.previouslySubmittedTopicFormModel;
         return (
@@ -44,7 +44,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
                 {previous && (
                     <div className="alert alert-success" role="alert">
                         Your topic "{previous.name}" has been created!
-                        Check it out: <Link to={`/${previous.urlFragment}`}>{`/${previous.urlFragment}`}</Link>
+                        Check it out: <Link to={`/${previous.slug}`}>{`/${previous.slug}`}</Link>
                     </div>
                 )}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
@@ -60,16 +60,16 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
                         />
                         {submitted && !name && <div className="help-block">Topic name is required</div>}
                     </div>
-                    <div className={'form-group' + (submitted && !urlFragment ? ' has-error' : '')}>
-                        <label htmlFor="urlFragment">Url fragment</label>
+                    <div className={'form-group' + (submitted && !slug ? ' has-error' : '')}>
+                        <label htmlFor="slug">Slug</label>
                         <input
                             type="text"
                             className="form-control"
-                            name="urlFragment"
-                            value={urlFragment}
+                            name="slug"
+                            value={slug}
                             onChange={this.handleChange}
                         />
-                        {submitted && !urlFragment && <div className="help-block">Url fragment is required</div>}
+                        {submitted && !slug && <div className="help-block">Slug is required</div>}
                     </div>
                     <div className="form-group">
                         <SubmitButton submitting={submitting} />

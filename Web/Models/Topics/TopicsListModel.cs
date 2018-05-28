@@ -19,11 +19,11 @@ namespace Pobs.Web.Models.Topics
             public TopicListItemModel() { }
             public TopicListItemModel(Topic topic)
             {
-                this.UrlFragment = topic.UrlFragment;
+                this.Slug = topic.Slug;
                 this.Name = topic.Name;
             }
 
-            public string UrlFragment { get; set; }
+            public string Slug { get; set; }
             public string Name { get; set; }
         }
     }

@@ -25,7 +25,7 @@ class Home extends React.Component<HomeProps, {}> {
                 {topicsList &&
                     topicsList.topics.map((x: TopicListItemModel, i: number) =>
                         <div key={`topic${i}`}>
-                            <Link to={`/${x.urlFragment}`}>{x.name}</Link>
+                            <Link to={`/${x.slug}`}>{x.name}</Link>
                         </div>)
                 }
             </div>

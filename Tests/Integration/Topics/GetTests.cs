@@ -16,7 +16,7 @@ namespace Pobs.Tests.Integration.Topics
 {
     public class GetTests : IDisposable
     {
-        private string _generateTopicUrl(string topicUrlFragment) => $"/api/topics/{topicUrlFragment}";
+        private string _generateTopicUrl(string topicSlug) => $"/api/topics/{topicSlug}";
         private readonly int _userId;
         private readonly Topic _topic;
 
@@ -34,7 +34,7 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateTopicUrl(_topic.UrlFragment);
+                var url = _generateTopicUrl(_topic.Slug);
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -54,13 +54,13 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task UnknownUrlFragment_ShouldReturnNotFound()
+        public async Task UnknownSlug_ShouldReturnNotFound()
         {
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
-                var url = _generateTopicUrl("INCORRECT_URL_FRAGMENT");
+                var url = _generateTopicUrl("INCORRECT_SLUG");
                 var response = await client.GetAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }

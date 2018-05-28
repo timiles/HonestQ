@@ -43,7 +43,7 @@ export interface StatementModel {
 }
 
 export interface TopicFormModel {
-    urlFragment: string;
+    slug: string;
     name: string;
 }
 
@@ -53,7 +53,7 @@ export interface TopicModel {
 }
 
 export interface TopicListItemModel {
-    urlFragment: string;
+    slug: string;
     name: string;
 }
 
