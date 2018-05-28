@@ -67,7 +67,7 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private shouldGetStatement(): boolean {
-        if (!this.props.topic || !this.props.match.params.statementId) {
+        if (!this.props.match.params.statementId) {
             return false;
         }
         if (!this.props.statement) {
