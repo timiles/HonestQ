@@ -49,14 +49,17 @@ class Container extends React.Component<ContainerProps, {}> {
         }
         return (
             <div>
-                <Topic {...topic}>
-                    <StatementForm {...statementForm} />
-                </Topic>
-                <Statement {...statement}>
-                    <CommentForm {...commentForm} />
-                </Statement>
-            </div>
-        );
+                <div className="col-md-6 vertical-scroll-container">
+                    <Topic {...topic}>
+                        <StatementForm {...statementForm} />
+                    </Topic>
+                </div>
+                <div className="col-md-6 vertical-scroll-container">
+                    <Statement {...statement}>
+                        <CommentForm {...commentForm} />
+                    </Statement>
+                </div>
+            </div>);
     }
 
     private shouldGetTopic(): boolean {

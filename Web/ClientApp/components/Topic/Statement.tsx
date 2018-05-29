@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StatementModel } from '../../server-models';
+import Comment from './Comment';
 
 export interface StatementProps {
     loading?: boolean;
@@ -17,18 +18,15 @@ export default class Statement extends React.Component<StatementProps, {}> {
     public render() {
         const { loading, model } = this.props;
         return (
-            <div className="col-md-6">
+            <div>
                 {loading && <p>Loading...</p>}
                 {model && (
                     <div>
                         <h1>{model.text}</h1>
                         {this.props.children}
-                        <div>
-                            {model.comments.map((x, i) =>
-                                <div key={`comment_${i}`}>
-                                    <p>{x.text}</p>
-                                </div>)}
-                        </div>
+                        <ol>
+                            {model.comments.map((x, i) => <li key={`comment_${i}`}><Comment {...x} /></li>)}
+                        </ol>
                     </div>
                 )}
             </div>
