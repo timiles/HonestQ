@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CommentFormModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
+import SuperTextArea from '../shared/SuperTextArea';
 
 export default class CommentForm extends React.Component<FormProps<CommentFormModel>, CommentFormModel> {
 
@@ -10,7 +11,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
 
         this.state = { text: '' };
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -31,12 +32,10 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="text">Comment</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="text"
+                        <SuperTextArea
                             value={text}
-                            onChange={this.handleChange}
+                            maxLength={280}
+                            onChange={this.handleTextAreaChange}
                         />
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
@@ -48,9 +47,8 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         );
     }
 
-    private handleChange(event: React.FormEvent<HTMLInputElement>): void {
-        const { name, value } = event.currentTarget;
-        this.setState({ ...this.state, [name]: value });
+    private handleTextAreaChange(value: string): void {
+        this.setState({ text: value });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
