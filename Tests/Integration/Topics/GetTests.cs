@@ -48,6 +48,7 @@ namespace Pobs.Tests.Integration.Topics
                 foreach (var statement in _topic.Statements)
                 {
                     var responseStatement = responseModel.Statements.Single(x => x.Id == statement.Id);
+                    Assert.Equal(statement.Slug, responseStatement.Slug);
                     Assert.Equal(statement.Text, responseStatement.Text);
                 }
             }

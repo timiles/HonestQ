@@ -11,9 +11,10 @@ using System;
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(PobsDbContext))]
-    partial class PobsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180529110036_AddSlugToStatement")]
+    partial class AddSlugToStatement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,9 +67,6 @@ namespace Pobs.Web.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PostedByUserId");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
 
                     b.HasIndex("TopicId");
 

@@ -23,6 +23,7 @@ namespace Pobs.Domain
             }
 
             modelBuilder.Entity<Topic>().HasIndex(x => x.Slug).IsUnique();
+            modelBuilder.Entity<Statement>().HasIndex(x => x.Slug).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
 
             // Don't cascase deletes from Collection to Parent

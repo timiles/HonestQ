@@ -62,9 +62,9 @@ namespace Pobs.Tests.Integration.Topics
                     var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
 
                     Assert.Equal(statement.Id, responseModel.Id);
+                    Assert.Equal(statement.Slug, responseModel.Slug);
                     Assert.Equal(statement.Text, responseModel.Text);
                 }
-
             }
         }
 
