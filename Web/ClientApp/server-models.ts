@@ -34,6 +34,7 @@ export interface StatementFormModel {
 
 export interface StatementListItemModel {
     id: number;
+    slug: string;
     text: string;
 }
 

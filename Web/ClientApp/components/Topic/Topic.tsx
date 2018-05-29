@@ -27,7 +27,11 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         {this.props.children}
                         {model.statements.map((x, i) =>
                             <div key={`statement_${i}`}>
-                                <Link to={`/${slug}/${x.id}`} className="btn btn-lg btn-default" role="button">
+                                <Link
+                                    to={`/${slug}/${x.id}/${x.slug}`}
+                                    className="btn btn-lg btn-default"
+                                    role="button"
+                                >
                                     &ldquo;{x.text}&rdquo; &rarr;
                                 </Link>
                             </div>)}

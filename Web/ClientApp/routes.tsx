@@ -16,7 +16,7 @@ export const routes = (
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
             <Route path="/register" component={Register} />
-            <Route path="/:topicSlug/:statementId?" component={Topic} />
+            <Route path="/:topicSlug/:statementId?/:statementSlug?" component={Topic} />
         </Switch>
     </Layout>
 );
