@@ -28,6 +28,7 @@ export default class Comment extends React.Component<CommentProps, {}> {
                         </footer>
                     </blockquote>
                 </div>
-            </div>);
+            </div>
+        );
     }
 }

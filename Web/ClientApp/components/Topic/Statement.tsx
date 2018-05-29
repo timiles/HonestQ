@@ -18,7 +18,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
     public render() {
         const { loading, model } = this.props;
         return (
-            <div>
+            <>
                 {loading && <p>Loading...</p>}
                 {model && (
                     <div>
@@ -29,7 +29,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
                         </ol>
                     </div>
                 )}
-            </div>
+            </>
         );
     }
 }

@@ -20,7 +20,7 @@ class Home extends React.Component<HomeProps, {}> {
     public render() {
         const { topicsList } = this.props;
         return (
-            <div>
+            <>
                 <h1>POBS!</h1>
                 {topicsList &&
                     topicsList.topics.map((x: TopicListItemModel, i: number) =>
@@ -28,7 +28,7 @@ class Home extends React.Component<HomeProps, {}> {
                             <Link to={`/${x.slug}`}>{x.name}</Link>
                         </div>)
                 }
-            </div>
+            </>
         );
     }
 }

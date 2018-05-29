@@ -18,7 +18,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
     public render() {
         const { loading, error, slug, model } = this.props;
         return (
-            <div>
+            <>
                 {loading && <p>Loading...</p>}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {model && (
@@ -37,7 +37,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                             </div>)}
                     </div>
                 )}
-            </div>
+            </>
         );
     }
 }

@@ -25,7 +25,7 @@ export default class StatementForm extends React.Component<FormProps<StatementFo
         const { error, submitting, submitted } = this.props;
         const { text } = this.state;
         return (
-            <div>
+            <>
                 <h2>Submit New Statement</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
@@ -44,7 +44,7 @@ export default class StatementForm extends React.Component<FormProps<StatementFo
                         <SubmitButton submitting={submitting} />
                     </div>
                 </form>
-            </div>
+            </>
         );
     }
 

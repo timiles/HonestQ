@@ -48,7 +48,7 @@ class Container extends React.Component<ContainerProps, {}> {
                 this.props.submitComment(topic!.slug!, statement!.statementId!, form);
         }
         return (
-            <div>
+            <>
                 <div className="col-md-6 vertical-scroll-container">
                     <Topic {...topic}>
                         <StatementForm {...statementForm} />
@@ -59,7 +59,8 @@ class Container extends React.Component<ContainerProps, {}> {
                         <CommentForm {...commentForm} />
                     </Statement>
                 </div>
-            </div>);
+            </>
+        );
     }
 
     private shouldGetTopic(): boolean {
