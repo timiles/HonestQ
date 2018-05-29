@@ -34,7 +34,7 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful statement on this topic"
+                Text = "\"My insightful statement on this topic\""
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
@@ -54,7 +54,7 @@ namespace Pobs.Tests.Integration.Topics
                         .Single(x => x.Id == _topicId);
 
                     var statement = topic.Statements.Single();
-                    Assert.Equal(payload.Text, statement.Text);
+                    Assert.Equal(payload.Text.Trim('"'), statement.Text);
                     Assert.Equal(_userId, statement.PostedByUser.Id);
                     Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 

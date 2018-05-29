@@ -14,8 +14,8 @@ namespace Pobs.Domain.Entities
         }
         public Statement(string text, User postedByUser, DateTime postedAt) : this()
         {
-            Slug = text.ToSlug();
-            Text = text;
+            Text = text.CleanStatementText();
+            Slug = Text.ToSlug();
             PostedByUser = postedByUser;
             PostedAt = postedAt;
         }
