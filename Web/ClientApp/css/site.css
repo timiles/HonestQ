@@ -69,3 +69,7 @@ div.vertical-scroll-container {
     height: 100vh;
     overflow-y: scroll;
 }
+
+blockquote p {
+    white-space: pre-wrap;
+}
