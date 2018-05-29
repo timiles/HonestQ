@@ -22,7 +22,7 @@ namespace Pobs.Web.Migrations
 
             modelBuilder.Entity("Pobs.Domain.Entities.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("PostedAt");

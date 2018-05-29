@@ -11,8 +11,8 @@ using System;
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(PobsDbContext))]
-    [Migration("20180529111211_AddUniqueConstraint")]
-    partial class AddUniqueConstraint
+    [Migration("20180529175456_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace Pobs.Web.Migrations
 
             modelBuilder.Entity("Pobs.Domain.Entities.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("PostedAt");

@@ -14,7 +14,7 @@ namespace Pobs.Web.Models.Topics
             this.PostedByUsername = comment.PostedByUser.Username;
         }
 
-        public int Id { get; set; }
+        public long Id { get; set; }
         public string Text { get; set; }
         public DateTime PostedAt { get; set; }
         public string PostedByUsername { get; set; }
