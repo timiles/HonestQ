@@ -86,3 +86,13 @@ export function isUserInRole(loggedInUser: LoggedInUserModel, role: string): boo
     return typeof (decodedToken.role) === 'string' && decodedToken.role === role ||
         typeof (decodedToken.role) === 'object' && decodedToken.role.indexOf(role) >= 0;
 }
+
+// tslint:disable-next-line:max-line-length
+const urlMatchingRegExp = new RegExp(/(?:(?:https?):\/\/|www\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/im);
+export function extractUrlFromText(text: string): string | null {
+    const match = urlMatchingRegExp.exec(text);
+    if (match) {
+        return match[0];
+    }
+    return null;
+}
