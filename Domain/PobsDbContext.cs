@@ -22,9 +22,10 @@ namespace Pobs.Domain
                 entityType.Relational().TableName = entityType.DisplayName();
             }
 
+            // Unique contraints
             modelBuilder.Entity<Topic>().HasIndex(x => x.Slug).IsUnique();
-            modelBuilder.Entity<Statement>().HasIndex(x => x.Slug).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
+            // NOTE: Statement Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
 
             // Don't cascase deletes from Collection to Parent
             modelBuilder.Entity<Statement>().HasOne(x => x.Topic).WithMany(x => x.Statements)
