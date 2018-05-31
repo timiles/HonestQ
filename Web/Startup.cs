@@ -1,4 +1,5 @@
 using System.Text;
+using Exceptionless;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -108,6 +109,7 @@ namespace Pobs.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionless("oxULXaEgDg4WzaBiTiLbbL6PQN1lDfiAkuycRX6H");
             }
 
             app.UseStaticFiles();
