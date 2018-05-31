@@ -27,11 +27,11 @@ export default class StatementForm extends React.Component<FormProps<StatementFo
         const { text } = this.state;
         return (
             <>
-                <h2>Submit New Statement</h2>
+                <h2>Got something to add?</h2>
+                <p>Don't worry, these statements are all presented anonymously.</p>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                        <label htmlFor="text">Statement</label>
                         <SuperTextArea
                             value={text}
                             maxLength={280}

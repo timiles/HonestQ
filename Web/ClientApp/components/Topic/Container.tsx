@@ -7,7 +7,8 @@ import * as TopicStore from '../../store/Topic';
 import CommentForm from './../Topic/CommentForm';
 import Statement from './../Topic/Statement';
 import StatementForm from './../Topic/StatementForm';
-import Topic from './../Topic/Topic';
+import BackToTopic from './BackToTopic';
+import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
     & typeof TopicStore.actionCreators
@@ -47,19 +48,28 @@ class Container extends React.Component<ContainerProps, {}> {
             commentForm.submit = (form: CommentFormModel) =>
                 this.props.submitComment(topic!.slug!, statement!.statementId!, form);
         }
+
+        // REVIEW: Is there a better way to handle this?
+        if (!topic) {
+            return false;
+        }
+
         return (
-            <>
-                <div className="col-md-6 vertical-scroll-container">
+            <div className="col-md-6">
+                {!this.props.match.params.statementId &&
                     <Topic {...topic}>
                         <StatementForm {...statementForm} />
                     </Topic>
-                </div>
-                <div className="col-md-6 vertical-scroll-container">
-                    <Statement {...statement}>
-                        <CommentForm {...commentForm} />
-                    </Statement>
-                </div>
-            </>
+                }
+                {this.props.match.params.statementId && topic.model &&
+                    <>
+                        <BackToTopic slug={topic.slug!} name={topic.model.name} />
+                        <Statement {...statement}>
+                            <CommentForm {...commentForm} />
+                        </Statement>
+                    </>
+                }
+            </div>
         );
     }
 

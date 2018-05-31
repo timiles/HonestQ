@@ -22,7 +22,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
                 {loading && <p>Loading...</p>}
                 {model && (
                     <div>
-                        <h1>{model.text}</h1>
+                        <h2 className="statement">{model.text}</h2>
                         {this.props.children}
                         <ol>
                             {model.comments.map((x, i) => <li key={`comment_${i}`}><Comment {...x} /></li>)}

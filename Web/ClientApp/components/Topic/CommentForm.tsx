@@ -27,7 +27,6 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         const { text } = this.state;
         return (
             <>
-                <h2>Submit New Comment</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
