@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { CommentFormModel, StatementFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
@@ -54,21 +55,39 @@ class Container extends React.Component<ContainerProps, {}> {
             return false;
         }
 
+        const slideDurationMilliseconds = 500;
+
         return (
             <div className="col-md-6">
-                {!this.props.match.params.statementId &&
-                    <Topic {...topic}>
-                        <StatementForm {...statementForm} />
-                    </Topic>
-                }
-                {this.props.match.params.statementId && topic.model &&
-                    <>
-                        <BackToTopic slug={topic.slug!} name={topic.model.name} />
-                        <Statement {...statement}>
-                            <CommentForm {...commentForm} />
-                        </Statement>
-                    </>
-                }
+                <div className="row">
+                    <TransitionGroup component={undefined}>
+                        {!this.props.match.params.statementId &&
+                            <CSSTransition
+                                timeout={slideDurationMilliseconds}
+                                classNames="slide"
+                            >
+                                <div className="slide slide-left vertical-scroll-container">
+                                    <Topic {...topic}>
+                                        <StatementForm {...statementForm} />
+                                    </Topic>
+                                </div>
+                            </CSSTransition>
+                        }
+                        {this.props.match.params.statementId && topic.model &&
+                            <CSSTransition
+                                timeout={slideDurationMilliseconds}
+                                classNames="slide"
+                            >
+                                <div className="slide slide-right vertical-scroll-container">
+                                    <BackToTopic slug={topic.slug!} name={topic.model.name} />
+                                    <Statement {...statement}>
+                                        <CommentForm {...commentForm} />
+                                    </Statement>
+                                </div>
+                            </CSSTransition>
+                        }
+                    </TransitionGroup>
+                </div>
             </div>
         );
     }
