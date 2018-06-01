@@ -2,8 +2,10 @@ using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Prerendering;
+using Pobs.Web.Helpers;
 using Pobs.Web.Models.Account;
 using Pobs.Web.Services;
 
@@ -43,10 +45,17 @@ namespace Pobs.Web.Controllers
                 login = new
                 {
                     loggedInUser = loggedInModel
+                },
+                versionedAssetPaths = new
+                {
+                    vendorCss = this.HttpContext.AddFileVersionToPath("/dist/vendor.css"),
+                    siteCss = this.HttpContext.AddFileVersionToPath("/dist/site.css"),
+                    vendorJs = this.HttpContext.AddFileVersionToPath("/dist/vendor.js"),
+                    mainClientJs = this.HttpContext.AddFileVersionToPath("/dist/main-client.js")
                 }
             };
 
-            var renderResult = await this.spaPrerenderer.RenderToString("ClientApp/dist/main-server", null, data, 30000);
+            var renderResult = (RenderToStringResult)await this.spaPrerenderer.RenderToString("ClientApp/dist/main-server", null, data, 30000);
             if (!string.IsNullOrEmpty(renderResult.RedirectUrl))
             {
                 if (renderResult.StatusCode != null && renderResult.StatusCode.Value == 301)
@@ -60,7 +69,7 @@ namespace Pobs.Web.Controllers
                 this.HttpContext.Response.StatusCode = renderResult.StatusCode.Value;
             }
 
-            return View("Index", renderResult);
+            return Content(renderResult.Html, "text/html");
         }
 
         public IActionResult Error()

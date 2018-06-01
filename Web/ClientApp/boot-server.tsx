@@ -8,6 +8,7 @@ import { StaticRouter } from 'react-router-dom';
 import { replace } from 'react-router-redux';
 import configureStore from './configureStore';
 import { routes } from './routes';
+import { ApplicationState } from './store';
 
 export default createServerRenderer((params) => {
     return new Promise<RenderResult>((resolve, reject) => {
@@ -46,12 +47,45 @@ export default createServerRenderer((params) => {
             return;
         }
 
+        const embedlyScript = `
+(function(w, d){
+var id='embedly-platform', n = 'script';
+if (!d.getElementById(id)){
+    w.embedly = w.embedly || function() {(w.embedly.q = w.embedly.q || []).push(arguments);};
+    var e = d.createElement(n); e.id = id; e.async=1;
+    e.src = ('https:' === document.location.protocol ? 'https' : 'http') + '://cdn.embedly.com/widgets/platform.js';
+    var s = d.getElementsByTagName(n)[0];
+    s.parentNode.insertBefore(e, s);
+}
+})(window, document);`;
+        const fullHtml = (reactApp: React.ReactElement<any>, state: ApplicationState) => (
+            <html lang="en">
+                <head>
+                    <meta charSet="utf-8" />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                    <title>Home - Web</title>
+                    <base href="/" />
+
+                    <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />
+                    <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />
+                </head>
+                <body>
+                    <div id="react-app">{reactApp}</div>
+                    <script
+                        dangerouslySetInnerHTML={{ __html: `window.initialReduxState = ${JSON.stringify(state)}` }}
+                    />
+                    <script src={params.data.versionedAssetPaths.vendorJs} />
+                    <script src={params.data.versionedAssetPaths.mainClientJs} />
+                    <script dangerouslySetInnerHTML={{ __html: embedlyScript }} />
+                </body>
+            </html>
+        );
+
         // Once any async tasks are done, we can perform the final render
         // We also send the redux store state, so the client can continue execution where the server left off
         params.domainTasks.then(() => {
             resolve({
-                globals: store.getState(),
-                html: renderToString(app),
+                html: '<!DOCTYPE html>' + renderToString(fullHtml(app, store.getState())),
                 statusCode: routerContext.status,
             });
         }, reject); // Also propagate any errors back into the host application
