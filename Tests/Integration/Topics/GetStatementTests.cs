@@ -45,6 +45,7 @@ namespace Pobs.Tests.Integration.Topics
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<StatementModel>(responseContent);
+                Assert.Equal(statement.Slug, responseModel.Slug);
                 Assert.Equal(statement.Text, responseModel.Text);
 
                 Assert.Equal(3, statement.Comments.Count);
