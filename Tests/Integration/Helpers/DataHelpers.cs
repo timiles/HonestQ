@@ -27,7 +27,8 @@ namespace Pobs.Tests.Integration.Helpers
 
         public static Topic CreateTopic(User user, int numberOfStatements = 0, int numberOfCommentsPerStatement = 0)
         {
-            var name = Utils.GenerateRandomString(10);
+            // Guarantee slug has both upper & lower case characters
+            var name = "ABCabc" + Utils.GenerateRandomString(10);
             var topic = new Topic(name, name, user, DateTime.UtcNow);
 
             for (int s = 0; s < numberOfStatements; s++)

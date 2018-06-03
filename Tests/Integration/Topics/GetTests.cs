@@ -56,6 +56,32 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task IncorrectCasingOnSlug_ShouldGetTopic()
+        {
+            // First check the Topic slug was created with both upper & lower, or the test doesn't make sense
+            Assert.Contains(_topic.Slug, char.IsUpper);
+            Assert.Contains(_topic.Slug, char.IsLower);
+
+            // Now switch upper & lower casing
+            var slugToRequest = new string(_topic.Slug.Select(c => char.IsUpper(c) ? char.ToLower(c) : char.ToUpper(c)).ToArray());
+            Assert.NotEqual(_topic.Slug, slugToRequest);
+
+            using (var server = new TestServer(new WebHostBuilder()
+                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var client = server.CreateClient())
+            {
+                var url = _generateTopicUrl(slugToRequest);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
+                // Should still be the correct slug from database
+                Assert.Equal(_topic.Slug, responseModel.Slug);
+            }
+        }
+
+        [Fact]
         public async Task UnknownSlug_ShouldReturnNotFound()
         {
             using (var server = new TestServer(new WebHostBuilder()
