@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -56,40 +57,55 @@ class Container extends React.Component<ContainerProps, {}> {
                 this.props.submitComment(topic.slug!, statement.statementId!, form);
         }
 
+        const pageTitleParts = ['POBS'];
+        if (topic.model) {
+            pageTitleParts.push(topic.model.name);
+            if (this.props.match.params.statementId && statement && statement.model) {
+                pageTitleParts.push('\u201C' + statement.model.text + '\u201D');
+            }
+        }
+        const pageTitle = pageTitleParts.join(' » ');
+
         const slideDurationMilliseconds = 500;
 
         return (
-            <div className="col-md-6">
-                <div className="row">
-                    <TransitionGroup component={undefined}>
-                        {!this.props.match.params.statementId &&
-                            <CSSTransition
-                                timeout={slideDurationMilliseconds}
-                                classNames="slide"
-                            >
-                                <div className="slide slide-left vertical-scroll-container">
-                                    <Topic {...topic}>
-                                        <StatementForm {...statementForm} />
-                                    </Topic>
-                                </div>
-                            </CSSTransition>
-                        }
-                        {this.props.match.params.statementId && topic.model &&
-                            <CSSTransition
-                                timeout={slideDurationMilliseconds}
-                                classNames="slide"
-                            >
-                                <div className="slide slide-right vertical-scroll-container">
-                                    <BackToTopic slug={topic.slug!} name={topic.model.name} />
-                                    <Statement {...statement}>
-                                        <CommentForm {...commentForm} />
-                                    </Statement>
-                                </div>
-                            </CSSTransition>
-                        }
-                    </TransitionGroup>
+            <>
+                <Helmet>
+                    <title>{pageTitle}</title>
+                </Helmet>
+
+                <div className="col-md-6">
+                    <div className="row">
+                        <TransitionGroup component={undefined}>
+                            {!this.props.match.params.statementId &&
+                                <CSSTransition
+                                    timeout={slideDurationMilliseconds}
+                                    classNames="slide"
+                                >
+                                    <div className="slide slide-left vertical-scroll-container">
+                                        <Topic {...topic}>
+                                            <StatementForm {...statementForm} />
+                                        </Topic>
+                                    </div>
+                                </CSSTransition>
+                            }
+                            {this.props.match.params.statementId && topic.model &&
+                                <CSSTransition
+                                    timeout={slideDurationMilliseconds}
+                                    classNames="slide"
+                                >
+                                    <div className="slide slide-right vertical-scroll-container">
+                                        <BackToTopic slug={topic.slug!} name={topic.model.name} />
+                                        <Statement {...statement}>
+                                            <CommentForm {...commentForm} />
+                                        </Statement>
+                                    </div>
+                                </CSSTransition>
+                            }
+                        </TransitionGroup>
+                    </div>
                 </div>
-            </div>
+            </>
         );
     }
 

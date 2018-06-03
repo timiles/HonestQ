@@ -2,7 +2,8 @@ import { RenderResult, createServerRenderer } from 'aspnet-prerendering';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 // tslint:disable-next-line:no-submodule-imports
-import { renderToString } from 'react-dom/server';
+import { renderToStaticMarkup, renderToString } from 'react-dom/server';
+import Helmet, { HelmetData } from 'react-helmet';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import { replace } from 'react-router-redux';
@@ -37,6 +38,8 @@ export default createServerRenderer((params) => {
             </Provider>
         );
         renderToString(app);
+        // Always call renderStatic before returning, to avoid memory leak
+        Helmet.renderStatic();
 
         // If there's a redirection, just send this information back to the host application
         if (routerContext.url) {
@@ -58,19 +61,20 @@ if (!d.getElementById(id)){
     s.parentNode.insertBefore(e, s);
 }
 })(window, document);`;
-        const fullHtml = (reactApp: React.ReactElement<any>, state: ApplicationState) => (
+
+        const fullHtml = (helmetData: HelmetData, renderedApp: string, state: ApplicationState) => (
             <html lang="en">
                 <head>
                     <meta charSet="utf-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                    <title>Home - Web</title>
+                    {helmetData.title.toComponent()}
                     <base href="/" />
 
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />
                 </head>
                 <body>
-                    <div id="react-app">{reactApp}</div>
+                    <div id="react-app" dangerouslySetInnerHTML={{ __html: renderedApp }} />
                     <script
                         dangerouslySetInnerHTML={{ __html: `window.initialReduxState = ${JSON.stringify(state)}` }}
                     />
@@ -84,8 +88,12 @@ if (!d.getElementById(id)){
         // Once any async tasks are done, we can perform the final render
         // We also send the redux store state, so the client can continue execution where the server left off
         params.domainTasks.then(() => {
+            // Final render of the app
+            const renderedApp = renderToString(app);
+            // ...and then collect head tags
+            const helmetData = Helmet.renderStatic();
             resolve({
-                html: '<!DOCTYPE html>' + renderToString(fullHtml(app, store.getState())),
+                html: '<!DOCTYPE html>' + renderToStaticMarkup(fullHtml(helmetData, renderedApp, store.getState())),
                 statusCode: routerContext.status,
             });
         }, reject); // Also propagate any errors back into the host application
