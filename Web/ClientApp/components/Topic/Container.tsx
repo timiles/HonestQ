@@ -40,19 +40,20 @@ class Container extends React.Component<ContainerProps, {}> {
 
     public render() {
         const { topic, statementForm, statement, commentForm } = this.props;
-        // REVIEW: Is there a better place to do these?
-        if (statementForm && !statementForm.submit) {
-            statementForm.submit = (form: StatementFormModel) =>
-                this.props.submitStatement(topic!.slug!, form);
-        }
-        if (commentForm && !commentForm.submit) {
-            commentForm.submit = (form: CommentFormModel) =>
-                this.props.submitComment(topic!.slug!, statement!.statementId!, form);
-        }
 
         // REVIEW: Is there a better way to handle this?
         if (!topic) {
             return false;
+        }
+
+        // REVIEW: Is there a better place to do these?
+        if (topic.slug && !statementForm.submit) {
+            statementForm.submit = (form: StatementFormModel) =>
+                this.props.submitStatement(topic.slug!, form);
+        }
+        if (commentForm && topic.slug && statement && statement!.statementId && !commentForm.submit) {
+            commentForm.submit = (form: CommentFormModel) =>
+                this.props.submitComment(topic.slug!, statement.statementId!, form);
         }
 
         const slideDurationMilliseconds = 500;
@@ -105,6 +106,9 @@ class Container extends React.Component<ContainerProps, {}> {
         }
         if (!this.props.statement) {
             return true;
+        }
+        if (this.props.statement.loading) {
+            return false;
         }
         return (this.props.statement.statementId !== this.props.match.params.statementId);
     }

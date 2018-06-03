@@ -11,8 +11,8 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContainerState {
-    topic?: TopicProps;
-    statementForm?: FormProps<StatementFormModel>;
+    topic: TopicProps;
+    statementForm: FormProps<StatementFormModel>;
     statement?: StatementProps;
     commentForm?: FormProps<CommentFormModel>;
 }
@@ -166,12 +166,13 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ContainerState = {};
+const defaultState: ContainerState = { topic: {}, statementForm: {} };
 
 export const reducer: Reducer<ContainerState> = (state: ContainerState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_TOPIC_REQUESTED':
             return {
+                ...state,
                 topic: {
                     loading: true,
                     slug: action.payload.topicSlug,
@@ -179,35 +180,36 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
             };
         case 'GET_TOPIC_SUCCESS':
             return {
+                // NOTE: Statement is possibly already set if GET_STATEMENT_REQUEST returned before GET_TOPIC_REQUEST
+                ...state,
                 topic: {
                     slug: action.payload.topicSlug,
                     model: action.payload.topic,
                 },
-                statementForm: {},
             };
         case 'GET_TOPIC_FAILED':
             return {
+                ...state,
                 topic: { error: action.payload.error },
             };
         case 'STATEMENT_FORM_SUBMITTED':
             return {
-                topic: state.topic,
+                ...state,
                 statementForm: {
                     submitting: true,
                     submitted: true,
                 },
-                statement: state.statement,
-                commentForm: state.commentForm,
             };
         case 'STATEMENT_FORM_RECEIVED': {
-            const topicModel = state.topic!.model!;
+            const topicModel = state.topic.model!;
             // Slice for immutability
             const statementsNext = topicModel.statements.slice();
             statementsNext.push(action.payload.statementListItem);
             const topicNext = { ...topicModel, statements: statementsNext };
             return {
+                ...state,
                 topic: {
-                    slug: state.topic!.slug,
+                    slug: state.topic.slug,
                     model: topicNext,
                 },
                 statementForm: {},
@@ -215,18 +217,15 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
         }
         case 'STATEMENT_FORM_FAILED':
             return {
-                topic: state.topic,
+                ...state,
                 statementForm: {
                     submitted: true,
                     error: action.payload.error,
                 },
-                statement: state.statement,
-                commentForm: state.commentForm,
             };
         case 'GET_STATEMENT_REQUESTED':
             return {
-                topic: state.topic,
-                statementForm: state.statementForm,
+                ...state,
                 statement: {
                     loading: true,
                     statementId: action.payload.statementId,
@@ -234,8 +233,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
             };
         case 'GET_STATEMENT_SUCCESS':
             return {
-                topic: state.topic,
-                statementForm: state.statementForm,
+                ...state,
                 statement: {
                     statementId: action.payload.statementId,
                     model: action.payload.statement,
@@ -244,8 +242,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
             };
         case 'GET_STATEMENT_FAILED':
             return {
-                topic: state.topic,
-                statementForm: state.statementForm,
+                ...state,
                 statement: { error: action.payload.error },
             };
         case 'COMMENT_FORM_SUBMITTED':
