@@ -109,7 +109,12 @@ namespace Pobs.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseExceptionless("oxULXaEgDg4WzaBiTiLbbL6PQN1lDfiAkuycRX6H");
+
+                var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+                if (appSettings.ExceptionlessApiKey != null)
+                {
+                    app.UseExceptionless(appSettings.ExceptionlessApiKey);
+                }
             }
 
             app.UseStaticFiles();
