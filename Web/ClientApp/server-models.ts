@@ -39,6 +39,7 @@ export interface StatementListItemModel {
 }
 
 export interface StatementModel {
+    slug: string;
     text: string;
     comments: CommentListItemModel[];
 }
@@ -49,6 +50,7 @@ export interface TopicFormModel {
 }
 
 export interface TopicModel {
+    slug: string;
     name: string;
     statements: StatementListItemModel[];
 }

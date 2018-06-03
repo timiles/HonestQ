@@ -68,6 +68,7 @@ if (!d.getElementById(id)){
                     <meta charSet="utf-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     {helmetData.title.toComponent()}
+                    {helmetData.link.toComponent()}
                     <base href="/" />
 
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />

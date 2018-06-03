@@ -57,22 +57,11 @@ class Container extends React.Component<ContainerProps, {}> {
                 this.props.submitComment(topic.slug!, statement.statementId!, form);
         }
 
-        const pageTitleParts = ['POBS'];
-        if (topic.model) {
-            pageTitleParts.push(topic.model.name);
-            if (this.props.match.params.statementId && statement && statement.model) {
-                pageTitleParts.push('\u201C' + statement.model.text + '\u201D');
-            }
-        }
-        const pageTitle = pageTitleParts.join(' » ');
-
         const slideDurationMilliseconds = 500;
 
         return (
             <>
-                <Helmet>
-                    <title>{pageTitle}</title>
-                </Helmet>
+                {this.renderHelmetTags()}
 
                 <div className="col-md-6">
                     <div className="row">
@@ -106,6 +95,34 @@ class Container extends React.Component<ContainerProps, {}> {
                     </div>
                 </div>
             </>
+        );
+    }
+
+    private renderHelmetTags() {
+        const { topic, statement } = this.props;
+
+        const pageTitleParts = ['POBS'];
+        const canonicalUrlParts = ['https://pobs.local'];
+
+        if (topic.model) {
+            pageTitleParts.push(topic.model.name);
+            canonicalUrlParts.push(topic.model.slug);
+
+            if (this.props.match.params.statementId && statement && statement.model) {
+                pageTitleParts.push('\u201C' + statement.model.text + '\u201D');
+                canonicalUrlParts.push(statement.statementId!.toString());
+                canonicalUrlParts.push(statement.model.slug);
+            }
+        }
+
+        const pageTitle = pageTitleParts.join(' » ');
+        const canonicalUrl = canonicalUrlParts.join('/');
+
+        return (
+            <Helmet>
+                <title>{pageTitle}</title>
+                <link rel="canonical" href={canonicalUrl} />
+            </Helmet>
         );
     }
 
