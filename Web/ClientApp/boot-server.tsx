@@ -76,7 +76,10 @@ if (!d.getElementById(id)){
                 <body>
                     <div id="react-app" dangerouslySetInnerHTML={{ __html: renderedApp }} />
                     <script
-                        dangerouslySetInnerHTML={{ __html: `window.initialReduxState = ${JSON.stringify(state)}` }}
+                        dangerouslySetInnerHTML={{
+                            // XSS: replace "<" to defend against "</script>" in the state data
+                            __html: `window.initialReduxState = ${JSON.stringify(state).replace(/</g, '\\u003c')}`,
+                        }}
                     />
                     <script src={params.data.versionedAssetPaths.vendorJs} />
                     <script src={params.data.versionedAssetPaths.mainClientJs} />
