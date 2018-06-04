@@ -36,6 +36,9 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
+                // PRIVATE BETA
+                client.AuthenticateAs(_userId);
+
                 var response = await client.GetAsync(Url);
                 response.EnsureSuccessStatusCode();
 

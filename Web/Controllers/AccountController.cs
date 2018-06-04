@@ -7,6 +7,7 @@ using Pobs.Web.Helpers;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Pobs.Web.Models.Account;
+using Pobs.Domain;
 
 namespace WebApi.Controllers
 {
@@ -56,6 +57,12 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Register([FromBody]RegisterFormModel registerFormModel)
         {
+            // PRIVATE BETA
+            if (registerFormModel.Username != "poi" && !User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
             var user = new User
             {
                 FirstName = registerFormModel.FirstName,

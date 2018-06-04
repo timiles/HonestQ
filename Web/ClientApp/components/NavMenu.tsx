@@ -57,13 +57,14 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                                     </NavLink>
                                 </li>
                             )}
-                            {!isAuthenticated && (
-                                <li>
-                                    <NavLink to={'/register'} activeClassName="active">
-                                        <span className="glyphicon glyphicon-user" /> Register
+                            {// PRIVATE BETA: was `!isAuthenticated && (`
+                                isAdmin && (
+                                    <li>
+                                        <NavLink to={'/register'} activeClassName="active">
+                                            <span className="glyphicon glyphicon-user" /> Register
                                     </NavLink>
-                                </li>
-                            )}
+                                    </li>
+                                )}
                             {isAuthenticated && (
                                 <li>
                                     <NavLink to={'/logout'} activeClassName="active">

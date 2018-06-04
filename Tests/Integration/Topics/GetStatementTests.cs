@@ -39,6 +39,9 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
+                // PRIVATE BETA
+                client.AuthenticateAs(_userId);
+
                 var url = _generateUrl(_topic.Slug, statement.Id);
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
@@ -66,6 +69,9 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
+                // PRIVATE BETA
+                client.AuthenticateAs(_userId);
+
                 var url = _generateUrl("INCORRECT_SLUG", _topic.Statements.First().Id);
                 var response = await client.GetAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -79,6 +85,9 @@ namespace Pobs.Tests.Integration.Topics
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
+                // PRIVATE BETA
+                client.AuthenticateAs(_userId);
+
                 var url = _generateUrl(_topic.Slug, 0);
                 var response = await client.GetAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

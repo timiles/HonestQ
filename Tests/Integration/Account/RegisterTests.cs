@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Pobs.Domain;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
 using Pobs.Web.Helpers;
@@ -31,6 +32,9 @@ namespace Pobs.Tests.Integration.Account
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
+                // PRIVATE BETA
+                client.AuthenticateAs(1, Role.Admin);
+
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
             }
@@ -63,6 +67,9 @@ namespace Pobs.Tests.Integration.Account
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
             using (var client = server.CreateClient())
             {
+                // PRIVATE BETA
+                client.AuthenticateAs(1, Role.Admin);
+
                 var response1 = await client.PostAsync(Url, payload.ToJsonContent());
                 response1.EnsureSuccessStatusCode();
 
