@@ -79,7 +79,7 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'GET_TOPIC_REQUESTED', payload: { topicSlug } });
 
-            getJson<TopicModel>(`/api/topics/${topicSlug}`)
+            getJson<TopicModel>(`/api/topics/${topicSlug}`, getState().login.loggedInUser)
                 .then((topicResponse: TopicModel) => {
                     dispatch({
                         type: 'GET_TOPIC_SUCCESS',
@@ -120,7 +120,8 @@ export const actionCreators = {
             return (async () => {
                 dispatch({ type: 'GET_STATEMENT_REQUESTED', payload: { statementId } });
 
-                getJson<StatementModel>(`/api/topics/${topicSlug}/statements/${statementId}`)
+                getJson<StatementModel>(`/api/topics/${topicSlug}/statements/${statementId}`,
+                    getState().login.loggedInUser)
                     .then((statementResponse: StatementModel) => {
                         dispatch({
                             type: 'GET_STATEMENT_SUCCESS',

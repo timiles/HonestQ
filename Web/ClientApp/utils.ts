@@ -2,8 +2,8 @@ import { addTask, fetch } from 'domain-task';
 import * as jwt_decode from 'jwt-decode';
 import { LoggedInUserModel } from './server-models';
 
-export function getJson<T>(url: string): Promise<T> {
-    const fetchTask = fetchJson<T>('GET', url, null, null, false);
+export function getJson<T>(url: string, loggedInUser: LoggedInUserModel | null | undefined): Promise<T> {
+    const fetchTask = fetchJson<T>('GET', url, null, loggedInUser, false);
     // Register GET requests to be awaited during server-side rendering
     addTask(fetchTask);
     return fetchTask;

@@ -36,7 +36,7 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'GET_TOPICS_LIST_REQUESTED' });
 
-            getJson<TopicsListModel>('/api/topics')
+            getJson<TopicsListModel>('/api/topics', getState().login.loggedInUser)
                 .then((topicsListResponse: TopicsListModel) => {
                     dispatch({ type: 'GET_TOPICS_LIST_SUCCESS', payload: topicsListResponse });
                 })
