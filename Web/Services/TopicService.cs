@@ -16,7 +16,8 @@ namespace Pobs.Web.Services
         Task<TopicModel> GetTopic(string topicSlug);
         Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
-        Task<CommentListItemModel> SaveComment(string topicSlug, int statementId, string text, int postedByUserId);
+        Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
+            string text, AgreementRating agreementRating, int postedByUserId);
     }
 
     public class TopicService : ITopicService
@@ -87,7 +88,8 @@ namespace Pobs.Web.Services
             return new StatementModel(statement);
         }
 
-        public async Task<CommentListItemModel> SaveComment(string topicSlug, int statementId, string text, int postedByUserId)
+        public async Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
+            string text, AgreementRating agreementRating, int postedByUserId)
         {
             var statementTask = _context.Topics
                 .SelectMany(x => x.Statements)
@@ -99,7 +101,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            var comment = new Comment(text, await postedByUserTask, DateTime.UtcNow);
+            var comment = new Comment(text, agreementRating, await postedByUserTask, DateTime.UtcNow);
             statement.Comments.Add(comment);
             await _context.SaveChangesAsync();
 

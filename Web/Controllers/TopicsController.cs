@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pobs.Domain;
@@ -83,7 +84,13 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{topicSlug}/statements/{statementId}/comments"), Authorize]
         public async Task<IActionResult> AddComment(string topicSlug, int statementId, [FromBody] CommentFormModel payload)
         {
-            var commentModel = await _topicService.SaveComment(topicSlug, statementId, payload.Text, User.Identity.ParseUserId());
+            if (!Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating agreementRating))
+            {
+                return BadRequest($"Invalid AgreementRating: {payload.AgreementRating}");
+            }
+
+            var commentModel = await _topicService.SaveComment(topicSlug, statementId,
+                payload.Text, agreementRating, User.Identity.ParseUserId());
             if (commentModel != null)
             {
                 return Ok(commentModel);

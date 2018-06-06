@@ -6,9 +6,10 @@ namespace Pobs.Domain.Entities
     public class Comment
     {
         public Comment() { }
-        public Comment(string text, User postedByUser, DateTime postedAt)
+        public Comment(string text, AgreementRating agreementRating, User postedByUser, DateTime postedAt)
         {
             Text = text;
+            AgreementRating = agreementRating;
             PostedByUser = postedByUser;
             PostedAt = postedAt;
         }
@@ -18,6 +19,8 @@ namespace Pobs.Domain.Entities
 
         [Required, MaxLength(280)]
         public string Text { get; set; }
+
+        public AgreementRating AgreementRating { get; set; }
 
         [Required]
         public User PostedByUser { get; set; }

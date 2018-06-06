@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web;
@@ -33,10 +34,11 @@ namespace Pobs.Tests.Integration.Topics
         public async Task Authenticated_ShouldAddComment()
         {
             var statementId = _topic.Statements.Skip(1).First().Id;
-
+            var agreementRating = AgreementRating.Agree;
             var payload = new
             {
-                Text = "My insightful comment on this statement"
+                Text = "My insightful comment on this statement",
+                AgreementRating = agreementRating.ToString()
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
@@ -59,6 +61,7 @@ namespace Pobs.Tests.Integration.Topics
                     var statement = topic.Statements.Single(x => x.Id == statementId);
                     var comment = statement.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
+                    Assert.Equal(agreementRating, comment.AgreementRating);
                     Assert.Equal(_userId, comment.PostedByUser.Id);
                     Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
@@ -71,6 +74,30 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(comment.PostedAt, responseModel.PostedAt);
                     Assert.Equal(comment.PostedByUser.Username, responseModel.PostedByUsername);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task InvalidAgreementRating_ShouldGetBadRequest()
+        {
+            var statementId = _topic.Statements.Skip(1).First().Id;
+            var payload = new
+            {
+                Text = "My insightful comment on this statement",
+                AgreementRating = "NotReallySureToBeHonest"
+            };
+            using (var server = new TestServer(new WebHostBuilder()
+                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateUrl(_topic.Slug, statementId);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal(responseContent, $"Invalid AgreementRating: {payload.AgreementRating}");
             }
         }
 
@@ -109,7 +136,8 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful statement on this topic"
+                Text = "My insightful statement on this topic",
+                AgreementRating = AgreementRating.Neutral
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
@@ -128,7 +156,8 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful statement on this topic"
+                Text = "My insightful statement on this topic",
+                AgreementRating = AgreementRating.Neutral
             };
             using (var server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))

@@ -9,7 +9,10 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
     constructor(props: FormProps<CommentFormModel>) {
         super(props);
 
-        this.state = { text: '' };
+        this.state = {
+            text: '',
+            agreementRating: 'Neutral'
+        };
 
         this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,7 +21,10 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
     public componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
         // This will reset the form when a comment has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '' });
+            this.setState({
+                text: '',
+                agreementRating: 'Neutral'
+            });
         }
     }
 

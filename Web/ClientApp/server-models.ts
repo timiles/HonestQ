@@ -19,6 +19,7 @@ export interface RegisterFormModel {
 
 export interface CommentFormModel {
     text: string;
+    agreementRating: string;
 }
 
 export interface CommentListItemModel {

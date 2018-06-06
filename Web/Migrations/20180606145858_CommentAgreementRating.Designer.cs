@@ -11,9 +11,10 @@ using System;
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(PobsDbContext))]
-    partial class PobsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180606145858_CommentAgreementRating")]
+    partial class CommentAgreementRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

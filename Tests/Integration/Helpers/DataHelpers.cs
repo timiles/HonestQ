@@ -1,4 +1,5 @@
 using System;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 
 namespace Pobs.Tests.Integration.Helpers
@@ -36,7 +37,7 @@ namespace Pobs.Tests.Integration.Helpers
                 var statement = new Statement(Utils.GenerateRandomString(10), user, DateTime.UtcNow);
                 for (int c = 0; c < numberOfCommentsPerStatement; c++)
                 {
-                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), user, DateTime.UtcNow));
+                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, user, DateTime.UtcNow));
                 }
                 topic.Statements.Add(statement);
             }
