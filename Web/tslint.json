@@ -23,6 +23,12 @@
             true,
             "single",
             "jsx-double"
+        ],
+        "space-before-function-paren": [
+            true,
+            {
+                "anonymous": "always"
+            }
         ]
     },
     "rulesDirectory": []
