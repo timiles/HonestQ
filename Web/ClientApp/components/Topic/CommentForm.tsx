@@ -1,5 +1,4 @@
 import * as React from 'react';
-import '../../prototypes';
 import { CommentFormModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';

@@ -1,5 +1,7 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
+// Import prototypes globally so they're available in every component
+import '../prototypes';
 import NavMenu from './NavMenu';
 
 export class Layout extends React.Component<{}, {}> {
