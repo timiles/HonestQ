@@ -5,6 +5,7 @@ import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 
 export interface CommentProps {
     text: string;
+    agreementRating: string;
     postedAt: Date;
     postedByUsername: string;
 }
@@ -16,7 +17,7 @@ export default class Comment extends React.Component<CommentProps, {}> {
     }
 
     public render() {
-        const { text, postedAt, postedByUsername } = this.props;
+        const { text, agreementRating, postedAt, postedByUsername } = this.props;
         const extractedUrl = extractUrlFromText(text);
         const postedAtMoment = moment(postedAt);
         const friendlyTime = postedAtMoment.fromNow();
@@ -25,6 +26,7 @@ export default class Comment extends React.Component<CommentProps, {}> {
             <div className="card">
                 <div className="card-body">
                     <blockquote className="blockquote mb-0">
+                        <span className="badge badge-secondary">{agreementRating.toSentenceCase()}</span>
                         <p>{text}</p>
                         <footer className="blockquote-footer">
                             @{postedByUsername}, <a href="#" title={fullTime}>{friendlyTime}</a>

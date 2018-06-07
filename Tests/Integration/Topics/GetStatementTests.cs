@@ -58,6 +58,7 @@ namespace Pobs.Tests.Integration.Topics
                 {
                     var responseComment = responseModel.Comments.Single(x => x.Id == comment.Id);
                     Assert.Equal(comment.Text, responseComment.Text);
+                    Assert.Equal(comment.AgreementRating.ToString(), responseComment.AgreementRating);
                 }
             }
         }

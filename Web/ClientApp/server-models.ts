@@ -25,6 +25,7 @@ export interface CommentFormModel {
 export interface CommentListItemModel {
     id: number;
     text: string;
+    agreementRating: string;
     postedAt: Date;
     postedByUsername: string;
 }
