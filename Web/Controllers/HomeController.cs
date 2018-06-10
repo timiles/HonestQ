@@ -39,6 +39,11 @@ namespace Pobs.Web.Controllers
                     }
                 }
             }
+            // PRIVATE BETA
+            else if (Request.Path != "/login")
+            {
+                return Redirect("/login");
+            }
 
             dynamic data = new
             {
