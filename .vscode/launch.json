@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Web/bin/Debug/netcoreapp2.0/Pobs.Web.dll",
+            "program": "${workspaceFolder}/Web/bin/Debug/netcoreapp2.1/Pobs.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Web",
             "stopAtEntry": false,
