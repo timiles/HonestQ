@@ -40,7 +40,7 @@ namespace Pobs.Web.Controllers
                 }
             }
             // PRIVATE BETA
-            else if (Request.Path != "/login")
+            else if (Request.Path != "/login" && Request.Path != "/register")
             {
                 return Redirect("/login");
             }
