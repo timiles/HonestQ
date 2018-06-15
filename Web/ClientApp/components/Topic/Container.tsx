@@ -48,11 +48,11 @@ class Container extends React.Component<ContainerProps, {}> {
         }
 
         // REVIEW: Is there a better place to do these?
-        if (topic.slug && !statementForm.submit) {
+        if (topic.slug) {
             statementForm.submit = (form: StatementFormModel) =>
                 this.props.submitStatement(topic.slug!, form);
         }
-        if (commentForm && topic.slug && statement && statement!.statementId && !commentForm.submit) {
+        if (commentForm && topic.slug && statement && statement!.statementId) {
             commentForm.submit = (form: CommentFormModel) =>
                 this.props.submitComment(topic.slug!, statement.statementId!, form);
         }
