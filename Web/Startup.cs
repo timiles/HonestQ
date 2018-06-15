@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Exceptionless;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
 using Pobs.Web.Services;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Pobs.Web
 {
@@ -36,9 +39,13 @@ namespace Pobs.Web
         {
             services.AddCors();
             services.AddMvc();
-            services.AddDbContext<PobsDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("Pobs.Web")));
+            services.AddDbContextPool<PobsDbContext>(
+                options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
+                    b =>
+                    {
+                        b.ServerVersion(new Version(5, 7, 21), ServerType.MySql);
+                        b.MigrationsAssembly("Pobs.Web");
+                    }));
 
             // Configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -78,6 +85,7 @@ namespace Pobs.Web
             });
 
             // Configure DI for application services
+            services.AddScoped(provider => provider.GetService<DbContextPool<PobsDbContext>>().Rent());
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IUserService, UserService>();
 

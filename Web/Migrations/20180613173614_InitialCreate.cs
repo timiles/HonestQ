@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
 namespace Pobs.Web.Migrations
 {
@@ -14,12 +13,12 @@ namespace Pobs.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     FirstName = table.Column<string>(maxLength: 50, nullable: false),
                     LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    Username = table.Column<string>(maxLength: 50, nullable: false),
                     PasswordHash = table.Column<byte[]>(maxLength: 64, nullable: false),
-                    PasswordSalt = table.Column<byte[]>(maxLength: 128, nullable: false),
-                    Username = table.Column<string>(maxLength: 50, nullable: false)
+                    PasswordSalt = table.Column<byte[]>(maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,11 +30,11 @@ namespace Pobs.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Slug = table.Column<string>(maxLength: 100, nullable: false),
                     Name = table.Column<string>(maxLength: 100, nullable: false),
-                    PostedAt = table.Column<DateTime>(nullable: false),
                     PostedByUserId = table.Column<int>(nullable: false),
-                    Slug = table.Column<string>(maxLength: 100, nullable: false)
+                    PostedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -53,11 +52,11 @@ namespace Pobs.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PostedAt = table.Column<DateTime>(nullable: false),
-                    PostedByUserId = table.Column<int>(nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Slug = table.Column<string>(maxLength: 280, nullable: false),
                     Text = table.Column<string>(maxLength: 280, nullable: false),
+                    PostedByUserId = table.Column<int>(nullable: false),
+                    PostedAt = table.Column<DateTime>(nullable: false),
                     TopicId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -82,11 +81,12 @@ namespace Pobs.Web.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PostedAt = table.Column<DateTime>(nullable: false),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Text = table.Column<string>(maxLength: 280, nullable: false),
+                    AgreementRating = table.Column<int>(nullable: false),
                     PostedByUserId = table.Column<int>(nullable: false),
-                    StatementId = table.Column<int>(nullable: false),
-                    Text = table.Column<string>(maxLength: 280, nullable: false)
+                    PostedAt = table.Column<DateTime>(nullable: false),
+                    StatementId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,12 +119,6 @@ namespace Pobs.Web.Migrations
                 name: "IX_Statement_PostedByUserId",
                 table: "Statement",
                 column: "PostedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Statement_Slug",
-                table: "Statement",
-                column: "Slug",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Statement_TopicId",
