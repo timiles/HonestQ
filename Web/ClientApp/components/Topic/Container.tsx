@@ -57,6 +57,8 @@ class Container extends React.Component<ContainerProps, {}> {
                 this.props.submitComment(topic.slug!, statement.statementId!, form);
         }
 
+        const numberOfStatementsInTopic = topic.model ? topic.model!.statements.length : 0;
+
         const slideDurationMilliseconds = 500;
 
         return (
@@ -73,7 +75,10 @@ class Container extends React.Component<ContainerProps, {}> {
                                 >
                                     <div className="slide slide-left vertical-scroll-container">
                                         <Topic {...topic}>
-                                            <StatementForm {...statementForm} />
+                                            <StatementForm
+                                                {...statementForm}
+                                                numberOfStatementsInTopic={numberOfStatementsInTopic}
+                                            />
                                         </Topic>
                                     </div>
                                 </CSSTransition>

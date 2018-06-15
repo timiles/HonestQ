@@ -24,7 +24,9 @@ export default class Topic extends React.Component<TopicProps, {}> {
                 {model && (
                     <>
                         <h1>{model.name}</h1>
-                        <h3>Here's a list of things people might say:</h3>
+                        {model.statements.length > 0 &&
+                            <h3>Here's a list of things people might say:</h3>
+                        }
                         <ul className="list-unstyled">
                             {model.statements.map((x, i) =>
                                 <li key={`statement_${i}`}>

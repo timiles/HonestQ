@@ -4,9 +4,12 @@ import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 
-export default class StatementForm extends React.Component<FormProps<StatementFormModel>, StatementFormModel> {
+type StatementFormProps = FormProps<StatementFormModel>
+    & { numberOfStatementsInTopic: number };
 
-    constructor(props: FormProps<StatementFormModel>) {
+export default class StatementForm extends React.Component<StatementFormProps, StatementFormModel> {
+
+    constructor(props: StatementFormProps) {
         super(props);
 
         this.state = { text: '' };
@@ -23,11 +26,12 @@ export default class StatementForm extends React.Component<FormProps<StatementFo
     }
 
     public render() {
-        const { error, submitting, submitted } = this.props;
+        const { numberOfStatementsInTopic, error, submitting, submitted } = this.props;
+        const headerText = numberOfStatementsInTopic === 0 ? 'Start the conversation' : 'Got something to add?';
         const { text } = this.state;
         return (
             <>
-                <h2>Got something to add?</h2>
+                <h2>{headerText}</h2>
                 <p>Don't worry, these statements are all presented anonymously.</p>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
