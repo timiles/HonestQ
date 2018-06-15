@@ -71,6 +71,12 @@ div.vertical-scroll-container {
     padding-right: 15px;    
 }
 
+.topics-list li {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
 .statement {
     position: relative;
     quotes: "\201C""\201D""\2018""\2019";

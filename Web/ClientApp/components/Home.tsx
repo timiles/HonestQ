@@ -28,12 +28,14 @@ class Home extends React.Component<HomeProps, {}> {
         return (
             <>
                 <h1>POBS!</h1>
-                {topicsList &&
-                    topicsList.topics.map((x: TopicListItemModel, i: number) =>
-                        <div key={`topic${i}`}>
-                            <Link to={`/${x.slug}`}>{x.name}</Link>
-                        </div>)
-                }
+                <ul className="topics-list list-unstyled">
+                    {topicsList &&
+                        topicsList.topics.map((x: TopicListItemModel, i: number) =>
+                            <li key={`topic${i}`}>
+                                <Link to={`/${x.slug}`} className="btn btn-lg btn-default">{x.name}</Link>
+                            </li>)
+                    }
+                </ul>
             </>
         );
     }
