@@ -11,6 +11,11 @@
             "never-prefix"
         ],
         "jsx-no-multiline-js": false,
+        "max-classes-per-file": [
+            true,
+            1,
+            "exclude-class-expressions"
+        ],
         "object-literal-sort-keys": false,
         "ordered-imports": [
             true,

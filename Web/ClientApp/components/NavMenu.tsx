@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, NavLinkProps } from 'react-router-dom';
 import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils';
@@ -11,6 +11,17 @@ interface NavMenuProps {
 
 class NavMenu extends React.Component<NavMenuProps, {}> {
     public render() {
+
+        const AutoCollapseNavLink = class extends React.Component<NavLinkProps, {}> {
+            public render() {
+                return (
+                    <NavLink {...this.props} data-toggle="collapse" data-target=".navbar-collapse.in">
+                        {this.props.children}
+                    </NavLink>
+                );
+            }
+        };
+
         const isAuthenticated = !!this.props.loggedInUser;
         const isAdmin = isUserInRole(this.props.loggedInUser, 'Admin');
         return (
@@ -39,37 +50,37 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                         )}
                         <ul className="nav navbar-nav">
                             <li>
-                                <NavLink exact={true} to={'/'} activeClassName="active">
+                                <AutoCollapseNavLink exact={true} to={'/'} activeClassName="active">
                                     <span className="glyphicon glyphicon-home" /> Home
-                                </NavLink>
+                                </AutoCollapseNavLink>
                             </li>
                             {isAdmin && (
                                 <li>
-                                    <NavLink to={'/admin'} activeClassName="active">
+                                    <AutoCollapseNavLink to={'/admin'} activeClassName="active">
                                         <span className="glyphicon glyphicon-flash" /> Admin
-                                    </NavLink>
+                                    </AutoCollapseNavLink>
                                 </li>
                             )}
                             {!isAuthenticated && (
                                 <li>
-                                    <NavLink to={'/login'} activeClassName="active">
+                                    <AutoCollapseNavLink to={'/login'} activeClassName="active">
                                         <span className="glyphicon glyphicon-log-in" /> Login
-                                    </NavLink>
+                                    </AutoCollapseNavLink>
                                 </li>
                             )}
                             {// PRIVATE BETA: was `!isAuthenticated && (`
                                 isAdmin && (
                                     <li>
-                                        <NavLink to={'/register'} activeClassName="active">
+                                        <AutoCollapseNavLink to={'/register'} activeClassName="active">
                                             <span className="glyphicon glyphicon-user" /> Register
-                                    </NavLink>
+                                        </AutoCollapseNavLink>
                                     </li>
                                 )}
                             {isAuthenticated && (
                                 <li>
-                                    <NavLink to={'/logout'} activeClassName="active">
+                                    <AutoCollapseNavLink to={'/logout'} activeClassName="active">
                                         <span className="glyphicon glyphicon-log-out" /> Log out
-                                    </NavLink>
+                                    </AutoCollapseNavLink>
                                 </li>
                             )}
                         </ul>
