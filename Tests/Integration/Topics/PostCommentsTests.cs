@@ -78,6 +78,44 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task Emoji_ShouldPersist()
+        {
+            var statementId = _topic.Statements.Skip(1).First().Id;
+            var payload = new
+            {
+                Text = "Here's a poop emoji: 💩",
+                AgreementRating = AgreementRating.StronglyAgree.ToString()
+            };
+            using (var server = new TestServer(new WebHostBuilder()
+                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateUrl(_topic.Slug, statementId);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var topic = dbContext.Topics
+                        .Include(x => x.Statements)
+                            .ThenInclude(x => x.Comments)
+                            .ThenInclude(x => x.PostedByUser)
+                        .Single(x => x.Id == _topic.Id);
+
+                    var statement = topic.Statements.Single(x => x.Id == statementId);
+                    var comment = statement.Comments.Single();
+                    Assert.Equal(payload.Text, comment.Text);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+                    Assert.Equal(comment.Text, responseModel.Text);
+                }
+            }
+        }
+
+        [Fact]
         public async Task InvalidAgreementRating_ShouldGetBadRequest()
         {
             var statementId = _topic.Statements.Skip(1).First().Id;

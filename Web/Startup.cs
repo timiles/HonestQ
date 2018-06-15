@@ -44,6 +44,9 @@ namespace Pobs.Web
                     b =>
                     {
                         b.ServerVersion(new Version(5, 7, 21), ServerType.MySql);
+                        b.CharSetBehavior(CharSetBehavior.AppendToAllAnsiColumns);
+                        b.AnsiCharSet(CharSet.Latin1);
+                        b.UnicodeCharSet(CharSet.Utf8mb4);
                         b.MigrationsAssembly("Pobs.Web");
                     }));
 
