@@ -18,15 +18,18 @@ namespace Pobs.Tests.Integration.Topics
     {
         private string _generateUrl(string topicSlug, int statementId) =>
             $"/api/topics/{topicSlug}/statements/{statementId}";
-        private readonly int _userId;
+        private readonly int _statementUserId;
+        private readonly int _commentUserId;
         private readonly Topic _topic;
 
         public GetStatementTests()
         {
-            var user = DataHelpers.CreateUser();
-            _userId = user.Id;
+            var statementUser = DataHelpers.CreateUser();
+            _statementUserId = statementUser.Id;
+            var commentUser = DataHelpers.CreateUser();
+            _commentUserId = commentUser.Id;
             // Create 3 statements so we can be sure we get the one we request
-            _topic = DataHelpers.CreateTopic(user, 3, 3);
+            _topic = DataHelpers.CreateTopic(statementUser, 3, commentUser, 3);
         }
 
         [Fact]
@@ -40,7 +43,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_statementUserId);
 
                 var url = _generateUrl(_topic.Slug, statement.Id);
                 var response = await client.GetAsync(url);
@@ -71,7 +74,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_statementUserId);
 
                 var url = _generateUrl("INCORRECT_SLUG", _topic.Statements.First().Id);
                 var response = await client.GetAsync(url);
@@ -87,7 +90,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_statementUserId);
 
                 var url = _generateUrl(_topic.Slug, 0);
                 var response = await client.GetAsync(url);
@@ -97,7 +100,8 @@ namespace Pobs.Tests.Integration.Topics
 
         public void Dispose()
         {
-            DataHelpers.DeleteUser(_userId);
+            DataHelpers.DeleteUser(_commentUserId);
+            DataHelpers.DeleteUser(_statementUserId);
         }
     }
 }

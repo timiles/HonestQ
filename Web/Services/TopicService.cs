@@ -79,7 +79,7 @@ namespace Pobs.Web.Services
             var statement = await _context.Topics
                 .SelectMany(x => x.Statements)
                 .Include(x => x.Comments)
-                .Include(x => x.PostedByUser)
+                .ThenInclude(x => x.PostedByUser)
                 .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Id == statementId);
             if (statement == null)
             {
