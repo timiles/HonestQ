@@ -27,7 +27,7 @@ interface GetTopicSuccessAction {
     type: 'GET_TOPIC_SUCCESS';
     payload: { topic: TopicModel; topicSlug: string; };
 }
-interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { error: string; }; }
+interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { topicSlug: string; error: string; }; }
 interface StatementFormSubmittedAction { type: 'STATEMENT_FORM_SUBMITTED'; }
 interface StatementFormReceivedAction {
     type: 'STATEMENT_FORM_RECEIVED';
@@ -47,7 +47,7 @@ interface GetStatementSuccessAction {
         statementId: number;
     };
 }
-interface GetStatementFailedAction { type: 'GET_STATEMENT_FAILED'; payload: { error: string; }; }
+interface GetStatementFailedAction { type: 'GET_STATEMENT_FAILED'; payload: { statementId: number; error: string; }; }
 interface CommentFormSubmittedAction { type: 'COMMENT_FORM_SUBMITTED'; }
 interface CommentFormReceivedAction {
     type: 'COMMENT_FORM_RECEIVED';
@@ -87,7 +87,12 @@ export const actionCreators = {
                     });
                 })
                 .catch((reason) => {
-                    dispatch({ type: 'GET_TOPIC_FAILED', payload: { error: reason || 'Get topic failed' } });
+                    dispatch({
+                        type: 'GET_TOPIC_FAILED', payload: {
+                            topicSlug,
+                            error: reason || 'Get topic failed',
+                        },
+                    });
                 });
         })();
     },
@@ -131,7 +136,10 @@ export const actionCreators = {
                     .catch((reason) => {
                         dispatch({
                             type: 'GET_STATEMENT_FAILED',
-                            payload: { error: reason || 'Get statement failed' },
+                            payload: {
+                                statementId,
+                                error: reason || 'Get statement failed',
+                            },
                         });
                     });
             })();
@@ -191,7 +199,10 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
         case 'GET_TOPIC_FAILED':
             return {
                 ...state,
-                topic: { error: action.payload.error },
+                topic: {
+                    slug: action.payload.topicSlug,
+                    error: action.payload.error,
+                },
             };
         case 'STATEMENT_FORM_SUBMITTED':
             return {
@@ -244,7 +255,10 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
         case 'GET_STATEMENT_FAILED':
             return {
                 ...state,
-                statement: { error: action.payload.error },
+                statement: {
+                    statementId: action.payload.statementId,
+                    error: action.payload.error,
+                },
             };
         case 'COMMENT_FORM_SUBMITTED':
             return {

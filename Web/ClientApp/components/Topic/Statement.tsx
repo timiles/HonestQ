@@ -16,10 +16,11 @@ export default class Statement extends React.Component<StatementProps, {}> {
     }
 
     public render() {
-        const { loading, model } = this.props;
+        const { loading, error, model } = this.props;
         return (
             <>
                 {loading && <p>Loading...</p>}
+                {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {model && (
                     <div>
                         <h2 className="statement">{model.text}</h2>
