@@ -1,7 +1,7 @@
 ﻿import { Reducer } from 'redux';
+import { FormProps } from '../components/shared/FormProps';
 import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
-import { FormProps } from '../components/shared/FormProps';
 // tslint:disable-next-line:max-line-length
 import { CommentFormModel, CommentListItemModel, StatementFormModel, StatementListItemModel, StatementModel, TopicModel } from '../server-models';
 import { getJson, postJson } from '../utils';

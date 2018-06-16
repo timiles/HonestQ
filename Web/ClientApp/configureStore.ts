@@ -1,7 +1,7 @@
 import { History } from 'history';
 import { routerMiddleware, routerReducer } from 'react-router-redux';
 // tslint:disable-next-line:max-line-length
-import { GenericStoreEnhancer, ReducersMapObject, Store, StoreEnhancerStoreCreator, applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore, GenericStoreEnhancer, ReducersMapObject, Store, StoreEnhancerStoreCreator } from 'redux';
 import thunk from 'redux-thunk';
 import * as StoreModule from './store';
 

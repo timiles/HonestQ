@@ -1,4 +1,4 @@
-import { RenderResult, createServerRenderer } from 'aspnet-prerendering';
+import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 import { createMemoryHistory } from 'history';
 import * as React from 'react';
 // tslint:disable-next-line:no-submodule-imports
