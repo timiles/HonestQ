@@ -4,7 +4,16 @@
     {
         public static string CleanStatementText(this string value)
         {
-            return value.Trim(' ', '\'', '"', '\t');
+            value = value.Trim(' ', '\t');
+            if (value.StartsWith("\"") || value.EndsWith("\""))
+            {
+                if (!value.Substring(1, value.Length - 2).Contains("\""))
+                {
+                    // If we start or end with a quote, and there are no quotes in between, trim it
+                    value = value.Trim('\"');
+                }
+            }
+            return value;
         }
     }
 }
