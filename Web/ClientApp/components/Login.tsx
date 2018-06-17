@@ -27,7 +27,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
 
     public render() {
         if (this.props.loggedInUser) {
-            return <Redirect to="/" />;
+            return <Redirect to="/intro" />;
         }
         const { username, password, rememberMe } = this.state;
         const { submitting, submitted, error } = this.props;

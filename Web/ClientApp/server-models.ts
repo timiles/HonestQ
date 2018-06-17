@@ -17,6 +17,10 @@ export interface RegisterFormModel {
     password: string;
 }
 
+export interface IntroModel {
+    content: string;
+}
+
 export interface CommentFormModel {
     text: string;
     agreementRating: string;
