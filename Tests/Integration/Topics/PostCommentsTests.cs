@@ -63,7 +63,7 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(payload.Text, comment.Text);
                     Assert.Equal(agreementRating, comment.AgreementRating);
                     Assert.Equal(_userId, comment.PostedByUser.Id);
-                    Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
 
                     var responseContent = await response.Content.ReadAsStringAsync();
