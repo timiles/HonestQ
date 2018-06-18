@@ -32,7 +32,6 @@ namespace Pobs.Web.Controllers
                     {
                         // Test our connection to exceptionless (if it was initialized)
                         exceptionlessClient.SubmitLog("Health check");
-                        throw new Exception();
                     }
                     catch (Exception ex)
                     {
