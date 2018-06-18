@@ -3,6 +3,7 @@ import { CommentFormModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
+import AgreementRatingScale from './AgreementRatingScale';
 
 export default class CommentForm extends React.Component<FormProps<CommentFormModel>, CommentFormModel> {
 
@@ -26,7 +27,6 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
     public render() {
         const { submitting, submitted, error } = this.props;
         const { text, agreementRating } = this.state;
-        const agreementRatingValues = ['StronglyDisagree', 'Disagree', 'Neutral', 'Agree', 'StronglyAgree'];
         return (
             <>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
@@ -41,22 +41,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
                     <div className="form-group">
-                        <ul className="rating-scale">
-                            {agreementRatingValues.map((x: string, i: number) =>
-                                <li key={`agreementRating${i}`}>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            name="agreementRating"
-                                            value={x}
-                                            onChange={this.handleAgreementRatingChange}
-                                            checked={agreementRating === x}
-                                        />
-                                        {x.toSentenceCase()}
-                                    </label>
-                                </li>)
-                            }
-                        </ul>
+                        <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
                     </div>
                     <div className="form-group">
                         <SubmitButton submitting={submitting} />
@@ -70,8 +55,8 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         this.setState({ text: value });
     }
 
-    private handleAgreementRatingChange(event: React.FormEvent<HTMLInputElement>): void {
-        this.setState({ agreementRating: event.currentTarget.value });
+    private handleAgreementRatingChange(name: string, value: string): void {
+        this.setState({ agreementRating: value });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
