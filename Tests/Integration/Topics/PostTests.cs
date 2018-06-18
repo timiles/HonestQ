@@ -2,12 +2,9 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Topics
@@ -30,8 +27,7 @@ namespace Pobs.Tests.Integration.Topics
                 Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
                 Name = "Topic (1982)"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id, Role.Admin);
@@ -63,8 +59,7 @@ namespace Pobs.Tests.Integration.Topics
                 Slug = topic.Slug,
                 Name = "Another topic with the same url"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id, Role.Admin);
@@ -85,8 +80,7 @@ namespace Pobs.Tests.Integration.Topics
                 Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
                 Name = "Topic (1982)"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);

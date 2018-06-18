@@ -3,12 +3,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web;
 using Pobs.Web.Helpers;
 using Pobs.Web.Models.Account;
 using Xunit;
@@ -50,8 +47,7 @@ namespace Pobs.Tests.Integration.Account
                 Username = _user.Username,
                 Password = _password
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
@@ -83,8 +79,7 @@ namespace Pobs.Tests.Integration.Account
                 Username = _user.Username,
                 Password = "WRONG_PASSWORD"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
@@ -106,8 +101,7 @@ namespace Pobs.Tests.Integration.Account
                 Username = "i_do_not_exist",
                 Password = _password
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());

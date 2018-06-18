@@ -1,10 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Pobs.Domain;
-using Pobs.Tests.Integration.Helpers;
-using Pobs.Web;
+﻿using System.Threading.Tasks;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Health
@@ -16,8 +10,7 @@ namespace Pobs.Tests.Integration.Health
         [Fact]
         public async Task ShouldBeOK()
         {
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 var response = await client.GetAsync(Url);

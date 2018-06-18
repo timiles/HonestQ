@@ -2,12 +2,9 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web;
 using Pobs.Web.Models.Topics;
 using Xunit;
 
@@ -36,8 +33,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 Text = "\"My insightful statement on this topic\""
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_userId);
@@ -75,8 +71,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 Text = "Here's a poop emoji: 💩"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_userId);
@@ -111,8 +106,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 Text = "My insightful statement on this topic"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 var url = _generateStatementsUrl(_topicSlug);
@@ -137,8 +131,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 Text = "My insightful statement on this topic"
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_userId);

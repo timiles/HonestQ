@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web;
 using Pobs.Web.Helpers;
 using Xunit;
 
@@ -47,8 +44,7 @@ namespace Pobs.Tests.Integration.Account
                 Username = _user.Username,
                 Password = _password
             };
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 // First log in to get the cookie

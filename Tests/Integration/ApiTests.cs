@@ -1,20 +1,15 @@
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Pobs.Tests.Integration.Helpers;
-using Pobs.Web;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Topics
+namespace Pobs.Tests.Integration
 {
     public class ApiTests
     {
         [Fact]
         public async Task NotFoundApiUrl_ShouldReturn404NotFound()
         {
-            using (var server = new TestServer(new WebHostBuilder()
-                .UseStartup<Startup>().UseConfiguration(TestSetup.Configuration)))
+            using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 var response = await client.GetAsync("/api/invalid_endpoint");
