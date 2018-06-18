@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
@@ -117,7 +119,7 @@ namespace Pobs.Web
                     ReactHotModuleReplacement = true
                 });
             }
-            else
+            else if (env.IsProduction())
             {
                 app.UseExceptionHandler("/Home/Error");
 
@@ -126,6 +128,31 @@ namespace Pobs.Web
                 {
                     app.UseExceptionless(appSettings.ExceptionlessApiKey);
                 }
+
+                // NOTE:
+                // app.UseForwardedHeaders() is for some reason not working;
+                // app.UseHttpsRedirection() would also redirect health check;
+                // so I'm taking a bit more explicit control and just doing it like this instead.
+                const string productionDomain = "pobs.timiles.com";
+                app.UseRewriter(new RewriteOptions()
+                    .Add(rule =>
+                    {
+                        // Important! Permit health check for internal pings
+                        if (rule.HttpContext.Request.Path == "/api/health")
+                        {
+                            return;
+                        }
+
+                        // Get scheme according to X-Forwarded-Proto from the load balancer
+                        var scheme = rule.HttpContext.Request.Headers[ForwardedHeadersDefaults.XForwardedProtoHeaderName];
+                        if (rule.HttpContext.Request.Host.Value != productionDomain
+                            || scheme == "http")
+                        {
+                            var url = $"https://{productionDomain}{rule.HttpContext.Request.Path}{rule.HttpContext.Request.QueryString}";
+                            rule.HttpContext.Response.Redirect(url);
+                            rule.Result = RuleResult.EndResponse;
+                        }
+                    }));
             }
 
             app.UseStaticFiles();
