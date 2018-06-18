@@ -34,6 +34,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="text">Comment</label>
                         <SuperTextArea
+                            id="text"
                             value={text}
                             maxLength={280}
                             onChange={this.handleTextAreaChange}
@@ -51,7 +52,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         );
     }
 
-    private handleTextAreaChange(value: string): void {
+    private handleTextAreaChange(name: string, value: string): void {
         this.setState({ text: value });
     }
 

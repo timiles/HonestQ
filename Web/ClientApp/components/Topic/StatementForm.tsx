@@ -51,7 +51,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
         );
     }
 
-    private handleTextAreaChange(value: string): void {
+    private handleTextAreaChange(name: string, value: string): void {
         this.setState({ text: value });
     }
 
