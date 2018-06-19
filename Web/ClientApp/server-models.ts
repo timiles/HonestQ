@@ -2,6 +2,7 @@ export interface LoggedInUserModel {
     firstName: string;
     username: string;
     token: string;
+    timeZoneOffsetHours: number;
 }
 
 export interface LoginFormModel {

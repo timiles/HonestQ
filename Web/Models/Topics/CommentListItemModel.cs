@@ -12,7 +12,7 @@ namespace Pobs.Web.Models.Topics
             this.Id = comment.Id;
             this.Text = comment.Text;
             this.AgreementRating = comment.AgreementRating.ToString();
-            this.PostedAt = comment.PostedAt;
+            this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUsername = comment.PostedByUser.Username;
         }
 

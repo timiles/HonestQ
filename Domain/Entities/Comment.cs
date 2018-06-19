@@ -6,7 +6,7 @@ namespace Pobs.Domain.Entities
     public class Comment
     {
         public Comment() { }
-        public Comment(string text, AgreementRating agreementRating, User postedByUser, DateTime postedAt)
+        public Comment(string text, AgreementRating agreementRating, User postedByUser, DateTimeOffset postedAt)
         {
             Text = text;
             AgreementRating = agreementRating;
@@ -25,7 +25,7 @@ namespace Pobs.Domain.Entities
         [Required]
         public User PostedByUser { get; set; }
 
-        public DateTime PostedAt { get; set; }
+        public DateTimeOffset PostedAt { get; set; }
 
 
         [Required]

@@ -96,3 +96,15 @@ export function extractUrlFromText(text: string): string | null {
     }
     return null;
 }
+
+export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number) {
+    // If date from server ends with 'Z', javascript automatically applies the local time zone
+    if (dateString.endsWith('Z')) {
+        dateString = dateString.substring(0, dateString.length - 1);
+    }
+    const date = new Date(dateString);
+    if (hoursOffset !== 0) {
+        date.setTime(date.getTime() + (hoursOffset * 60 * 60 * 1000));
+    }
+    return date;
+}

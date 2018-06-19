@@ -3,9 +3,10 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { CommentFormModel, StatementFormModel } from '../../server-models';
+import { CommentFormModel, LoggedInUserModel, StatementFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 import CommentForm from './../Topic/CommentForm';
 import Statement from './../Topic/Statement';
 import StatementForm from './../Topic/StatementForm';
@@ -14,6 +15,7 @@ import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
     & typeof TopicStore.actionCreators
+    & { loggedInUser: LoggedInUserModel | undefined }
     & RouteComponentProps<{ topicSlug: string, statementId?: number }>;
 
 class Container extends React.Component<ContainerProps, {}> {
@@ -62,7 +64,7 @@ class Container extends React.Component<ContainerProps, {}> {
         const slideDurationMilliseconds = 500;
 
         return (
-            <>
+            <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 {this.renderHelmetTags()}
 
                 <div className="col-md-6">
@@ -99,7 +101,7 @@ class Container extends React.Component<ContainerProps, {}> {
                         </TransitionGroup>
                     </div>
                 </div>
-            </>
+            </LoggedInUserContext.Provider>
         );
     }
 
@@ -153,6 +155,6 @@ class Container extends React.Component<ContainerProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.topic),
+    (state: ApplicationState, ownProps: any) => ({ ...state.topic, loggedInUser: state.login.loggedInUser }),
     TopicStore.actionCreators,
 )(Container);
