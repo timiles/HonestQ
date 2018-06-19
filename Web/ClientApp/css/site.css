@@ -78,33 +78,31 @@ div.vertical-scroll-container {
 }
 
 .statement {
-    position: relative;
-    quotes: "\201C""\201D""\2018""\2019";
+    quotes: "“" "”" "‘" "’";
     text-align: left;
 }
     .statement:before, .statement:after {
-        color: #ccc;
+        font-family: Georgia, serif;
         font-size: 4em;
         line-height: 0;
+        opacity: .2;
+        position: relative;
     }
     .statement:before {
         content: open-quote;
         margin-right: 10px;
-        position: relative;
-        top: 30px;
+        top: 33px;
     }
     .statement:after {
-        bottom: 0;
         content: close-quote;
         margin-left: 10px;
-        position: absolute;
-        right: 16px;
+        bottom: -33px;
     }
     h2.statement:before {
         top: 54px;
     }
     h2.statement:after {
-        bottom: -14px;
+        bottom: -54px;
     }
 
 .statement-list-item {
