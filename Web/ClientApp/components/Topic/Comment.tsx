@@ -6,7 +6,7 @@ import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 export interface CommentProps {
     text: string;
     agreementRating: string;
-    postedAt: Date;
+    postedAt: string;
     postedByUsername: string;
 }
 

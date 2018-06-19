@@ -30,7 +30,7 @@ export interface CommentListItemModel {
     id: number;
     text: string;
     agreementRating: string;
-    postedAt: Date;
+    postedAt: string;
     postedByUsername: string;
 }
 
