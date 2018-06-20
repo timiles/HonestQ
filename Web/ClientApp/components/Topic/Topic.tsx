@@ -21,26 +21,47 @@ export default class Topic extends React.Component<TopicProps, {}> {
             <>
                 {loading && <p>Loading...</p>}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                {model && (
-                    <>
-                        <h1>{model.name}</h1>
-                        {model.statements.length > 0 &&
-                            <h3>Here's a list of things people might say:</h3>
+                {slug && model && this.renderModel(slug!, model!)}
+            </>
+        );
+    }
+
+    private renderModel(slug: string, model: TopicModel) {
+        const { name, summary, moreInfoUrl, statements } = model;
+        return (
+            <>
+                <h1>{name}</h1>
+                {(summary || moreInfoUrl) &&
+                    <div className="bs-callout bs-callout-info">
+                        {summary &&
+                            <>
+                                <h4>Summary</h4>
+                                <p>{summary}</p>
+                            </>
                         }
-                        <ul className="list-unstyled">
-                            {model.statements.map((x, i) =>
-                                <li key={`statement_${i}`}>
-                                    <Link
-                                        to={`/${slug}/${x.id}/${x.slug}`}
-                                        className="btn btn-lg btn-default statement statement-list-item"
-                                    >
-                                        {x.text}
-                                    </Link>
-                                </li>)}
-                        </ul>
-                        {this.props.children}
-                    </>
-                )}
+                        {moreInfoUrl &&
+                            <>
+                                <h4>More info</h4>
+                                <Link to={moreInfoUrl} target="_blank">{moreInfoUrl}</Link>
+                            </>
+                        }
+                    </div>
+                }
+                {statements.length > 0 &&
+                    <h3>Here's a list of things people might say:</h3>
+                }
+                <ul className="list-unstyled">
+                    {statements.map((x, i) =>
+                        <li key={`statement_${i}`}>
+                            <Link
+                                to={`/${slug}/${x.id}/${x.slug}`}
+                                className="btn btn-lg btn-default statement statement-list-item"
+                            >
+                                {x.text}
+                            </Link>
+                        </li>)}
+                </ul>
+                {this.props.children}
             </>
         );
     }

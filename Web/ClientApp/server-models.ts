@@ -54,11 +54,15 @@ export interface StatementModel {
 export interface TopicFormModel {
     slug: string;
     name: string;
+    summary: string;
+    moreInfoUrl: string;
 }
 
 export interface TopicModel {
     slug: string;
     name: string;
+    summary: string;
+    moreInfoUrl: string;
     statements: StatementListItemModel[];
 }
 
