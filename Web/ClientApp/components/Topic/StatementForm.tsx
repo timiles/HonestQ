@@ -32,11 +32,25 @@ export default class StatementForm extends React.Component<StatementFormProps, S
         return (
             <>
                 <h2>{headerText}</h2>
-                <p>Don't worry, these statements are all presented anonymously.</p>
+                <div className="alert alert-info" role="alert">
+                    <p>Please remember, Statements under a Topic are:
+                        <ul>
+                            <li>Unique</li>
+                            <li>Anonymous</li>
+                            <li>A general summary of a fact or opinion that people believe</li>
+                        </ul>
+                    </p>
+                    <p>
+                        Once you have submitted a Statement, you can then discuss whether you agree with it,
+                        provide further info, and see other people's points of view in the Comments section.
+                    </p>
+                </div>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" onSubmit={this.handleSubmit}>
+                <form className="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
+                        <label htmlFor="statementText">Statement</label>
                         <SuperTextArea
+                            id="statementText"
                             value={text}
                             maxLength={280}
                             onChange={this.handleTextAreaChange}
