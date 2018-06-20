@@ -1,4 +1,5 @@
-﻿import { Reducer } from 'redux';
+﻿import { push } from 'react-router-redux';
+import { Reducer } from 'redux';
 import { FormProps } from '../components/shared/FormProps';
 import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
@@ -111,6 +112,9 @@ export const actionCreators = {
                     `/api/topics/${topicSlug}/statements`, statementForm, getState().login.loggedInUser!)
                     .then((responseModel: StatementListItemModel) => {
                         dispatch({ type: 'STATEMENT_FORM_RECEIVED', payload: { statementListItem: responseModel } });
+                        setTimeout(() => {
+                            dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
+                        }, 100);
                     })
                     .catch((reason: string) => {
                         dispatch({
