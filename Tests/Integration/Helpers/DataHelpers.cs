@@ -31,7 +31,11 @@ namespace Pobs.Tests.Integration.Helpers
         {
             // Guarantee slug has both upper & lower case characters
             var name = "ABCabc" + Utils.GenerateRandomString(10);
-            var topic = new Topic(name, name, statementUser, DateTime.UtcNow);
+            var topic = new Topic(name, name, statementUser, DateTime.UtcNow)
+            {
+                Summary = Utils.GenerateRandomString(50),
+                MoreInfoUrl = Utils.GenerateRandomString(50),
+            };
 
             for (int s = 0; s < numberOfStatements; s++)
             {

@@ -40,6 +40,8 @@ namespace Pobs.Tests.Integration.Topics
                 var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
                 Assert.Equal(_topic.Slug, responseModel.Slug);
                 Assert.Equal(_topic.Name, responseModel.Name);
+                Assert.Equal(_topic.Summary, responseModel.Summary);
+                Assert.Equal(_topic.MoreInfoUrl, responseModel.MoreInfoUrl);
 
                 Assert.Equal(3, _topic.Statements.Count);
                 Assert.Equal(_topic.Statements.Count, responseModel.Statements.Length);
