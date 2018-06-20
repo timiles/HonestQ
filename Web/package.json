@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "dependencies": {
     "aspnet-prerendering": "^3.0.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.1.1",
     "domain-task": "^3.0.3",
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
@@ -45,6 +45,7 @@
     "file-loader": "^0.11.2",
     "jquery": "^3.3.1",
     "node-noop": "^1.0.0",
+    "popper.js": "^1.14.3",
     "style-loader": "^0.18.2",
     "tslint": "^5.10.0",
     "tslint-react": "^3.6.0",
