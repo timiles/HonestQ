@@ -49,8 +49,10 @@ export default class StatementForm extends React.Component<StatementFormProps, S
                 <form className="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="statementText">Statement</label>
+                        <div className="statement statement-floating-quotes" />
                         <SuperTextArea
                             id="statementText"
+                            className="statement-text-area"
                             value={text}
                             maxLength={280}
                             onChange={this.handleTextAreaChange}

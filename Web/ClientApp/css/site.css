@@ -104,6 +104,20 @@ div.vertical-scroll-container {
     h2.statement:after {
         bottom: -54px;
     }
+    .statement-floating-quotes:before {
+        float: left;
+        padding-left: 10px;
+    }
+    .statement-floating-quotes:after {
+        float: right;
+        padding-right: 10px;
+    }
+    .statement-text-area {
+        font-size: 18px;
+        padding-left: 40px;
+        padding-right: 40px;
+        resize: none;
+    }
 
 .statement-list-item {
     margin-bottom: 10px;

@@ -3,6 +3,7 @@ import * as React from 'react';
 interface Props {
     id?: string;
     name?: string;
+    className?: string;
     value: string;
     maxLength: number;
     onChange: (name: string, value: string) => void;
@@ -34,7 +35,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     public render() {
-        const { id, name, maxLength } = this.props;
+        const { id, name, className, maxLength } = this.props;
         const { value, scrollHeight, focused } = this.state;
         const remainingCharacterCount = maxLength - value.length;
         // Use rows to specify a minimum, then the min-height CSS will override it as the text grows
@@ -45,7 +46,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
                 <textarea
                     id={id}
                     name={name}
-                    className="form-control"
+                    className={'form-control ' + className}
                     style={{ minHeight }}
                     rows={rowCount}
                     maxLength={maxLength}
