@@ -12,7 +12,7 @@ namespace Pobs.Web.Services
     public interface ITopicService
     {
         Task<TopicsListModel> GetAllTopics();
-        Task SaveTopic(string slug, string name, int postedByUserId);
+        Task SaveTopic(string slug, string name, string summary, string moreInfoUrl, int postedByUserId, bool isApproved);
         Task<TopicModel> GetTopic(string topicSlug);
         Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
@@ -35,14 +35,20 @@ namespace Pobs.Web.Services
             return new TopicsListModel(topics);
         }
 
-        public async Task SaveTopic(string slug, string name, int postedByUserId)
+        public async Task SaveTopic(string slug, string name, string summary, string moreInfoUrl, int postedByUserId, bool isApproved)
         {
             if (_context.Topics.Any(x => x.Slug == slug))
             {
                 throw new AppException($"A topic already exists at /{slug}");
             }
             var postedByUser = await _context.Users.FindAsync(postedByUserId);
-            _context.Topics.Add(new Topic(slug, name, postedByUser, DateTime.UtcNow));
+            _context.Topics.Add(
+                new Topic(slug, name, postedByUser, DateTime.UtcNow)
+                {
+                    Summary = summary,
+                    MoreInfoUrl = moreInfoUrl,
+                    IsApproved = isApproved
+                });
             await _context.SaveChangesAsync();
         }
 

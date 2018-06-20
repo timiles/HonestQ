@@ -27,12 +27,19 @@ namespace Pobs.Domain.Entities
         [Required, MaxLength(100)]
         public string Name { get; set; }
 
+        [MaxLength(280)]
+        public string Summary { get; set; }
+
+        [MaxLength(100)]
+        public string MoreInfoUrl { get; set; }
+
 
         [Required]
         public virtual User PostedByUser { get; set; }
 
         public DateTime PostedAt { get; set; }
 
+        public bool IsApproved { get; set; }
 
         public virtual ICollection<Statement> Statements { get; set; }
     }

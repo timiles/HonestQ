@@ -25,7 +25,9 @@ namespace Pobs.Tests.Integration.Topics
             var payload = new
             {
                 Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
-                Name = "Topic (1982)"
+                Name = "Topic (1982)",
+                Summary = "This is a quick blurb about the topic",
+                MoreInfoUrl = "https://www.example.com/Topic_(1982)"
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -44,8 +46,11 @@ namespace Pobs.Tests.Integration.Topics
                 var topic = user.Topics.Single();
                 Assert.Equal(payload.Slug, topic.Slug);
                 Assert.Equal(payload.Name, topic.Name);
+                Assert.Equal(payload.Summary, topic.Summary);
+                Assert.Equal(payload.MoreInfoUrl, topic.MoreInfoUrl);
                 Assert.Equal(_user.Id, topic.PostedByUser.Id);
                 Assert.True(topic.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                Assert.True(topic.IsApproved);
             }
         }
 

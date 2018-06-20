@@ -39,7 +39,8 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                await _topicService.SaveTopic(payload.Slug, payload.Name, User.Identity.ParseUserId());
+                await _topicService.SaveTopic(
+                    payload.Slug, payload.Name, payload.Summary, payload.MoreInfoUrl, User.Identity.ParseUserId(), true);
                 return Ok();
             }
             catch (AppException ex)
