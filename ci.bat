@@ -1,5 +1,9 @@
 pushd Web
 call tslint.bat
 popd
-dotnet test .\Tests\Unit\Pobs.Tests.Unit.csproj 1> nul
-dotnet test .\Tests\Integration\Pobs.Tests.Integration.csproj 1> nul
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+dotnet test .\Tests\Unit\Pobs.Tests.Unit.csproj
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+dotnet test .\Tests\Integration\Pobs.Tests.Integration.csproj

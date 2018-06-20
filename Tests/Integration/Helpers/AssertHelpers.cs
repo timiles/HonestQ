@@ -5,7 +5,7 @@ namespace Pobs.Tests.Integration.Helpers
 {
     static class AssertHelpers
     {
-        public static void Equal(DateTime expected, DateTime actual, int numberOfTicksTolerance)
+        public static void Equal(DateTimeOffset expected, DateTimeOffset actual, int numberOfTicksTolerance)
         {
             Assert.True(Math.Abs(expected.Ticks - actual.Ticks) <= numberOfTicksTolerance);
         }
