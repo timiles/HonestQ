@@ -18,19 +18,23 @@ namespace Pobs.Domain.Utils
 
         // White space, full-stop, comma, colon, semicolon, em-dash, en-dash, hyphen, underscore
         static readonly Regex WordDelimiters = new Regex(@"[\s\.,:;—–\-_]", RegexOptions.Compiled);
-        static readonly Regex InvalidChars = new Regex(@"[^a-z0-9\-_]", RegexOptions.Compiled);
+        static readonly Regex LowerCaseInvalidChars = new Regex(@"[^a-z0-9\-_]", RegexOptions.Compiled);
+        static readonly Regex AnyCaseInvalidChars = new Regex(@"[^a-zA-Z0-9\-_]", RegexOptions.Compiled);
         static readonly Regex MultipleUnderscores = new Regex(@"_{2,}", RegexOptions.Compiled);
 
-        public static string ToSlug(this string value)
+        public static string ToSlug(this string value, bool preserveCasing = false)
         {
-            value = value.ToLowerInvariant()
-                .RemoveDiacritics();
+            if (!preserveCasing)
+            {
+                value = value.ToLowerInvariant();
+            }
+            value = value.RemoveDiacritics();
 
             // Replace all word delimiters with underscores
             value = WordDelimiters.Replace(value, "_");
 
             // Strip out invalid characters
-            value = InvalidChars.Replace(value, "");
+            value = (preserveCasing ? AnyCaseInvalidChars : LowerCaseInvalidChars).Replace(value, "");
 
             // Replace multiple underscores with a single underscore
             value = MultipleUnderscores.Replace(value, "_");

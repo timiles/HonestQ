@@ -27,7 +27,7 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static Topic CreateTopic(User statementUser, int numberOfStatements = 0,
-            User commentUser = null, int numberOfCommentsPerStatement = 0)
+            User commentUser = null, int numberOfCommentsPerStatement = 0, bool isApproved = false)
         {
             // Guarantee slug has both upper & lower case characters
             var name = "ABCabc" + Utils.GenerateRandomString(10);
@@ -35,6 +35,7 @@ namespace Pobs.Tests.Integration.Helpers
             {
                 Summary = Utils.GenerateRandomString(50),
                 MoreInfoUrl = Utils.GenerateRandomString(50),
+                IsApproved = isApproved
             };
 
             for (int s = 0; s < numberOfStatements; s++)

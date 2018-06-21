@@ -20,11 +20,10 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task AuthenticatedAsAdmin_ShouldCreateTopic()
+        public async Task Authenticated_ShouldCreateUnapprovedTopic()
         {
             var payload = new
             {
-                Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
                 Name = "Topic (1982)",
                 Summary = "This is a quick blurb about the topic",
                 MoreInfoUrl = "https://www.example.com/Topic_(1982)"
@@ -32,7 +31,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id, Role.Admin);
+                client.AuthenticateAs(_user.Id);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -44,30 +43,48 @@ namespace Pobs.Tests.Integration.Topics
                 dbContext.Entry(user).Collection(b => b.Topics).Load();
 
                 var topic = user.Topics.Single();
-                Assert.Equal(payload.Slug, topic.Slug);
+                Assert.NotNull(topic.Slug);
                 Assert.Equal(payload.Name, topic.Name);
                 Assert.Equal(payload.Summary, topic.Summary);
                 Assert.Equal(payload.MoreInfoUrl, topic.MoreInfoUrl);
                 Assert.Equal(_user.Id, topic.PostedByUser.Id);
                 Assert.True(topic.PostedAt > DateTime.UtcNow.AddMinutes(-1));
-                Assert.True(topic.IsApproved);
+                Assert.False(topic.IsApproved);
             }
         }
 
         [Fact]
-        public async Task TopicSlugAlreadyExists_ShouldGetBadRequest()
+        public async Task TopicSlugAlreadyExistsUnapproved_ShouldBeOK()
         {
             var topic = DataHelpers.CreateTopic(_user);
 
             var payload = new
             {
-                Slug = topic.Slug,
-                Name = "Another topic with the same url"
+                Name = topic.Name
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id, Role.Admin);
+                client.AuthenticateAs(_user.Id);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
+        [Fact]
+        public async Task TopicSlugAlreadyExistsApproved_ShouldGetBadRequest()
+        {
+            var topic = DataHelpers.CreateTopic(_user, isApproved: true);
+
+            var payload = new
+            {
+                Name = topic.Name
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
 
@@ -78,20 +95,17 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task NotAuthenticatedAsAdmin_ShouldBeDenied()
+        public async Task NotAuthenticated_ShouldBeDenied()
         {
             var payload = new
             {
-                Slug = "Topic_(1982)_" + Utils.GenerateRandomString(10),
                 Name = "Topic (1982)"
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id);
-
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+                Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

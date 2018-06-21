@@ -32,6 +32,20 @@ namespace Pobs.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Post([FromBody] TopicFormModel payload)
         {
+            try
+            {
+                await _topicService.SaveTopic(payload.Name, payload.Summary, payload.MoreInfoUrl, User.Identity.ParseUserId());
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize, HttpPut, Route("{topicSlug}")]
+        public async Task<IActionResult> Put(string topicSlug, [FromBody] AdminTopicFormModel payload)
+        {
             if (!User.IsInRole(Role.Admin))
             {
                 return Forbid();
@@ -39,9 +53,13 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                await _topicService.SaveTopic(
-                    payload.Slug, payload.Name, payload.Summary, payload.MoreInfoUrl, User.Identity.ParseUserId(), true);
-                return Ok();
+                var topicModel = await _topicService.UpdateTopic(topicSlug, payload.Slug, payload.Name,
+                    payload.Summary, payload.MoreInfoUrl, payload.IsApproved);
+                if (topicModel != null)
+                {
+                    return Ok(topicModel);
+                }
+                return NotFound();
             }
             catch (AppException ex)
             {

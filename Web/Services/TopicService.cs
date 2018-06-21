@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
+using Pobs.Domain.Utils;
 using Pobs.Web.Helpers;
 using Pobs.Web.Models.Topics;
 
@@ -12,7 +13,8 @@ namespace Pobs.Web.Services
     public interface ITopicService
     {
         Task<TopicsListModel> GetAllTopics();
-        Task SaveTopic(string slug, string name, string summary, string moreInfoUrl, int postedByUserId, bool isApproved);
+        Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId);
+        Task<TopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
         Task<TopicModel> GetTopic(string topicSlug);
         Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
@@ -35,11 +37,18 @@ namespace Pobs.Web.Services
             return new TopicsListModel(topics);
         }
 
-        public async Task SaveTopic(string slug, string name, string summary, string moreInfoUrl, int postedByUserId, bool isApproved)
+        public async Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId)
         {
-            if (_context.Topics.Any(x => x.Slug == slug))
+            var slug = name.ToSlug(true);
+            var topicWithSameSlug = _context.Topics.FirstOrDefault(x => x.Slug == slug);
+            if (topicWithSameSlug != null)
             {
-                throw new AppException($"A topic already exists at /{slug}");
+                if (topicWithSameSlug.IsApproved)
+                {
+                    throw new AppException($"A topic already exists at /{slug}");
+                }
+                // If it's not yet approved, no-one needs to know?
+                return;
             }
             var postedByUser = await _context.Users.FindAsync(postedByUserId);
             _context.Topics.Add(
@@ -47,9 +56,42 @@ namespace Pobs.Web.Services
                 {
                     Summary = summary,
                     MoreInfoUrl = moreInfoUrl,
-                    IsApproved = isApproved
+                    IsApproved = false
                 });
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<TopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved)
+        {
+            var topic = await _context.Topics.FirstOrDefaultAsync(x => x.Slug == topicSlug);
+            if (topic == null)
+            {
+                return null;
+            }
+
+            if (topicSlug != newSlug)
+            {
+                var topicWithSameSlug = _context.Topics.FirstOrDefault(x => x.Id != topic.Id && x.Slug == newSlug);
+                if (topicWithSameSlug != null)
+                {
+                    if (topicWithSameSlug.IsApproved)
+                    {
+                        throw new AppException($"A topic already exists at /{newSlug}");
+                    }
+                    else
+                    {
+                        throw new AppException($"Unapproved TopicId {topicWithSameSlug.Id} already has slug {newSlug}");
+                    }
+                }
+            }
+
+            topic.Slug = newSlug;
+            topic.Name = name;
+            topic.Summary = summary;
+            topic.MoreInfoUrl = moreInfoUrl;
+            topic.IsApproved = isApproved;
+            await _context.SaveChangesAsync();
+            return new TopicModel(topic);
         }
 
         public async Task<TopicModel> GetTopic(string topicSlug)
