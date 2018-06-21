@@ -55,7 +55,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
                     onFocus={this.handleFocus}
                     onBlur={this.handleBlur}
                 />
-                <div className="pull-right">{remainingCharacterCount} characters remaining</div>
+                <div className="float-right">{remainingCharacterCount} characters remaining</div>
                 <br className="clear" />
             </>
         );

@@ -67,7 +67,7 @@ class Container extends React.Component<ContainerProps, {}> {
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 {this.renderHelmetTags()}
 
-                <div className="col-md-6">
+                <div className="col-md-6 offset-md-3">
                     <div className="row">
                         <TransitionGroup component={undefined}>
                             {!this.props.match.params.statementId &&
@@ -75,7 +75,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                     timeout={slideDurationMilliseconds}
                                     classNames="slide"
                                 >
-                                    <div className="slide slide-left vertical-scroll-container">
+                                    <div className="col-md-12 slide slide-left">
                                         <Topic {...topic}>
                                             <StatementForm
                                                 {...statementForm}
@@ -90,7 +90,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                     timeout={slideDurationMilliseconds}
                                     classNames="slide"
                                 >
-                                    <div className="slide slide-right vertical-scroll-container">
+                                    <div className="col-md-12 slide slide-right">
                                         <BackToTopic slug={topic.slug!} name={topic.model.name} />
                                         <Statement {...statement}>
                                             <CommentForm {...commentForm} />

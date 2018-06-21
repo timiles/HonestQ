@@ -11,7 +11,7 @@ export default class BackToTopic extends React.Component<BackToTopicProps, {}> {
     public render() {
         const { slug, name } = this.props;
         return (
-            <Link to={`/${slug}`} className="btn btn-md btn-default btn-back-to-topic">
+            <Link to={`/${slug}`} className="btn btn-md btn-outline-secondary btn-back-to-topic">
                 &larr; Back to other statements about <span className="topic-name">{name}</span>
             </Link>
         );

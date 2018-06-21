@@ -43,7 +43,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
         const { submitting, submitted, error } = this.props;
         const previous = this.props.previouslySubmittedTopicFormModel;
         return (
-            <div className="col-md-6">
+            <div className="col-md-6 offset-md-3">
                 <h2>Suggest a new Topic</h2>
                 {previous && (
                     <div className="alert alert-success" role="alert">

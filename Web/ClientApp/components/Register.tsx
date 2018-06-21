@@ -31,7 +31,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
         const { error, submitting, submitted } = this.props;
 
         return (
-            <div className="col-md-6">
+            <div className="col-md-6 offset-md-3">
                 <h2>Register</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>

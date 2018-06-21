@@ -32,7 +32,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
         const { username, password, rememberMe } = this.state;
         const { submitting, submitted, error } = this.props;
         return (
-            <div className="col-md-6">
+            <div className="col-md-6 offset-md-3">
                 <h2>Login</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>

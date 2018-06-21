@@ -55,7 +55,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         <li key={`statement_${i}`}>
                             <Link
                                 to={`/${slug}/${x.id}/${x.slug}`}
-                                className="btn btn-lg btn-default statement statement-list-item"
+                                className="btn btn-lg btn-outline-secondary statement statement-list-item"
                             >
                                 {x.text}
                             </Link>

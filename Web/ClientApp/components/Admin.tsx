@@ -17,10 +17,10 @@ class Admin extends React.Component<AdminProps & RouteComponentProps<{}>, {}> {
             return <Redirect to="/" />;
         }
         return (
-            <>
+            <div className="col-md-6 offset-md-3">
                 <h1>Admin</h1>
                 <NewTopic />
-            </>
+            </div>
         );
     }
 }

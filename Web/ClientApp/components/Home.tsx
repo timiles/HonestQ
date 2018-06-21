@@ -26,22 +26,22 @@ class Home extends React.Component<HomeProps, {}> {
     public render() {
         const { topicsList } = this.props;
         return (
-            <>
+            <div className="col-md-12">
                 <h1>POBS!</h1>
                 <ul className="topics-list list-unstyled">
                     {topicsList &&
                         topicsList.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic${i}`}>
-                                <Link to={`/${x.slug}`} className="btn btn-lg btn-default">{x.name}</Link>
+                                <Link to={`/${x.slug}`} className="btn btn-lg btn-outline-secondary">{x.name}</Link>
                             </li>)
                     }
                     <li>
-                        <Link to="/newtopic" className="btn btn-lg btn-default">
-                            <span className="glyphicon glyphicon-plus-sign" /> Suggest a new Topic
+                        <Link to="/newtopic" className="btn btn-lg btn-primary">
+                            Suggest a new Topic
                         </Link>
                     </li>
                 </ul>
-            </>
+            </div>
         );
     }
 }

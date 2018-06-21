@@ -15,8 +15,8 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
         const AutoCollapseNavLink = class extends React.Component<NavLinkProps, {}> {
             public render() {
                 return (
-                    <li data-toggle="collapse" data-target=".navbar-collapse.show">
-                        <NavLink {...this.props}>
+                    <li className="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                        <NavLink {...this.props} className="nav-link" activeClassName="active">
                             {this.props.children}
                         </NavLink>
                     </li>
@@ -24,61 +24,45 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
             }
         };
 
-        const isAuthenticated = !!this.props.loggedInUser;
-        const isAdmin = isUserInRole(this.props.loggedInUser, 'Admin');
+        const { loggedInUser } = this.props;
+        const isAdmin = isUserInRole(loggedInUser, 'Admin');
         return (
-            <div className="main-nav">
-                <div className="navbar navbar-inverse">
-                    <div className="navbar-header">
-                        <button
-                            type="button"
-                            className="navbar-toggle"
-                            data-toggle="collapse"
-                            data-target=".navbar-collapse"
-                        >
-                            <span className="sr-only">Toggle navigation</span>
-                            <span className="icon-bar" />
-                            <span className="icon-bar" />
-                            <span className="icon-bar" />
-                        </button>
-                        <Link className="navbar-brand" to={'/'}>Pobs</Link>
-                    </div>
-                    <div className="clearfix" />
-                    <div className="navbar-collapse collapse">
-                        {isAuthenticated && (
-                            <span className="navbar-text">
-                                Hi, {this.props.loggedInUser.firstName} ({this.props.loggedInUser.username})!
-                            </span>
-                        )}
-                        <ul className="nav navbar-nav">
-                            <AutoCollapseNavLink exact={true} to={'/'} activeClassName="active">
-                                <span className="glyphicon glyphicon-home" /> Home
-                                </AutoCollapseNavLink>
-                            {isAdmin && (
-                                <AutoCollapseNavLink to={'/admin'} activeClassName="active">
-                                    <span className="glyphicon glyphicon-flash" /> Admin
-                                    </AutoCollapseNavLink>
+            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <div className="container">
+                    <Link className="navbar-brand" to={'/'}>Pobs</Link>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span className="navbar-toggler-icon" />
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul className="navbar-nav mr-auto">
+                            <AutoCollapseNavLink exact={true} to={'/'}>Home</AutoCollapseNavLink>
+                            {isAdmin && <AutoCollapseNavLink to={'/admin'}>Admin</AutoCollapseNavLink>}
+                        </ul>
+                        <ul className="navbar-nav ml-auto">
+                            {loggedInUser && (
+                                <>
+                                    <li className="d-none d-lg-block">
+                                        <span className="navbar-text">
+                                            Hi, {loggedInUser.firstName} ({loggedInUser.username})!
+                                        </span>
+                                    </li>
+                                    {isAdmin && <AutoCollapseNavLink to={'/register'}>Register</AutoCollapseNavLink>}
+                                    <AutoCollapseNavLink to={'/logout'}>Log out</AutoCollapseNavLink>
+                                </>
                             )}
-                            {!isAuthenticated && (
-                                <AutoCollapseNavLink to={'/login'} activeClassName="active">
-                                    <span className="glyphicon glyphicon-log-in" /> Login
-                                    </AutoCollapseNavLink>
-                            )}
-                            {// PRIVATE BETA: was `!isAuthenticated && (`
-                                isAdmin && (
-                                    <AutoCollapseNavLink to={'/register'} activeClassName="active">
-                                        <span className="glyphicon glyphicon-user" /> Register
-                                        </AutoCollapseNavLink>
-                                )}
-                            {isAuthenticated && (
-                                <AutoCollapseNavLink to={'/logout'} activeClassName="active">
-                                    <span className="glyphicon glyphicon-log-out" /> Log out
-                                    </AutoCollapseNavLink>
-                            )}
+                            {!loggedInUser && <AutoCollapseNavLink to={'/login'}>Login</AutoCollapseNavLink>}
                         </ul>
                     </div>
                 </div>
-            </div>
+            </nav>
         );
     }
 }
