@@ -35,6 +35,11 @@ class Home extends React.Component<HomeProps, {}> {
                                 <Link to={`/${x.slug}`} className="btn btn-lg btn-default">{x.name}</Link>
                             </li>)
                     }
+                    <li>
+                        <Link to="/newtopic" className="btn btn-lg btn-default">
+                            <span className="glyphicon glyphicon-plus-sign" /> Suggest a new Topic
+                        </Link>
+                    </li>
                 </ul>
             </>
         );

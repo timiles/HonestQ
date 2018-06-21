@@ -6,6 +6,7 @@ import Intro from './components/Intro';
 import { Layout } from './components/Layout';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import NewTopic from './components/NewTopic';
 import Register from './components/Register';
 import Topic from './components/Topic/Container';
 
@@ -17,6 +18,7 @@ export const routes = (
             <Route path="/intro" component={Intro} />
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
+            <Route path="/newtopic" component={NewTopic} />
             <Route path="/register" component={Register} />
             <Route path="/:topicSlug/:statementId?/:statementSlug?" component={Topic} />
         </Switch>

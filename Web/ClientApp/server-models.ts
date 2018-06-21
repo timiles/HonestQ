@@ -52,7 +52,6 @@ export interface StatementModel {
 }
 
 export interface TopicFormModel {
-    slug: string;
     name: string;
     summary: string;
     moreInfoUrl: string;

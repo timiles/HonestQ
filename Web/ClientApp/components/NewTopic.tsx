@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { TopicFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewTopicStore from '../store/NewTopic';
@@ -18,7 +18,6 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
 
         this.state = {
             name: '',
-            slug: '',
             summary: '',
             moreInfoUrl: '',
         };
@@ -33,7 +32,6 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
         if (!nextProps.submitted) {
             this.setState({
                 name: '',
-                slug: '',
                 summary: '',
                 moreInfoUrl: '',
             });
@@ -41,16 +39,15 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
     }
 
     public render() {
-        const { name, slug, summary, moreInfoUrl } = this.state;
+        const { name, summary, moreInfoUrl } = this.state;
         const { submitting, submitted, error } = this.props;
         const previous = this.props.previouslySubmittedTopicFormModel;
         return (
             <div className="col-md-6">
-                <h2>Submit New Topic</h2>
+                <h2>Suggest a new Topic</h2>
                 {previous && (
                     <div className="alert alert-success" role="alert">
-                        Your topic "{previous.name}" has been created!
-                        Check it out: <Link to={`/${previous.slug}`}>{`/${previous.slug}`}</Link>
+                        Your topic "{previous.name}" has been created and is awaiting approval!
                     </div>
                 )}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
@@ -68,21 +65,8 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
                         />
                         {submitted && !name && <div className="help-block">Topic name is required</div>}
                     </div>
-                    <div className={'form-group' + (submitted && !slug ? ' has-error' : '')}>
-                        <label htmlFor="slug">Slug</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="slug"
-                            name="slug"
-                            maxLength={100}
-                            value={slug}
-                            onChange={this.handleChange}
-                        />
-                        {submitted && !slug && <div className="help-block">Slug is required</div>}
-                    </div>
                     <div className="form-group">
-                        <label htmlFor="summary">Summary</label>
+                        <label htmlFor="summary">Summary (optional)</label>
                         <SuperTextArea
                             id="summary"
                             name="summary"
@@ -92,7 +76,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page</label>
+                        <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page (optional)</label>
                         <input
                             type="text"
                             className="form-control"
