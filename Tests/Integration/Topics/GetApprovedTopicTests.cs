@@ -10,17 +10,17 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Topics
 {
-    public class GetTests : IDisposable
+    public class GetApprovedTopicTests : IDisposable
     {
         private string _generateTopicUrl(string topicSlug) => $"/api/topics/{topicSlug}";
         private readonly int _userId;
         private readonly Topic _topic;
 
-        public GetTests()
+        public GetApprovedTopicTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
-            _topic = DataHelpers.CreateTopic(user, 3);
+            _topic = DataHelpers.CreateTopic(user, 3, isApproved: true);
         }
 
         [Fact]

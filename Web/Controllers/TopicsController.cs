@@ -23,9 +23,14 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool isApproved = true)
         {
-            var topicsListModel = await _topicService.GetAllTopics();
+            if (!isApproved && !User.IsInRole(Role.Admin))
+            {
+                return this.Forbid();
+            }
+
+            var topicsListModel = await _topicService.GetAllTopics(isApproved);
             return Ok(topicsListModel);
         }
 
@@ -70,7 +75,7 @@ namespace Pobs.Web.Controllers
         [Route("{topicSlug}")]
         public async Task<IActionResult> Get(string topicSlug)
         {
-            var topicModel = await _topicService.GetTopic(topicSlug);
+            var topicModel = await _topicService.GetTopic(topicSlug, User.IsInRole(Role.Admin));
             if (topicModel != null)
             {
                 return Ok(topicModel);

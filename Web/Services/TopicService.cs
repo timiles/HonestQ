@@ -12,10 +12,10 @@ namespace Pobs.Web.Services
 {
     public interface ITopicService
     {
-        Task<TopicsListModel> GetAllTopics();
+        Task<TopicsListModel> GetAllTopics(bool isApproved);
         Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId);
         Task<TopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
-        Task<TopicModel> GetTopic(string topicSlug);
+        Task<TopicModel> GetTopic(string topicSlug, bool isAdmin);
         Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
         Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
@@ -31,9 +31,9 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<TopicsListModel> GetAllTopics()
+        public async Task<TopicsListModel> GetAllTopics(bool isApproved)
         {
-            var topics = await _context.Topics.ToListAsync();
+            var topics = await _context.Topics.Where(x => x.IsApproved == isApproved).ToListAsync();
             return new TopicsListModel(topics);
         }
 
@@ -94,12 +94,16 @@ namespace Pobs.Web.Services
             return new TopicModel(topic);
         }
 
-        public async Task<TopicModel> GetTopic(string topicSlug)
+        public async Task<TopicModel> GetTopic(string topicSlug, bool isAdmin)
         {
             var topic = await _context.Topics
                 .Include(x => x.Statements)
                 .FirstOrDefaultAsync(x => x.Slug == topicSlug);
             if (topic == null)
+            {
+                return null;
+            }
+            if (!topic.IsApproved && !isAdmin)
             {
                 return null;
             }
