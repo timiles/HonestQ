@@ -33,13 +33,12 @@ export default class StatementForm extends React.Component<StatementFormProps, S
             <>
                 <h2>{headerText}</h2>
                 <div className="alert alert-info" role="alert">
-                    <p>Please remember, Statements under a Topic are:
-                        <ul>
-                            <li>Unique</li>
-                            <li>Anonymous</li>
-                            <li>A general summary of a fact or opinion that people believe</li>
-                        </ul>
-                    </p>
+                    <p>Please remember, Statements under a Topic are:</p>
+                    <ul>
+                        <li>Unique</li>
+                        <li>Anonymous</li>
+                        <li>A general summary of a fact or opinion that people believe</li>
+                    </ul>
                     <p>
                         Once you have submitted a Statement, you can then discuss whether you agree with it,
                         provide further info, and see other people's points of view in the Comments section.
