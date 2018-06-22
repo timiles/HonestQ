@@ -54,6 +54,34 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task Emoji_ShouldPersist()
+        {
+            var payload = new
+            {
+                Name = "💩",
+                Summary = "This topic is all about 💩💩💩"
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                dbContext.Entry(user).Collection(b => b.Topics).Load();
+
+                var topic = user.Topics.Single();
+                Assert.Equal(payload.Name, topic.Name);
+                Assert.Equal(payload.Summary, topic.Summary);
+            }
+        }
+
+        [Fact]
         public async Task TopicSlugAlreadyExistsUnapproved_ShouldBeOK()
         {
             var topic = DataHelpers.CreateTopic(_user);

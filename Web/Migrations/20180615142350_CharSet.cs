@@ -8,10 +8,10 @@ namespace Pobs.Web.Migrations
         {
             // TODO: see if this can be done through Pomelo conventions
             migrationBuilder.Sql($@"ALTER DATABASE CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            migrationBuilder.Sql($@"ALTER TABLE Statement CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            migrationBuilder.Sql($@"ALTER TABLE Statement CHANGE Text Text VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            migrationBuilder.Sql($@"ALTER TABLE Comment CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            migrationBuilder.Sql($@"ALTER TABLE Comment CHANGE Text Text VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+            migrationBuilder.ApplyUtf8mb4CharSet("Statement");
+            migrationBuilder.ApplyUtf8mb4CharSet("Statement", "Text", 280);
+            migrationBuilder.ApplyUtf8mb4CharSet("Comment");
+            migrationBuilder.ApplyUtf8mb4CharSet("Comment", "Text", 280);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
