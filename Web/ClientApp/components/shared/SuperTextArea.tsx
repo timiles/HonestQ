@@ -28,7 +28,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     public componentWillReceiveProps(nextProps: Props) {
-        this.setState({ value: nextProps.value });
+        this.setState({ value: nextProps.value || '' });
         if (!nextProps.value) {
             this.setState({ scrollHeight: 0 });
         }
