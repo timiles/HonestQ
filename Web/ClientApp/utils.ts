@@ -18,6 +18,14 @@ export function postJson<T>(
     return fetchJson<T>('POST', url, model, loggedInUser, includeCredentials!);
 }
 
+export function putJson<T>(
+    url: string,
+    model: any,
+    loggedInUser: LoggedInUserModel | null | undefined): Promise<T> {
+
+    return fetchJson<T>('PUT', url, model, loggedInUser, false);
+}
+
 function fetchJson<T>(
     method: string,
     url: string,

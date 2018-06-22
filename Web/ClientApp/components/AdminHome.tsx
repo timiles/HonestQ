@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
 import { LoggedInUserModel, TopicListItemModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as AdminHomeStore from '../store/AdminHome';
 import { isUserInRole } from '../utils';
+import Loading from './shared/Loading';
 
 type AdminHomeProps = AdminHomeStore.AdminHomeState
     & typeof AdminHomeStore.actionCreators
@@ -17,7 +18,7 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return;
         }
-        if (!this.props.unapprovedTopicsList) {
+        if (!this.props.unapprovedTopicsList.model) {
             this.props.getUnapprovedTopicsList();
         }
     }
@@ -26,19 +27,25 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return <Redirect to="/" />;
         }
-        const { unapprovedTopicsList } = this.props;
+        const { model } = this.props.unapprovedTopicsList;
         return (
             <div className="col-md-6 offset-md-3">
                 <h1>Admin</h1>
                 <h2>Topics awaiting Approval:</h2>
-                <ul className="topics-list list-unstyled">
-                    {unapprovedTopicsList &&
-                        unapprovedTopicsList.topics.map((x: TopicListItemModel, i: number) =>
+                <Loading {...this.props.unapprovedTopicsList} />
+                {model && (model.topics.length === 0 ?
+                    <p>All done!</p>
+                    :
+                    <ul className="topics-list list-unstyled">
+                        {model.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic${i}`}>
-                                {x.name}
+                                <Link to={`/admin/editTopic/${x.slug}`} className="btn btn-lg btn-outline-secondary">
+                                    {x.name}
+                                </Link>
                             </li>)
-                    }
-                </ul>
+                        }
+                    </ul>
+                )}
             </div>
         );
     }

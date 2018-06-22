@@ -1,0 +1,168 @@
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { EditTopicFormModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as EditTopicStore from '../../store/EditTopic';
+import Loading from '../shared/Loading';
+import SubmitButton from '../shared/SubmitButton';
+import SuperTextArea from '../shared/SuperTextArea';
+
+type EditTopicProps = EditTopicStore.EditTopicState
+    & typeof EditTopicStore.actionCreators
+    & RouteComponentProps<{ topicSlug: string }>;
+
+class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
+
+    constructor(props: EditTopicProps) {
+        super(props);
+
+        this.state = {
+            name: '',
+            slug: '',
+            summary: '',
+            moreInfoUrl: '',
+            isApproved: false,
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSuperTextAreaChange = this.handleSuperTextAreaChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    public componentWillMount() {
+        // This will also run on server side render
+        if (this.shouldGetTopic()) {
+            this.props.getTopic(this.props.match.params.topicSlug);
+        }
+    }
+
+    public componentWillReceiveProps(nextProps: EditTopicProps) {
+        if (nextProps.topicModel.model) {
+            this.setState({
+                name: nextProps.topicModel.model.name || '',
+                slug: nextProps.topicModel.model.slug || '',
+                summary: nextProps.topicModel.model.summary || '',
+                moreInfoUrl: nextProps.topicModel.model.moreInfoUrl || '',
+                isApproved: false,
+            });
+        }
+    }
+
+    public render() {
+        const { name, slug, summary, moreInfoUrl, isApproved } = this.state;
+        const { submitting, submitted, error } = this.props.editTopicForm;
+        const previous = this.props.previouslySubmittedTopicFormModel;
+        return (
+            <div className="col-md-6 offset-md-3">
+                <h2>Edit Topic</h2>
+                {previous && previous.isApproved && (
+                    <div className="alert alert-success" role="alert">
+                        "{previous.name}" approved,
+                        check it out: <Link to={`/${previous.slug}`}>{`/${previous.slug}`}</Link>
+                    </div>
+                )}
+                <Loading {...this.props.topicModel} />
+                {this.props.topicModel.model && (
+                    <>
+                        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                        <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
+                            <div className={'form-group' + (submitted && !name ? ' has-error' : '')}>
+                                <label htmlFor="name">Topic name</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="name"
+                                    name="name"
+                                    maxLength={100}
+                                    value={name}
+                                    onChange={this.handleChange}
+                                />
+                                {submitted && !name && <div className="help-block">Topic name is required</div>}
+                            </div>
+                            <div className={'form-group' + (submitted && !slug ? ' has-error' : '')}>
+                                <label htmlFor="slug">Slug</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="slug"
+                                    name="slug"
+                                    maxLength={100}
+                                    value={slug}
+                                    onChange={this.handleChange}
+                                />
+                                {submitted && !slug && <div className="help-block">Slug is required</div>}
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="summary">Summary</label>
+                                <SuperTextArea
+                                    id="summary"
+                                    name="summary"
+                                    maxLength={280}
+                                    value={summary}
+                                    onChange={this.handleSuperTextAreaChange}
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="moreInfoUrl"
+                                    name="moreInfoUrl"
+                                    maxLength={100}
+                                    value={moreInfoUrl}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
+                            <div className="form-group form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="isApproved"
+                                    name="isApproved"
+                                    checked={isApproved}
+                                    onChange={this.handleChange}
+                                />
+                                <label className="form-check-label" htmlFor="isApproved">Mark as Approved</label>
+                            </div>
+                            <div className="form-group">
+                                <SubmitButton submitting={submitting} />
+                            </div>
+                        </form>
+                    </>
+                )}
+            </div>
+        );
+    }
+
+    private shouldGetTopic(): boolean {
+        if (!this.props.topicModel.model) {
+            return true;
+        }
+        return (this.props.topicModel.id !== this.props.match.params.topicSlug);
+    }
+
+    private handleChange(event: React.FormEvent<HTMLInputElement>): void {
+        const { name, value, checked } = event.currentTarget;
+        if (name === 'isApproved') {
+            this.setState({ ...this.state, [name]: checked });
+        } else {
+            this.setState({ ...this.state, [name]: value });
+        }
+    }
+
+    private handleSuperTextAreaChange(name: string, value: string): void {
+        this.setState({ ...this.state, [name]: value });
+    }
+
+    private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+        event.preventDefault();
+        this.props.submit(this.props.topicModel.id!, this.state);
+    }
+}
+
+export default connect(
+    (state: ApplicationState, ownProps: any) => (state.editTopic),
+    EditTopicStore.actionCreators,
+)(EditTopic);

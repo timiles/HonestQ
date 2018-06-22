@@ -1,4 +1,5 @@
 ﻿import { Reducer } from 'redux';
+import { LoadingProps } from '../components/shared/Loading';
 import { TopicsListModel } from '../server-models';
 import { getJson } from '../utils';
 import { AppThunkAction } from './';
@@ -7,9 +8,7 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface AdminHomeState {
-    loading: boolean;
-    unapprovedTopicsList?: TopicsListModel;
-    error?: string;
+    unapprovedTopicsList: LoadingProps<TopicsListModel>;
 }
 
 // -----------------
@@ -64,16 +63,16 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: AdminHomeState = { loading: false };
+const defaultState: AdminHomeState = { unapprovedTopicsList: {} };
 
 export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_UNAPPROVED_TOPICS_LIST_REQUESTED':
-            return { loading: true };
+            return { unapprovedTopicsList: { loading: true } };
         case 'GET_UNAPPROVED_TOPICS_LIST_SUCCESS':
-            return { loading: false, unapprovedTopicsList: action.payload };
+            return { unapprovedTopicsList: { model: action.payload } };
         case 'GET_UNAPPROVED_TOPICS_LIST_FAILED':
-            return { loading: false, error: action.payload.error };
+            return { unapprovedTopicsList: { error: action.payload.error } };
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

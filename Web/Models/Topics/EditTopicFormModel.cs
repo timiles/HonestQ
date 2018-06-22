@@ -1,6 +1,6 @@
-namespace Pobs.Web.Models.Topics
+﻿namespace Pobs.Web.Models.Topics
 {
-    public class AdminTopicFormModel
+    public class EditTopicFormModel
     {
         public string Slug { get; set; }
         public string Name { get; set; }

@@ -35,6 +35,14 @@ export interface CommentListItemModel {
     postedByUsername: string;
 }
 
+export interface EditTopicFormModel {
+    slug: string;
+    name: string;
+    summary: string;
+    moreInfoUrl: string;
+    isApproved: boolean;
+}
+
 export interface StatementFormModel {
     text: string;
 }

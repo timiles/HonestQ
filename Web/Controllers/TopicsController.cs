@@ -49,7 +49,7 @@ namespace Pobs.Web.Controllers
         }
 
         [Authorize, HttpPut, Route("{topicSlug}")]
-        public async Task<IActionResult> Put(string topicSlug, [FromBody] AdminTopicFormModel payload)
+        public async Task<IActionResult> Put(string topicSlug, [FromBody] EditTopicFormModel payload)
         {
             if (!User.IsInRole(Role.Admin))
             {
