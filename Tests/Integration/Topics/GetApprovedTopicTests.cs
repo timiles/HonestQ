@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Topics;
@@ -43,6 +44,9 @@ namespace Pobs.Tests.Integration.Topics
                 Assert.Equal(_topic.Summary, responseModel.Summary);
                 Assert.Equal(_topic.MoreInfoUrl, responseModel.MoreInfoUrl);
 
+                var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
+                Assert.Null(dynamicResponseModel.isApproved);
+
                 Assert.Equal(3, _topic.Statements.Count);
                 Assert.Equal(_topic.Statements.Count, responseModel.Statements.Length);
 
@@ -52,6 +56,26 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(statement.Slug, responseStatement.Slug);
                     Assert.Equal(statement.Text, responseStatement.Text);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsAdmin_ShouldGetIsApprovedProperty()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId, Role.Admin);
+
+                var url = _generateTopicUrl(_topic.Slug);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<AdminTopicModel>(responseContent);
+                Assert.Equal(_topic.Slug, responseModel.Slug);
+                Assert.Equal(_topic.Name, responseModel.Name);
+                Assert.Equal(_topic.IsApproved, responseModel.IsApproved);
             }
         }
 

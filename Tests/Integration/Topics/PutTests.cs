@@ -43,11 +43,12 @@ namespace Pobs.Tests.Integration.Topics
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
+                var responseModel = JsonConvert.DeserializeObject<AdminTopicModel>(responseContent);
                 Assert.Equal(payload.Slug, responseModel.Slug);
                 Assert.Equal(payload.Name, responseModel.Name);
                 Assert.Equal(payload.Summary, responseModel.Summary);
                 Assert.Equal(payload.MoreInfoUrl, responseModel.MoreInfoUrl);
+                Assert.Equal(payload.IsApproved, responseModel.IsApproved);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

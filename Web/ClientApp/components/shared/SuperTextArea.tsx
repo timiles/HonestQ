@@ -20,7 +20,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = { value: '', scrollHeight: 0, focused: false };
+        this.state = { value: props.value, scrollHeight: 0, focused: false };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleFocus = this.handleFocus.bind(this);
@@ -67,7 +67,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     private handleFocus(event: React.FormEvent<HTMLTextAreaElement>): void {
-        this.setState({ focused: true });
+        this.setState({ focused: true, scrollHeight: event.currentTarget.scrollHeight });
     }
 
     private handleBlur(event: React.FormEvent<HTMLTextAreaElement>): void {

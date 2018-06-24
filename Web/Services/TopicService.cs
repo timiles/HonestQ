@@ -14,7 +14,7 @@ namespace Pobs.Web.Services
     {
         Task<TopicsListModel> GetAllTopics(bool isApproved);
         Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId);
-        Task<TopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
+        Task<AdminTopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
         Task<TopicModel> GetTopic(string topicSlug, bool isAdmin);
         Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
@@ -61,7 +61,7 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved)
+        public async Task<AdminTopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved)
         {
             var topic = await _context.Topics.FirstOrDefaultAsync(x => x.Slug == topicSlug);
             if (topic == null)
@@ -91,7 +91,7 @@ namespace Pobs.Web.Services
             topic.MoreInfoUrl = moreInfoUrl;
             topic.IsApproved = isApproved;
             await _context.SaveChangesAsync();
-            return new TopicModel(topic);
+            return new AdminTopicModel(topic);
         }
 
         public async Task<TopicModel> GetTopic(string topicSlug, bool isAdmin)
@@ -99,15 +99,12 @@ namespace Pobs.Web.Services
             var topic = await _context.Topics
                 .Include(x => x.Statements)
                 .FirstOrDefaultAsync(x => x.Slug == topicSlug);
-            if (topic == null)
+            if (topic == null || (!topic.IsApproved && !isAdmin))
             {
                 return null;
             }
-            if (!topic.IsApproved && !isAdmin)
-            {
-                return null;
-            }
-            return new TopicModel(topic);
+            var model = (isAdmin) ? new AdminTopicModel(topic) : new TopicModel(topic);
+            return model;
         }
 
         public async Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId)

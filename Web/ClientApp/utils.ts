@@ -85,7 +85,7 @@ function fetchJson<T>(
     });
 }
 
-export function isUserInRole(loggedInUser: LoggedInUserModel, role: string): boolean {
+export function isUserInRole(loggedInUser: LoggedInUserModel | undefined, role: string): boolean {
     if (!loggedInUser || !loggedInUser.token) {
         return false;
     }

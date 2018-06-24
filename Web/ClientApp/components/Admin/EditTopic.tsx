@@ -30,40 +30,41 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    public componentWillMount() {
-        // This will also run on server side render
+    public componentDidMount() {
         if (this.shouldGetTopic()) {
             this.props.getTopic(this.props.match.params.topicSlug);
         }
     }
 
-    public componentWillReceiveProps(nextProps: EditTopicProps) {
-        if (nextProps.topicModel.model) {
+    public componentDidUpdate(prevProps: EditTopicProps) {
+        const { model } = this.props.topicModel;
+        if (!prevProps.topicModel.model && model) {
             this.setState({
-                name: nextProps.topicModel.model.name || '',
-                slug: nextProps.topicModel.model.slug || '',
-                summary: nextProps.topicModel.model.summary || '',
-                moreInfoUrl: nextProps.topicModel.model.moreInfoUrl || '',
-                isApproved: false,
+                name: model.name || '',
+                slug: model.slug || '',
+                summary: model.summary || '',
+                moreInfoUrl: model.moreInfoUrl || '',
+                isApproved: model.isApproved,
             });
         }
     }
 
     public render() {
         const { name, slug, summary, moreInfoUrl, isApproved } = this.state;
+        const { successfullySaved } = this.props;
+        const { model } = this.props.topicModel;
         const { submitting, submitted, error } = this.props.editTopicForm;
-        const previous = this.props.previouslySubmittedTopicFormModel;
         return (
             <div className="col-md-6 offset-md-3">
                 <h2>Edit Topic</h2>
-                {previous && previous.isApproved && (
+                {successfullySaved && model && model.isApproved && (
                     <div className="alert alert-success" role="alert">
-                        "{previous.name}" approved,
-                        check it out: <Link to={`/${previous.slug}`}>{`/${previous.slug}`}</Link>
+                        "{model.name}" approved,
+                        check it out: <Link to={`/${model.slug}`}>{`/${model.slug}`}</Link>
                     </div>
                 )}
                 <Loading {...this.props.topicModel} />
-                {this.props.topicModel.model && (
+                {model && (
                     <>
                         {error && <div className="alert alert-danger" role="alert">{error}</div>}
                         <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>

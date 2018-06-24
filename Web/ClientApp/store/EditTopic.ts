@@ -3,15 +3,15 @@ import { FormProps } from '../components/shared/FormProps';
 import { LoadingProps } from '../components/shared/Loading';
 import { getJson, putJson } from '../utils';
 import { AppThunkAction } from './';
-import { EditTopicFormModel, TopicModel } from './../server-models';
+import { AdminTopicModel, EditTopicFormModel } from './../server-models';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface EditTopicState {
-    topicModel: LoadingProps<TopicModel>;
+    topicModel: LoadingProps<AdminTopicModel>;
     editTopicForm: FormProps<EditTopicFormModel>;
-    previouslySubmittedTopicFormModel?: EditTopicFormModel;
+    successfullySaved?: boolean;
 }
 
 // -----------------
@@ -19,24 +19,24 @@ export interface EditTopicState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetTopicRequestedAction { type: 'GET_TOPIC_REQUESTED'; payload: { topicSlug: string; }; }
-interface GetTopicSuccessAction {
-    type: 'GET_TOPIC_SUCCESS';
-    payload: { topic: TopicModel; topicSlug: string; };
+interface GetAdminTopicRequestedAction { type: 'GET_ADMIN_TOPIC_REQUESTED'; payload: { topicSlug: string; }; }
+interface GetAdminTopicSuccessAction {
+    type: 'GET_ADMIN_TOPIC_SUCCESS';
+    payload: { topic: AdminTopicModel; topicSlug: string; };
 }
-interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { topicSlug: string; error: string; }; }
-interface TopicFormSubmittedAction { type: 'TOPIC_FORM_SUBMITTED'; }
-interface TopicFormReceivedAction { type: 'TOPIC_FORM_RECEIVED'; payload: { topic: EditTopicFormModel; }; }
-interface TopicFormFailedAction { type: 'TOPIC_FORM_FAILED'; payload: { error: string | null; }; }
+interface GetAdminTopicFailedAction { type: 'GET_ADMIN_TOPIC_FAILED'; payload: { topicSlug: string; error: string; }; }
+interface EditTopicFormSubmittedAction { type: 'EDIT_TOPIC_FORM_SUBMITTED'; }
+interface EditTopicFormReceivedAction { type: 'EDIT_TOPIC_FORM_RECEIVED'; payload: { topic: AdminTopicModel; }; }
+interface EditTopicFormFailedAction { type: 'EDIT_TOPIC_FORM_FAILED'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetTopicRequestedAction
-    | GetTopicSuccessAction
-    | GetTopicFailedAction
-    | TopicFormSubmittedAction
-    | TopicFormReceivedAction
-    | TopicFormFailedAction;
+type KnownAction = GetAdminTopicRequestedAction
+    | GetAdminTopicSuccessAction
+    | GetAdminTopicFailedAction
+    | EditTopicFormSubmittedAction
+    | EditTopicFormReceivedAction
+    | EditTopicFormFailedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -45,18 +45,18 @@ type KnownAction = GetTopicRequestedAction
 export const actionCreators = {
     getTopic: (topicSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_TOPIC_REQUESTED', payload: { topicSlug } });
+            dispatch({ type: 'GET_ADMIN_TOPIC_REQUESTED', payload: { topicSlug } });
 
-            getJson<TopicModel>(`/api/topics/${topicSlug}`, getState().login.loggedInUser)
-                .then((topicResponse: TopicModel) => {
+            getJson<AdminTopicModel>(`/api/topics/${topicSlug}`, getState().login.loggedInUser)
+                .then((topicResponse: AdminTopicModel) => {
                     dispatch({
-                        type: 'GET_TOPIC_SUCCESS',
+                        type: 'GET_ADMIN_TOPIC_SUCCESS',
                         payload: { topic: topicResponse, topicSlug },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_TOPIC_FAILED', payload: {
+                        type: 'GET_ADMIN_TOPIC_FAILED', payload: {
                             topicSlug,
                             error: reason || 'Get topic failed',
                         },
@@ -66,20 +66,20 @@ export const actionCreators = {
     },
     submit: (slug: string, topicForm: EditTopicFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'TOPIC_FORM_SUBMITTED' });
+            dispatch({ type: 'EDIT_TOPIC_FORM_SUBMITTED' });
 
             if (!topicForm.name || !topicForm.slug) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: null } });
+                dispatch({ type: 'EDIT_TOPIC_FORM_FAILED', payload: { error: null } });
                 return;
             }
 
-            putJson(`/api/topics/${slug}`, topicForm, getState().login.loggedInUser!)
-                .then(() => {
-                    dispatch({ type: 'TOPIC_FORM_RECEIVED', payload: { topic: topicForm } });
+            putJson<AdminTopicModel>(`/api/topics/${slug}`, topicForm, getState().login.loggedInUser!)
+                .then((topicResponse: AdminTopicModel) => {
+                    dispatch({ type: 'EDIT_TOPIC_FORM_RECEIVED', payload: { topic: topicResponse } });
                 })
                 .catch((reason: string) => {
-                    dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: reason } });
+                    dispatch({ type: 'EDIT_TOPIC_FORM_FAILED', payload: { error: reason } });
                 });
         })();
     },
@@ -93,15 +93,15 @@ const defaultState: EditTopicState = { topicModel: {}, editTopicForm: {} };
 
 export const reducer: Reducer<EditTopicState> = (state: EditTopicState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_TOPIC_REQUESTED':
+        case 'GET_ADMIN_TOPIC_REQUESTED':
             return {
                 topicModel: {
                     id: action.payload.topicSlug,
                     loading: true,
                 },
-                editTopicForm: state.editTopicForm,
+                editTopicForm: {},
             };
-        case 'GET_TOPIC_SUCCESS':
+        case 'GET_ADMIN_TOPIC_SUCCESS':
             return {
                 topicModel: {
                     id: action.payload.topicSlug,
@@ -109,7 +109,7 @@ export const reducer: Reducer<EditTopicState> = (state: EditTopicState, action: 
                 },
                 editTopicForm: state.editTopicForm,
             };
-        case 'GET_TOPIC_FAILED':
+        case 'GET_ADMIN_TOPIC_FAILED':
             return {
                 topicModel: {
                     id: action.payload.topicSlug,
@@ -117,7 +117,7 @@ export const reducer: Reducer<EditTopicState> = (state: EditTopicState, action: 
                 },
                 editTopicForm: state.editTopicForm,
             };
-        case 'TOPIC_FORM_SUBMITTED':
+        case 'EDIT_TOPIC_FORM_SUBMITTED':
             return {
                 topicModel: state.topicModel,
                 editTopicForm: {
@@ -125,17 +125,20 @@ export const reducer: Reducer<EditTopicState> = (state: EditTopicState, action: 
                     submitted: true,
                 },
             };
-        case 'TOPIC_FORM_RECEIVED':
+        case 'EDIT_TOPIC_FORM_RECEIVED':
             return {
-                topicModel: state.topicModel,
+                topicModel: {
+                    id: action.payload.topic.slug,
+                    model: action.payload.topic,
+                },
                 editTopicForm: {
                     submitting: false,
                     submitted: false,
                 },
-                previouslySubmittedTopicFormModel: action.payload.topic,
+                successfullySaved: true,
                 // TODO: if Topic was Approved, update pending list on AdminHome
             };
-        case 'TOPIC_FORM_FAILED':
+        case 'EDIT_TOPIC_FORM_FAILED':
             return {
                 topicModel: state.topicModel,
                 editTopicForm: {

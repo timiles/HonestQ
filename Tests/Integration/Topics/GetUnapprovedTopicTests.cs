@@ -36,11 +36,12 @@ namespace Pobs.Tests.Integration.Topics
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
+                var responseModel = JsonConvert.DeserializeObject<AdminTopicModel>(responseContent);
                 Assert.Equal(_topic.Slug, responseModel.Slug);
                 Assert.Equal(_topic.Name, responseModel.Name);
                 Assert.Equal(_topic.Summary, responseModel.Summary);
                 Assert.Equal(_topic.MoreInfoUrl, responseModel.MoreInfoUrl);
+                Assert.Equal(_topic.IsApproved, responseModel.IsApproved);
             }
         }
 

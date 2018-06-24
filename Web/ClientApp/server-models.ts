@@ -22,6 +22,15 @@ export interface IntroModel {
     content: string;
 }
 
+export interface AdminTopicModel {
+    isApproved: boolean;
+    slug: string;
+    name: string;
+    summary: string;
+    moreInfoUrl: string;
+    statements: StatementListItemModel[];
+}
+
 export interface CommentFormModel {
     text: string;
     agreementRating: string;

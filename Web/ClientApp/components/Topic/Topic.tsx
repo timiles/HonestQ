@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { TopicModel } from '../../server-models';
+import { isUserInRole } from '../../utils';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 
 export interface TopicProps {
     loading?: boolean;
@@ -30,6 +32,11 @@ export default class Topic extends React.Component<TopicProps, {}> {
         const { name, summary, moreInfoUrl, statements } = model;
         return (
             <>
+                <LoggedInUserContext.Consumer>
+                    {(user) => isUserInRole(user, 'Admin') &&
+                        <Link to={`/admin/editTopic/${slug}`} className="float-right">Edit</Link>
+                    }
+                </LoggedInUserContext.Consumer>
                 <h1>{name}</h1>
                 {(summary || moreInfoUrl) &&
                     <div className="bs-callout bs-callout-info">
