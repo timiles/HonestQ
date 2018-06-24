@@ -6,7 +6,7 @@ interface Props {
     className?: string;
     value: string;
     maxLength: number;
-    onChange: (name: string, value: string) => void;
+    onChange: (event: React.FormEvent<HTMLTextAreaElement>) => void;
 }
 
 interface State {
@@ -63,7 +63,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
 
     private handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
         this.setState({ value: event.currentTarget.value, scrollHeight: event.currentTarget.scrollHeight });
-        this.props.onChange(event.currentTarget.name, event.currentTarget.value);
+        this.props.onChange(event);
     }
 
     private handleFocus(event: React.FormEvent<HTMLTextAreaElement>): void {

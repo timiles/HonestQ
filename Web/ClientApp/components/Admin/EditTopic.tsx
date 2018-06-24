@@ -26,7 +26,6 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSuperTextAreaChange = this.handleSuperTextAreaChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -101,7 +100,7 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
                                     name="summary"
                                     maxLength={280}
                                     value={summary}
-                                    onChange={this.handleSuperTextAreaChange}
+                                    onChange={this.handleChange}
                                 />
                             </div>
                             <div className="form-group">
@@ -144,17 +143,14 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
         return (this.props.topicModel.id !== this.props.match.params.topicSlug);
     }
 
-    private handleChange(event: React.FormEvent<HTMLInputElement>): void {
-        const { name, value, checked } = event.currentTarget;
-        if (name === 'isApproved') {
+    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
+        if (event.currentTarget instanceof HTMLInputElement && name === 'isApproved') {
+            const { name, checked } = event.currentTarget;
             this.setState({ ...this.state, [name]: checked });
         } else {
+            const { name, value } = event.currentTarget;
             this.setState({ ...this.state, [name]: value });
         }
-    }
-
-    private handleSuperTextAreaChange(name: string, value: string): void {
-        this.setState({ ...this.state, [name]: value });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

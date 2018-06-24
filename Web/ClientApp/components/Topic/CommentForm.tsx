@@ -12,7 +12,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
 
         this.state = { text: '', agreementRating: 'Neutral' };
 
-        this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleAgreementRatingChange = this.handleAgreementRatingChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -37,7 +37,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
                             id="text"
                             value={text}
                             maxLength={280}
-                            onChange={this.handleTextAreaChange}
+                            onChange={this.handleChange}
                         />
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
@@ -52,7 +52,8 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         );
     }
 
-    private handleTextAreaChange(name: string, value: string): void {
+    private handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
+        const { value } = event.currentTarget;
         this.setState({ text: value });
     }
 

@@ -23,7 +23,6 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleSuperTextAreaChange = this.handleSuperTextAreaChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -72,7 +71,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
                             name="summary"
                             maxLength={280}
                             value={summary}
-                            onChange={this.handleSuperTextAreaChange}
+                            onChange={this.handleChange}
                         />
                     </div>
                     <div className="form-group">
@@ -95,12 +94,8 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
         );
     }
 
-    private handleChange(event: React.FormEvent<HTMLInputElement>): void {
+    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
-        this.setState({ ...this.state, [name]: value });
-    }
-
-    private handleSuperTextAreaChange(name: string, value: string): void {
         this.setState({ ...this.state, [name]: value });
     }
 

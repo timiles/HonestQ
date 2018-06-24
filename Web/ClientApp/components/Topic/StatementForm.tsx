@@ -14,7 +14,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
 
         this.state = { text: '' };
 
-        this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -54,7 +54,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
                             className="statement-text-area"
                             value={text}
                             maxLength={280}
-                            onChange={this.handleTextAreaChange}
+                            onChange={this.handleChange}
                         />
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
@@ -66,7 +66,8 @@ export default class StatementForm extends React.Component<StatementFormProps, S
         );
     }
 
-    private handleTextAreaChange(name: string, value: string): void {
+    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
+        const { value } = event.currentTarget;
         this.setState({ text: value });
     }
 
