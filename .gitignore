@@ -235,3 +235,7 @@ Web/.paket/paket.exe
 
 # FAKE - F# Make
 Web/.fake/
+
+# Deployment files
+deploy/appsettings.Production.json
+deploy/build
