@@ -1,25 +1,19 @@
 import * as moment from 'moment';
 import * as React from 'react';
+import { CommentListItemModel } from '../../server-models';
 import { extractUrlFromText, parseDateWithTimeZoneOffset } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 
-export interface CommentProps {
-    text: string;
-    agreementRating: string;
-    postedAt: string;
-    postedByUsername: string;
-}
+export default class Comment extends React.Component<CommentListItemModel, {}> {
 
-export default class Comment extends React.Component<CommentProps, {}> {
-
-    constructor(props: CommentProps) {
+    constructor(props: CommentListItemModel) {
         super(props);
     }
 
     public render() {
-        const { text, agreementRating, postedAt, postedByUsername } = this.props;
-        const extractedUrl = extractUrlFromText(text);
+        const { text, source, agreementRating, postedAt, postedByUsername } = this.props;
+        const extractedUrl = extractUrlFromText(source) || extractUrlFromText(text);
 
         return (
             <LoggedInUserContext.Consumer>
@@ -36,6 +30,7 @@ export default class Comment extends React.Component<CommentProps, {}> {
                                 <blockquote className="blockquote mb-0">
                                     <span className="badge badge-secondary">{agreementRating.toSentenceCase()}</span>
                                     <p>{text}</p>
+                                    {source && <p><small>Source: {source}</small></p>}
                                     <footer className="blockquote-footer">
                                         @{postedByUsername}, <a href="#" title={fullTime}>{friendlyTime}</a>
                                     </footer>

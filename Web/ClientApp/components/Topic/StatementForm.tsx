@@ -12,7 +12,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     constructor(props: StatementFormProps) {
         super(props);
 
-        this.state = { text: '' };
+        this.state = { text: '', source: '' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,14 +21,14 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     public componentWillReceiveProps(nextProps: FormProps<StatementFormModel>) {
         // This will reset the form when a statement has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '' });
+            this.setState({ text: '', source: '' });
         }
     }
 
     public render() {
         const { numberOfStatementsInTopic, error, submitting, submitted } = this.props;
         const headerText = numberOfStatementsInTopic === 0 ? 'Start the conversation' : 'Got something to add?';
-        const { text } = this.state;
+        const { text, source } = this.state;
         return (
             <>
                 <h2>{headerText}</h2>
@@ -51,9 +51,23 @@ export default class StatementForm extends React.Component<StatementFormProps, S
                         <div className="statement statement-floating-quotes" />
                         <SuperTextArea
                             id="statementText"
+                            name="text"
                             className="statement-text-area"
                             value={text}
                             maxLength={280}
+                            onChange={this.handleChange}
+                        />
+                        {submitted && !text && <div className="help-block">Text is required</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="statementSource">Source (optional)</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="statementSource"
+                            name="source"
+                            value={source}
+                            maxLength={100}
                             onChange={this.handleChange}
                         />
                         {submitted && !text && <div className="help-block">Text is required</div>}
@@ -67,8 +81,8 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     }
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
-        const { value } = event.currentTarget;
-        this.setState({ text: value });
+        const { name, value } = event.currentTarget;
+        this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

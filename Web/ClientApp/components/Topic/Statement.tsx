@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { StatementModel } from '../../server-models';
+import { extractUrlFromText } from '../../utils';
+import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Comment from './Comment';
 
 export interface StatementProps {
@@ -17,6 +19,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
 
     public render() {
         const { loading, error, model } = this.props;
+
         return (
             <>
                 {loading && <p>Loading...</p>}
@@ -24,12 +27,23 @@ export default class Statement extends React.Component<StatementProps, {}> {
                 {model && (
                     <div>
                         <h2 className="statement">{model.text}</h2>
+                        {model.source && this.renderSource(model.source)}
                         {this.props.children}
                         <ol>
                             {model.comments.map((x, i) => <li key={`comment_${i}`}><Comment {...x} /></li>)}
                         </ol>
                     </div>
                 )}
+            </>
+        );
+    }
+
+    private renderSource(source: string) {
+        const extractedUrl = extractUrlFromText(source);
+        return (
+            <>
+                <p><small>Source: {source}</small></p>
+                {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
             </>
         );
     }

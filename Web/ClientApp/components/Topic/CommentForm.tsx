@@ -10,7 +10,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
     constructor(props: FormProps<CommentFormModel>) {
         super(props);
 
-        this.state = { text: '', agreementRating: 'Neutral' };
+        this.state = { text: '', source: '', agreementRating: 'Neutral' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleAgreementRatingChange = this.handleAgreementRatingChange.bind(this);
@@ -20,23 +20,37 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
     public componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
         // This will reset the form when a comment has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', agreementRating: 'Neutral' });
+            this.setState({ text: '', source: '', agreementRating: 'Neutral' });
         }
     }
 
     public render() {
         const { submitting, submitted, error } = this.props;
-        const { text, agreementRating } = this.state;
+        const { text, source, agreementRating } = this.state;
         return (
             <>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                        <label htmlFor="text">Comment</label>
+                        <label htmlFor="commentText">Comment</label>
                         <SuperTextArea
-                            id="text"
+                            id="commentText"
+                            name="text"
                             value={text}
                             maxLength={280}
+                            onChange={this.handleChange}
+                        />
+                        {submitted && !text && <div className="help-block">Text is required</div>}
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="commentSource">Source (optional)</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="commentSource"
+                            name="source"
+                            value={source}
+                            maxLength={100}
                             onChange={this.handleChange}
                         />
                         {submitted && !text && <div className="help-block">Text is required</div>}
@@ -52,9 +66,9 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         );
     }
 
-    private handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
-        const { value } = event.currentTarget;
-        this.setState({ text: value });
+    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
+        const { name, value } = event.currentTarget;
+        this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
     private handleAgreementRatingChange(name: string, value: string): void {

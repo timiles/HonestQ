@@ -33,12 +33,14 @@ export interface AdminTopicModel {
 
 export interface CommentFormModel {
     text: string;
+    source: string;
     agreementRating: string;
 }
 
 export interface CommentListItemModel {
     id: number;
     text: string;
+    source: string;
     agreementRating: string;
     postedAt: string;
     postedByUsername: string;
@@ -54,6 +56,7 @@ export interface EditTopicFormModel {
 
 export interface StatementFormModel {
     text: string;
+    source: string;
 }
 
 export interface StatementListItemModel {
@@ -65,6 +68,7 @@ export interface StatementListItemModel {
 export interface StatementModel {
     slug: string;
     text: string;
+    source: string;
     comments: CommentListItemModel[];
 }
 
