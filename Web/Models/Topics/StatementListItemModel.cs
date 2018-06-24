@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Pobs.Domain.Entities;
 
 namespace Pobs.Web.Models.Topics

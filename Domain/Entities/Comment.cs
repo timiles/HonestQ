@@ -20,6 +20,9 @@ namespace Pobs.Domain.Entities
         [Required, MaxLength(280)]
         public string Text { get; set; }
 
+        [MaxLength(100)]
+        public string Source { get; set; }
+
         public AgreementRating AgreementRating { get; set; }
 
         [Required]

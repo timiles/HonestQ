@@ -2,16 +2,14 @@
 
 namespace Pobs.Web.Migrations
 {
-    public partial class CharSet : Migration
+    public partial class FixNullabilityOnColumns : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            // TODO: see if this can be done through Pomelo conventions
-            migrationBuilder.Sql($@"ALTER DATABASE CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-            migrationBuilder.ApplyUtf8mb4CharSet("Statement");
+            migrationBuilder.ApplyUtf8mb4CharSet("Topic", "Name", 100, false);
             migrationBuilder.ApplyUtf8mb4CharSet("Statement", "Text", 280, false);
-            migrationBuilder.ApplyUtf8mb4CharSet("Comment");
             migrationBuilder.ApplyUtf8mb4CharSet("Comment", "Text", 280, false);
+
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

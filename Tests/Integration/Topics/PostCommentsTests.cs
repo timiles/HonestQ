@@ -80,6 +80,7 @@ namespace Pobs.Tests.Integration.Topics
             var payload = new
             {
                 Text = "Here's a poop emoji: 💩",
+                Source = "https://example.com/💩",
                 AgreementRating = AgreementRating.StronglyAgree.ToString()
             };
             using (var server = new IntegrationTestingServer())
@@ -102,10 +103,12 @@ namespace Pobs.Tests.Integration.Topics
                     var statement = topic.Statements.Single(x => x.Id == statementId);
                     var comment = statement.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
+                    Assert.Equal(payload.Source, comment.Source);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
                     Assert.Equal(comment.Text, responseModel.Text);
+                    Assert.Equal(comment.Source, responseModel.Source);
                 }
             }
         }

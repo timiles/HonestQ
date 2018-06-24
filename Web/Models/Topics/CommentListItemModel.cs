@@ -11,6 +11,7 @@ namespace Pobs.Web.Models.Topics
         {
             this.Id = comment.Id;
             this.Text = comment.Text;
+            this.Source = comment.Source;
             this.AgreementRating = comment.AgreementRating.ToString();
             this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUsername = comment.PostedByUser.Username;
@@ -18,6 +19,7 @@ namespace Pobs.Web.Models.Topics
 
         public long Id { get; set; }
         public string Text { get; set; }
+        public string Source { get; set; }
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
         public string PostedByUsername { get; set; }

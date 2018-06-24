@@ -40,12 +40,18 @@ namespace Pobs.Tests.Integration.Helpers
 
             for (int s = 0; s < numberOfStatements; s++)
             {
-                var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow);
+                var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow)
+                {
+                    Source = Utils.GenerateRandomString(10)
+                };
                 if (commentUser != null)
                 {
                     for (int c = 0; c < numberOfCommentsPerStatement; c++)
                     {
-                        var comment = new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, commentUser, DateTime.UtcNow);
+                        var comment = new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, commentUser, DateTime.UtcNow)
+                        {
+                            Source = Utils.GenerateRandomString(10)
+                        };
                         statement.Comments.Add(comment);
                     }
                 }

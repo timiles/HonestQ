@@ -8,8 +8,8 @@ namespace Pobs.Web.Migrations
         {
             // TODO: see if this can be done through Pomelo conventions
             migrationBuilder.ApplyUtf8mb4CharSet("Topic");
-            migrationBuilder.ApplyUtf8mb4CharSet("Topic", "Name", 100);
-            migrationBuilder.ApplyUtf8mb4CharSet("Topic", "Summary", 280);
+            migrationBuilder.ApplyUtf8mb4CharSet("Topic", "Name", 100, false);
+            migrationBuilder.ApplyUtf8mb4CharSet("Topic", "Summary", 280, true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

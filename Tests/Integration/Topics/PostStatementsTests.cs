@@ -31,7 +31,7 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "\"My insightful statement on this topic\""
+                Text = "\"My insightful statement on this topic\"",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -69,7 +69,8 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "Here's a poop emoji: 💩"
+                Text = "Here's a poop emoji: 💩",
+                Source = "https://example.com/💩"
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -89,6 +90,7 @@ namespace Pobs.Tests.Integration.Topics
 
                     var statement = topic.Statements.Single();
                     Assert.Equal(payload.Text, statement.Text);
+                    Assert.Equal(payload.Source, statement.Source);
                     Assert.Equal("heres_a_poop_emoji", statement.Slug);
 
                     var responseContent = await response.Content.ReadAsStringAsync();

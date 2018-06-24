@@ -48,6 +48,7 @@ namespace Pobs.Tests.Integration.Topics
                 var responseModel = JsonConvert.DeserializeObject<StatementModel>(responseContent);
                 Assert.Equal(statement.Slug, responseModel.Slug);
                 Assert.Equal(statement.Text, responseModel.Text);
+                Assert.Equal(statement.Source, responseModel.Source);
 
                 Assert.Equal(3, statement.Comments.Count);
                 Assert.Equal(statement.Comments.Count, responseModel.Comments.Length);
@@ -56,6 +57,7 @@ namespace Pobs.Tests.Integration.Topics
                 {
                     var responseComment = responseModel.Comments.Single(x => x.Id == comment.Id);
                     Assert.Equal(comment.Text, responseComment.Text);
+                    Assert.Equal(comment.Source, responseComment.Source);
                     Assert.Equal(comment.AgreementRating.ToString(), responseComment.AgreementRating);
                 }
             }

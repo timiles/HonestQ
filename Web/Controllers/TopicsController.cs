@@ -86,7 +86,7 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{topicSlug}/statements"), Authorize]
         public async Task<IActionResult> AddStatement(string topicSlug, [FromBody] StatementFormModel payload)
         {
-            var statementModel = await _topicService.SaveStatement(topicSlug, payload.Text, User.Identity.ParseUserId());
+            var statementModel = await _topicService.SaveStatement(topicSlug, payload.Text, payload.Source, User.Identity.ParseUserId());
             if (statementModel != null)
             {
                 return Ok(statementModel);
@@ -114,7 +114,7 @@ namespace Pobs.Web.Controllers
             }
 
             var commentModel = await _topicService.SaveComment(topicSlug, statementId,
-                payload.Text, agreementRating, User.Identity.ParseUserId());
+                payload.Text, payload.Source, agreementRating, User.Identity.ParseUserId());
             if (commentModel != null)
             {
                 return Ok(commentModel);

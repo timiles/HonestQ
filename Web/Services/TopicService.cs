@@ -16,10 +16,10 @@ namespace Pobs.Web.Services
         Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId);
         Task<AdminTopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
         Task<TopicModel> GetTopic(string topicSlug, bool isAdmin);
-        Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId);
+        Task<StatementListItemModel> SaveStatement(string topicSlug, string text, string source, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
         Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
-            string text, AgreementRating agreementRating, int postedByUserId);
+            string text, string source, AgreementRating agreementRating, int postedByUserId);
     }
 
     public class TopicService : ITopicService
@@ -107,7 +107,7 @@ namespace Pobs.Web.Services
             return model;
         }
 
-        public async Task<StatementListItemModel> SaveStatement(string topicSlug, string text, int postedByUserId)
+        public async Task<StatementListItemModel> SaveStatement(string topicSlug, string text, string source, int postedByUserId)
         {
             var topicTask = _context.Topics.FirstOrDefaultAsync(x => x.Slug == topicSlug);
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
@@ -116,7 +116,10 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            var statement = new Statement(text, await postedByUserTask, DateTime.UtcNow);
+            var statement = new Statement(text, await postedByUserTask, DateTime.UtcNow)
+            {
+                Source = source
+            };
             topic.Statements.Add(statement);
             await _context.SaveChangesAsync();
 
@@ -138,7 +141,7 @@ namespace Pobs.Web.Services
         }
 
         public async Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
-            string text, AgreementRating agreementRating, int postedByUserId)
+            string text, string source, AgreementRating agreementRating, int postedByUserId)
         {
             var statementTask = _context.Topics
                 .SelectMany(x => x.Statements)
@@ -150,7 +153,10 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            var comment = new Comment(text, agreementRating, await postedByUserTask, DateTime.UtcNow);
+            var comment = new Comment(text, agreementRating, await postedByUserTask, DateTime.UtcNow)
+            {
+                Source = source
+            };
             statement.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
