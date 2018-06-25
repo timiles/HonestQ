@@ -144,12 +144,13 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
     }
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
-        if (event.currentTarget instanceof HTMLInputElement && name === 'isApproved') {
-            const { name, checked } = event.currentTarget;
-            this.setState({ ...this.state, [name]: checked });
+        const { name } = event.currentTarget;
+        if (event.currentTarget instanceof HTMLInputElement && event.currentTarget.type === 'checkbox') {
+            const { checked } = event.currentTarget;
+            this.setState((prevState) => ({ ...prevState, [name]: checked }));
         } else {
-            const { name, value } = event.currentTarget;
-            this.setState({ ...this.state, [name]: value });
+            const { value } = event.currentTarget;
+            this.setState((prevState) => ({ ...prevState, [name]: value }));
         }
     }
 
