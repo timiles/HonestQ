@@ -2,14 +2,13 @@
 import { TopicsListModel } from '../server-models';
 import { getJson } from '../utils';
 import { AppThunkAction } from './';
+import { LoadingProps } from './../components/shared/Loading';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface HomeState {
-    loading: boolean;
-    topicsList?: TopicsListModel;
-    error?: string;
+    loadingTopicsList: LoadingProps<TopicsListModel>;
 }
 
 // -----------------
@@ -56,16 +55,16 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: HomeState = { loading: false };
+const defaultState: HomeState = { loadingTopicsList: {} };
 
 export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_TOPICS_LIST_REQUESTED':
-            return { loading: true };
+            return { loadingTopicsList: { loading: true } };
         case 'GET_TOPICS_LIST_SUCCESS':
-            return { loading: false, topicsList: action.payload };
+            return { loadingTopicsList: { model: action.payload } };
         case 'GET_TOPICS_LIST_FAILED':
-            return { loading: false, error: action.payload.error };
+            return { loadingTopicsList: { error: action.payload.error } };
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

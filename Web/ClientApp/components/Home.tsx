@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { LoggedInUserModel, TopicListItemModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as HomeStore from '../store/Home';
+import Loading from './shared/Loading';
 
 type HomeProps = HomeStore.HomeState
     & typeof HomeStore.actionCreators
@@ -18,29 +19,30 @@ class Home extends React.Component<HomeProps, {}> {
         if (!this.props.loggedInUser) {
             return;
         }
-        if (!this.props.topicsList) {
+        if (!this.props.loadingTopicsList.model) {
             this.props.getTopicsList();
         }
     }
 
     public render() {
-        const { topicsList } = this.props;
+        const { model } = this.props.loadingTopicsList;
         return (
             <div className="col-md-12">
                 <h1>POBS!</h1>
-                <ul className="topics-list list-unstyled">
-                    {topicsList &&
-                        topicsList.topics.map((x: TopicListItemModel, i: number) =>
+                <Loading {...this.props.loadingTopicsList} />
+                {model &&
+                    <ul className="topics-list list-unstyled">
+                        {model.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic${i}`}>
                                 <Link to={`/${x.slug}`} className="btn btn-lg btn-outline-secondary">{x.name}</Link>
-                            </li>)
-                    }
-                    <li>
-                        <Link to="/newtopic" className="btn btn-lg btn-primary">
-                            Suggest a new Topic
-                        </Link>
-                    </li>
-                </ul>
+                            </li>)}
+                        <li>
+                            <Link to="/newtopic" className="btn btn-lg btn-primary">
+                                Suggest a new Topic
+                            </Link>
+                        </li>
+                    </ul>
+                }
             </div>
         );
     }
