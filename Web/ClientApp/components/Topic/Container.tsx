@@ -67,7 +67,7 @@ class Container extends React.Component<ContainerProps, {}> {
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 {this.renderHelmetTags()}
 
-                <div className="col-md-6 offset-md-3">
+                <div className="col-lg-6 offset-lg-3">
                     <div className="row">
                         <TransitionGroup component={undefined}>
                             {!this.props.match.params.statementId &&

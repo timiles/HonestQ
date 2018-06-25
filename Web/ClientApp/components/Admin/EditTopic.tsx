@@ -54,7 +54,7 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
         const { model } = this.props.topicModel;
         const { submitting, submitted, error } = this.props.editTopicForm;
         return (
-            <div className="col-md-6 offset-md-3">
+            <div className="col-lg-6 offset-lg-3">
                 <h2>Edit Topic</h2>
                 {successfullySaved && model && model.isApproved && (
                     <div className="alert alert-success" role="alert">

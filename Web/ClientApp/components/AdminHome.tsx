@@ -29,7 +29,7 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         }
         const { model } = this.props.unapprovedTopicsList;
         return (
-            <div className="col-md-6 offset-md-3">
+            <div className="col-lg-6 offset-lg-3">
                 <h1>Admin</h1>
                 <h2>Topics awaiting Approval:</h2>
                 <Loading {...this.props.unapprovedTopicsList} />

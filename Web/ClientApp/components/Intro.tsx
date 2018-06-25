@@ -21,7 +21,7 @@ class Intro extends React.Component<IntroProps, {}> {
         const { loading, error, intro } = this.props;
         const introHtml = (intro) ? new Showdown.Converter().makeHtml(intro) : '';
         return (
-            <div className="col-md-6 offset-md-3">
+            <div className="col-lg-6 offset-lg-3">
                 {loading && <p>Loading...</p>}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <div dangerouslySetInnerHTML={{ __html: introHtml }} />
