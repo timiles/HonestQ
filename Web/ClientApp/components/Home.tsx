@@ -19,20 +19,20 @@ class Home extends React.Component<HomeProps, {}> {
         if (!this.props.loggedInUser) {
             return;
         }
-        if (!this.props.loadingTopicsList.model) {
+        if (!this.props.loadingTopicsList.loadedModel) {
             this.props.getTopicsList();
         }
     }
 
     public render() {
-        const { model } = this.props.loadingTopicsList;
+        const { loadedModel } = this.props.loadingTopicsList;
         return (
             <div className="col-md-12">
                 <h1>POBS!</h1>
                 <Loading {...this.props.loadingTopicsList} />
-                {model &&
+                {loadedModel &&
                     <ul className="topics-list list-unstyled">
-                        {model.topics.map((x: TopicListItemModel, i: number) =>
+                        {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic${i}`}>
                                 <Link to={`/${x.slug}`} className="btn btn-lg btn-outline-secondary">{x.name}</Link>
                             </li>)}

@@ -105,7 +105,7 @@ export const reducer: Reducer<EditTopicState> = (state: EditTopicState, action: 
             return {
                 topicModel: {
                     id: action.payload.topicSlug,
-                    model: action.payload.topic,
+                    loadedModel: action.payload.topic,
                 },
                 editTopicForm: state.editTopicForm,
             };
@@ -129,7 +129,7 @@ export const reducer: Reducer<EditTopicState> = (state: EditTopicState, action: 
             return {
                 topicModel: {
                     id: action.payload.topic.slug,
-                    model: action.payload.topic,
+                    loadedModel: action.payload.topic,
                 },
                 editTopicForm: {
                     submitting: false,

@@ -3,13 +3,13 @@ import * as React from 'react';
 export interface LoadingProps<T> {
     id?: string;
     loading?: boolean;
-    model?: T;
+    loadedModel?: T;
     error?: string;
 }
 
 export default class Loading extends React.Component<LoadingProps<any>, {}> {
     public render() {
-        const { loading, error, model } = this.props;
+        const { loading, error } = this.props;
         return (
             <>
                 {loading && <p>Loading...</p>}

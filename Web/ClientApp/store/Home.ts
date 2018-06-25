@@ -62,7 +62,7 @@ export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownActio
         case 'GET_TOPICS_LIST_REQUESTED':
             return { loadingTopicsList: { loading: true } };
         case 'GET_TOPICS_LIST_SUCCESS':
-            return { loadingTopicsList: { model: action.payload } };
+            return { loadingTopicsList: { loadedModel: action.payload } };
         case 'GET_TOPICS_LIST_FAILED':
             return { loadingTopicsList: { error: action.payload.error } };
 

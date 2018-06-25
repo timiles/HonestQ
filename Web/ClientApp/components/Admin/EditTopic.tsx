@@ -36,14 +36,14 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
     }
 
     public componentDidUpdate(prevProps: EditTopicProps) {
-        const { model } = this.props.topicModel;
-        if (!prevProps.topicModel.model && model) {
+        const { loadedModel } = this.props.topicModel;
+        if (!prevProps.topicModel.loadedModel && loadedModel) {
             this.setState({
-                name: model.name || '',
-                slug: model.slug || '',
-                summary: model.summary || '',
-                moreInfoUrl: model.moreInfoUrl || '',
-                isApproved: model.isApproved,
+                name: loadedModel.name || '',
+                slug: loadedModel.slug || '',
+                summary: loadedModel.summary || '',
+                moreInfoUrl: loadedModel.moreInfoUrl || '',
+                isApproved: loadedModel.isApproved,
             });
         }
     }
@@ -51,19 +51,19 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
     public render() {
         const { name, slug, summary, moreInfoUrl, isApproved } = this.state;
         const { successfullySaved } = this.props;
-        const { model } = this.props.topicModel;
+        const { loadedModel } = this.props.topicModel;
         const { submitting, submitted, error } = this.props.editTopicForm;
         return (
             <div className="col-lg-6 offset-lg-3">
                 <h2>Edit Topic</h2>
-                {successfullySaved && model && model.isApproved && (
+                {successfullySaved && loadedModel && loadedModel.isApproved && (
                     <div className="alert alert-success" role="alert">
-                        "{model.name}" approved,
-                        check it out: <Link to={`/${model.slug}`}>{`/${model.slug}`}</Link>
+                        "{loadedModel.name}" approved,
+                        check it out: <Link to={`/${loadedModel.slug}`}>{`/${loadedModel.slug}`}</Link>
                     </div>
                 )}
                 <Loading {...this.props.topicModel} />
-                {model && (
+                {loadedModel && (
                     <>
                         {error && <div className="alert alert-danger" role="alert">{error}</div>}
                         <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
@@ -137,7 +137,7 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
     }
 
     private shouldGetTopic(): boolean {
-        if (!this.props.topicModel.model) {
+        if (!this.props.topicModel.loadedModel) {
             return true;
         }
         return (this.props.topicModel.id !== this.props.match.params.topicSlug);

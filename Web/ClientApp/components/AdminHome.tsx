@@ -18,7 +18,7 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return;
         }
-        if (!this.props.unapprovedTopicsList.model) {
+        if (!this.props.unapprovedTopicsList.loadedModel) {
             this.props.getUnapprovedTopicsList();
         }
     }
@@ -27,17 +27,17 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return <Redirect to="/" />;
         }
-        const { model } = this.props.unapprovedTopicsList;
+        const { loadedModel } = this.props.unapprovedTopicsList;
         return (
             <div className="col-lg-6 offset-lg-3">
                 <h1>Admin</h1>
                 <h2>Topics awaiting Approval:</h2>
                 <Loading {...this.props.unapprovedTopicsList} />
-                {model && (model.topics.length === 0 ?
+                {loadedModel && (loadedModel.topics.length === 0 ?
                     <p>All done!</p>
                     :
                     <ul className="topics-list list-unstyled">
-                        {model.topics.map((x: TopicListItemModel, i: number) =>
+                        {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic${i}`}>
                                 <Link to={`/admin/editTopic/${x.slug}`} className="btn btn-lg btn-outline-secondary">
                                     {x.name}

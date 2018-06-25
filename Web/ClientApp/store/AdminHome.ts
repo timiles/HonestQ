@@ -70,7 +70,7 @@ export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: 
         case 'GET_UNAPPROVED_TOPICS_LIST_REQUESTED':
             return { unapprovedTopicsList: { loading: true } };
         case 'GET_UNAPPROVED_TOPICS_LIST_SUCCESS':
-            return { unapprovedTopicsList: { model: action.payload } };
+            return { unapprovedTopicsList: { loadedModel: action.payload } };
         case 'GET_UNAPPROVED_TOPICS_LIST_FAILED':
             return { unapprovedTopicsList: { error: action.payload.error } };
 
