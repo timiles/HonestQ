@@ -76,7 +76,10 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                     <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
                         <label htmlFor="password">Password</label>
                         <input
-                            type="password"
+                            type="input"
+                            autoCorrect="off"
+                            autoCapitalize="none"
+
                             className="form-control"
                             id="password"
                             name="password"
