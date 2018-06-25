@@ -107,6 +107,7 @@
 
 .statement-list-item {
     margin-bottom: 10px;
+    text-align: left;
     white-space: normal;
     width: 100%;
 }

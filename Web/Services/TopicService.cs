@@ -98,6 +98,8 @@ namespace Pobs.Web.Services
         {
             var topic = await _context.Topics
                 .Include(x => x.Statements)
+                    // TODO: This could be more efficient if we aggregated Comment AgreementRating data in SQL
+                    .ThenInclude(x => x.Comments)
                 .FirstOrDefaultAsync(x => x.Slug == topicSlug);
             if (topic == null || (!topic.IsApproved && !isAdmin))
             {

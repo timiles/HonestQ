@@ -63,6 +63,7 @@ export interface StatementListItemModel {
     id: number;
     slug: string;
     text: string;
+    agreementRatings: { [key: string]: number };
 }
 
 export interface StatementModel {

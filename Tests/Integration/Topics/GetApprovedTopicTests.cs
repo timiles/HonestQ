@@ -14,14 +14,13 @@ namespace Pobs.Tests.Integration.Topics
     public class GetApprovedTopicTests : IDisposable
     {
         private string _generateTopicUrl(string topicSlug) => $"/api/topics/{topicSlug}";
-        private readonly int _userId;
+        private readonly User _user;
         private readonly Topic _topic;
 
         public GetApprovedTopicTests()
         {
-            var user = DataHelpers.CreateUser();
-            _userId = user.Id;
-            _topic = DataHelpers.CreateTopic(user, 3, isApproved: true);
+            _user = DataHelpers.CreateUser();
+            _topic = DataHelpers.CreateTopic(_user, 3, isApproved: true);
         }
 
         [Fact]
@@ -31,7 +30,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateTopicUrl(_topic.Slug);
                 var response = await client.GetAsync(url);
@@ -60,12 +59,58 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task StatementShouldHaveAgreementRatingSummary()
+        {
+            // Add some Comments to the middle Statement
+            var statement = _topic.Statements.Skip(1).First();
+            void AddCommentsToStatement(AgreementRating agreementRating, int numberOfComments)
+            {
+                for (int i = 0; i < numberOfComments; i++)
+                {
+                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), agreementRating, _user, DateTime.UtcNow));
+                }
+            };
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                AddCommentsToStatement(AgreementRating.StronglyDisagree, 3);
+                AddCommentsToStatement(AgreementRating.Disagree, 4);
+                AddCommentsToStatement(AgreementRating.Neutral, 5);
+                AddCommentsToStatement(AgreementRating.Agree, 6);
+                AddCommentsToStatement(AgreementRating.StronglyAgree, 7);
+                dbContext.Attach(statement);
+                dbContext.Attach(_user);
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateTopicUrl(_topic.Slug);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
+                var statementResponseModel = responseModel.Statements.Single(x => x.Id == statement.Id);
+
+                Assert.Equal(3, statementResponseModel.AgreementRatings[AgreementRating.StronglyDisagree.ToString()]);
+                Assert.Equal(4, statementResponseModel.AgreementRatings[AgreementRating.Disagree.ToString()]);
+                Assert.Equal(5, statementResponseModel.AgreementRatings[AgreementRating.Neutral.ToString()]);
+                Assert.Equal(6, statementResponseModel.AgreementRatings[AgreementRating.Agree.ToString()]);
+                Assert.Equal(7, statementResponseModel.AgreementRatings[AgreementRating.StronglyAgree.ToString()]);
+            }
+        }
+
+        [Fact]
         public async Task AuthenticatedAsAdmin_ShouldGetIsApprovedProperty()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId, Role.Admin);
+                client.AuthenticateAs(_user.Id, Role.Admin);
 
                 var url = _generateTopicUrl(_topic.Slug);
                 var response = await client.GetAsync(url);
@@ -94,7 +139,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateTopicUrl(slugToRequest);
                 var response = await client.GetAsync(url);
@@ -114,7 +159,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateTopicUrl("INCORRECT_SLUG");
                 var response = await client.GetAsync(url);
@@ -124,7 +169,7 @@ namespace Pobs.Tests.Integration.Topics
 
         public void Dispose()
         {
-            DataHelpers.DeleteUser(_userId);
+            DataHelpers.DeleteUser(_user.Id);
         }
     }
 }
