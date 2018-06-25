@@ -41,6 +41,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                         <input
                             type="text"
                             className="form-control"
+                            id="username"
                             name="username"
                             value={username}
                             onChange={this.handleChange}
@@ -52,6 +53,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                         <input
                             type="password"
                             className="form-control"
+                            id="password"
                             name="password"
                             value={password}
                             onChange={this.handleChange}

@@ -30,7 +30,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
         return (
             <>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" onSubmit={this.handleSubmit}>
+                <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="commentText">Comment</label>
                         <SuperTextArea

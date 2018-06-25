@@ -45,7 +45,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
                     </p>
                 </div>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form className="form" onSubmit={this.handleSubmit}>
+                <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="statementText">Statement</label>
                         <div className="statement statement-floating-quotes" />

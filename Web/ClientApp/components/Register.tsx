@@ -34,12 +34,13 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
             <div className="col-lg-6 offset-lg-3">
                 <h2>Register</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" onSubmit={this.handleSubmit}>
+                <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !firstName ? ' has-error' : '')}>
                         <label htmlFor="firstName">First Name</label>
                         <input
                             type="text"
                             className="form-control"
+                            id="firstName"
                             name="firstName"
                             value={firstName}
                             onChange={this.handleChange}
@@ -51,6 +52,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                         <input
                             type="text"
                             className="form-control"
+                            id="lastName"
                             name="lastName"
                             value={lastName}
                             onChange={this.handleChange}
@@ -62,6 +64,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                         <input
                             type="text"
                             className="form-control"
+                            id="username"
                             name="username"
                             value={username}
                             onChange={this.handleChange}
@@ -73,6 +76,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                         <input
                             type="password"
                             className="form-control"
+                            id="password"
                             name="password"
                             value={password}
                             onChange={this.handleChange}
