@@ -30,7 +30,7 @@ namespace Pobs.Domain.Entities
         [MaxLength(280)]
         public string Summary { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength(2000)]
         public string MoreInfoUrl { get; set; }
 
 

@@ -50,7 +50,7 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
                             id="commentSource"
                             name="source"
                             value={source}
-                            maxLength={100}
+                            maxLength={2000}
                             onChange={this.handleChange}
                         />
                         {submitted && !text && <div className="help-block">Text is required</div>}

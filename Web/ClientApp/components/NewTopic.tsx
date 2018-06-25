@@ -81,7 +81,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
                             className="form-control"
                             id="moreInfoUrl"
                             name="moreInfoUrl"
-                            maxLength={100}
+                            maxLength={2000}
                             value={moreInfoUrl}
                             onChange={this.handleChange}
                         />
