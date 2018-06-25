@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { TopicModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
+import StatementListItem from './StatementListItem';
 
 export interface TopicProps {
     loading?: boolean;
@@ -60,12 +61,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                 <ul className="list-unstyled">
                     {statements.map((x, i) =>
                         <li key={`statement_${i}`}>
-                            <Link
-                                to={`/${slug}/${x.id}/${x.slug}`}
-                                className="btn btn-lg btn-outline-secondary statement statement-list-item"
-                            >
-                                {x.text}
-                            </Link>
+                            <StatementListItem topicSlug={slug} {...x} />
                         </li>)}
                 </ul>
                 {this.props.children}
