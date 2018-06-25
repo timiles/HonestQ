@@ -1,3 +1,20 @@
+/* Prevent long words & URLs from breaking out of their containing element */
+body {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+}
+
+blockquote p {
+    white-space: pre-wrap;
+}
+
+
 /* Callout */
 .bs-callout {
     padding: 20px;
@@ -121,22 +138,6 @@
     .btn-back-to-topic .topic-name {
         font-weight: bold;
     }
-
-/* Add styles to card to prevent long words & URLs from breaking out */
-.card {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-    -ms-word-break: break-all;
-    word-break: break-word;
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-}
-
-blockquote p {
-    white-space: pre-wrap;
-}
 
 
 .slide {
