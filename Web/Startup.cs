@@ -121,8 +121,6 @@ namespace Pobs.Web
             }
             else if (env.IsProduction())
             {
-                app.UseExceptionHandler("/Home/Error");
-
                 var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
                 if (appSettings.ExceptionlessApiKey != null)
                 {

@@ -76,11 +76,5 @@ namespace Pobs.Web.Controllers
 
             return Content(renderResult.Html, "text/html");
         }
-
-        public IActionResult Error()
-        {
-            ViewData["RequestId"] = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            return View();
-        }
     }
 }
