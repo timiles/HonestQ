@@ -43,6 +43,8 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                             className="form-control"
                             id="username"
                             name="username"
+                            autoCorrect="off"
+                            autoCapitalize="none"
                             value={username}
                             onChange={this.handleChange}
                         />

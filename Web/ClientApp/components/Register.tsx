@@ -66,6 +66,8 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                             className="form-control"
                             id="username"
                             name="username"
+                            autoCorrect="off"
+                            autoCapitalize="none"
                             value={username}
                             onChange={this.handleChange}
                         />
