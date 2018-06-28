@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
+using Pobs.Web.Middleware;
 using Pobs.Web.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
@@ -163,7 +164,7 @@ namespace Pobs.Web
                 .AllowCredentials());
 
             app.UseAuthentication();
-
+            app.UseFeatureLogging();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
