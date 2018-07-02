@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -29,6 +30,14 @@ namespace Pobs.Web.Controllers
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var decodedToken = tokenHandler.ReadJwtToken(token);
+
+                if (decodedToken.ValidTo < DateTime.UtcNow)
+                {
+                    // JWT expired? Clear the cookie and redirect to login
+                    this.Response.Cookies.Delete("id_token");
+                    return Redirect("/login");
+                }
+
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 if (int.TryParse(identityClaim.Value, out int userId))
                 {
