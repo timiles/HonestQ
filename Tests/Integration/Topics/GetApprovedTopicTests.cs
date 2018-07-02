@@ -20,7 +20,7 @@ namespace Pobs.Tests.Integration.Topics
         public GetApprovedTopicTests()
         {
             _user = DataHelpers.CreateUser();
-            _topic = DataHelpers.CreateTopic(_user, 3, isApproved: true);
+            _topic = DataHelpers.CreateTopic(_user, 3, isApproved: true, setAllProperties: true);
         }
 
         [Fact]
@@ -54,6 +54,7 @@ namespace Pobs.Tests.Integration.Topics
                     var responseStatement = responseModel.Statements.Single(x => x.Id == statement.Id);
                     Assert.Equal(statement.Slug, responseStatement.Slug);
                     Assert.Equal(statement.Text, responseStatement.Text);
+                    Assert.Equal(statement.Stance.ToString(), responseStatement.Stance);
                 }
             }
         }

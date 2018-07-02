@@ -36,6 +36,8 @@ namespace Pobs.Domain.Entities
 
         public DateTime PostedAt { get; set; }
 
+        public Stance? Stance { get; set; }
+
 
         [Required]
         public virtual Topic Topic { get; set; }

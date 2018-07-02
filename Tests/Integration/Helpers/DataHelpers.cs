@@ -27,7 +27,7 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static Topic CreateTopic(User statementUser, int numberOfStatements = 0,
-            User commentUser = null, int numberOfCommentsPerStatement = 0, bool isApproved = false)
+            User commentUser = null, int numberOfCommentsPerStatement = 0, bool isApproved = false, bool setAllProperties = false)
         {
             // Guarantee slug has both upper & lower case characters
             var name = "ABCabc" + Utils.GenerateRandomString(10);
@@ -38,12 +38,17 @@ namespace Pobs.Tests.Integration.Helpers
                 IsApproved = isApproved
             };
 
+            var numberOfStances = Enum.GetValues(typeof(Stance)).Length;
             for (int s = 0; s < numberOfStatements; s++)
             {
                 var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow)
                 {
                     Source = Utils.GenerateRandomString(10)
                 };
+                if (setAllProperties)
+                {
+                    statement.Stance = (Stance)(s % numberOfStances);
+                }
                 if (commentUser != null)
                 {
                     for (int c = 0; c < numberOfCommentsPerStatement; c++)

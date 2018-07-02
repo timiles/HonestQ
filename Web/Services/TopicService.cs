@@ -16,7 +16,7 @@ namespace Pobs.Web.Services
         Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId);
         Task<AdminTopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
         Task<TopicModel> GetTopic(string topicSlug, bool isAdmin);
-        Task<StatementListItemModel> SaveStatement(string topicSlug, string text, string source, int postedByUserId);
+        Task<StatementListItemModel> SaveStatement(string topicSlug, string text, string source, Stance? stance, int postedByUserId);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
         Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
             string text, string source, AgreementRating agreementRating, int postedByUserId);
@@ -109,7 +109,7 @@ namespace Pobs.Web.Services
             return model;
         }
 
-        public async Task<StatementListItemModel> SaveStatement(string topicSlug, string text, string source, int postedByUserId)
+        public async Task<StatementListItemModel> SaveStatement(string topicSlug, string text, string source, Stance? stance, int postedByUserId)
         {
             var topicTask = _context.Topics.FirstOrDefaultAsync(x => x.Slug == topicSlug);
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
@@ -120,7 +120,8 @@ namespace Pobs.Web.Services
             }
             var statement = new Statement(text, await postedByUserTask, DateTime.UtcNow)
             {
-                Source = source
+                Source = source,
+                Stance = stance,
             };
             topic.Statements.Add(statement);
             await _context.SaveChangesAsync();

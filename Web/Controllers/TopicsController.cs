@@ -86,7 +86,17 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{topicSlug}/statements"), Authorize]
         public async Task<IActionResult> AddStatement(string topicSlug, [FromBody] StatementFormModel payload)
         {
-            var statementModel = await _topicService.SaveStatement(topicSlug, payload.Text, payload.Source, User.Identity.ParseUserId());
+            Stance? stance = null;
+            if (!string.IsNullOrWhiteSpace(payload.Stance))
+            {
+                if (!Enum.TryParse<Stance>(payload.Stance, out Stance s))
+                {
+                    return BadRequest($"Invalid Stance: {payload.Stance}");
+                }
+                stance = s;
+            }
+
+            var statementModel = await _topicService.SaveStatement(topicSlug, payload.Text, payload.Source, stance, User.Identity.ParseUserId());
             if (statementModel != null)
             {
                 return Ok(statementModel);

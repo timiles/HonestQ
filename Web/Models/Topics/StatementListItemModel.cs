@@ -13,6 +13,7 @@ namespace Pobs.Web.Models.Topics
             this.Id = statement.Id;
             this.Slug = statement.Slug;
             this.Text = statement.Text;
+            this.Stance = statement.Stance?.ToString();
             this.AgreementRatings = statement.Comments
                 .GroupBy(x => x.AgreementRating)
                 .ToDictionary(x => x.Key.ToString(), x => x.Count());
@@ -21,6 +22,7 @@ namespace Pobs.Web.Models.Topics
         public int Id { get; set; }
         public string Slug { get; set; }
         public string Text { get; set; }
+        public string Stance { get; set; }
         public Dictionary<string, int> AgreementRatings { get; set; }
     }
 }
