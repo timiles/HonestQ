@@ -45,7 +45,7 @@ namespace Pobs.Web.Middleware
 
                     var exceptionlessClient = new ExceptionlessClient(this.appSettings.Value.ExceptionlessApiKey);
                     var feature = exceptionlessClient.CreateFeatureUsage(featureName)
-                        .SetProperty("Duration", stopwatch.ElapsedMilliseconds)
+                        .SetProperty("RequestDurationMilliseconds", stopwatch.ElapsedMilliseconds)
                         .SetProperty("UserAgent", context.Request.Headers[HeaderNames.UserAgent].ToString());
 
                     foreach (var value in routeData.Values)
