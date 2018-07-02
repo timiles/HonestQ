@@ -50,6 +50,13 @@ export default createServerRenderer((params) => {
             return;
         }
 
+        const trackingCode = 'UA-17476465-5';
+        const gaScript = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${trackingCode}');`;
+
         const embedlyScript = `
 (function(w, d){
 var id='embedly-platform', n = 'script';
@@ -84,6 +91,8 @@ if (!d.getElementById(id)){
                     />
                     <script src={params.data.versionedAssetPaths.vendorJs} />
                     <script src={params.data.versionedAssetPaths.mainClientJs} />
+                    <script async={true} src={`https://www.googletagmanager.com/gtag/js?id=${trackingCode}`} />
+                    <script dangerouslySetInnerHTML={{ __html: gaScript }} />
                     <script dangerouslySetInnerHTML={{ __html: embedlyScript }} />
                 </body>
             </html>
