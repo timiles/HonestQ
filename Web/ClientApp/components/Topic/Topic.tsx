@@ -14,10 +14,6 @@ export interface TopicProps {
 
 export default class Topic extends React.Component<TopicProps, {}> {
 
-    constructor(props: TopicProps) {
-        super(props);
-    }
-
     public render() {
         const { loading, error, slug, model } = this.props;
         return (
@@ -56,7 +52,6 @@ export default class Topic extends React.Component<TopicProps, {}> {
                     </div>
                 }
                 <StatementList statements={statements} topicSlug={slug} />
-                {this.props.children}
             </>
         );
     }

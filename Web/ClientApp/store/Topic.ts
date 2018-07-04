@@ -113,8 +113,15 @@ export const actionCreators = {
                     .then((responseModel: StatementListItemModel) => {
                         dispatch({ type: 'STATEMENT_FORM_RECEIVED', payload: { statementListItem: responseModel } });
                         setTimeout(() => {
-                            dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
+                            // First slide back to Topic
+                            dispatch(push(`/${topicSlug}`) as any);
+
+                            setTimeout(() => {
+                                // Then slide onto new Statement
+                                dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
+                            }, 700);
                         }, 100);
+
                     })
                     .catch((reason: string) => {
                         dispatch({

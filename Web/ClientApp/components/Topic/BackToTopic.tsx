@@ -12,7 +12,7 @@ export default class BackToTopic extends React.Component<BackToTopicProps, {}> {
         const { slug, name } = this.props;
         return (
             <Link to={`/${slug}`} className="btn btn-md btn-outline-secondary btn-back-to-topic">
-                &larr; Back to other statements about <span className="topic-name">{name}</span>
+                &larr; Back to <span className="topic-name">{name}</span>
             </Link>
         );
     }

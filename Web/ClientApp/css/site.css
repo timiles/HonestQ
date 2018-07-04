@@ -129,6 +129,10 @@ blockquote p {
     width: 100%;
 }
 
+.btn-new-statement {
+    width: 100%;
+}
+
 .btn-back-to-topic {
     margin-top: 20px;
     text-align: left;

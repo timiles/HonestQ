@@ -5,12 +5,9 @@ import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import StanceInput from './StanceInput';
 
-type StatementFormProps = FormProps<StatementFormModel>
-    & { numberOfStatementsInTopic: number };
+export default class StatementForm extends React.Component<FormProps<StatementFormModel>, StatementFormModel> {
 
-export default class StatementForm extends React.Component<StatementFormProps, StatementFormModel> {
-
-    constructor(props: StatementFormProps) {
+    constructor(props: FormProps<StatementFormModel>) {
         super(props);
 
         this.state = { text: '', source: '', stance: 'NA' };
@@ -27,12 +24,10 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     }
 
     public render() {
-        const { numberOfStatementsInTopic, error, submitting, submitted } = this.props;
-        const headerText = numberOfStatementsInTopic === 0 ? 'Start the conversation' : 'Got something to add?';
+        const { error, submitting, submitted } = this.props;
         const { text, stance, source } = this.state;
         return (
             <>
-                <h2>{headerText}</h2>
                 <div className="alert alert-info" role="alert">
                     <p>Please remember, Statements under a Topic are:</p>
                     <ul>

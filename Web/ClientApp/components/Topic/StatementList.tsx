@@ -25,10 +25,12 @@ export default class StatementList extends React.Component<Props, State> {
     }
 
     public render() {
+        let { statements } = this.props;
+        if (statements.length === 0) {
+            return null;
+        }
         const { topicSlug } = this.props;
         const { stanceFilter } = this.state;
-        let { statements } = this.props;
-        const unfilteredStatementCount = statements.length;
 
         if (stanceFilter) {
             statements = statements.filter((x) => x.stance === stanceFilter);
@@ -36,9 +38,7 @@ export default class StatementList extends React.Component<Props, State> {
 
         return (
             <>
-                {unfilteredStatementCount > 0 &&
-                    <h3>Here's a list of things people might say:</h3>
-                }
+                <h3>Here's a list of things people might say:</h3>
                 <form className="form-inline my-2 float-right">
                     <label className="my-1 mr-2">Filter</label>
                     <StanceInput includeAll={true} onChange={this.handleChangeStanceFilter} />
@@ -55,6 +55,11 @@ export default class StatementList extends React.Component<Props, State> {
                                 {x.agreementRatings && <AgreementRatingBarChart {...x.agreementRatings} />}
                             </Link>
                         </li>)}
+                    <li>
+                        <Link to={`/${topicSlug}/newStatement`} className="btn btn-lg btn-primary btn-new-statement">
+                            Add a statement
+                        </Link>
+                    </li>
                 </ul>
             </>);
     }

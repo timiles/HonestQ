@@ -16,7 +16,8 @@ import Topic from './Topic';
 type ContainerProps = TopicStore.ContainerState
     & typeof TopicStore.actionCreators
     & { loggedInUser: LoggedInUserModel | undefined }
-    & RouteComponentProps<{ topicSlug: string, statementId?: number }>;
+    // Important: statementId cannot be number as would still be a string in the underlying JavaScript?
+    & RouteComponentProps<{ topicSlug: string, statementId?: string }>;
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -30,14 +31,14 @@ class Container extends React.Component<ContainerProps, {}> {
             this.props.getTopic(this.props.match.params.topicSlug);
         }
         if (this.shouldGetStatement()) {
-            this.props.getStatement(this.props.match.params.topicSlug, this.props.match.params.statementId!);
+            this.props.getStatement(this.props.match.params.topicSlug, Number(this.props.match.params.statementId));
         }
     }
 
     public componentDidUpdate(prevProps: ContainerProps) {
         // This is run every time the route changes
         if (this.shouldGetStatement()) {
-            this.props.getStatement(this.props.match.params.topicSlug, this.props.match.params.statementId!);
+            this.props.getStatement(this.props.match.params.topicSlug, Number(this.props.match.params.statementId));
         }
     }
 
@@ -76,16 +77,16 @@ class Container extends React.Component<ContainerProps, {}> {
                                     classNames="slide"
                                 >
                                     <div className="col-md-12 slide slide-left">
-                                        <Topic {...topic}>
-                                            <StatementForm
-                                                {...statementForm}
-                                                numberOfStatementsInTopic={numberOfStatementsInTopic}
-                                            />
-                                        </Topic>
+                                        <Topic {...topic} />
+                                        {numberOfStatementsInTopic === 0 &&
+                                            <>
+                                                <h2>Start the conversation</h2>
+                                                <StatementForm {...statementForm} />
+                                            </>}
                                     </div>
                                 </CSSTransition>
                             }
-                            {this.props.match.params.statementId && topic.model &&
+                            {topic.model && (Number(this.props.match.params.statementId) > 0) &&
                                 <CSSTransition
                                     timeout={slideDurationMilliseconds}
                                     classNames="slide"
@@ -95,6 +96,18 @@ class Container extends React.Component<ContainerProps, {}> {
                                         <Statement {...statement}>
                                             <CommentForm {...commentForm} />
                                         </Statement>
+                                    </div>
+                                </CSSTransition>
+                            }
+                            {topic.model && this.props.match.params.statementId === 'newStatement' &&
+                                <CSSTransition
+                                    timeout={slideDurationMilliseconds}
+                                    classNames="slide"
+                                >
+                                    <div className="col-md-12 slide slide-right">
+                                        <BackToTopic slug={topic.slug!} name={topic.model.name} />
+                                        <h2>Add a new Statement</h2>
+                                        <StatementForm {...statementForm} />
                                     </div>
                                 </CSSTransition>
                             }
@@ -144,13 +157,17 @@ class Container extends React.Component<ContainerProps, {}> {
         if (!this.props.match.params.statementId) {
             return false;
         }
+        const statementIdAsNumber = Number(this.props.match.params.statementId);
+        if (isNaN(statementIdAsNumber)) {
+            return false;
+        }
         if (!this.props.statement) {
             return true;
         }
         if (this.props.statement.loading) {
             return false;
         }
-        return (this.props.statement.statementId !== this.props.match.params.statementId);
+        return (this.props.statement.statementId !== statementIdAsNumber);
     }
 }
 
