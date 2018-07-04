@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { StatementListItemModel } from '../../server-models';
+import AgreementRatingBarChart from './AgreementRatingBarChart';
 import StanceInput from './StanceInput';
-import StatementListItem from './StatementListItem';
+import StanceView from './StanceView';
 
 interface Props {
     statements: StatementListItemModel[];
@@ -44,7 +46,14 @@ export default class StatementList extends React.Component<Props, State> {
                 <ul className="list-unstyled">
                     {statements.map((x, i) =>
                         <li key={`statement_${i}`}>
-                            <StatementListItem topicSlug={topicSlug} {...x} />
+                            <Link
+                                to={`/${topicSlug}/${x.id}/${x.slug}`}
+                                className="btn btn-lg btn-outline-secondary statement-list-item"
+                            >
+                                <StanceView value={x.stance} />
+                                <span className="statement">{x.text}</span>
+                                {x.agreementRatings && <AgreementRatingBarChart {...x.agreementRatings} />}
+                            </Link>
                         </li>)}
                 </ul>
             </>);
