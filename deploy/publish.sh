@@ -2,6 +2,9 @@
 buildNumber=`cat build/next-build-number.txt`
 if [ $? -ne 0 ]; then read -p "Enter next build number: " buildNumber; fi
 
+# Exit if any command after here returns non-zero error code
+set -e
+
 rm -rf build/app
 dotnet publish "../Web" -c Release -r linux-x64 -o "$(pwd)/build/app"
 
@@ -13,6 +16,9 @@ docker build -t pobsweb .
 imageUri="627618477028.dkr.ecr.eu-west-2.amazonaws.com/pobsweb:$((buildNumber))"
 docker tag pobsweb:latest $imageUri
 docker push $imageUri
+
+# Clean up
+docker rmi $imageUri pobsweb
 
 # Increment next already in case anything fails after here
 echo $((buildNumber+1)) > build/next-build-number.txt
