@@ -3,6 +3,7 @@ import { StatementModel } from '../../server-models';
 import { extractUrlFromText } from '../../utils';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Comment from './Comment';
+import StanceView from './StanceView';
 
 export interface StatementProps {
     loading?: boolean;
@@ -26,7 +27,10 @@ export default class Statement extends React.Component<StatementProps, {}> {
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {model && (
                     <div>
-                        <h2 className="statement">{model.text}</h2>
+                        <h4>
+                            {model.stance && <StanceView value={model.stance} />}
+                            <span className="statement">{model.text}</span>
+                        </h4>
                         {model.source && this.renderSource(model.source)}
                         {this.props.children}
                         <ol>

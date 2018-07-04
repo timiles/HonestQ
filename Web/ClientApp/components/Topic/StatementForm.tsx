@@ -3,6 +3,7 @@ import { StatementFormModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
+import StanceInput from './StanceInput';
 
 type StatementFormProps = FormProps<StatementFormModel>
     & { numberOfStatementsInTopic: number };
@@ -12,7 +13,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     constructor(props: StatementFormProps) {
         super(props);
 
-        this.state = { text: '', source: '' };
+        this.state = { text: '', source: '', stance: '' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,14 +22,14 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     public componentWillReceiveProps(nextProps: FormProps<StatementFormModel>) {
         // This will reset the form when a statement has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '' });
+            this.setState({ text: '', source: '', stance: '' });
         }
     }
 
     public render() {
         const { numberOfStatementsInTopic, error, submitting, submitted } = this.props;
         const headerText = numberOfStatementsInTopic === 0 ? 'Start the conversation' : 'Got something to add?';
-        const { text, source } = this.state;
+        const { text, stance, source } = this.state;
         return (
             <>
                 <h2>{headerText}</h2>
@@ -60,6 +61,16 @@ export default class StatementForm extends React.Component<StatementFormProps, S
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
                     <div className="form-group">
+                        <label>Stance</label>
+                        <div>
+                            <StanceInput
+                                name="stance"
+                                value={stance}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                    </div>
+                    <div className="form-group">
                         <label htmlFor="statementSource">Source (optional)</label>
                         <input
                             type="text"
@@ -80,7 +91,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
         );
     }
 
-    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
+    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLButtonElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
         this.setState((prevState) => ({ ...prevState, [name]: value }));
     }

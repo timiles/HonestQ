@@ -101,11 +101,11 @@ blockquote p {
         margin-left: 10px;
         bottom: -33px;
     }
-    h2.statement:before {
-        top: 54px;
+    h4 span.statement:before {
+        top: 46px;
     }
-    h2.statement:after {
-        bottom: -54px;
+    h4 span.statement:after {
+        bottom: -46px;
     }
     .statement-floating-quotes:before {
         float: left;
