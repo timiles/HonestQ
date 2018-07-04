@@ -107,6 +107,42 @@ namespace Pobs.Web.Controllers
             return NotFound();
         }
 
+        [Authorize, HttpPut, Route("{topicSlug}/statements/{statementId}")]
+        public async Task<IActionResult> UpdateStatement(string topicSlug, int statementId, [FromBody] StatementFormModel payload)
+        {
+            if (!User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
+            if (string.IsNullOrWhiteSpace(payload.Text))
+            {
+                return BadRequest("Text is required");
+            }
+            if (string.IsNullOrWhiteSpace(payload.Stance))
+            {
+                return BadRequest("Stance is required");
+            }
+            if (!Enum.TryParse<Stance>(payload.Stance, out Stance stance))
+            {
+                return BadRequest($"Invalid Stance: {payload.Stance}");
+            }
+
+            try
+            {
+                var statementModel = await _topicService.UpdateStatement(topicSlug, statementId, payload.Text, payload.Source, stance);
+                if (statementModel != null)
+                {
+                    return Ok(statementModel);
+                }
+                return NotFound();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet, Route("{topicSlug}/statements/{statementId}")]
         public async Task<IActionResult> GetStatement(string topicSlug, int statementId)
         {
