@@ -11,7 +11,7 @@ namespace Pobs.Web.Models.Topics
             this.Slug = statement.Slug;
             this.Text = statement.Text;
             this.Source = statement.Source;
-            this.Stance = statement.Stance?.ToString();
+            this.Stance = statement.Stance.ToString();
             this.Comments = statement.Comments.Select(x => new CommentListItemModel(x)).ToArray();
         }
 

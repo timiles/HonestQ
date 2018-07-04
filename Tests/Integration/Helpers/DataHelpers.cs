@@ -27,7 +27,7 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static Topic CreateTopic(User statementUser, int numberOfStatements = 0,
-            User commentUser = null, int numberOfCommentsPerStatement = 0, bool isApproved = false, bool setAllProperties = false)
+            User commentUser = null, int numberOfCommentsPerStatement = 0, bool isApproved = false)
         {
             // Guarantee slug has both upper & lower case characters
             var name = "ABCabc" + Utils.GenerateRandomString(10);
@@ -43,12 +43,9 @@ namespace Pobs.Tests.Integration.Helpers
             {
                 var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow)
                 {
-                    Source = Utils.GenerateRandomString(10)
+                    Source = Utils.GenerateRandomString(10),
+                    Stance = (Stance)(s % numberOfStances)
                 };
-                if (setAllProperties)
-                {
-                    statement.Stance = (Stance)(s % numberOfStances);
-                }
                 if (commentUser != null)
                 {
                     for (int c = 0; c < numberOfCommentsPerStatement; c++)

@@ -13,7 +13,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     constructor(props: StatementFormProps) {
         super(props);
 
-        this.state = { text: '', source: '', stance: '' };
+        this.state = { text: '', source: '', stance: 'NA' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,7 +22,7 @@ export default class StatementForm extends React.Component<StatementFormProps, S
     public componentWillReceiveProps(nextProps: FormProps<StatementFormModel>) {
         // This will reset the form when a statement has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', stance: '' });
+            this.setState({ text: '', source: '', stance: 'NA' });
         }
     }
 

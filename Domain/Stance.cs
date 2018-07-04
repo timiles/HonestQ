@@ -2,7 +2,8 @@ namespace Pobs.Domain
 {
     public enum Stance
     {
-        Con = 0,
+        NA = 0,
         Pro = 1,
+        Con = 2,
     }
 }

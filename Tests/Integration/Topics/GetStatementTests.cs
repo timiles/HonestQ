@@ -50,7 +50,7 @@ namespace Pobs.Tests.Integration.Topics
                 Assert.Equal(statement.Slug, responseModel.Slug);
                 Assert.Equal(statement.Text, responseModel.Text);
                 Assert.Equal(statement.Source, responseModel.Source);
-                Assert.Null(responseModel.Stance);
+                Assert.Equal(statement.Stance.ToString(), responseModel.Stance);
 
                 Assert.Equal(3, statement.Comments.Count);
                 Assert.Equal(statement.Comments.Count, responseModel.Comments.Length);
@@ -62,34 +62,6 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(comment.Source, responseComment.Source);
                     Assert.Equal(comment.AgreementRating.ToString(), responseComment.AgreementRating);
                 }
-            }
-        }
-
-        [Fact]
-        public async Task ShouldGetStatementWithStance()
-        {
-            var stance = Stance.Con;
-            var statement = _topic.Statements.Skip(1).First();
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                dbContext.Attach(statement);
-                statement.Stance = stance;
-                dbContext.SaveChanges();
-            }
-
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                // PRIVATE BETA
-                client.AuthenticateAs(_statementUserId);
-
-                var url = _generateUrl(_topic.Slug, statement.Id);
-                var response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<StatementModel>(responseContent);
-                Assert.Equal(stance.ToString(), responseModel.Stance);
             }
         }
 

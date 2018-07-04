@@ -32,7 +32,8 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful statement on this topic"
+                Text = "My insightful statement on this topic",
+                Stance = Stance.NA.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -52,6 +53,7 @@ namespace Pobs.Tests.Integration.Topics
 
                     var statement = topic.Statements.Single();
                     Assert.Equal(payload.Text, statement.Text);
+                    Assert.Equal(payload.Stance, statement.Stance.ToString());
                     Assert.Equal(_userId, statement.PostedByUser.Id);
                     Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
@@ -61,6 +63,7 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(statement.Id, responseModel.Id);
                     Assert.Equal(statement.Slug, responseModel.Slug);
                     Assert.Equal(statement.Text, responseModel.Text);
+                    Assert.Equal(statement.Stance.ToString(), responseModel.Stance);
                 }
             }
         }
@@ -68,13 +71,12 @@ namespace Pobs.Tests.Integration.Topics
         [Fact]
         public async Task AllProperties_ShouldPersist()
         {
-            var stance = Stance.Pro;
             var payload = new
             {
                 // Include emoji in the Text, and quote marks around it
                 Text = "\"Here's a poop emoji: 💩\"",
                 Source = "https://example.com/💩",
-                Stance = stance.ToString(),
+                Stance = Stance.Pro.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -95,7 +97,7 @@ namespace Pobs.Tests.Integration.Topics
                     var statement = topic.Statements.Single();
                     Assert.Equal(payload.Text.Trim('"'), statement.Text);
                     Assert.Equal(payload.Source, statement.Source);
-                    Assert.Equal(stance, statement.Stance);
+                    Assert.Equal(payload.Stance, statement.Stance.ToString());
                     Assert.Equal("heres_a_poop_emoji", statement.Slug);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -112,7 +114,8 @@ namespace Pobs.Tests.Integration.Topics
         {
             var payload = new
             {
-                Text = "My insightful statement on this topic"
+                Text = "My insightful statement on this topic",
+                Stance = Stance.NA.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -133,11 +136,54 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task NoText_ShouldGetBadRequest()
+        {
+            var payload = new
+            {
+                Stance = Stance.NA.ToString(),
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateStatementsUrl(_topicSlug);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Text is required", responseContent);
+            }
+        }
+
+        [Fact]
+        public async Task NoStance_ShouldGetBadRequest()
+        {
+            var payload = new
+            {
+                Text = "My insightful statement on this topic",
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateStatementsUrl(_topicSlug);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Stance is required", responseContent);
+            }
+        }
+
+        [Fact]
         public async Task UnknownSlug_ShouldReturnNotFound()
         {
             var payload = new
             {
-                Text = "My insightful statement on this topic"
+                Text = "My insightful statement on this topic",
+                Stance = Stance.NA.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

@@ -12,7 +12,7 @@ interface State {
 
 export default class StanceInput extends React.Component<Props, State> {
 
-    private readonly stanceValues = new Map([['', 'N/A'], ['Pro', '👍'], ['Con', '👎']]);
+    private readonly stanceValues = new Map([['NA', 'N/A'], ['Pro', '👍'], ['Con', '👎']]);
 
     constructor(props: Props) {
         super(props);

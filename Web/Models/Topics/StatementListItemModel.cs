@@ -13,7 +13,7 @@ namespace Pobs.Web.Models.Topics
             this.Id = statement.Id;
             this.Slug = statement.Slug;
             this.Text = statement.Text;
-            this.Stance = statement.Stance?.ToString();
+            this.Stance = statement.Stance.ToString();
             this.AgreementRatings = statement.Comments
                 .GroupBy(x => x.AgreementRating)
                 .ToDictionary(x => x.Key.ToString(), x => x.Count());
