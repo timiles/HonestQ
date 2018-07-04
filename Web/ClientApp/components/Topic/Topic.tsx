@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { TopicModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import StatementListItem from './StatementListItem';
+import StatementList from './StatementList';
 
 export interface TopicProps {
     loading?: boolean;
@@ -55,15 +55,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         }
                     </div>
                 }
-                {statements.length > 0 &&
-                    <h3>Here's a list of things people might say:</h3>
-                }
-                <ul className="list-unstyled">
-                    {statements.map((x, i) =>
-                        <li key={`statement_${i}`}>
-                            <StatementListItem topicSlug={slug} {...x} />
-                        </li>)}
-                </ul>
+                <StatementList statements={statements} topicSlug={slug} />
                 {this.props.children}
             </>
         );

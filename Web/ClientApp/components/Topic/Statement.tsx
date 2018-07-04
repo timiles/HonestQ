@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StatementModel } from '../../server-models';
 import { extractUrlFromText } from '../../utils';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
-import Comment from './Comment';
+import CommentList from './CommentList';
 import StanceView from './StanceView';
 
 export interface StatementProps {
@@ -33,9 +33,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
                         </h4>
                         {model.source && this.renderSource(model.source)}
                         {this.props.children}
-                        <ol>
-                            {model.comments.map((x, i) => <li key={`comment_${i}`}><Comment {...x} /></li>)}
-                        </ol>
+                        <CommentList comments={model.comments} />
                     </div>
                 )}
             </>
