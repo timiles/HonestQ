@@ -178,6 +178,28 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task InvalidStance_ShouldGetBadRequest()
+        {
+            var payload = new
+            {
+                Text = "My insightful statement on this topic",
+                Stance = "BLAH",
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateStatementsUrl(_topicSlug);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Invalid Stance: " + payload.Stance, responseContent);
+            }
+        }
+
+        [Fact]
         public async Task UnknownSlug_ShouldReturnNotFound()
         {
             var payload = new
