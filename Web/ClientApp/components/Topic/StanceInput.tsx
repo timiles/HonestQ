@@ -2,7 +2,8 @@ import * as React from 'react';
 
 interface Props {
     name?: string;
-    value: string;
+    value?: string;
+    includeAll?: boolean;
     onChange: (event: React.FormEvent<HTMLButtonElement>) => void;
 }
 
@@ -12,18 +13,19 @@ interface State {
 
 export default class StanceInput extends React.Component<Props, State> {
 
-    private readonly stanceValues = new Map([['NA', 'N/A'], ['Pro', '👍'], ['Con', '👎']]);
+    private readonly stanceValues = new Map();
 
     constructor(props: Props) {
         super(props);
 
-        this.state = { value: this.props.value };
+        this.state = { value: this.props.value || '' };
+
+        if (this.props.includeAll) {
+            this.stanceValues.set('', 'All');
+        }
+        [['NA', 'N/A'], ['Pro', '👍'], ['Con', '👎']].map((x) => this.stanceValues.set(x[0], x[1]));
 
         this.handleChange = this.handleChange.bind(this);
-    }
-
-    public componentWillReceiveProps(nextProps: Props) {
-        this.setState({ value: nextProps.value });
     }
 
     public render() {
