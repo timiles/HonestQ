@@ -86,26 +86,31 @@ blockquote p {
 }
     .statement:before, .statement:after {
         font-family: Georgia, serif;
-        font-size: 4em;
+        font-size: 3.3em;
         line-height: 0;
         opacity: .2;
         position: relative;
     }
     .statement:before {
         content: open-quote;
-        margin-right: 10px;
-        top: 33px;
+        margin-right: 6px;
+        top: 32px;
     }
     .statement:after {
         content: close-quote;
-        margin-left: 10px;
-        bottom: -33px;
+        margin-left: 6px;
+        bottom: -32px;
+    }
+    h4 .statement:before, h4 .statement:after {
+        font-size: 2.9em;
     }
     h4 span.statement:before {
-        top: 46px;
+        margin-right: 4px;
+        top: 34px;
     }
     h4 span.statement:after {
-        bottom: -46px;
+        bottom: -34px;
+        margin-left: 4px;
     }
     .statement-floating-quotes:before {
         float: left;
