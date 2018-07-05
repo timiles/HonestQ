@@ -56,7 +56,7 @@ export default class StatementList extends React.Component<Props, State> {
                             </Link>
                         </li>)}
                     <li>
-                        <Link to={`/${topicSlug}/newStatement`} className="btn btn-lg btn-primary btn-new-statement">
+                        <Link to={`/${topicSlug}/new_statement`} className="btn btn-lg btn-primary btn-new-statement">
                             Add a statement
                         </Link>
                     </li>

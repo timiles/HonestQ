@@ -31,7 +31,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
             <>
                 <LoggedInUserContext.Consumer>
                     {(user) => isUserInRole(user, 'Admin') &&
-                        <Link to={`/admin/editTopic/${slug}`} className="float-right">Edit</Link>
+                        <Link to={`/admin/edit/${slug}`} className="float-right">Edit</Link>
                     }
                 </LoggedInUserContext.Consumer>
                 <h1>{name}</h1>

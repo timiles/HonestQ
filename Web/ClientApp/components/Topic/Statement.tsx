@@ -30,7 +30,7 @@ export default class Statement extends React.Component<Props, {}> {
                     <div>
                         <LoggedInUserContext.Consumer>
                             {(user) => isUserInRole(user, 'Admin') &&
-                                <Link to={`/admin/editTopic/${topicSlug}/${statementId}`} className="float-right">
+                                <Link to={`/admin/edit/${topicSlug}/${statementId}`} className="float-right">
                                     Edit
                                 </Link>
                             }

@@ -39,7 +39,7 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
                     <ul className="topics-list list-unstyled">
                         {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic${i}`}>
-                                <Link to={`/admin/editTopic/${x.slug}`} className="btn btn-lg btn-outline-secondary">
+                                <Link to={`/admin/edit/${x.slug}`} className="btn btn-lg btn-outline-secondary">
                                     {x.name}
                                 </Link>
                             </li>)

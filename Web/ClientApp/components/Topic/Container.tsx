@@ -78,7 +78,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                 >
                                     <div className="col-md-12 slide slide-left">
                                         <Topic {...topic} />
-                                        {numberOfStatementsInTopic === 0 &&
+                                        {topic.model && numberOfStatementsInTopic === 0 &&
                                             <>
                                                 <h2>Start the conversation</h2>
                                                 <StatementForm {...statementForm} />
@@ -99,14 +99,14 @@ class Container extends React.Component<ContainerProps, {}> {
                                     </div>
                                 </CSSTransition>
                             }
-                            {topic.model && this.props.match.params.statementId === 'newStatement' &&
+                            {topic.model && this.props.match.params.statementId === 'new_statement' &&
                                 <CSSTransition
                                     timeout={slideDurationMilliseconds}
                                     classNames="slide"
                                 >
                                     <div className="col-md-12 slide slide-right">
                                         <BackToTopic slug={topic.slug!} name={topic.model.name} />
-                                        <h2>Add a new Statement</h2>
+                                        <h2>Add a statement</h2>
                                         <StatementForm {...statementForm} />
                                     </div>
                                 </CSSTransition>
