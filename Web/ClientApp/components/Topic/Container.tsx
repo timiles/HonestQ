@@ -93,7 +93,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                 >
                                     <div className="col-md-12 slide slide-right">
                                         <BackToTopic slug={topic.slug!} name={topic.model.name} />
-                                        <Statement {...statement}>
+                                        <Statement {...statement} topicSlug={topic.slug!}>
                                             <CommentForm {...commentForm} />
                                         </Statement>
                                     </div>

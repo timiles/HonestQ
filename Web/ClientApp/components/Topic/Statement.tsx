@@ -1,9 +1,14 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { StatementModel } from '../../server-models';
-import { extractUrlFromText } from '../../utils';
+import { extractUrlFromText, isUserInRole } from '../../utils';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import CommentList from './CommentList';
 import StanceView from './StanceView';
+
+type Props = StatementProps
+    & { topicSlug: string; };
 
 export interface StatementProps {
     loading?: boolean;
@@ -12,14 +17,10 @@ export interface StatementProps {
     model?: StatementModel;
 }
 
-export default class Statement extends React.Component<StatementProps, {}> {
-
-    constructor(props: StatementProps) {
-        super(props);
-    }
+export default class Statement extends React.Component<Props, {}> {
 
     public render() {
-        const { loading, error, model } = this.props;
+        const { loading, error, topicSlug, statementId, model } = this.props;
 
         return (
             <>
@@ -27,6 +28,13 @@ export default class Statement extends React.Component<StatementProps, {}> {
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {model && (
                     <div>
+                        <LoggedInUserContext.Consumer>
+                            {(user) => isUserInRole(user, 'Admin') &&
+                                <Link to={`/admin/editTopic/${topicSlug}/${statementId}`} className="float-right">
+                                    Edit
+                                </Link>
+                            }
+                        </LoggedInUserContext.Consumer>
                         <h4>
                             {model.stance && <StanceView value={model.stance} />}
                             <span className="statement">{model.text}</span>

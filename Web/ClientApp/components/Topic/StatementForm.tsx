@@ -5,18 +5,23 @@ import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import StanceInput from './StanceInput';
 
-export default class StatementForm extends React.Component<FormProps<StatementFormModel>, StatementFormModel> {
+type Props = FormProps<StatementFormModel>
+    & { hideInfoBox?: boolean };
 
-    constructor(props: FormProps<StatementFormModel>) {
+export default class StatementForm extends React.Component<Props, StatementFormModel> {
+
+    constructor(props: Props) {
         super(props);
 
-        this.state = { text: '', source: '', stance: 'NA' };
+        this.state = (props.initialState) ?
+            { text: props.initialState.text, source: props.initialState.source, stance: props.initialState.stance } :
+            { text: '', source: '', stance: 'NA' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: FormProps<StatementFormModel>) {
+    public componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a statement has been successfully submitted
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '', stance: 'NA' });
@@ -24,22 +29,24 @@ export default class StatementForm extends React.Component<FormProps<StatementFo
     }
 
     public render() {
-        const { error, submitting, submitted } = this.props;
+        const { hideInfoBox, error, submitting, submitted } = this.props;
         const { text, stance, source } = this.state;
         return (
             <>
-                <div className="alert alert-info" role="alert">
-                    <p>Please remember, Statements under a Topic are:</p>
-                    <ul>
-                        <li>Unique</li>
-                        <li>Anonymous</li>
-                        <li>A general summary of a fact or opinion that people believe</li>
-                    </ul>
-                    <p>
-                        Once you have submitted a Statement, you can then discuss whether you agree with it,
-                        provide further info, and see other people's points of view in the Comments section.
+                {!hideInfoBox &&
+                    <div className="alert alert-info" role="alert">
+                        <p>Please remember, Statements under a Topic are:</p>
+                        <ul>
+                            <li>Unique</li>
+                            <li>Anonymous</li>
+                            <li>A general summary of a fact or opinion that people believe</li>
+                        </ul>
+                        <p>
+                            Once you have submitted a Statement, you can then discuss whether you agree with it,
+                            provide further info, and see other people's points of view in the Comments section.
                     </p>
-                </div>
+                    </div>
+                }
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>

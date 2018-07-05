@@ -1,4 +1,5 @@
 import * as AdminHome from './AdminHome';
+import * as EditStatement from './EditStatement';
 import * as EditTopic from './EditTopic';
 import * as Home from './Home';
 import * as Intro from './Intro';
@@ -10,6 +11,7 @@ import * as Topic from './Topic';
 // The top-level state object
 export interface ApplicationState {
     adminHome: AdminHome.AdminHomeState;
+    editStatement: EditStatement.EditStatementState;
     editTopic: EditTopic.EditTopicState;
     home: Home.HomeState;
     intro: Intro.IntroState;
@@ -24,6 +26,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     adminHome: AdminHome.reducer,
+    editStatement: EditStatement.reducer,
     editTopic: EditTopic.reducer,
     home: Home.reducer,
     intro: Intro.reducer,
