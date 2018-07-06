@@ -26,7 +26,7 @@ namespace Pobs.Tests.Integration.Topics
             var commentUser = DataHelpers.CreateUser();
             _commentUserId = commentUser.Id;
             // Create 3 statements so we can be sure we get the one we request
-            _topic = DataHelpers.CreateTopic(statementUser, 3, commentUser, 3);
+            _topic = DataHelpers.CreateTopic(statementUser, 3, commentUser, 3, isApproved: true);
         }
 
         [Fact]
@@ -62,6 +62,28 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(comment.Source, responseComment.Source);
                     Assert.Equal(comment.AgreementRating.ToString(), responseComment.AgreementRating);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task UnapprovedTopic_ShouldGetNotFound()
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(_topic);
+                _topic.IsApproved = false;
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_statementUserId);
+
+                var url = _generateUrl(_topic.Slug, _topic.Statements.First().Id);
+                var response = await client.GetAsync(url);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 

@@ -160,7 +160,7 @@ namespace Pobs.Web.Services
                 .SelectMany(x => x.Statements)
                 .Include(x => x.Comments)
                 .ThenInclude(x => x.PostedByUser)
-                .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Id == statementId);
+                .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Topic.IsApproved && x.Id == statementId);
             if (statement == null)
             {
                 return null;

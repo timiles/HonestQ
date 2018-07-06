@@ -73,13 +73,13 @@ namespace Pobs.Tests.Integration.Topics
             };
             using (var dbContext = TestSetup.CreateDbContext())
             {
+                dbContext.Attach(_user);
+                dbContext.Attach(statement);
                 AddCommentsToStatement(AgreementRating.StronglyDisagree, 3);
                 AddCommentsToStatement(AgreementRating.Disagree, 4);
                 AddCommentsToStatement(AgreementRating.Neutral, 5);
                 AddCommentsToStatement(AgreementRating.Agree, 6);
                 AddCommentsToStatement(AgreementRating.StronglyAgree, 7);
-                dbContext.Attach(statement);
-                dbContext.Attach(_user);
                 dbContext.SaveChanges();
             }
 

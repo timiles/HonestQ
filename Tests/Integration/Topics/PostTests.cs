@@ -84,7 +84,7 @@ namespace Pobs.Tests.Integration.Topics
         [Fact]
         public async Task TopicSlugAlreadyExistsUnapproved_ShouldBeOK()
         {
-            var topic = DataHelpers.CreateTopic(_user);
+            var topic = DataHelpers.CreateTopic(_user, isApproved: false);
 
             var payload = new
             {
