@@ -12,8 +12,8 @@ export default class CommentList extends React.Component<Props, {}> {
         const { comments } = this.props;
 
         return (
-            <ol>
-                {comments.map((x, i) => <li key={`comment_${i}`}><Comment {...x} /></li>)}
+            <ol className="list-unstyled">
+                {comments.map((x, i) => <li key={`comment_${i}`} className="mb-3"><Comment {...x} /></li>)}
             </ol>
         );
     }
