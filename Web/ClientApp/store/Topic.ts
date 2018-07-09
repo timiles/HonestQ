@@ -160,7 +160,7 @@ export const actionCreators = {
             return (async () => {
                 dispatch({ type: 'COMMENT_FORM_SUBMITTED' });
 
-                if (!commentForm.text) {
+                if (!commentForm.text && !commentForm.source) {
                     // Don't set an error message, the validation properties will display instead
                     dispatch({ type: 'COMMENT_FORM_FAILED', payload: {} });
                     return;

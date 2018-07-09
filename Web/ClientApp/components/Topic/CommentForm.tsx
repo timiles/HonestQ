@@ -5,9 +5,12 @@ import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import AgreementRatingScale from './AgreementRatingScale';
 
-export default class CommentForm extends React.Component<FormProps<CommentFormModel>, CommentFormModel> {
+type Props = FormProps<CommentFormModel>
+    & { stance: string };
 
-    constructor(props: FormProps<CommentFormModel>) {
+export default class CommentForm extends React.Component<Props, CommentFormModel> {
+
+    constructor(props: Props) {
         super(props);
 
         this.state = { text: '', source: '', agreementRating: 'Neutral' };
@@ -25,25 +28,30 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
     }
 
     public render() {
-        const { submitting, submitted, error } = this.props;
+        const { stance, submitting, submitted, error } = this.props;
         const { text, source, agreementRating } = this.state;
+        const sourceOnly = (stance === 'ProveIt');
+
         return (
             <>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                        <label htmlFor="commentText">Comment</label>
-                        <SuperTextArea
-                            id="commentText"
-                            name="text"
-                            value={text}
-                            maxLength={280}
-                            onChange={this.handleChange}
-                        />
-                        {submitted && !text && <div className="help-block">Text is required</div>}
-                    </div>
+                    {!sourceOnly &&
+                        <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
+                            <label htmlFor="commentText">Comment</label>
+                            <SuperTextArea
+                                id="commentText"
+                                name="text"
+                                value={text}
+                                maxLength={280}
+                                onChange={this.handleChange}
+                            />
+                            {submitted && !text && !source &&
+                                <div className="help-block">Text or Source is required</div>}
+                        </div>
+                    }
                     <div className="form-group">
-                        <label htmlFor="commentSource">Source (optional)</label>
+                        <label htmlFor="commentSource">Source</label>
                         <input
                             type="text"
                             className="form-control"
@@ -53,11 +61,18 @@ export default class CommentForm extends React.Component<FormProps<CommentFormMo
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && <div className="help-block">Text is required</div>}
+                        {submitted && !text && !source && !sourceOnly &&
+                            <div className="help-block">Text or Source is required</div>
+                        }
+                        {submitted && !source && sourceOnly &&
+                            <div className="help-block">Source is required</div>
+                        }
                     </div>
-                    <div className="form-group">
-                        <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
-                    </div>
+                    {!sourceOnly &&
+                        <div className="form-group">
+                            <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
+                        </div>
+                    }
                     <div className="form-group">
                         <SubmitButton submitting={submitting} />
                     </div>

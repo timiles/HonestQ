@@ -39,6 +39,12 @@ export default class Statement extends React.Component<Props, {}> {
                             {model.stance && <StanceView value={model.stance} />}
                             <span className="statement">{model.text}</span>
                         </h4>
+                        {model.stance === 'ProveIt' &&
+                            <div className="alert alert-info" role="alert">
+                                This is a <strong>Request for Proof</strong>.
+                                Please only post Sources which prove the statement.
+                            </div>
+                        }
                         {model.source && this.renderSource(model.source)}
                         {this.props.children}
                         <CommentList comments={model.comments} />
