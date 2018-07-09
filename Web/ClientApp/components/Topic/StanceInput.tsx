@@ -23,7 +23,7 @@ export default class StanceInput extends React.Component<Props, State> {
         if (this.props.includeAll) {
             this.stanceValues.set('', 'All');
         }
-        [['NA', 'N/A'], ['Pro', '👍'], ['Con', '👎']].map((x) => this.stanceValues.set(x[0], x[1]));
+        [['NA', 'N/A'], ['Pro', '👍'], ['Con', '👎'], ['ProveIt', '🕵']].map((x) => this.stanceValues.set(x[0], x[1]));
 
         this.handleChange = this.handleChange.bind(this);
     }

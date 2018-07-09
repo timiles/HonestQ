@@ -5,5 +5,6 @@ namespace Pobs.Domain
         NA = 0,
         Pro = 1,
         Con = 2,
+        ProveIt = 3,
     }
 }
