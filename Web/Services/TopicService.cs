@@ -148,6 +148,7 @@ namespace Pobs.Web.Services
             }
 
             statement.Text = text;
+            statement.Slug = text.ToSlug();
             statement.Source = source;
             statement.Stance = stance;
             await _context.SaveChangesAsync();

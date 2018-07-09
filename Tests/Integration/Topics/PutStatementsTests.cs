@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
+using Pobs.Domain.Utils;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Topics;
 using Xunit;
@@ -37,6 +38,7 @@ namespace Pobs.Tests.Integration.Topics
                 Stance = differentStance.ToString(),
                 Source = Utils.GenerateRandomString(10),
             };
+            var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
@@ -49,6 +51,7 @@ namespace Pobs.Tests.Integration.Topics
                 var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
                 Assert.Equal(payload.Text, responseModel.Text);
                 Assert.Equal(payload.Stance, responseModel.Stance);
+                Assert.Equal(slug, responseModel.Slug);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -58,11 +61,11 @@ namespace Pobs.Tests.Integration.Topics
 
                 var statement = topic.Statements.Single(x => x.Id == _statement.Id);
                 Assert.Equal(payload.Text, statement.Text);
+                Assert.Equal(slug, statement.Slug);
                 Assert.Equal(payload.Stance, statement.Stance.ToString());
                 Assert.Equal(payload.Source, statement.Source);
             }
         }
-
 
         [Fact]
         public async Task NoText_ShouldGetBadRequest()
