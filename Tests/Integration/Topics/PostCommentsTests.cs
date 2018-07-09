@@ -16,13 +16,13 @@ namespace Pobs.Tests.Integration.Topics
     {
         private string _generateUrl(string topicSlug, int statementId) =>
             $"/api/topics/{topicSlug}/statements/{statementId}/comments";
-        private readonly int _userId;
-        private Topic _topic;
+        private readonly User _user;
+        private readonly Topic _topic;
 
         public PostCommentsTests()
         {
             var user = DataHelpers.CreateUser();
-            _userId = user.Id;
+            _user = user;
             // Create 3 statements so we can be sure we comment on the one we request            
             _topic = DataHelpers.CreateTopic(user, 3);
         }
@@ -40,7 +40,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -58,7 +58,7 @@ namespace Pobs.Tests.Integration.Topics
                     var comment = statement.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
                     Assert.Equal(agreementRating, comment.AgreementRating);
-                    Assert.Equal(_userId, comment.PostedByUser.Id);
+                    Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
 
@@ -86,7 +86,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -125,7 +125,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -153,6 +153,63 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task ParentCommentId_ShouldPersist()
+        {
+            var statement = _topic.Statements.Skip(1).First();
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(statement);
+                var comment = new Comment("Parent", AgreementRating.Neutral, _user, DateTimeOffset.UtcNow);
+                statement.Comments.Add(comment);
+                dbContext.SaveChanges();
+            }
+
+            var parentComment = statement.Comments.First();
+            var agreementRating = AgreementRating.Agree;
+            var payload = new
+            {
+                Text = "My insightful child comment on this parent comment",
+                AgreementRating = agreementRating.ToString(),
+                ParentCommentId = parentComment.Id,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_topic.Slug, statement.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var topic = dbContext.Topics
+                        .Include(x => x.Statements)
+                            .ThenInclude(x => x.Comments)
+                            .ThenInclude(x => x.PostedByUser)
+                        .Single(x => x.Id == _topic.Id);
+
+                    var reloadedStatement = topic.Statements.Single(x => x.Id == statement.Id);
+                    var reloadedParentComment = reloadedStatement.Comments.Single(x => x.Id == parentComment.Id);
+                    var comment = reloadedParentComment.ChildComments.Single();
+                    Assert.Equal(payload.Text, comment.Text);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+
+                    Assert.Equal(comment.Id, responseModel.Id);
+                    Assert.Equal(comment.Text, responseModel.Text);
+                    Assert.Equal(reloadedParentComment.Id, responseModel.ParentCommentId);
+
+
+                    // Delete the child comment first to not upset foreign key constraints
+                    reloadedParentComment.ChildComments.Remove(comment);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        [Fact]
         public async Task NoTextAndNoSource_ShouldGetBadRequest()
         {
             var statementId = _topic.Statements.Skip(1).First().Id;
@@ -163,7 +220,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -186,7 +243,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_topic.Slug, statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -237,7 +294,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl("INCORRECT_SLUG", _topic.Statements.First().Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -256,7 +313,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_topic.Slug, 0);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
@@ -266,7 +323,7 @@ namespace Pobs.Tests.Integration.Topics
 
         public void Dispose()
         {
-            DataHelpers.DeleteUser(_userId);
+            DataHelpers.DeleteUser(_user.Id);
         }
     }
 }

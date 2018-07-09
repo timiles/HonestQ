@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pobs.Domain;
 
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(PobsDbContext))]
-    partial class PobsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180709190118_ChildComments")]
+    partial class ChildComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,8 +156,7 @@ namespace Pobs.Web.Migrations
                 {
                     b.HasOne("Pobs.Domain.Entities.Comment", "ParentComment")
                         .WithMany("ChildComments")
-                        .HasForeignKey("ParentCommentId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("ParentCommentId");
 
                     b.HasOne("Pobs.Domain.Entities.User", "PostedByUser")
                         .WithMany()

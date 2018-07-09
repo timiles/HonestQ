@@ -167,7 +167,7 @@ namespace Pobs.Web.Controllers
             }
 
             var commentModel = await _topicService.SaveComment(topicSlug, statementId,
-                payload.Text, payload.Source, agreementRating, User.Identity.ParseUserId());
+                payload.Text, payload.Source, agreementRating, User.Identity.ParseUserId(), payload.ParentCommentId);
             if (commentModel != null)
             {
                 return Ok(commentModel);

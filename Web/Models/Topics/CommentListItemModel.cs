@@ -23,5 +23,6 @@ namespace Pobs.Web.Models.Topics
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
         public string PostedByUsername { get; set; }
+        public long? ParentCommentId { get; set; }
     }
 }

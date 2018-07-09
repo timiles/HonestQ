@@ -27,10 +27,12 @@ namespace Pobs.Domain
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             // NOTE: Statement Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
 
-            // Don't cascase deletes from Collection to Parent
+            // Don't cascade deletes from Collection to Parent
             modelBuilder.Entity<Statement>().HasOne(x => x.Topic).WithMany(x => x.Statements)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             modelBuilder.Entity<Comment>().HasOne(x => x.Statement).WithMany(x => x.Comments)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            modelBuilder.Entity<Comment>().HasOne(x => x.ParentComment).WithMany(x => x.ChildComments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
         }
     }

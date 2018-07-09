@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
@@ -33,5 +34,8 @@ namespace Pobs.Domain.Entities
 
         [Required]
         public virtual Statement Statement { get; set; }
+
+        public virtual Comment ParentComment { get; set; }
+        public virtual ICollection<Comment> ChildComments { get; set; }
     }
 }
