@@ -114,6 +114,67 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
+        public async Task SourceOnly_ShouldPersist()
+        {
+            var statementId = _topic.Statements.Skip(1).First().Id;
+            var payload = new
+            {
+                Source = "https://example.com/",
+                AgreementRating = AgreementRating.Neutral.ToString()
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateUrl(_topic.Slug, statementId);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var topic = dbContext.Topics
+                        .Include(x => x.Statements)
+                            .ThenInclude(x => x.Comments)
+                            .ThenInclude(x => x.PostedByUser)
+                        .Single(x => x.Id == _topic.Id);
+
+                    var statement = topic.Statements.Single(x => x.Id == statementId);
+                    var comment = statement.Comments.Single();
+                    Assert.Null(comment.Text);
+                    Assert.Equal(payload.Source, comment.Source);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+                    Assert.Equal(comment.Text, responseModel.Text);
+                    Assert.Equal(comment.Source, responseModel.Source);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task NoTextAndNoSource_ShouldGetBadRequest()
+        {
+            var statementId = _topic.Statements.Skip(1).First().Id;
+            var payload = new
+            {
+                AgreementRating = AgreementRating.Neutral.ToString(),
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var url = _generateUrl(_topic.Slug, statementId);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Text or Source is required", responseContent);
+            }
+        }
+
+        [Fact]
         public async Task InvalidAgreementRating_ShouldGetBadRequest()
         {
             var statementId = _topic.Statements.Skip(1).First().Id;
@@ -132,7 +193,7 @@ namespace Pobs.Tests.Integration.Topics
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal(responseContent, $"Invalid AgreementRating: {payload.AgreementRating}");
+                Assert.Equal($"Invalid AgreementRating: {payload.AgreementRating}", responseContent);
             }
         }
 

@@ -157,6 +157,10 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{topicSlug}/statements/{statementId}/comments"), Authorize]
         public async Task<IActionResult> AddComment(string topicSlug, int statementId, [FromBody] CommentFormModel payload)
         {
+            if (string.IsNullOrWhiteSpace(payload.Text) && string.IsNullOrWhiteSpace(payload.Source))
+            {
+                return BadRequest("Text or Source is required");
+            }
             if (!Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating agreementRating))
             {
                 return BadRequest($"Invalid AgreementRating: {payload.AgreementRating}");

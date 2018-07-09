@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pobs.Domain;
 
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(PobsDbContext))]
-    partial class PobsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180709114416_CommentTextCanBeNull")]
+    partial class CommentTextCanBeNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
