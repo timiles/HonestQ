@@ -29,7 +29,8 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static Topic CreateTopic(User statementUser, int numberOfStatements = 0,
-            User commentUser = null, int numberOfCommentsPerStatement = 0, int numberOfChildCommentsPerComment = 0,
+            User commentUser = null, int numberOfCommentsPerStatement = 0,
+            User childCommentUser = null, int numberOfChildCommentsPerComment = 0,
             bool isApproved = true)
         {
             // Guarantee slug has both upper & lower case characters
@@ -75,12 +76,12 @@ namespace Pobs.Tests.Integration.Helpers
             }
 
             // Save everything first, then add child Comments by saved Ids. There's probably a better way but this works for now.
-            if (numberOfChildCommentsPerComment > 0)
+            if (childCommentUser != null && numberOfChildCommentsPerComment > 0)
             {
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
                     dbContext.Attach(topic);
-                    dbContext.Attach(commentUser);
+                    dbContext.Attach(childCommentUser);
 
                     foreach (var statement in topic.Statements)
                     {
@@ -88,7 +89,7 @@ namespace Pobs.Tests.Integration.Helpers
                         {
                             for (int childCommentIndex = 0; childCommentIndex < numberOfChildCommentsPerComment; childCommentIndex++)
                             {
-                                var childComment = new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, commentUser, DateTime.UtcNow)
+                                var childComment = new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, childCommentUser, DateTime.UtcNow)
                                 {
                                     Source = Utils.GenerateRandomString(10),
                                     ParentComment = new Comment { Id = comment.Id },

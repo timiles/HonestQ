@@ -14,7 +14,7 @@ namespace Pobs.Tests.Integration.Topics
         private string _generateUrl(string topicSlug, int statementId, long? commentId) =>
             $"/api/topics/{topicSlug}/statements/{statementId}" + (commentId.HasValue ? $"/comments/{commentId}" : "");
         private readonly int _statementUserId;
-        private readonly int _commentUserId;
+        private readonly int _childCommentUserId;
         private readonly Topic _topic;
         private readonly Statement _statement;
 
@@ -22,9 +22,9 @@ namespace Pobs.Tests.Integration.Topics
         {
             var statementUser = DataHelpers.CreateUser();
             _statementUserId = statementUser.Id;
-            var commentUser = DataHelpers.CreateUser();
-            _commentUserId = commentUser.Id;
-            _topic = DataHelpers.CreateTopic(statementUser, 1, commentUser, 3, 2);
+            var childCommentUser = DataHelpers.CreateUser();
+            _childCommentUserId = childCommentUser.Id;
+            _topic = DataHelpers.CreateTopic(statementUser, 1, statementUser, 3, childCommentUser, 2);
             _statement = _topic.Statements.First();
         }
 
@@ -52,10 +52,36 @@ namespace Pobs.Tests.Integration.Topics
             }
         }
 
+        [Fact]
+        public async Task GetComment_ShouldGetChildComments()
+        {
+            var comment = _statement.Comments.First();
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_statementUserId);
+
+                var url = _generateUrl(_topic.Slug, _statement.Id, comment.Id);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
+                Assert.Equal(comment.ChildComments.Count(), responseModel.Comments.Length);
+
+                foreach (var childComment in comment.ChildComments)
+                {
+                    Assert.NotNull(responseModel.Comments.SingleOrDefault(x => x.Id == childComment.Id));
+                }
+            }
+        }
+
         public void Dispose()
         {
             DataHelpers.DeleteAllChildComments(_topic.Id);
-            DataHelpers.DeleteUser(_commentUserId);
+            DataHelpers.DeleteUser(_childCommentUserId);
             DataHelpers.DeleteUser(_statementUserId);
         }
     }

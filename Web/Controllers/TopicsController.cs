@@ -174,5 +174,16 @@ namespace Pobs.Web.Controllers
             }
             return NotFound();
         }
+
+        [HttpGet, Route("{topicSlug}/statements/{statementId}/comments/{commentId}")]
+        public async Task<IActionResult> GetComment(string topicSlug, int statementId, long commentId)
+        {
+            var commentModel = await _topicService.GetComment(topicSlug, statementId, commentId);
+            if (commentModel != null)
+            {
+                return Ok(commentModel);
+            }
+            return NotFound();
+        }
     }
 }
