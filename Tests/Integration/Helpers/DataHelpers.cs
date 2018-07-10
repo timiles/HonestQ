@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 
@@ -27,7 +29,8 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static Topic CreateTopic(User statementUser, int numberOfStatements = 0,
-            User commentUser = null, int numberOfCommentsPerStatement = 0, bool isApproved = true)
+            User commentUser = null, int numberOfCommentsPerStatement = 0, int numberOfChildCommentsPerComment = 0,
+            bool isApproved = true)
         {
             // Guarantee slug has both upper & lower case characters
             var name = "ABCabc" + Utils.GenerateRandomString(10);
@@ -48,7 +51,7 @@ namespace Pobs.Tests.Integration.Helpers
                 };
                 if (commentUser != null)
                 {
-                    for (int c = 0; c < numberOfCommentsPerStatement; c++)
+                    for (int commentIndex = 0; commentIndex < numberOfCommentsPerStatement; commentIndex++)
                     {
                         var comment = new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, commentUser, DateTime.UtcNow)
                         {
@@ -71,7 +74,60 @@ namespace Pobs.Tests.Integration.Helpers
                 dbContext.SaveChanges();
             }
 
+            // Save everything first, then add child Comments by saved Ids. There's probably a better way but this works for now.
+            if (numberOfChildCommentsPerComment > 0)
+            {
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    dbContext.Attach(topic);
+                    dbContext.Attach(commentUser);
+
+                    foreach (var statement in topic.Statements)
+                    {
+                        foreach (var comment in statement.Comments.ToArray())
+                        {
+                            for (int childCommentIndex = 0; childCommentIndex < numberOfChildCommentsPerComment; childCommentIndex++)
+                            {
+                                var childComment = new Comment(Utils.GenerateRandomString(10), AgreementRating.Neutral, commentUser, DateTime.UtcNow)
+                                {
+                                    Source = Utils.GenerateRandomString(10),
+                                    ParentComment = new Comment { Id = comment.Id },
+                                };
+                                statement.Comments.Add(childComment);
+                            }
+                        }
+                    }
+
+                    dbContext.SaveChanges();
+                }
+            }
+
             return topic;
+        }
+
+        /// <summary>Delete child comments before cascading other deletes so as to not upset foreign key constraints.</summary>
+        public static void DeleteAllChildComments(int topicId)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var topic = dbContext.Topics
+                    .Include(x => x.Statements)
+                        .ThenInclude(x => x.Comments)
+                        .ThenInclude(x => x.ParentComment)
+                    .Include(x => x.Statements)
+                        .ThenInclude(x => x.Comments)
+                        .ThenInclude(x => x.ChildComments)
+                    .Single(x => x.Id == topicId);
+
+                foreach (var statement in topic.Statements)
+                {
+                    foreach (var comment in statement.Comments.Where(x => x.ParentComment != null))
+                    {
+                        comment.ParentComment.ChildComments.Remove(comment);
+                    }
+                }
+                dbContext.SaveChanges();
+            }
         }
 
         public static bool DeleteUser(int id)

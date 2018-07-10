@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
@@ -13,6 +14,7 @@ namespace Pobs.Domain.Entities
             AgreementRating = agreementRating;
             PostedByUser = postedByUser;
             PostedAt = postedAt;
+            ChildComments = new Collection<Comment>();
         }
 
         public long Id { get; set; }

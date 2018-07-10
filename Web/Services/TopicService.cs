@@ -166,7 +166,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return new StatementModel(statement);
+            return new StatementModel(statement, statement.Comments.Where(x => x.ParentComment == null));
         }
 
         public async Task<CommentListItemModel> SaveComment(string topicSlug, int statementId,
