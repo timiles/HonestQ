@@ -160,8 +160,8 @@ namespace Pobs.Web.Services
         {
             var statement = await _context.Topics
                 .SelectMany(x => x.Statements)
-                .Include(x => x.Comments)
-                .ThenInclude(x => x.PostedByUser)
+                .Include(x => x.Comments).ThenInclude(x => x.PostedByUser)
+                .Include(x => x.Comments).ThenInclude(x => x.ChildComments)
                 .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Topic.IsApproved && x.Id == statementId);
             if (statement == null)
             {
@@ -204,6 +204,7 @@ namespace Pobs.Web.Services
                 .SelectMany(x => x.Comments)
                     .Include(x => x.PostedByUser)
                     .Include(x => x.ChildComments).ThenInclude(x => x.PostedByUser)
+                    .Include(x => x.ChildComments).ThenInclude(x => x.ChildComments)
                 .FirstOrDefaultAsync(x => x.Statement.Topic.Slug == topicSlug && x.Statement.Topic.IsApproved
                     && x.Statement.Id == statementId && x.Id == commentId);
             if (comment == null)

@@ -15,6 +15,7 @@ namespace Pobs.Web.Models.Topics
             this.AgreementRating = comment.AgreementRating.ToString();
             this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUsername = comment.PostedByUser.Username;
+            this.ChildCount = comment.ChildComments.Count;
         }
 
         public long Id { get; set; }
@@ -24,5 +25,6 @@ namespace Pobs.Web.Models.Topics
         public DateTime PostedAt { get; set; }
         public string PostedByUsername { get; set; }
         public long? ParentCommentId { get; set; }
+        public int ChildCount { get; set; }
     }
 }

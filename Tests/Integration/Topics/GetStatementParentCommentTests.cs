@@ -47,7 +47,9 @@ namespace Pobs.Tests.Integration.Topics
 
                 foreach (var comment in _statement.Comments.Where(x => x.ParentComment == null))
                 {
-                    Assert.NotNull(responseModel.Comments.SingleOrDefault(x => x.Id == comment.Id));
+                    var responseComment = responseModel.Comments.SingleOrDefault(x => x.Id == comment.Id);
+                    Assert.NotNull(responseComment);
+                    Assert.Equal(2, responseComment.ChildCount);
                 }
             }
         }
@@ -73,7 +75,9 @@ namespace Pobs.Tests.Integration.Topics
 
                 foreach (var childComment in comment.ChildComments)
                 {
-                    Assert.NotNull(responseModel.Comments.SingleOrDefault(x => x.Id == childComment.Id));
+                    var responseComment = responseModel.Comments.SingleOrDefault(x => x.Id == childComment.Id);
+                    Assert.NotNull(responseComment);
+                    Assert.Equal(0, responseComment.ChildCount);
                 }
             }
         }
