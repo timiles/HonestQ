@@ -4,6 +4,7 @@ import * as EditTopic from './EditTopic';
 import * as Home from './Home';
 import * as Intro from './Intro';
 import * as Login from './Login';
+import * as NewStatement from './NewStatement';
 import * as NewTopic from './NewTopic';
 import * as Register from './Register';
 import * as Topic from './Topic';
@@ -16,6 +17,7 @@ export interface ApplicationState {
     home: Home.HomeState;
     intro: Intro.IntroState;
     login: Login.LoginState;
+    newStatement: NewStatement.NewStatementState;
     newTopic: NewTopic.NewTopicState;
     register: Register.RegisterState;
     topic: Topic.ContainerState;
@@ -31,6 +33,7 @@ export const reducers = {
     home: Home.reducer,
     intro: Intro.reducer,
     login: Login.reducer,
+    newStatement: NewStatement.reducer,
     newTopic: NewTopic.reducer,
     register: Register.reducer,
     topic: Topic.reducer,

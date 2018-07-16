@@ -3,14 +3,14 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { CommentFormModel, LoggedInUserModel, StatementFormModel } from '../../server-models';
+import { CommentFormModel, LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import CommentForm from './../Topic/CommentForm';
 import Statement from './../Topic/Statement';
-import StatementForm from './../Topic/StatementForm';
 import BackToTopic from './BackToTopic';
+import NewStatement from './NewStatement';
 import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
@@ -43,7 +43,7 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     public render() {
-        const { topic, statementForm, statement, commentForm } = this.props;
+        const { topic, statement, commentForm } = this.props;
 
         // REVIEW: Is there a better way to handle this?
         if (!topic) {
@@ -51,10 +51,6 @@ class Container extends React.Component<ContainerProps, {}> {
         }
 
         // REVIEW: Is there a better place to do these?
-        if (topic.slug) {
-            statementForm.submit = (form: StatementFormModel) =>
-                this.props.submitStatement(topic.slug!, form);
-        }
         if (commentForm && topic.slug && statement && statement!.statementId) {
             commentForm.submit = (form: CommentFormModel) =>
                 this.props.submitComment(topic.slug!, statement.statementId!, form);
@@ -81,7 +77,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                         {topic.model && numberOfStatementsInTopic === 0 &&
                                             <>
                                                 <h2>Start the conversation</h2>
-                                                <StatementForm {...statementForm} />
+                                                <NewStatement topicSlug={topic.slug} />
                                             </>}
                                     </div>
                                 </CSSTransition>
@@ -110,7 +106,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                     <div className="col-md-12 slide slide-right">
                                         <BackToTopic slug={topic.slug!} name={topic.model.name} />
                                         <h2>Add a statement</h2>
-                                        <StatementForm {...statementForm} />
+                                        <NewStatement topicSlug={topic.slug} />
                                     </div>
                                 </CSSTransition>
                             }

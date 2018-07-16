@@ -1,19 +1,18 @@
-﻿import { push } from 'react-router-redux';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { FormProps } from '../components/shared/FormProps';
 import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
 // tslint:disable-next-line:max-line-length
-import { CommentFormModel, CommentListItemModel, StatementFormModel, StatementListItemModel, StatementModel, TopicModel } from '../server-models';
+import { CommentFormModel, CommentListItemModel, StatementModel, TopicModel } from '../server-models';
 import { getJson, postJson } from '../utils';
 import { AppThunkAction } from './';
+import { NewStatementFormReceivedAction } from './NewStatement';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContainerState {
     topic: TopicProps;
-    statementForm: FormProps<StatementFormModel>;
     statement?: StatementProps;
     commentForm?: FormProps<CommentFormModel>;
 }
@@ -29,12 +28,6 @@ interface GetTopicSuccessAction {
     payload: { topic: TopicModel; topicSlug: string; };
 }
 interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { topicSlug: string; error: string; }; }
-interface StatementFormSubmittedAction { type: 'STATEMENT_FORM_SUBMITTED'; }
-interface StatementFormReceivedAction {
-    type: 'STATEMENT_FORM_RECEIVED';
-    payload: { statementListItem: StatementListItemModel; };
-}
-interface StatementFormFailedAction { type: 'STATEMENT_FORM_FAILED'; payload: { error?: string; }; }
 
 interface GetStatementRequestedAction {
     type: 'GET_STATEMENT_REQUESTED';
@@ -61,9 +54,7 @@ interface CommentFormFailedAction { type: 'COMMENT_FORM_FAILED'; payload: { erro
 type KnownAction = GetTopicRequestedAction
     | GetTopicSuccessAction
     | GetTopicFailedAction
-    | StatementFormSubmittedAction
-    | StatementFormReceivedAction
-    | StatementFormFailedAction
+    | NewStatementFormReceivedAction
     | GetStatementRequestedAction
     | GetStatementSuccessAction
     | GetStatementFailedAction
@@ -97,40 +88,6 @@ export const actionCreators = {
                 });
         })();
     },
-    submitStatement: (topicSlug: string, statementForm: StatementFormModel):
-        AppThunkAction<KnownAction> => (dispatch, getState) => {
-            return (async () => {
-                dispatch({ type: 'STATEMENT_FORM_SUBMITTED' });
-
-                if (!statementForm.text) {
-                    // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'STATEMENT_FORM_FAILED', payload: {} });
-                    return;
-                }
-
-                postJson<StatementListItemModel>(
-                    `/api/topics/${topicSlug}/statements`, statementForm, getState().login.loggedInUser!)
-                    .then((responseModel: StatementListItemModel) => {
-                        dispatch({ type: 'STATEMENT_FORM_RECEIVED', payload: { statementListItem: responseModel } });
-                        setTimeout(() => {
-                            // First slide back to Topic
-                            dispatch(push(`/${topicSlug}`) as any);
-
-                            setTimeout(() => {
-                                // Then slide onto new Statement
-                                dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
-                            }, 700);
-                        }, 100);
-
-                    })
-                    .catch((reason: string) => {
-                        dispatch({
-                            type: 'STATEMENT_FORM_FAILED',
-                            payload: { error: reason || 'Posting statement failed' },
-                        });
-                    });
-            })();
-        },
     getStatement: (topicSlug: string, statementId: number): AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
@@ -186,7 +143,7 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ContainerState = { topic: {}, statementForm: {} };
+const defaultState: ContainerState = { topic: {} };
 
 export const reducer: Reducer<ContainerState> = (state: ContainerState, action: KnownAction) => {
     switch (action.type) {
@@ -215,15 +172,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     error: action.payload.error,
                 },
             };
-        case 'STATEMENT_FORM_SUBMITTED':
-            return {
-                ...state,
-                statementForm: {
-                    submitting: true,
-                    submitted: true,
-                },
-            };
-        case 'STATEMENT_FORM_RECEIVED': {
+        case 'NEW_STATEMENT_FORM_RECEIVED': {
             const topicModel = state.topic.model!;
             // Slice for immutability
             const statementsNext = topicModel.statements.slice();
@@ -235,17 +184,8 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     slug: state.topic.slug,
                     model: topicNext,
                 },
-                statementForm: {},
             };
         }
-        case 'STATEMENT_FORM_FAILED':
-            return {
-                ...state,
-                statementForm: {
-                    submitted: true,
-                    error: action.payload.error,
-                },
-            };
         case 'GET_STATEMENT_REQUESTED':
             return {
                 ...state,
