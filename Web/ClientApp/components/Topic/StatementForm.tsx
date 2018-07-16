@@ -6,7 +6,7 @@ import SuperTextArea from '../shared/SuperTextArea';
 import StanceInput from './StanceInput';
 
 type Props = FormProps<StatementFormModel>
-    & { hideInfoBox?: boolean };
+    & { hideInfoBox?: boolean, isModal?: boolean, onCloseModalRequested?: () => void };
 
 export default class StatementForm extends React.Component<Props, StatementFormModel> {
 
@@ -29,26 +29,26 @@ export default class StatementForm extends React.Component<Props, StatementFormM
     }
 
     public render() {
-        const { hideInfoBox, error, submitting, submitted } = this.props;
+        const { hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
         const { text, stance, source } = this.state;
         return (
-            <>
-                {!hideInfoBox &&
-                    <div className="alert alert-info" role="alert">
-                        <p>Please remember, Statements under a Topic are:</p>
-                        <ul>
-                            <li>Unique</li>
-                            <li>Anonymous</li>
-                            <li>A general summary of a fact or opinion that people believe</li>
-                        </ul>
-                        <p>
-                            Once you have submitted a Statement, you can then discuss whether you agree with it,
-                            provide further info, and see other people's points of view in the Comments section.
+            <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
+                <div className={isModal ? 'modal-body' : ''}>
+                    {!hideInfoBox &&
+                        <div className="alert alert-info" role="alert">
+                            <p>Please remember, Statements under a Topic are:</p>
+                            <ul>
+                                <li>Unique</li>
+                                <li>Anonymous</li>
+                                <li>A general summary of a fact or opinion that people believe</li>
+                            </ul>
+                            <p>
+                                Once you have submitted a Statement, you can then discuss whether you agree with it,
+                                provide further info, and see other people's points of view in the Comments section.
                     </p>
-                    </div>
-                }
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
+                        </div>
+                    }
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="statementText">Statement</label>
                         <div className="statement statement-floating-quotes" />
@@ -83,13 +83,20 @@ export default class StatementForm extends React.Component<Props, StatementFormM
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
-                    <div className="form-group">
-                        <SubmitButton submitting={submitting} />
-                    </div>
-                </form>
-            </>
+                </div>
+                <div className={isModal ? 'modal-footer' : 'form-group'}>
+                    {isModal && onCloseModalRequested &&
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={onCloseModalRequested}
+                        >
+                            Close
+                        </button>}
+                    <SubmitButton submitting={submitting} />
+                </div>
+            </form>
         );
     }
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { StatementListItemModel } from '../../server-models';
 import AgreementRatingBarChart from './AgreementRatingBarChart';
+import NewStatement from './NewStatement';
 import StanceInput from './StanceInput';
 import StanceView from './StanceView';
 
@@ -56,9 +57,7 @@ export default class StatementList extends React.Component<Props, State> {
                             </Link>
                         </li>)}
                     <li>
-                        <Link to={`/${topicSlug}/new_statement`} className="btn btn-lg btn-primary btn-new-statement">
-                            Add a statement
-                        </Link>
+                        <NewStatement topicSlug={topicSlug} />
                     </li>
                 </ul>
             </>);

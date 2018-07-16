@@ -53,25 +53,21 @@ export const actionCreators = {
 
                 postJson<StatementListItemModel>(
                     `/api/topics/${topicSlug}/statements`, statementForm, getState().login.loggedInUser!)
-                    .then((statementResponse: StatementListItemModel) => {
+                    .then((responseModel: StatementListItemModel) => {
                         dispatch({
-                            type: 'NEW_STATEMENT_FORM_RECEIVED', payload: {
-                                statementListItem: statementResponse,
-                            },
+                            type: 'NEW_STATEMENT_FORM_RECEIVED',
+                            payload: { statementListItem: responseModel },
                         });
                         setTimeout(() => {
-                            // First slide back to Topic
-                            dispatch(push(`/${topicSlug}`) as any);
-
-                            setTimeout(() => {
-                                // Then slide onto new Statement
-                                const statementUrl = `/${topicSlug}/${statementResponse.id}/${statementResponse.slug}`;
-                                dispatch(push(statementUrl) as any);
-                            }, 700);
-                        }, 100);
+                            // Wait a bit for modal to have closed, then slide onto new Statement
+                            dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
+                        }, 700);
                     })
                     .catch((reason: string) => {
-                        dispatch({ type: 'NEW_STATEMENT_FORM_FAILED', payload: { error: reason } });
+                        dispatch({
+                            type: 'NEW_STATEMENT_FORM_FAILED',
+                            payload: { error: reason || 'Posting statement failed' },
+                        });
                     });
             })();
         },
