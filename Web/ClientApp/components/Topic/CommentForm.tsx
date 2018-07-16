@@ -6,7 +6,7 @@ import SuperTextArea from '../shared/SuperTextArea';
 import AgreementRatingScale from './AgreementRatingScale';
 
 type Props = FormProps<CommentFormModel>
-    & { stance: string };
+    & { isSourceOnly?: boolean, isModal?: boolean, onCloseModalRequested?: () => void };
 
 export default class CommentForm extends React.Component<Props, CommentFormModel> {
 
@@ -28,15 +28,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public render() {
-        const { stance, submitting, submitted, error } = this.props;
+        const { isSourceOnly, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
         const { text, source, agreementRating } = this.state;
-        const sourceOnly = (stance === 'ProveIt');
 
         return (
-            <>
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
-                    {!sourceOnly &&
+            <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
+                <div className={isModal ? 'modal-body' : ''}>
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    {!isSourceOnly &&
                         <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                             <label htmlFor="commentText">Comment</label>
                             <SuperTextArea
@@ -61,23 +60,31 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && !source && !sourceOnly &&
+                        {submitted && !text && !source && !isSourceOnly &&
                             <div className="help-block">Text or Source is required</div>
                         }
-                        {submitted && !source && sourceOnly &&
+                        {submitted && !source && isSourceOnly &&
                             <div className="help-block">Source is required</div>
                         }
                     </div>
-                    {!sourceOnly &&
+                    {!isSourceOnly &&
                         <div className="form-group">
                             <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
                         </div>
                     }
-                    <div className="form-group">
-                        <SubmitButton submitting={submitting} />
-                    </div>
-                </form>
-            </>
+                </div>
+                <div className={isModal ? 'modal-footer' : 'form-group'}>
+                    {isModal && onCloseModalRequested &&
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={onCloseModalRequested}
+                        >
+                            Close
+                        </button>}
+                    <SubmitButton submitting={submitting} />
+                </div>
+            </form>
         );
     }
 
