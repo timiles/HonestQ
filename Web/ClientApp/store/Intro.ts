@@ -1,7 +1,7 @@
 ﻿import { Reducer } from 'redux';
+import { AppThunkAction } from '.';
 import { IntroModel } from '../server-models';
 import { getJson } from '../utils';
-import { AppThunkAction } from './';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.

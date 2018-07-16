@@ -1,9 +1,9 @@
 ﻿import { AnyAction, Reducer } from 'redux';
+import { AppThunkAction } from '.';
 import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
 import { StatementModel, TopicModel } from '../server-models';
 import { getJson } from '../utils';
-import { AppThunkAction } from './';
 import { NewCommentFormReceivedAction } from './NewComment';
 import { NewStatementFormReceivedAction } from './NewStatement';
 

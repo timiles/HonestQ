@@ -1,8 +1,8 @@
 ﻿import { push } from 'react-router-redux';
 import { Reducer } from 'redux';
+import { AppThunkAction } from '.';
 import { RegisterFormModel } from '../server-models';
 import { postJson } from '../utils';
-import { AppThunkAction } from './';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
