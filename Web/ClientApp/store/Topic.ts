@@ -1,11 +1,10 @@
-﻿import { Reducer } from 'redux';
-import { FormProps } from '../components/shared/FormProps';
+﻿import { AnyAction, Reducer } from 'redux';
 import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
-// tslint:disable-next-line:max-line-length
-import { CommentFormModel, CommentListItemModel, StatementModel, TopicModel } from '../server-models';
-import { getJson, postJson } from '../utils';
+import { StatementModel, TopicModel } from '../server-models';
+import { getJson } from '../utils';
 import { AppThunkAction } from './';
+import { NewCommentFormReceivedAction } from './NewComment';
 import { NewStatementFormReceivedAction } from './NewStatement';
 
 // -----------------
@@ -14,7 +13,6 @@ import { NewStatementFormReceivedAction } from './NewStatement';
 export interface ContainerState {
     topic: TopicProps;
     statement?: StatementProps;
-    commentForm?: FormProps<CommentFormModel>;
 }
 
 // -----------------
@@ -22,12 +20,18 @@ export interface ContainerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetTopicRequestedAction { type: 'GET_TOPIC_REQUESTED'; payload: { topicSlug: string; }; }
+interface GetTopicRequestedAction {
+    type: 'GET_TOPIC_REQUESTED';
+    payload: { topicSlug: string; };
+}
 interface GetTopicSuccessAction {
     type: 'GET_TOPIC_SUCCESS';
     payload: { topic: TopicModel; topicSlug: string; };
 }
-interface GetTopicFailedAction { type: 'GET_TOPIC_FAILED'; payload: { topicSlug: string; error: string; }; }
+interface GetTopicFailedAction {
+    type: 'GET_TOPIC_FAILED';
+    payload: { topicSlug: string; error: string; };
+}
 
 interface GetStatementRequestedAction {
     type: 'GET_STATEMENT_REQUESTED';
@@ -41,13 +45,10 @@ interface GetStatementSuccessAction {
         statementId: number;
     };
 }
-interface GetStatementFailedAction { type: 'GET_STATEMENT_FAILED'; payload: { statementId: number; error: string; }; }
-interface CommentFormSubmittedAction { type: 'COMMENT_FORM_SUBMITTED'; }
-interface CommentFormReceivedAction {
-    type: 'COMMENT_FORM_RECEIVED';
-    payload: { commentListItem: CommentListItemModel; };
+interface GetStatementFailedAction {
+    type: 'GET_STATEMENT_FAILED';
+    payload: { statementId: number; error: string; };
 }
-interface CommentFormFailedAction { type: 'COMMENT_FORM_FAILED'; payload: { error?: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -58,9 +59,7 @@ type KnownAction = GetTopicRequestedAction
     | GetStatementRequestedAction
     | GetStatementSuccessAction
     | GetStatementFailedAction
-    | CommentFormSubmittedAction
-    | CommentFormReceivedAction
-    | CommentFormFailedAction;
+    | NewCommentFormReceivedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -80,7 +79,8 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_TOPIC_FAILED', payload: {
+                        type: 'GET_TOPIC_FAILED',
+                        payload: {
                             topicSlug,
                             error: reason || 'Get topic failed',
                         },
@@ -112,31 +112,6 @@ export const actionCreators = {
                     });
             })();
         },
-    submitComment: (topicSlug: string, statementId: number, commentForm: CommentFormModel):
-        AppThunkAction<KnownAction> => (dispatch, getState) => {
-            return (async () => {
-                dispatch({ type: 'COMMENT_FORM_SUBMITTED' });
-
-                if (!commentForm.text && !commentForm.source) {
-                    // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'COMMENT_FORM_FAILED', payload: {} });
-                    return;
-                }
-
-                postJson<CommentListItemModel>(
-                    `/api/topics/${topicSlug}/statements/${statementId}/comments`,
-                    commentForm, getState().login.loggedInUser!)
-                    .then((responseModel: CommentListItemModel) => {
-                        dispatch({ type: 'COMMENT_FORM_RECEIVED', payload: { commentListItem: responseModel } });
-                    })
-                    .catch((reason: string) => {
-                        dispatch({
-                            type: 'COMMENT_FORM_FAILED',
-                            payload: { error: reason || 'Posting comment failed' },
-                        });
-                    });
-            })();
-        },
 };
 
 // ----------------
@@ -145,7 +120,9 @@ export const actionCreators = {
 
 const defaultState: ContainerState = { topic: {} };
 
-export const reducer: Reducer<ContainerState> = (state: ContainerState, action: KnownAction) => {
+export const reducer: Reducer<ContainerState> = (state: ContainerState, anyAction: AnyAction) => {
+    // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
+    const action = anyAction as KnownAction;
     switch (action.type) {
         case 'GET_TOPIC_REQUESTED':
             return {
@@ -201,7 +178,6 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     statementId: action.payload.statementId,
                     model: action.payload.statement,
                 },
-                commentForm: {},
             };
         case 'GET_STATEMENT_FAILED':
             return {
@@ -211,15 +187,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     error: action.payload.error,
                 },
             };
-        case 'COMMENT_FORM_SUBMITTED':
-            return {
-                ...state,
-                commentForm: {
-                    submitting: true,
-                    submitted: true,
-                },
-            };
-        case 'COMMENT_FORM_RECEIVED': {
+        case 'NEW_COMMENT_FORM_RECEIVED': {
             const statementModel = state.statement!.model!;
             // Slice for immutability
             const commentsNext = statementModel.comments.slice();
@@ -231,17 +199,8 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, action: 
                     statementId: state.statement!.statementId,
                     model: statementNext,
                 },
-                commentForm: {},
             };
         }
-        case 'COMMENT_FORM_FAILED':
-            return {
-                ...state,
-                commentForm: {
-                    submitted: true,
-                    error: action.payload.error,
-                },
-            };
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

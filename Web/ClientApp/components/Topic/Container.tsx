@@ -3,14 +3,14 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { CommentFormModel, LoggedInUserModel } from '../../server-models';
+import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import CommentForm from './../Topic/CommentForm';
-import Statement from './../Topic/Statement';
 import BackToTopic from './BackToTopic';
+import NewComment from './NewComment';
 import NewStatement from './NewStatement';
+import Statement from './Statement';
 import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
@@ -43,17 +43,11 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     public render() {
-        const { topic, statement, commentForm } = this.props;
+        const { topic, statement } = this.props;
 
         // REVIEW: Is there a better way to handle this?
         if (!topic) {
             return false;
-        }
-
-        // REVIEW: Is there a better place to do these?
-        if (commentForm && topic.slug && statement && statement!.statementId) {
-            commentForm.submit = (form: CommentFormModel) =>
-                this.props.submitComment(topic.slug!, statement.statementId!, form);
         }
 
         const numberOfStatementsInTopic = topic.model ? topic.model!.statements.length : 0;
@@ -93,7 +87,11 @@ class Container extends React.Component<ContainerProps, {}> {
                                     <div className="col-md-12 slide slide-right">
                                         <BackToTopic slug={topic.slug!} name={topic.model.name} />
                                         <Statement {...statement} topicSlug={topic.slug!}>
-                                            <CommentForm {...commentForm} stance={statement!.model!.stance} />
+                                            <NewComment
+                                                topicSlug={topic.slug!}
+                                                statementId={statement!.statementId!}
+                                                stance={statement!.model!.stance}
+                                            />
                                         </Statement>
                                     </div>
                                 </CSSTransition>
