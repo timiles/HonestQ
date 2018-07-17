@@ -20,7 +20,7 @@ namespace Pobs.Web.Services
         Task<StatementListItemModel> UpdateStatement(string topicSlug, int statementId, string text, string source, Stance stance);
         Task<StatementModel> GetStatement(string topicSlug, int statementId);
         Task<CommentModel> SaveComment(string topicSlug, int statementId,
-            string text, string source, AgreementRating agreementRating, int postedByUserId, long? parentCommentId);
+            string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId);
         Task<CommentModel> GetComment(string topicSlug, int statementId, long commentId);
     }
 
@@ -171,7 +171,7 @@ namespace Pobs.Web.Services
         }
 
         public async Task<CommentModel> SaveComment(string topicSlug, int statementId,
-            string text, string source, AgreementRating agreementRating, int postedByUserId, long? parentCommentId)
+            string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId)
         {
             var statementTask = _context.Topics
                 .SelectMany(x => x.Statements)
@@ -183,14 +183,22 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            var comment = new Comment(text, agreementRating, await postedByUserTask, DateTime.UtcNow)
+
+            Comment comment = null;
+            if (agreementRating.HasValue)
             {
-                Source = source,
-            };
+                comment = new Comment(text, await postedByUserTask, DateTime.UtcNow, agreementRating.Value);
+            }
             if (parentCommentId.HasValue)
             {
-                comment.ParentComment = new Comment { Id = parentCommentId.Value };
+                comment = new Comment(text, await postedByUserTask, DateTime.UtcNow, parentCommentId.Value);
             }
+            if (comment == null)
+            {
+                throw new AppException("Comment must have either AgreementRating or ParentCommentId");
+            }
+
+            comment.Source = source;
             statement.Comments.Add(comment);
             await _context.SaveChangesAsync();
 

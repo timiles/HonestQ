@@ -8,13 +8,22 @@ namespace Pobs.Domain.Entities
     public class Comment
     {
         public Comment() { }
-        public Comment(string text, AgreementRating agreementRating, User postedByUser, DateTimeOffset postedAt)
+        protected Comment(string text, User postedByUser, DateTimeOffset postedAt)
         {
             Text = text;
-            AgreementRating = agreementRating;
             PostedByUser = postedByUser;
             PostedAt = postedAt;
             ChildComments = new Collection<Comment>();
+        }
+        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating agreementRating)
+            : this(text, postedByUser, postedAt)
+        {
+            AgreementRating = agreementRating;
+        }
+        public Comment(string text, User postedByUser, DateTimeOffset postedAt, long parentCommentId)
+            : this(text, postedByUser, postedAt)
+        {
+            ParentComment = new Comment { Id = parentCommentId };
         }
 
         public long Id { get; set; }
@@ -26,7 +35,7 @@ namespace Pobs.Domain.Entities
         [MaxLength(2000)]
         public string Source { get; set; }
 
-        public AgreementRating AgreementRating { get; set; }
+        public AgreementRating? AgreementRating { get; set; }
 
         [Required]
         public User PostedByUser { get; set; }

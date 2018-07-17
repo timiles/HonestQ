@@ -157,17 +157,31 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{topicSlug}/statements/{statementId}/comments"), Authorize]
         public async Task<IActionResult> AddComment(string topicSlug, int statementId, [FromBody] CommentFormModel payload)
         {
+            AgreementRating? agreementRating = null;
+
             if (string.IsNullOrWhiteSpace(payload.Text) && string.IsNullOrWhiteSpace(payload.Source))
             {
-                return BadRequest("Text or Source is required");
+                return BadRequest($"{nameof(payload.Text)} or {nameof(payload.Source)} is required");
             }
-            if (!Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating agreementRating))
+            if (payload.ParentCommentId != null && !string.IsNullOrEmpty(payload.AgreementRating))
             {
-                return BadRequest($"Invalid AgreementRating: {payload.AgreementRating}");
+                return BadRequest($"{nameof(payload.AgreementRating)} is invalid with {nameof(payload.ParentCommentId)}");
+            }
+            if (payload.ParentCommentId == null)
+            {
+                if (!Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
+                {
+                    return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}");
+                }
+                else
+                {
+                    // Passed validation, we can use this value
+                    agreementRating = a;
+                }
             }
 
             var commentModel = await _topicService.SaveComment(topicSlug, statementId,
-                payload.Text, payload.Source, agreementRating, User.Identity.ParseUserId(), payload.ParentCommentId);
+                payload.Text, payload.Source, User.Identity.ParseUserId(), agreementRating, payload.ParentCommentId);
             if (commentModel != null)
             {
                 return Ok(commentModel);

@@ -159,17 +159,15 @@ namespace Pobs.Tests.Integration.Topics
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(statement);
-                var comment = new Comment("Parent", AgreementRating.Neutral, _user, DateTimeOffset.UtcNow);
+                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral);
                 statement.Comments.Add(comment);
                 dbContext.SaveChanges();
             }
 
             var parentComment = statement.Comments.First();
-            var agreementRating = AgreementRating.Agree;
             var payload = new
             {
                 Text = "My insightful child comment on this parent comment",
-                AgreementRating = agreementRating.ToString(),
                 ParentCommentId = parentComment.Id,
             };
             using (var server = new IntegrationTestingServer())
@@ -206,6 +204,39 @@ namespace Pobs.Tests.Integration.Topics
                     reloadedParentComment.ChildComments.Remove(comment);
                     dbContext.SaveChanges();
                 }
+            }
+        }
+
+        [Fact]
+        public async Task ParentCommentId_WithAgreementRating_ShouldGetBadRequest()
+        {
+            var statement = _topic.Statements.Skip(1).First();
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(statement);
+                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral);
+                statement.Comments.Add(comment);
+                dbContext.SaveChanges();
+            }
+
+            var parentComment = statement.Comments.First();
+            var agreementRating = AgreementRating.Agree;
+            var payload = new
+            {
+                Text = "My insightful child comment on this parent comment",
+                AgreementRating = agreementRating.ToString(),
+                ParentCommentId = parentComment.Id,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_topic.Slug, statement.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("AgreementRating is invalid with ParentCommentId", responseContent);
             }
         }
 

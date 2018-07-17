@@ -13,7 +13,12 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     constructor(props: Props) {
         super(props);
 
-        this.state = { text: '', source: '', agreementRating: 'Neutral', parentCommentId: this.props.parentCommentId };
+        this.state = {
+            text: '',
+            source: '',
+            agreementRating: this.props.parentCommentId ? '' : 'Neutral',
+            parentCommentId: this.props.parentCommentId,
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleAgreementRatingChange = this.handleAgreementRatingChange.bind(this);
@@ -23,13 +28,15 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     public componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
         // This will reset the form when a comment has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', agreementRating: 'Neutral' });
+            this.setState({ text: '', source: '' });
         }
     }
 
     public render() {
         const { isSourceOnly, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
         const { text, source, agreementRating } = this.state;
+
+        const isReply = !!this.props.parentCommentId;
 
         return (
             <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
@@ -67,7 +74,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             <div className="help-block">Source is required</div>
                         }
                     </div>
-                    {!isSourceOnly &&
+                    {!isSourceOnly && !isReply &&
                         <div className="form-group">
                             <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
                         </div>

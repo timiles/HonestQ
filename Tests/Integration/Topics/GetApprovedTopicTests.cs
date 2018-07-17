@@ -68,7 +68,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 for (int i = 0; i < numberOfComments; i++)
                 {
-                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), agreementRating, _user, DateTime.UtcNow));
+                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, DateTime.UtcNow, agreementRating));
                 }
             };
             using (var dbContext = TestSetup.CreateDbContext())
