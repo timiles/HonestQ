@@ -1,18 +1,23 @@
 import * as moment from 'moment';
 import * as React from 'react';
-import { CommentListItemModel } from '../../server-models';
+import { CommentModel } from '../../server-models';
 import { extractUrlFromText, parseDateWithTimeZoneOffset } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
+import NewComment from './NewComment';
 
-export default class Comment extends React.Component<CommentListItemModel, {}> {
+type Props = CommentModel
+    & { topicSlug: string, statementId: number };
 
-    constructor(props: CommentListItemModel) {
+export default class Comment extends React.Component<Props, {}> {
+
+    constructor(props: Props) {
         super(props);
     }
 
-    public render() {
-        const { text, source, agreementRating, postedAt, postedByUsername } = this.props;
+    public render(): any {
+        const { topicSlug, statementId } = this.props;
+        const { id, text, source, agreementRating, postedAt, postedByUsername, comments } = this.props;
         const extractedUrl = extractUrlFromText(source) || extractUrlFromText(text);
 
         return (
@@ -25,22 +30,41 @@ export default class Comment extends React.Component<CommentListItemModel, {}> {
                     const fullTime = postedAtMoment.format('LLLL');
 
                     return (
-                        <div className="card">
-                            <div className="card-body">
-                                <blockquote className="blockquote mb-0">
-                                    <span className="badge badge-secondary">{agreementRating.toSentenceCase()}</span>
-                                    <p>{text}</p>
-                                    {source && <p><small>Source: {source}</small></p>}
-                                    <footer className="blockquote-footer">
-                                        @{postedByUsername}, <a href="#" title={fullTime}>{friendlyTime}</a>
-                                    </footer>
-                                    {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
-                                </blockquote>
+                        <>
+                            <div className="card">
+                                <div className="card-body">
+                                    <blockquote className="blockquote mb-0">
+                                        <span className="badge badge-secondary">
+                                            {agreementRating.toSentenceCase()}
+                                        </span>
+                                        <p>{text}</p>
+                                        {source && <p><small>Source: {source}</small></p>}
+                                        <footer className="blockquote-footer">
+                                            @{postedByUsername}, <a href="#" title={fullTime}>{friendlyTime}</a>
+                                        </footer>
+                                        {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
+                                    </blockquote>
+                                    <NewComment
+                                        parentCommentId={id}
+                                        topicSlug={topicSlug}
+                                        statementId={statementId}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                            {comments && comments.length > 0 &&
+                                <ol className="list-unstyled list-comments-nested">
+                                    {comments.map((x, i) =>
+                                        <li key={`comment_${i}`}>
+                                            <Comment
+                                                {...x}
+                                                topicSlug={topicSlug}
+                                                statementId={statementId}
+                                            />
+                                        </li>)}
+                                </ol>}
+                        </>
                     );
-                }
-                }
+                }}
             </LoggedInUserContext.Consumer>
         );
     }

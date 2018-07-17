@@ -8,7 +8,6 @@ import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import BackToTopic from './BackToTopic';
-import NewComment from './NewComment';
 import NewStatement from './NewStatement';
 import Statement from './Statement';
 import Topic from './Topic';
@@ -86,13 +85,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                 >
                                     <div className="col-md-12 slide slide-right">
                                         <BackToTopic slug={topic.slug!} name={topic.model.name} />
-                                        <Statement {...statement} topicSlug={topic.slug!}>
-                                            <NewComment
-                                                topicSlug={topic.slug!}
-                                                statementId={statement!.statementId!}
-                                                stance={statement!.model!.stance}
-                                            />
-                                        </Statement>
+                                        <Statement {...statement} topicSlug={topic.slug!} />
                                     </div>
                                 </CSSTransition>
                             }

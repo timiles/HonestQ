@@ -29,7 +29,7 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task GetStatement_ShouldGetTopLevelCommentsOnly()
+        public async Task GetStatement_ShouldGetAllComments()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -49,7 +49,7 @@ namespace Pobs.Tests.Integration.Topics
                 {
                     var responseComment = responseModel.Comments.SingleOrDefault(x => x.Id == comment.Id);
                     Assert.NotNull(responseComment);
-                    Assert.Equal(2, responseComment.ChildCount);
+                    Assert.Equal(2, responseComment.Comments.Count());
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace Pobs.Tests.Integration.Topics
                 {
                     var responseComment = responseModel.Comments.SingleOrDefault(x => x.Id == childComment.Id);
                     Assert.NotNull(responseComment);
-                    Assert.Equal(0, responseComment.ChildCount);
+                    Assert.Equal(0, responseComment.Comments.Count());
                 }
             }
         }

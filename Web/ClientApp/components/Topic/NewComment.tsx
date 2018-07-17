@@ -8,7 +8,7 @@ import CommentForm from './CommentForm';
 
 type Props = NewCommentStore.NewCommentState
     & typeof NewCommentStore.actionCreators
-    & { topicSlug: string, statementId: number, stance: string };
+    & { topicSlug: string, statementId: number, stance: string, parentCommentId: number | null };
 
 interface State {
     isModalOpen: boolean;
@@ -34,12 +34,18 @@ class NewComment extends React.Component<Props, State> {
     }
 
     public render() {
-        const { commentForm, stance } = this.props;
+        const { commentForm, stance, parentCommentId } = this.props;
         const { isModalOpen } = this.state;
+        const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
 
         if (stance === 'ProveIt') {
             return (
-                <CommentForm {...commentForm} isSourceOnly={true} submit={this.handleSubmit} />
+                <CommentForm
+                    {...commentForm}
+                    parentCommentId={parentCommentId}
+                    isSourceOnly={true}
+                    submit={this.handleSubmit}
+                />
             );
         }
 
@@ -47,14 +53,15 @@ class NewComment extends React.Component<Props, State> {
             <>
                 <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn btn-link"
                     onClick={this.handleOpen}
                 >
-                    Add a comment
+                    {headerText}
                 </button>
-                <Modal title="Add a comment" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                <Modal title={headerText} isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <CommentForm
                         {...commentForm}
+                        parentCommentId={parentCommentId}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}

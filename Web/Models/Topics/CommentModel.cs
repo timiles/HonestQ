@@ -15,7 +15,7 @@ namespace Pobs.Web.Models.Topics
             this.AgreementRating = comment.AgreementRating.ToString();
             this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUsername = comment.PostedByUser.Username;
-            this.Comments = comment.ChildComments.Select(x => new CommentListItemModel(x)).ToArray();
+            this.Comments = comment.ChildComments.Select(x => new CommentModel(x)).ToArray();
         }
 
         public long Id { get; set; }
@@ -25,6 +25,6 @@ namespace Pobs.Web.Models.Topics
         public DateTime PostedAt { get; set; }
         public string PostedByUsername { get; set; }
         public long? ParentCommentId { get; set; }
-        public CommentListItemModel[] Comments { get; set; }
+        public CommentModel[] Comments { get; set; }
     }
 }

@@ -13,13 +13,13 @@ namespace Pobs.Web.Models.Topics
             this.Text = statement.Text;
             this.Source = statement.Source;
             this.Stance = statement.Stance.ToString();
-            this.Comments = topLevelComments.Select(x => new CommentListItemModel(x)).ToArray();
+            this.Comments = topLevelComments.Select(x => new CommentModel(x)).ToArray();
         }
 
         public string Slug { get; set; }
         public string Text { get; set; }
         public string Source { get; set; }
         public string Stance { get; set; }
-        public CommentListItemModel[] Comments { get; set; }
+        public CommentModel[] Comments { get; set; }
     }
 }

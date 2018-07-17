@@ -148,6 +148,9 @@ blockquote p {
         font-weight: bold;
     }
 
+.list-comments-nested {
+    margin-left: 10px;
+}
 
 .slide {
     position: absolute;

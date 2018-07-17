@@ -35,15 +35,18 @@ export interface CommentFormModel {
     text: string;
     source: string;
     agreementRating: string;
+    parentCommentId: number | null;
 }
 
-export interface CommentListItemModel {
+export interface CommentModel {
     id: number;
     text: string;
     source: string;
     agreementRating: string;
     postedAt: string;
     postedByUsername: string;
+    parentCommentId: number | null;
+    comments: CommentModel[];
 }
 
 export interface EditTopicFormModel {
@@ -73,7 +76,7 @@ export interface StatementModel {
     text: string;
     source: string;
     stance: string;
-    comments: CommentListItemModel[];
+    comments: CommentModel[];
 }
 
 export interface TopicFormModel {

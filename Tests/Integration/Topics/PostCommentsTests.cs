@@ -63,7 +63,7 @@ namespace Pobs.Tests.Integration.Topics
 
 
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
 
                     Assert.Equal(comment.Id, responseModel.Id);
                     Assert.Equal(comment.Text, responseModel.Text);
@@ -106,7 +106,7 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(payload.Source, comment.Source);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
                     Assert.Equal(comment.Text, responseModel.Text);
                     Assert.Equal(comment.Source, responseModel.Source);
                 }
@@ -145,7 +145,7 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(payload.Source, comment.Source);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
                     Assert.Equal(comment.Text, responseModel.Text);
                     Assert.Equal(comment.Source, responseModel.Source);
                 }
@@ -195,7 +195,7 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(payload.Text, comment.Text);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommentListItemModel>(responseContent);
+                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
 
                     Assert.Equal(comment.Id, responseModel.Id);
                     Assert.Equal(comment.Text, responseModel.Text);

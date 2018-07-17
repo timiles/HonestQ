@@ -6,14 +6,14 @@ import SuperTextArea from '../shared/SuperTextArea';
 import AgreementRatingScale from './AgreementRatingScale';
 
 type Props = FormProps<CommentFormModel>
-    & { isSourceOnly?: boolean, isModal?: boolean, onCloseModalRequested?: () => void };
+    & { isSourceOnly?: boolean, isModal?: boolean, onCloseModalRequested?: () => void, parentCommentId: number | null };
 
 export default class CommentForm extends React.Component<Props, CommentFormModel> {
 
     constructor(props: Props) {
         super(props);
 
-        this.state = { text: '', source: '', agreementRating: 'Neutral' };
+        this.state = { text: '', source: '', agreementRating: 'Neutral', parentCommentId: this.props.parentCommentId };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleAgreementRatingChange = this.handleAgreementRatingChange.bind(this);

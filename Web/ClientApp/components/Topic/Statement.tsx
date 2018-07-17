@@ -5,6 +5,7 @@ import { extractUrlFromText, isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import CommentList from './CommentList';
+import NewComment from './NewComment';
 import StanceView from './StanceView';
 
 type Props = StatementProps
@@ -26,7 +27,7 @@ export default class Statement extends React.Component<Props, {}> {
             <>
                 {loading && <p>Loading...</p>}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                {model && (
+                {model && statementId && (
                     <div>
                         <LoggedInUserContext.Consumer>
                             {(user) => isUserInRole(user, 'Admin') &&
@@ -46,8 +47,17 @@ export default class Statement extends React.Component<Props, {}> {
                             </div>
                         }
                         {model.source && this.renderSource(model.source)}
-                        {this.props.children}
-                        <CommentList comments={model.comments} />
+                        <NewComment
+                            parentCommentId={null}
+                            topicSlug={topicSlug}
+                            statementId={statementId}
+                            stance={model!.stance}
+                        />
+                        <CommentList
+                            comments={model.comments}
+                            topicSlug={topicSlug}
+                            statementId={statementId!}
+                        />
                     </div>
                 )}
             </>

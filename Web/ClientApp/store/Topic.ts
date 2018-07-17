@@ -4,6 +4,7 @@ import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
 import { StatementModel, TopicModel } from '../server-models';
 import { getJson } from '../utils';
+import { CommentModel } from './../server-models';
 import { NewCommentFormReceivedAction } from './NewComment';
 import { NewStatementFormReceivedAction } from './NewStatement';
 
@@ -191,7 +192,11 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             const statementModel = state.statement!.model!;
             // Slice for immutability
             const commentsNext = statementModel.comments.slice();
-            commentsNext.push(action.payload.commentListItem);
+            if (action.payload.comment.parentCommentId) {
+                appendNewComment(commentsNext, action.payload.comment);
+            } else {
+                commentsNext.push(action.payload.comment);
+            }
             const statementNext = { ...statementModel, comments: commentsNext };
             return {
                 ...state,
@@ -211,3 +216,16 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     //  (or default initial state if none was supplied)
     return state || defaultState;
 };
+
+function appendNewComment(comments: CommentModel[], newComments: CommentModel): boolean {
+    for (const comment of comments) {
+        if (comment.id === newComments.parentCommentId) {
+            comment.comments.push(newComments);
+            return true;
+        }
+        if (appendNewComment(comment.comments, newComments)) {
+            return true;
+        }
+    }
+    return false;
+}

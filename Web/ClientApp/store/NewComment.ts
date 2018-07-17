@@ -1,7 +1,7 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { FormProps } from '../components/shared/FormProps';
-import { CommentFormModel, CommentListItemModel } from '../server-models';
+import { CommentFormModel, CommentModel } from '../server-models';
 import { postJson } from '../utils';
 
 // -----------------
@@ -21,7 +21,7 @@ interface NewCommentFormSubmittedAction {
 }
 export interface NewCommentFormReceivedAction {
     type: 'NEW_COMMENT_FORM_RECEIVED';
-    payload: { commentListItem: CommentListItemModel; };
+    payload: { comment: CommentModel; };
 }
 interface NewCommentFormFailedAction {
     type: 'NEW_COMMENT_FORM_FAILED';
@@ -50,11 +50,11 @@ export const actionCreators = {
                     return;
                 }
 
-                postJson<CommentListItemModel>(
+                postJson<CommentModel>(
                     `/api/topics/${topicSlug}/statements/${statementId}/comments`,
                     commentForm, getState().login.loggedInUser!)
-                    .then((responseModel: CommentListItemModel) => {
-                        dispatch({ type: 'NEW_COMMENT_FORM_RECEIVED', payload: { commentListItem: responseModel } });
+                    .then((responseModel: CommentModel) => {
+                        dispatch({ type: 'NEW_COMMENT_FORM_RECEIVED', payload: { comment: responseModel } });
                     })
                     .catch((reason: string) => {
                         dispatch({
