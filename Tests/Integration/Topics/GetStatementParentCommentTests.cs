@@ -77,7 +77,7 @@ namespace Pobs.Tests.Integration.Topics
                 {
                     var responseComment = responseModel.Comments.SingleOrDefault(x => x.Id == childComment.Id);
                     Assert.NotNull(responseComment);
-                    Assert.Equal(0, responseComment.Comments.Count());
+                    Assert.Empty(responseComment.Comments);
                 }
             }
         }
