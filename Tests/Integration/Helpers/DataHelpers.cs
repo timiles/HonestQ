@@ -28,7 +28,7 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(User statementUser, int numberOfStatements = 0,
+        public static Topic CreateTopic(User statementUser, int numberOfStatements = 0, int numberOfStatementsPerStance = 0,
             User commentUser = null, int numberOfCommentsPerStatement = 0,
             User childCommentUser = null, int numberOfChildCommentsPerComment = 0,
             bool isApproved = true)
@@ -43,7 +43,8 @@ namespace Pobs.Tests.Integration.Helpers
             };
 
             var numberOfStances = Enum.GetValues(typeof(Stance)).Length;
-            for (int s = 0; s < numberOfStatements; s++)
+            var numberOfStatementsToCreate = Math.Max(numberOfStatements, numberOfStatementsPerStance * numberOfStances);
+            for (int s = 0; s < numberOfStatementsToCreate; s++)
             {
                 var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow)
                 {

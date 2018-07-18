@@ -15,7 +15,7 @@ namespace Pobs.Domain.Entities
             PostedAt = postedAt;
             ChildComments = new Collection<Comment>();
         }
-        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating agreementRating)
+        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating? agreementRating)
             : this(text, postedByUser, postedAt)
         {
             AgreementRating = agreementRating;

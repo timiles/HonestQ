@@ -6,5 +6,6 @@ namespace Pobs.Domain
         Pro = 1,
         Con = 2,
         ProveIt = 3,
+        Question = 4,
     }
 }

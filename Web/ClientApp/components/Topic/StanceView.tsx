@@ -6,7 +6,14 @@ interface Props {
 
 export default class StanceView extends React.Component<Props, {}> {
 
-    private readonly stanceValues = new Map([['NA', null], ['Pro', '👍'], ['Con', '👎'], ['ProveIt', '🕵']]);
+    private readonly stanceValues = new Map(
+        [
+            ['NA', null],
+            ['Pro', '👍'],
+            ['Con', '👎'],
+            ['ProveIt', '🕵'],
+            ['Question', '❓'],
+        ]);
 
     public render() {
         return this.stanceValues.get(this.props.value);

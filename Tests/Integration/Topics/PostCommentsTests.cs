@@ -23,8 +23,8 @@ namespace Pobs.Tests.Integration.Topics
         {
             var user = DataHelpers.CreateUser();
             _user = user;
-            // Create 3 statements so we can be sure we comment on the one we request            
-            _topic = DataHelpers.CreateTopic(user, 3);
+            // Create a statement for every Stance
+            _topic = DataHelpers.CreateTopic(user, numberOfStatementsPerStance: 1);
         }
 
         [Fact]
@@ -204,6 +204,30 @@ namespace Pobs.Tests.Integration.Topics
                     reloadedParentComment.ChildComments.Remove(comment);
                     dbContext.SaveChanges();
                 }
+            }
+        }
+
+        [Theory]
+        [InlineData("ProveIt")]
+        [InlineData("Question")]
+        public async Task Stance_WithAgreementRating_ShouldGetBadRequest(string stance)
+        {
+            var statement = _topic.Statements.First(x => x.Stance.ToString() == stance);
+            var payload = new
+            {
+                Text = "My insightful response",
+                AgreementRating = AgreementRating.Disagree,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_topic.Slug, statement.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal($"AgreementRating is invalid when Stance is {stance}", responseContent);
             }
         }
 

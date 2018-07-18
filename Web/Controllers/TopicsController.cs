@@ -163,30 +163,32 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest($"{nameof(payload.Text)} or {nameof(payload.Source)} is required");
             }
-            if (payload.ParentCommentId != null && !string.IsNullOrEmpty(payload.AgreementRating))
+            if (!string.IsNullOrEmpty(payload.AgreementRating))
             {
-                return BadRequest($"{nameof(payload.AgreementRating)} is invalid with {nameof(payload.ParentCommentId)}");
-            }
-            if (payload.ParentCommentId == null)
-            {
-                if (!Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
+                if (Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
                 {
-                    return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}");
+                    agreementRating = a;
                 }
                 else
                 {
-                    // Passed validation, we can use this value
-                    agreementRating = a;
+                    return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}");
                 }
             }
 
-            var commentModel = await _topicService.SaveComment(topicSlug, statementId,
-                payload.Text, payload.Source, User.Identity.ParseUserId(), agreementRating, payload.ParentCommentId);
-            if (commentModel != null)
+            try
             {
-                return Ok(commentModel);
+                var commentModel = await _topicService.SaveComment(topicSlug, statementId,
+                    payload.Text, payload.Source, User.Identity.ParseUserId(), agreementRating, payload.ParentCommentId);
+                if (commentModel != null)
+                {
+                    return Ok(commentModel);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch (AppException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet, Route("{topicSlug}/statements/{statementId}/comments/{commentId}")]

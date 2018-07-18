@@ -24,7 +24,9 @@ namespace Pobs.Tests.Integration.Topics
             _statementUserId = statementUser.Id;
             var childCommentUser = DataHelpers.CreateUser();
             _childCommentUserId = childCommentUser.Id;
-            _topic = DataHelpers.CreateTopic(statementUser, 1, statementUser, 3, childCommentUser, 2);
+            _topic = DataHelpers.CreateTopic(statementUser, 1,
+                commentUser: statementUser, numberOfCommentsPerStatement: 3,
+                childCommentUser: childCommentUser, numberOfChildCommentsPerComment: 2);
             _statement = _topic.Statements.First();
         }
 

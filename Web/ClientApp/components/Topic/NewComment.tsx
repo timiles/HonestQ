@@ -38,12 +38,12 @@ class NewComment extends React.Component<Props, State> {
         const { isModalOpen } = this.state;
         const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
 
-        if (stance === 'ProveIt') {
+        if (stance === 'ProveIt' || stance === 'Question') {
             return (
                 <CommentForm
                     {...commentForm}
                     parentCommentId={parentCommentId}
-                    isSourceOnly={true}
+                    stance={stance}
                     submit={this.handleSubmit}
                 />
             );
@@ -62,6 +62,7 @@ class NewComment extends React.Component<Props, State> {
                     <CommentForm
                         {...commentForm}
                         parentCommentId={parentCommentId}
+                        stance={stance}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}

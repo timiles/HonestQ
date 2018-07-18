@@ -26,7 +26,8 @@ namespace Pobs.Tests.Integration.Topics
             var commentUser = DataHelpers.CreateUser();
             _commentUserId = commentUser.Id;
             // Create 3 statements so we can be sure we get the one we request
-            _topic = DataHelpers.CreateTopic(statementUser, 3, commentUser, 3, isApproved: true);
+            _topic = DataHelpers.CreateTopic(statementUser, 3,
+                commentUser: commentUser, numberOfCommentsPerStatement: 3, isApproved: true);
         }
 
         [Fact]

@@ -6,17 +6,32 @@ import SuperTextArea from '../shared/SuperTextArea';
 import AgreementRatingScale from './AgreementRatingScale';
 
 type Props = FormProps<CommentFormModel>
-    & { isSourceOnly?: boolean, isModal?: boolean, onCloseModalRequested?: () => void, parentCommentId: number | null };
+    & CommentFormProps;
+
+interface CommentFormProps {
+    stance: string;
+    isModal?: boolean;
+    onCloseModalRequested?: () => void;
+    parentCommentId: number | null;
+}
 
 export default class CommentForm extends React.Component<Props, CommentFormModel> {
+
+    private readonly hideAgreementRating: boolean;
+    private readonly hideText: boolean;
 
     constructor(props: Props) {
         super(props);
 
+        this.hideAgreementRating = this.props.stance === 'ProveIt'
+            || this.props.stance === 'Question'
+            || !!this.props.parentCommentId;
+        this.hideText = (this.props.stance === 'ProveIt');
+
         this.state = {
             text: '',
             source: '',
-            agreementRating: this.props.parentCommentId ? '' : 'Neutral',
+            agreementRating: this.hideAgreementRating ? '' : 'Neutral',
             parentCommentId: this.props.parentCommentId,
         };
 
@@ -33,18 +48,18 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public render() {
-        const { isSourceOnly, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
+        const { stance, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
         const { text, source, agreementRating } = this.state;
 
-        const isReply = !!this.props.parentCommentId;
+        const label = (stance === 'Question') ? 'Answer' : 'Comment';
 
         return (
             <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    {!isSourceOnly &&
+                    {!this.hideText &&
                         <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                            <label htmlFor="commentText">Comment</label>
+                            <label htmlFor="commentText">{label}</label>
                             <SuperTextArea
                                 id="commentText"
                                 name="text"
@@ -67,14 +82,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && !source && !isSourceOnly &&
+                        {submitted && !text && !this.hideText && !source &&
                             <div className="help-block">Text or Source is required</div>
                         }
-                        {submitted && !source && isSourceOnly &&
+                        {submitted && this.hideText && !source &&
                             <div className="help-block">Source is required</div>
                         }
                     </div>
-                    {!isSourceOnly && !isReply &&
+                    {!this.hideAgreementRating &&
                         <div className="form-group">
                             <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
                         </div>

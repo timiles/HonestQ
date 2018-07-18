@@ -184,19 +184,22 @@ namespace Pobs.Web.Services
                 return null;
             }
 
-            Comment comment = null;
+            // Validate params
             if (agreementRating.HasValue)
             {
-                comment = new Comment(text, await postedByUserTask, DateTime.UtcNow, agreementRating.Value);
+                if (parentCommentId.HasValue)
+                {
+                    throw new AppException("AgreementRating is invalid with ParentCommentId");
+                }
+                if (statement.Stance == Stance.ProveIt || statement.Stance == Stance.Question)
+                {
+                    throw new AppException($"AgreementRating is invalid when Stance is {statement.Stance}");
+                }
             }
-            if (parentCommentId.HasValue)
-            {
-                comment = new Comment(text, await postedByUserTask, DateTime.UtcNow, parentCommentId.Value);
-            }
-            if (comment == null)
-            {
-                throw new AppException("Comment must have either AgreementRating or ParentCommentId");
-            }
+
+            Comment comment = (parentCommentId.HasValue) ?
+                new Comment(text, await postedByUserTask, DateTime.UtcNow, parentCommentId.Value) :
+                new Comment(text, await postedByUserTask, DateTime.UtcNow, agreementRating);
 
             comment.Source = source;
             statement.Comments.Add(comment);
