@@ -13,6 +13,7 @@ export default class StanceView extends React.Component<Props, {}> {
             ['Con', '👎'],
             ['ProveIt', '🕵'],
             ['Question', '❓'],
+            ['Warning', '⚠️'],
         ]);
 
     public render() {

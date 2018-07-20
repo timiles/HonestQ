@@ -7,5 +7,6 @@ namespace Pobs.Domain
         Con = 2,
         ProveIt = 3,
         Question = 4,
+        Warning = 5
     }
 }
