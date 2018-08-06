@@ -199,25 +199,6 @@ namespace Pobs.Tests.Integration.Topics
             }
         }
 
-        [Fact]
-        public async Task UnknownSlug_ShouldReturnNotFound()
-        {
-            var payload = new
-            {
-                Text = "My insightful statement on this topic",
-                Stance = Stance.NA.ToString(),
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_userId);
-
-                var url = _generateStatementsUrl("INCORRECT_SLUG");
-                var response = await client.PostAsync(url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            }
-        }
-
         public void Dispose()
         {
             DataHelpers.DeleteUser(_userId);

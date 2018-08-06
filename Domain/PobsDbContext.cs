@@ -10,6 +10,8 @@ namespace Pobs.Domain
         {
         }
 
+        public DbSet<Statement> Statements { get; set; }
+
         public DbSet<Topic> Topics { get; set; }
 
         public DbSet<User> Users { get; set; }
@@ -34,6 +36,11 @@ namespace Pobs.Domain
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             modelBuilder.Entity<Comment>().HasOne(x => x.ParentComment).WithMany(x => x.ChildComments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+
+            // Many-to-many relationships
+            modelBuilder.Entity<StatementTopic>().HasKey(x => new { x.StatementId, x.TopicId });
+            modelBuilder.Entity<StatementTopic>().HasOne(x => x.Statement).WithMany(x => x.StatementTopics);
+            modelBuilder.Entity<StatementTopic>().HasOne(x => x.Topic).WithMany(x => x.StatementTopics);
         }
     }
 }

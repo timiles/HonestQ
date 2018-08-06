@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Pobs.Domain.Entities.Helpers;
 
 namespace Pobs.Domain.Entities
 {
@@ -9,7 +11,7 @@ namespace Pobs.Domain.Entities
     {
         public Topic()
         {
-            this.Statements = new Collection<Statement>();
+            this.Statements = new JoinCollectionFacade<Statement, Topic, StatementTopic>(this, this.StatementTopics);
         }
         public Topic(string slug, string name, User postedByUser, DateTime postedAt) : this()
         {
@@ -41,6 +43,10 @@ namespace Pobs.Domain.Entities
 
         public bool IsApproved { get; set; }
 
-        public virtual ICollection<Statement> Statements { get; set; }
+
+        internal ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
+
+        [NotMapped]
+        public ICollection<Statement> Statements { get; }
     }
 }

@@ -111,15 +111,7 @@ namespace Pobs.Tests.Integration.Helpers
         {
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var topic = dbContext.Topics
-                    .Include(x => x.Statements)
-                        .ThenInclude(x => x.Comments)
-                        .ThenInclude(x => x.ParentComment)
-                    .Include(x => x.Statements)
-                        .ThenInclude(x => x.Comments)
-                        .ThenInclude(x => x.ChildComments)
-                    .Single(x => x.Id == topicId);
-
+                var topic = dbContext.Topics.Find(topicId);
                 foreach (var statement in topic.Statements)
                 {
                     foreach (var comment in statement.Comments.Where(x => x.ParentComment != null))

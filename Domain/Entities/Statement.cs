@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using Pobs.Domain.Entities.Helpers;
 using Pobs.Domain.Utils;
 
 namespace Pobs.Domain.Entities
@@ -10,6 +13,7 @@ namespace Pobs.Domain.Entities
     {
         public Statement()
         {
+            this.Topics = new JoinCollectionFacade<Topic, Statement, StatementTopic>(this, this.StatementTopics);
             this.Comments = new Collection<Comment>();
         }
         public Statement(string text, User postedByUser, DateTime postedAt) : this()
@@ -41,6 +45,11 @@ namespace Pobs.Domain.Entities
 
         [Required]
         public virtual Topic Topic { get; set; }
+
+        internal ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
+
+        [NotMapped]
+        public ICollection<Topic> Topics { get; }
 
         public virtual ICollection<Comment> Comments { get; set; }
     }

@@ -139,10 +139,9 @@ namespace Pobs.Web.Services
                 return null;
             }
 
-            var statement = await _context.Topics
-                .SelectMany(x => x.Statements)
+            var statement = await _context.Statements
                 .Include(x => x.Comments)
-                .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Id == statementId);
+                .FirstOrDefaultAsync(x => x.Id == statementId);
             if (statement == null)
             {
                 return null;
@@ -158,11 +157,10 @@ namespace Pobs.Web.Services
 
         public async Task<StatementModel> GetStatement(string topicSlug, int statementId)
         {
-            var statement = await _context.Topics
-                .SelectMany(x => x.Statements)
+            var statement = await _context.Statements
                 .Include(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Comments).ThenInclude(x => x.ChildComments)
-                .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Topic.IsApproved && x.Id == statementId);
+                .FirstOrDefaultAsync(x => x.Id == statementId);
             if (statement == null)
             {
                 return null;
@@ -173,10 +171,9 @@ namespace Pobs.Web.Services
         public async Task<CommentModel> SaveComment(string topicSlug, int statementId,
             string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId)
         {
-            var statementTask = _context.Topics
-                .SelectMany(x => x.Statements)
+            var statementTask = _context.Statements
                 .Include(x => x.Comments)
-                .FirstOrDefaultAsync(x => x.Topic.Slug == topicSlug && x.Id == statementId);
+                .FirstOrDefaultAsync(x => x.Id == statementId);
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
             var statement = await statementTask;
             if (statement == null)
@@ -210,14 +207,12 @@ namespace Pobs.Web.Services
 
         public async Task<CommentModel> GetComment(string topicSlug, int statementId, long commentId)
         {
-            var comment = await _context.Topics
-                .SelectMany(x => x.Statements)
+            var comment = await _context.Statements
                 .SelectMany(x => x.Comments)
                     .Include(x => x.PostedByUser)
                     .Include(x => x.ChildComments).ThenInclude(x => x.PostedByUser)
                     .Include(x => x.ChildComments).ThenInclude(x => x.ChildComments)
-                .FirstOrDefaultAsync(x => x.Statement.Topic.Slug == topicSlug && x.Statement.Topic.IsApproved
-                    && x.Statement.Id == statementId && x.Id == commentId);
+                .FirstOrDefaultAsync(x => x.Statement.Id == statementId && x.Id == commentId);
             if (comment == null)
             {
                 return null;

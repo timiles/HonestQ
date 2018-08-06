@@ -46,8 +46,8 @@ namespace Pobs.Tests.Integration.Topics
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
                 Assert.Null(dynamicResponseModel.isApproved);
 
-                Assert.Equal(3, _topic.Statements.Count);
-                Assert.Equal(_topic.Statements.Count, responseModel.Statements.Length);
+                Assert.Equal(3, _topic.Statements.Count());
+                Assert.Equal(_topic.Statements.Count(), responseModel.Statements.Length);
 
                 foreach (var statement in _topic.Statements)
                 {

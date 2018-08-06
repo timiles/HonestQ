@@ -67,43 +67,6 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task UnapprovedTopic_ShouldGetNotFound()
-        {
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                dbContext.Attach(_topic);
-                _topic.IsApproved = false;
-                dbContext.SaveChanges();
-            }
-
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                // PRIVATE BETA
-                client.AuthenticateAs(_statementUserId);
-
-                var url = _generateUrl(_topic.Slug, _topic.Statements.First().Id);
-                var response = await client.GetAsync(url);
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            }
-        }
-
-        [Fact]
-        public async Task UnknownSlug_ShouldReturnNotFound()
-        {
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                // PRIVATE BETA
-                client.AuthenticateAs(_statementUserId);
-
-                var url = _generateUrl("INCORRECT_SLUG", _topic.Statements.First().Id);
-                var response = await client.GetAsync(url);
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            }
-        }
-
-        [Fact]
         public async Task UnknownStatementId_ShouldReturnNotFound()
         {
             using (var server = new IntegrationTestingServer())
