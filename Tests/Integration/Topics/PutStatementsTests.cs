@@ -28,7 +28,7 @@ namespace Pobs.Tests.Integration.Topics
             _statement = _topic.Statements.Skip(1).First();
         }
 
-        [Fact(Skip = "Need to remove Statement.TopicId")]
+        [Fact]
         public async Task AuthenticatedAsAdmin_ShouldUpdateStatement()
         {
             var differentStance = (Stance)(((int)_statement.Stance + 1) % Enum.GetValues(typeof(Stance)).Length);
@@ -56,8 +56,9 @@ namespace Pobs.Tests.Integration.Topics
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var topic = dbContext.Topics.Find(_topic.Id);
-                dbContext.Entry(topic).Collection(b => b.Statements).Load();
+                var topic = dbContext.Topics
+                    .Include("StatementTopics.Statement")
+                    .Single(x => x.Id == _topic.Id);
 
                 var statement = topic.Statements.Single(x => x.Id == _statement.Id);
                 Assert.Equal(payload.Text, statement.Text);

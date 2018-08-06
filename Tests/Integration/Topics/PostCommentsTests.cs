@@ -48,13 +48,10 @@ namespace Pobs.Tests.Integration.Topics
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.Comments)
-                            .ThenInclude(x => x.PostedByUser)
-                        .Single(x => x.Id == _topic.Id);
-
-                    var statement = topic.Statements.Single(x => x.Id == statementId);
+                    var statement = dbContext.Statements
+                        .Include(x => x.Comments)
+                        .Include(x => x.PostedByUser)
+                        .FirstOrDefault(x => x.Id == statementId);
                     var comment = statement.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
                     Assert.Equal(agreementRating, comment.AgreementRating);
@@ -94,13 +91,9 @@ namespace Pobs.Tests.Integration.Topics
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.Comments)
-                            .ThenInclude(x => x.PostedByUser)
-                        .Single(x => x.Id == _topic.Id);
-
-                    var statement = topic.Statements.Single(x => x.Id == statementId);
+                    var statement = dbContext.Statements
+                        .Include(x => x.Comments)
+                        .FirstOrDefault(x => x.Id == statementId);
                     var comment = statement.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
                     Assert.Equal(payload.Source, comment.Source);
@@ -133,13 +126,11 @@ namespace Pobs.Tests.Integration.Topics
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.Comments)
-                            .ThenInclude(x => x.PostedByUser)
-                        .Single(x => x.Id == _topic.Id);
+                    var statement = dbContext.Statements
+                        .Include(x => x.Comments)
+                        .Include(x => x.PostedByUser)
+                        .Single(x => x.Id == statementId);
 
-                    var statement = topic.Statements.Single(x => x.Id == statementId);
                     var comment = statement.Comments.Single();
                     Assert.Null(comment.Text);
                     Assert.Equal(payload.Source, comment.Source);
@@ -152,7 +143,7 @@ namespace Pobs.Tests.Integration.Topics
             }
         }
 
-        [Fact(Skip = "Need to remove Statement.TopicId")]
+        [Fact]
         public async Task ParentCommentId_ShouldPersist()
         {
             var statement = _topic.Statements.Skip(1).First();
@@ -181,13 +172,10 @@ namespace Pobs.Tests.Integration.Topics
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.Comments)
-                            .ThenInclude(x => x.PostedByUser)
-                        .Single(x => x.Id == _topic.Id);
-
-                    var reloadedStatement = topic.Statements.Single(x => x.Id == statement.Id);
+                    var reloadedStatement = dbContext.Statements
+                        .Include(x => x.Comments)
+                        .Include(x => x.PostedByUser)
+                        .Single(x => x.Id == statement.Id);
                     var reloadedParentComment = reloadedStatement.Comments.Single(x => x.Id == parentComment.Id);
                     var comment = reloadedParentComment.ChildComments.Single();
                     Assert.Equal(payload.Text, comment.Text);
@@ -327,12 +315,9 @@ namespace Pobs.Tests.Integration.Topics
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.Comments)
-                        .Single(x => x.Id == _topic.Id);
-
-                var statement = topic.Statements.Single(x => x.Id == statementId);
+                var statement = dbContext.Statements
+                        .Include(x => x.Comments)
+                        .Single(x => x.Id == statementId);
 
                 Assert.Empty(statement.Comments);
             }

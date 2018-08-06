@@ -47,8 +47,8 @@ namespace Pobs.Tests.Integration.Topics
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
                     var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.PostedByUser)
+                        .Include("StatementTopics.Statement")
+                        .Include("StatementTopics.Statement.PostedByUser")
                         .Single(x => x.Id == _topicId);
 
                     var statement = topic.Statements.Single();
@@ -90,8 +90,8 @@ namespace Pobs.Tests.Integration.Topics
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
                     var topic = dbContext.Topics
-                        .Include(x => x.Statements)
-                            .ThenInclude(x => x.PostedByUser)
+                        .Include("StatementTopics.Statement")
+                        .Include("StatementTopics.Statement.PostedByUser")
                         .Single(x => x.Id == _topicId);
 
                     var statement = topic.Statements.Single();
@@ -128,7 +128,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var topic = dbContext.Topics
-                    .Include(x => x.Statements)
+                    .Include("StatementTopics.Statement")
                     .Single(x => x.Id == _topicId);
 
                 Assert.Empty(topic.Statements);

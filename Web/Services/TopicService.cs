@@ -99,9 +99,9 @@ namespace Pobs.Web.Services
         public async Task<TopicModel> GetTopic(string topicSlug, bool isAdmin)
         {
             var topic = await _context.Topics
-                .Include(x => x.Statements)
+                    .Include("StatementTopics.Statement")
                     // TODO: This could be more efficient if we aggregated Comment AgreementRating data in SQL
-                    .ThenInclude(x => x.Comments)
+                    .Include("StatementTopics.Statement.Comments")
                 .FirstOrDefaultAsync(x => x.Slug == topicSlug);
             if (topic == null || (!topic.IsApproved && !isAdmin))
             {

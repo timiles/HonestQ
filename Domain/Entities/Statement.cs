@@ -43,9 +43,6 @@ namespace Pobs.Domain.Entities
         public Stance Stance { get; set; }
 
 
-        [Required]
-        public virtual Topic Topic { get; set; }
-
         internal ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
 
         [NotMapped]
