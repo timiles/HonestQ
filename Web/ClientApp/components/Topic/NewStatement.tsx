@@ -34,7 +34,7 @@ class NewStatement extends React.Component<Props, State> {
     }
 
     public render() {
-        const { statementForm } = this.props;
+        const { statementForm, topicSlug } = this.props;
         const { isModalOpen } = this.state;
 
         return (
@@ -49,6 +49,7 @@ class NewStatement extends React.Component<Props, State> {
                 <Modal title="Add a statement" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <StatementForm
                         {...statementForm}
+                        topicSlug={topicSlug}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}
@@ -67,7 +68,7 @@ class NewStatement extends React.Component<Props, State> {
     }
 
     private handleSubmit(form: StatementFormModel): void {
-        this.props.submit(this.props.topicSlug, form);
+        this.props.submit(form);
     }
 }
 

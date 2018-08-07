@@ -94,7 +94,7 @@ export const actionCreators = {
             return (async () => {
                 dispatch({ type: 'GET_STATEMENT_REQUESTED', payload: { statementId } });
 
-                getJson<StatementModel>(`/api/topics/${topicSlug}/statements/${statementId}`,
+                getJson<StatementModel>(`/api/statements/${statementId}`,
                     getState().login.loggedInUser)
                     .then((statementResponse: StatementModel) => {
                         dispatch({

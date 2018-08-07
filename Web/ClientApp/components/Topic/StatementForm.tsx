@@ -6,7 +6,7 @@ import SuperTextArea from '../shared/SuperTextArea';
 import StanceInput from './StanceInput';
 
 type Props = FormProps<StatementFormModel>
-    & { hideInfoBox?: boolean, isModal?: boolean, onCloseModalRequested?: () => void };
+    & { topicSlug?: string, hideInfoBox?: boolean, isModal?: boolean, onCloseModalRequested?: () => void };
 
 export default class StatementForm extends React.Component<Props, StatementFormModel> {
 
@@ -14,8 +14,13 @@ export default class StatementForm extends React.Component<Props, StatementFormM
         super(props);
 
         this.state = (props.initialState) ?
-            { text: props.initialState.text, source: props.initialState.source, stance: props.initialState.stance } :
-            { text: '', source: '', stance: 'NA' };
+            {
+                text: props.initialState.text,
+                source: props.initialState.source,
+                stance: props.initialState.stance,
+                topicSlugs: props.initialState.topicSlugs,
+            } :
+            { text: '', source: '', stance: 'NA', topicSlugs: [props.topicSlug!] };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

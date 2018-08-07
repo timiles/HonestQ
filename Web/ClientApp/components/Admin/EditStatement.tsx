@@ -21,7 +21,7 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
 
     public componentDidMount() {
         if (this.shouldGetStatement()) {
-            this.props.getStatement(this.props.match.params.topicSlug, this.props.match.params.statementId);
+            this.props.getStatement(this.props.match.params.statementId);
         }
     }
 
@@ -31,6 +31,16 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
         const successUrl = (successfullySaved && loadedModel)
             ? `/${this.props.match.params.topicSlug}/${this.props.match.params.statementId}/${loadedModel.slug}`
             : null;
+
+        let statementFormModel: StatementFormModel | null;
+        if (loadedModel) {
+            statementFormModel = {
+                text: loadedModel.text,
+                source: loadedModel.source,
+                stance: loadedModel.stance,
+                topicSlugs: loadedModel.topics.map((x) => x.slug),
+            };
+        }
 
         return (
             <div className="col-lg-6 offset-lg-3">
@@ -42,7 +52,7 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
                 )}
                 <Loading {...this.props.statementModel} />
                 {loadedModel && (
-                    <StatementForm initialState={loadedModel} hideInfoBox={true} submit={this.handleSubmit} />
+                    <StatementForm initialState={statementFormModel!} hideInfoBox={true} submit={this.handleSubmit} />
                 )}
             </div>
         );
@@ -56,7 +66,7 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
     }
 
     private handleSubmit(form: StatementFormModel): void {
-        this.props.submit(this.props.match.params.topicSlug, this.props.match.params.statementId, form);
+        this.props.submit(this.props.match.params.statementId, form);
     }
 }
 

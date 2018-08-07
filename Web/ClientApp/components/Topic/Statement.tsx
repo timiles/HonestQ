@@ -49,13 +49,11 @@ export default class Statement extends React.Component<Props, {}> {
                         {model.source && this.renderSource(model.source)}
                         <NewComment
                             parentCommentId={null}
-                            topicSlug={topicSlug}
                             statementId={statementId}
                             stance={model!.stance}
                         />
                         <CommentList
                             comments={model.comments}
-                            topicSlug={topicSlug}
                             statementId={statementId!}
                         />
                     </div>

@@ -18,34 +18,28 @@ export interface EditStatementState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface GetStatementRequestedAction {
-    type: 'GET_STATEMENT_REQUESTED'; payload: {
-        topicSlug: string;
-        statementId: number;
-    };
+    type: 'GET_STATEMENT_REQUESTED';
+    payload: { statementId: number; };
 }
 interface GetStatementSuccessAction {
     type: 'GET_STATEMENT_SUCCESS';
-    payload: {
-        statement: StatementModel;
-        topicSlug: string;
-        statementId: number;
-    };
+    payload: { statement: StatementModel; statementId: number; };
 }
 interface GetStatementFailedAction {
-    type: 'GET_STATEMENT_FAILED'; payload: {
-        topicSlug: string;
-        statementId: number;
-        error: string;
-    };
+    type: 'GET_STATEMENT_FAILED';
+    payload: { statementId: number; error: string; };
 }
-interface EditStatementFormSubmittedAction { type: 'EDIT_STATEMENT_FORM_SUBMITTED'; }
+interface EditStatementFormSubmittedAction {
+    type: 'EDIT_STATEMENT_FORM_SUBMITTED';
+}
 interface EditStatementFormReceivedAction {
-    type: 'EDIT_STATEMENT_FORM_RECEIVED'; payload: {
-        statementId: number;
-        statement: StatementModel;
-    };
+    type: 'EDIT_STATEMENT_FORM_RECEIVED';
+    payload: { statementId: number; statement: StatementModel; };
 }
-interface EditStatementFormFailedAction { type: 'EDIT_STATEMENT_FORM_FAILED'; payload: { error: string | null; }; }
+interface EditStatementFormFailedAction {
+    type: 'EDIT_STATEMENT_FORM_FAILED';
+    payload: { error: string | null; };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -61,21 +55,20 @@ type KnownAction = GetStatementRequestedAction
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getStatement: (topicSlug: string, statementId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    getStatement: (statementId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_STATEMENT_REQUESTED', payload: { topicSlug, statementId } });
+            dispatch({ type: 'GET_STATEMENT_REQUESTED', payload: { statementId } });
 
-            getJson<StatementModel>(`/api/topics/${topicSlug}/statements/${statementId}`, getState().login.loggedInUser)
+            getJson<StatementModel>(`/api/statements/${statementId}`, getState().login.loggedInUser)
                 .then((statementResponse: StatementModel) => {
                     dispatch({
                         type: 'GET_STATEMENT_SUCCESS',
-                        payload: { statement: statementResponse, topicSlug, statementId },
+                        payload: { statement: statementResponse, statementId },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
                         type: 'GET_STATEMENT_FAILED', payload: {
-                            topicSlug,
                             statementId,
                             error: reason || 'Get topic failed',
                         },
@@ -83,7 +76,7 @@ export const actionCreators = {
                 });
         })();
     },
-    submit: (topicSlug: string, statementId: number, statementForm: StatementFormModel):
+    submit: (statementId: number, statementForm: StatementFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'EDIT_STATEMENT_FORM_SUBMITTED' });
@@ -95,7 +88,7 @@ export const actionCreators = {
                 }
 
                 putJson<StatementModel>(
-                    `/api/topics/${topicSlug}/statements/${statementId}`, statementForm, getState().login.loggedInUser!)
+                    `/api/statements/${statementId}`, statementForm, getState().login.loggedInUser!)
                     .then((statementResponse: StatementModel) => {
                         dispatch({
                             type: 'EDIT_STATEMENT_FORM_RECEIVED', payload: {

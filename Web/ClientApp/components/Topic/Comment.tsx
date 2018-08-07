@@ -7,7 +7,7 @@ import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import NewComment from './NewComment';
 
 type Props = CommentModel
-    & { topicSlug: string, statementId: number };
+    & { statementId: number };
 
 export default class Comment extends React.Component<Props, {}> {
 
@@ -16,7 +16,7 @@ export default class Comment extends React.Component<Props, {}> {
     }
 
     public render(): any {
-        const { topicSlug, statementId } = this.props;
+        const { statementId } = this.props;
         const { id, text, source, agreementRating, postedAt, postedByUsername, comments } = this.props;
         const extractedUrl = extractUrlFromText(source) || extractUrlFromText(text);
 
@@ -46,7 +46,6 @@ export default class Comment extends React.Component<Props, {}> {
                                     </blockquote>
                                     <NewComment
                                         parentCommentId={id}
-                                        topicSlug={topicSlug}
                                         statementId={statementId}
                                     />
                                 </div>
@@ -57,7 +56,6 @@ export default class Comment extends React.Component<Props, {}> {
                                         <li key={`comment_${i}`}>
                                             <Comment
                                                 {...x}
-                                                topicSlug={topicSlug}
                                                 statementId={statementId}
                                             />
                                         </li>)}

@@ -40,7 +40,7 @@ type KnownAction = NewStatementFormSubmittedAction
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    submit: (topicSlug: string, statementForm: StatementFormModel):
+    submit: (statementForm: StatementFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'NEW_STATEMENT_FORM_SUBMITTED' });
@@ -52,7 +52,7 @@ export const actionCreators = {
                 }
 
                 postJson<StatementListItemModel>(
-                    `/api/topics/${topicSlug}/statements`, statementForm, getState().login.loggedInUser!)
+                    `/api/statements`, statementForm, getState().login.loggedInUser!)
                     .then((responseModel: StatementListItemModel) => {
                         dispatch({
                             type: 'NEW_STATEMENT_FORM_RECEIVED',
@@ -60,6 +60,8 @@ export const actionCreators = {
                         });
                         setTimeout(() => {
                             // Wait a bit for modal to have closed, then slide onto new Statement
+                            // TODO: enable multiple Topics
+                            const topicSlug = responseModel.topics[0].slug;
                             dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
                         }, 700);
                     })

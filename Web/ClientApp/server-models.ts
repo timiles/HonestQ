@@ -22,15 +22,6 @@ export interface IntroModel {
     content: string;
 }
 
-export interface AdminTopicModel {
-    isApproved: boolean;
-    slug: string;
-    name: string;
-    summary: string;
-    moreInfoUrl: string;
-    statements: StatementListItemModel[];
-}
-
 export interface CommentFormModel {
     text: string;
     source: string;
@@ -49,18 +40,11 @@ export interface CommentModel {
     comments: CommentModel[];
 }
 
-export interface EditTopicFormModel {
-    slug: string;
-    name: string;
-    summary: string;
-    moreInfoUrl: string;
-    isApproved: boolean;
-}
-
 export interface StatementFormModel {
     text: string;
     source: string;
     stance: string;
+    topicSlugs: string[];
 }
 
 export interface StatementListItemModel {
@@ -68,6 +52,7 @@ export interface StatementListItemModel {
     slug: string;
     text: string;
     stance: string;
+    topics: TopicLabelModel[];
     agreementRatings: { [key: string]: number };
 }
 
@@ -76,7 +61,30 @@ export interface StatementModel {
     text: string;
     source: string;
     stance: string;
+    topics: TopicLabelModel[];
     comments: CommentModel[];
+}
+
+export interface TopicLabelModel {
+    name: string;
+    slug: string;
+}
+
+export interface AdminTopicModel {
+    isApproved: boolean;
+    slug: string;
+    name: string;
+    summary: string;
+    moreInfoUrl: string;
+    statements: StatementListItemModel[];
+}
+
+export interface EditTopicFormModel {
+    slug: string;
+    name: string;
+    summary: string;
+    moreInfoUrl: string;
+    isApproved: boolean;
 }
 
 export interface TopicFormModel {
