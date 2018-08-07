@@ -1,6 +1,6 @@
 using Pobs.Domain;
 
-namespace Pobs.Web.Models.Topics
+namespace Pobs.Web.Models.Statements
 {
     public class CommentFormModel
     {

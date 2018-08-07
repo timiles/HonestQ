@@ -92,6 +92,7 @@ namespace Pobs.Web
 
             // Configure DI for application services
             services.AddScoped(provider => provider.GetService<DbContextPool<PobsDbContext>>().Rent());
+            services.AddScoped<IStatementService, StatementService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IUserService, UserService>();
 

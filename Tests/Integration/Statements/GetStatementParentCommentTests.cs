@@ -4,15 +4,16 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
+using Pobs.Web.Models.Statements;
 using Pobs.Web.Models.Topics;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Topics
+namespace Pobs.Tests.Integration.Statements
 {
     public class GetStatementParentCommentTests : IDisposable
     {
-        private string _generateUrl(string topicSlug, int statementId, long? commentId) =>
-            $"/api/topics/{topicSlug}/statements/{statementId}" + (commentId.HasValue ? $"/comments/{commentId}" : "");
+        private string _generateUrl(int statementId, long? commentId) =>
+            $"/api/statements/{statementId}" + (commentId.HasValue ? $"/comments/{commentId}" : "");
         private readonly int _statementUserId;
         private readonly int _childCommentUserId;
         private readonly Topic _topic;
@@ -39,7 +40,7 @@ namespace Pobs.Tests.Integration.Topics
                 // PRIVATE BETA
                 client.AuthenticateAs(_statementUserId);
 
-                var url = _generateUrl(_topic.Slug, _statement.Id, null);
+                var url = _generateUrl(_statement.Id, null);
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -67,7 +68,7 @@ namespace Pobs.Tests.Integration.Topics
                 // PRIVATE BETA
                 client.AuthenticateAs(_statementUserId);
 
-                var url = _generateUrl(_topic.Slug, _statement.Id, comment.Id);
+                var url = _generateUrl(_statement.Id, comment.Id);
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 

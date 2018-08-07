@@ -7,15 +7,15 @@ using Newtonsoft.Json;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
+using Pobs.Web.Models.Statements;
 using Pobs.Web.Models.Topics;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Topics
+namespace Pobs.Tests.Integration.Statements
 {
     public class PostCommentsTests : IDisposable
     {
-        private string _generateUrl(string topicSlug, int statementId) =>
-            $"/api/topics/{topicSlug}/statements/{statementId}/comments";
+        private string _generateUrl(int statementId) => $"/api/statements/{statementId}/comments";
         private readonly User _user;
         private readonly Topic _topic;
 
@@ -42,7 +42,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statementId);
+                var url = _generateUrl(statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -85,7 +85,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statementId);
+                var url = _generateUrl(statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -120,7 +120,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statementId);
+                var url = _generateUrl(statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -166,7 +166,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statement.Id);
+                var url = _generateUrl(statement.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -211,7 +211,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statement.Id);
+                var url = _generateUrl(statement.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -244,7 +244,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statement.Id);
+                var url = _generateUrl(statement.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -265,7 +265,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statementId);
+                var url = _generateUrl(statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -288,7 +288,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, statementId);
+                var url = _generateUrl(statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -308,7 +308,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl(_topic.Slug, statementId);
+                var url = _generateUrl(statementId);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
@@ -336,7 +336,7 @@ namespace Pobs.Tests.Integration.Topics
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(_topic.Slug, 0);
+                var url = _generateUrl(0);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }

@@ -1,5 +1,6 @@
 using System.Linq;
 using Pobs.Domain.Entities;
+using Pobs.Web.Models.Statements;
 
 namespace Pobs.Web.Models.Topics
 {

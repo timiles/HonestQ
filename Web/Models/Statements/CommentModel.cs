@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Pobs.Domain.Entities;
 
-namespace Pobs.Web.Models.Topics
+namespace Pobs.Web.Models.Statements
 {
     public class CommentModel
     {

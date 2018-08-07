@@ -43,7 +43,7 @@ namespace Pobs.Domain.Entities
         public Stance Stance { get; set; }
 
 
-        internal ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
+        public ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
 
         [NotMapped]
         public ICollection<Topic> Topics { get; }

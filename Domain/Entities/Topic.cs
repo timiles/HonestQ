@@ -44,7 +44,7 @@ namespace Pobs.Domain.Entities
         public bool IsApproved { get; set; }
 
 
-        internal ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
+        public ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
 
         [NotMapped]
         public ICollection<Statement> Statements { get; }

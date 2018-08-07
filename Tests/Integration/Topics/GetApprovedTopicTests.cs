@@ -55,6 +55,10 @@ namespace Pobs.Tests.Integration.Topics
                     Assert.Equal(statement.Slug, responseStatement.Slug);
                     Assert.Equal(statement.Text, responseStatement.Text);
                     Assert.Equal(statement.Stance.ToString(), responseStatement.Stance);
+
+                    Assert.Single(statement.Topics);
+                    Assert.Equal(_topic.Id, statement.Topics.Single().Id);
+                    Assert.Equal(_topic.Name, statement.Topics.Single().Name);
                 }
             }
         }
