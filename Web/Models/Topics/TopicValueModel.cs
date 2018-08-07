@@ -1,13 +1,13 @@
 using Pobs.Domain.Entities;
 
-namespace Pobs.Web.Models.Statements
+namespace Pobs.Web.Models.Topics
 {
-    public class TopicLabelModel
+    public class TopicValueModel
     {
-        public TopicLabelModel()
+        public TopicValueModel()
         {
         }
-        public TopicLabelModel(Topic topic)
+        public TopicValueModel(Topic topic)
         {
             this.Name = topic.Name;
             this.Slug = topic.Slug;

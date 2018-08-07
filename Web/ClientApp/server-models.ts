@@ -52,7 +52,7 @@ export interface StatementListItemModel {
     slug: string;
     text: string;
     stance: string;
-    topics: TopicLabelModel[];
+    topics: TopicValueModel[];
     agreementRatings: { [key: string]: number };
 }
 
@@ -61,13 +61,8 @@ export interface StatementModel {
     text: string;
     source: string;
     stance: string;
-    topics: TopicLabelModel[];
+    topics: TopicValueModel[];
     comments: CommentModel[];
-}
-
-export interface TopicLabelModel {
-    name: string;
-    slug: string;
 }
 
 export interface AdminTopicModel {
@@ -108,4 +103,9 @@ export interface TopicListItemModel {
 
 export interface TopicsListModel {
     topics: TopicListItemModel[];
+}
+
+export interface TopicValueModel {
+    name: string;
+    slug: string;
 }

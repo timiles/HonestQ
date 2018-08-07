@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pobs.Domain.Entities;
+using Pobs.Web.Models.Topics;
 
 namespace Pobs.Web.Models.Statements
 {
@@ -13,7 +14,7 @@ namespace Pobs.Web.Models.Statements
             this.Text = statement.Text;
             this.Source = statement.Source;
             this.Stance = statement.Stance.ToString();
-            this.Topics = statement.Topics.Select(x => new TopicLabelModel(x)).ToArray();
+            this.Topics = statement.Topics.Select(x => new TopicValueModel(x)).ToArray();
             this.Comments = topLevelComments.Select(x => new CommentModel(x)).ToArray();
         }
 
@@ -21,7 +22,7 @@ namespace Pobs.Web.Models.Statements
         public string Text { get; set; }
         public string Source { get; set; }
         public string Stance { get; set; }
-        public TopicLabelModel[] Topics { get; set; }
+        public TopicValueModel[] Topics { get; set; }
         public CommentModel[] Comments { get; set; }
     }
 }
