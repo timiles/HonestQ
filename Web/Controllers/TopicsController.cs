@@ -33,6 +33,13 @@ namespace Pobs.Web.Controllers
             return Ok(topicsListModel);
         }
 
+        [HttpGet, Route("autocomplete")]
+        public async Task<IActionResult> Autocomplete(string q)
+        {
+            var topics = await _topicService.Query(q);
+            return Ok(topics);
+        }
+
         [Authorize]
         public async Task<IActionResult> Post([FromBody] TopicFormModel payload)
         {

@@ -31,10 +31,11 @@ namespace Pobs.Tests.Integration.Helpers
         public static Topic CreateTopic(User statementUser, int numberOfStatements = 0, int numberOfStatementsPerStance = 0,
             User commentUser = null, int numberOfCommentsPerStatement = 0,
             User childCommentUser = null, int numberOfChildCommentsPerComment = 0,
-            bool isApproved = true)
+            bool isApproved = true, string topicNamePrefix = null)
         {
             // Guarantee slug has both upper & lower case characters
-            var name = "ABCabc" + Utils.GenerateRandomString(10);
+            topicNamePrefix = topicNamePrefix ?? "ABCabc";
+            var name = topicNamePrefix + Utils.GenerateRandomString(10);
             var topic = new Topic(name, name, statementUser, DateTime.UtcNow)
             {
                 Summary = Utils.GenerateRandomString(50),

@@ -16,6 +16,7 @@ namespace Pobs.Web.Services
         Task SaveTopic(string name, string summary, string moreInfoUrl, int postedByUserId);
         Task<AdminTopicModel> UpdateTopic(string topicSlug, string newSlug, string name, string summary, string moreInfoUrl, bool isApproved);
         Task<TopicModel> GetTopic(string topicSlug, bool isAdmin);
+        Task<TopicAutocompleteResultsModel> Query(string q);
     }
 
     public class TopicService : ITopicService
@@ -104,6 +105,12 @@ namespace Pobs.Web.Services
             }
             var model = (isAdmin) ? new AdminTopicModel(topic) : new TopicModel(topic);
             return model;
+        }
+
+        public async Task<TopicAutocompleteResultsModel> Query(string q)
+        {
+            var topics = await _context.Topics.Where(x => x.IsApproved && x.Name.ToLower().StartsWith(q)).ToArrayAsync();
+            return new TopicAutocompleteResultsModel(topics.ToArray());
         }
     }
 }
