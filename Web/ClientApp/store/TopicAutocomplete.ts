@@ -1,7 +1,7 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
+import { TopicAutocompleteResultsModel, TopicValueModel } from '../server-models';
 import { getJson } from '../utils';
-import { TopicAutocompleteResultsModel, TopicValueModel } from './../server-models';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.

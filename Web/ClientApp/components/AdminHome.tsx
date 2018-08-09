@@ -36,10 +36,10 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
                 {loadedModel && (loadedModel.topics.length === 0 ?
                     <p>All done!</p>
                     :
-                    <ul className="topics-list list-unstyled">
+                    <ul className="topics-list">
                         {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
-                            <li key={`topic${i}`}>
-                                <Link to={`/admin/edit/${x.slug}`} className="btn btn-lg btn-outline-secondary">
+                            <li key={`topic${i}`} className="mr-2 mb-2">
+                                <Link to={`/admin/edit/topics/${x.slug}`} className="btn btn-lg btn-outline-secondary">
                                     {x.name}
                                 </Link>
                             </li>)

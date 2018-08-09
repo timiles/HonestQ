@@ -31,10 +31,12 @@ class Home extends React.Component<HomeProps, {}> {
                 <h1>POBS!</h1>
                 <Loading {...this.props.loadingTopicsList} />
                 {loadedModel &&
-                    <ul className="topics-list list-unstyled">
+                    <ul className="topics-list">
                         {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
-                            <li key={`topic${i}`}>
-                                <Link to={`/${x.slug}`} className="btn btn-lg btn-outline-secondary">{x.name}</Link>
+                            <li key={`topic${i}`} className="mr-2 mb-2">
+                                <Link to={`/topics/${x.slug}`} className="btn btn-lg btn-outline-secondary">
+                                    {x.name}
+                                </Link>
                             </li>)}
                         <li>
                             <Link to="/newtopic" className="btn btn-lg btn-primary">

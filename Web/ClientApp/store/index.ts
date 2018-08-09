@@ -8,6 +8,7 @@ import * as NewComment from './NewComment';
 import * as NewStatement from './NewStatement';
 import * as NewTopic from './NewTopic';
 import * as Register from './Register';
+import * as Statement from './Statement';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
 
@@ -23,6 +24,7 @@ export interface ApplicationState {
     newStatement: NewStatement.NewStatementState;
     newTopic: NewTopic.NewTopicState;
     register: Register.RegisterState;
+    statement: Statement.ContainerState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
 }
@@ -41,6 +43,7 @@ export const reducers = {
     newStatement: NewStatement.reducer,
     newTopic: NewTopic.reducer,
     register: Register.reducer,
+    statement: Statement.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,
 };

@@ -73,11 +73,18 @@ blockquote p {
     color: #5bc0de;
 }
 
-
-.topics-list li {
+ul.topics-list {
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 0;
+}
+ul.topics-list:after {
+    content: '';
+    clear: both;
+    display: table;
+}
+ul.topics-list li {
     float: left;
-    margin-right: 10px;
-    margin-bottom: 10px;
 }
 
 .statement {
@@ -138,61 +145,9 @@ blockquote p {
     width: 100%;
 }
 
-.btn-back-to-topic {
-    margin-top: 20px;
-    text-align: left;
-    white-space: normal;
-    width: 100%;
-}
-    .btn-back-to-topic .topic-name {
-        font-weight: bold;
-    }
-
 .list-comments-nested {
     margin-left: 10px;
 }
-
-.slide {
-    position: absolute;
-    width: 100%;
-    transition: left 500ms ease-in, opacity 500ms ease-in;
-}
-    .slide-left.slide-enter {
-        left: -110%;
-        opacity: 0;
-    }
-    .slide-left.slide-enter-active {
-        left: 0;
-        opacity: 1;
-    }
-
-    .slide-left.slide-exit {
-        left: 0;
-        opacity: 1;
-    }
-    .slide-left.slide-exit-active {
-        left: -110%;
-        opacity: 0;
-    }
-
-    .slide-right.slide-enter {
-        left: 110%;
-        opacity: 0;
-    }
-    .slide-right.slide-enter-active {
-        left: 0;
-        opacity: 1;
-    }
-
-    .slide-right.slide-exit {
-        left: 0;
-        opacity: 1;
-    }
-    .slide-right.slide-exit-active {
-        left: 110%;
-        opacity: 0;
-    }
-
 
 .rating-scale {
     padding-left: 0;

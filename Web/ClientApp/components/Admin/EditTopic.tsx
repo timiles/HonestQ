@@ -53,13 +53,17 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
         const { successfullySaved } = this.props;
         const { loadedModel } = this.props.topicModel;
         const { submitting, submitted, error } = this.props.editTopicForm;
+        const successUrl = (successfullySaved && loadedModel && loadedModel.isApproved)
+            ? `/topics/${loadedModel.slug}`
+            : null;
+
         return (
             <div className="col-lg-6 offset-lg-3">
                 <h2>Edit Topic</h2>
-                {successfullySaved && loadedModel && loadedModel.isApproved && (
+                {loadedModel && successUrl && (
                     <div className="alert alert-success" role="alert">
                         "{loadedModel.name}" approved,
-                        check it out: <Link to={`/${loadedModel.slug}`}>{`/${loadedModel.slug}`}</Link>
+                        check it out: <Link to={successUrl}>{successUrl}</Link>
                     </div>
                 )}
                 <Loading {...this.props.topicModel} />

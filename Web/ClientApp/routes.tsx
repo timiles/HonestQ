@@ -10,6 +10,7 @@ import Login from './components/Login';
 import Logout from './components/Logout';
 import NewTopic from './components/NewTopic';
 import Register from './components/Register';
+import Statement from './components/Statement/Container';
 import Topic from './components/Topic/Container';
 
 export const routes = (
@@ -17,14 +18,15 @@ export const routes = (
         <Switch>
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/admin" component={AdminHome} />
-            <Route exact={true} path="/admin/edit/:topicSlug" component={EditTopic} />
-            <Route exact={true} path="/admin/edit/:topicSlug/:statementId" component={EditStatement} />
+            <Route exact={true} path="/admin/edit/statements/:statementId" component={EditStatement} />
+            <Route exact={true} path="/admin/edit/topics/:topicSlug" component={EditTopic} />
             <Route path="/intro" component={Intro} />
             <Route path="/login" component={Login} />
             <Route path="/logout" component={Logout} />
             <Route path="/newtopic" component={NewTopic} />
             <Route path="/register" component={Register} />
-            <Route path="/:topicSlug/:statementId?/:statementSlug?" component={Topic} />
+            <Route path="/statements/:statementId/:statementSlug" component={Statement} />
+            <Route path="/topics/:topicSlug" component={Topic} />
         </Switch>
     </Layout>
 );

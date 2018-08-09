@@ -29,7 +29,7 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
         const { successfullySaved } = this.props;
         const { loadedModel } = this.props.statementModel;
         const successUrl = (successfullySaved && loadedModel)
-            ? `/${this.props.match.params.topicSlug}/${this.props.match.params.statementId}/${loadedModel.slug}`
+            ? `/statements/${this.props.match.params.statementId}/${loadedModel.slug}`
             : null;
 
         let statementFormModel: StatementFormModel | null;

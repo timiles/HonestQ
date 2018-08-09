@@ -60,9 +60,7 @@ export const actionCreators = {
                         });
                         setTimeout(() => {
                             // Wait a bit for modal to have closed, then slide onto new Statement
-                            // TODO: enable multiple Topics
-                            const topicSlug = responseModel.topics[0].slug;
-                            dispatch(push(`/${topicSlug}/${responseModel.id}/${responseModel.slug}`) as any);
+                            dispatch(push(`/statements/${responseModel.id}/${responseModel.slug}`) as any);
                         }, 700);
                     })
                     .catch((reason: string) => {

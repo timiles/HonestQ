@@ -1,11 +1,8 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { StatementProps } from '../components/Topic/Statement';
 import { TopicProps } from '../components/Topic/Topic';
-import { StatementModel, TopicModel } from '../server-models';
+import { TopicModel } from '../server-models';
 import { getJson } from '../utils';
-import { CommentModel } from './../server-models';
-import { NewCommentFormReceivedAction } from './NewComment';
 import { NewStatementFormReceivedAction } from './NewStatement';
 
 // -----------------
@@ -13,7 +10,6 @@ import { NewStatementFormReceivedAction } from './NewStatement';
 
 export interface ContainerState {
     topic: TopicProps;
-    statement?: StatementProps;
 }
 
 // -----------------
@@ -34,33 +30,12 @@ interface GetTopicFailedAction {
     payload: { topicSlug: string; error: string; };
 }
 
-interface GetStatementRequestedAction {
-    type: 'GET_STATEMENT_REQUESTED';
-    payload: { statementId: number; };
-}
-interface GetStatementSuccessAction {
-    type: 'GET_STATEMENT_SUCCESS';
-    payload: {
-        statement: StatementModel;
-        topicSlug: string;
-        statementId: number;
-    };
-}
-interface GetStatementFailedAction {
-    type: 'GET_STATEMENT_FAILED';
-    payload: { statementId: number; error: string; };
-}
-
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction = GetTopicRequestedAction
     | GetTopicSuccessAction
     | GetTopicFailedAction
-    | NewStatementFormReceivedAction
-    | GetStatementRequestedAction
-    | GetStatementSuccessAction
-    | GetStatementFailedAction
-    | NewCommentFormReceivedAction;
+    | NewStatementFormReceivedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -89,30 +64,6 @@ export const actionCreators = {
                 });
         })();
     },
-    getStatement: (topicSlug: string, statementId: number): AppThunkAction<KnownAction> =>
-        (dispatch, getState) => {
-            return (async () => {
-                dispatch({ type: 'GET_STATEMENT_REQUESTED', payload: { statementId } });
-
-                getJson<StatementModel>(`/api/statements/${statementId}`,
-                    getState().login.loggedInUser)
-                    .then((statementResponse: StatementModel) => {
-                        dispatch({
-                            type: 'GET_STATEMENT_SUCCESS',
-                            payload: { statement: statementResponse, topicSlug, statementId },
-                        });
-                    })
-                    .catch((reason) => {
-                        dispatch({
-                            type: 'GET_STATEMENT_FAILED',
-                            payload: {
-                                statementId,
-                                error: reason || 'Get statement failed',
-                            },
-                        });
-                    });
-            })();
-        },
 };
 
 // ----------------
@@ -164,48 +115,6 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                 },
             };
         }
-        case 'GET_STATEMENT_REQUESTED':
-            return {
-                ...state,
-                statement: {
-                    loading: true,
-                    statementId: action.payload.statementId,
-                },
-            };
-        case 'GET_STATEMENT_SUCCESS':
-            return {
-                ...state,
-                statement: {
-                    statementId: action.payload.statementId,
-                    model: action.payload.statement,
-                },
-            };
-        case 'GET_STATEMENT_FAILED':
-            return {
-                ...state,
-                statement: {
-                    statementId: action.payload.statementId,
-                    error: action.payload.error,
-                },
-            };
-        case 'NEW_COMMENT_FORM_RECEIVED': {
-            const statementModel = state.statement!.model!;
-            // Slice for immutability
-            const commentsNext = statementModel.comments.slice();
-            if (action.payload.comment.parentCommentId) {
-                appendNewComment(commentsNext, action.payload.comment);
-            } else {
-                commentsNext.push(action.payload.comment);
-            }
-            const statementNext = { ...statementModel, comments: commentsNext };
-            return {
-                ...state,
-                statement: {
-                    statementId: state.statement!.statementId,
-                    model: statementNext,
-                },
-            };
-        }
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
@@ -216,16 +125,3 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     //  (or default initial state if none was supplied)
     return state || defaultState;
 };
-
-function appendNewComment(comments: CommentModel[], newComments: CommentModel): boolean {
-    for (const comment of comments) {
-        if (comment.id === newComments.parentCommentId) {
-            comment.comments.push(newComments);
-            return true;
-        }
-        if (appendNewComment(comment.comments, newComments)) {
-            return true;
-        }
-    }
-    return false;
-}

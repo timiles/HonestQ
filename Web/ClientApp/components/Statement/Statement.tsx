@@ -4,12 +4,9 @@ import { StatementModel } from '../../server-models';
 import { extractUrlFromText, isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
+import StanceView from '../shared/StanceView';
 import CommentList from './CommentList';
 import NewComment from './NewComment';
-import StanceView from './StanceView';
-
-type Props = StatementProps
-    & { topicSlug: string; };
 
 export interface StatementProps {
     loading?: boolean;
@@ -18,10 +15,10 @@ export interface StatementProps {
     model?: StatementModel;
 }
 
-export default class Statement extends React.Component<Props, {}> {
+export default class Statement extends React.Component<StatementProps, {}> {
 
     public render() {
-        const { loading, error, topicSlug, statementId, model } = this.props;
+        const { loading, error, statementId, model } = this.props;
 
         return (
             <>
@@ -31,7 +28,7 @@ export default class Statement extends React.Component<Props, {}> {
                     <div>
                         <LoggedInUserContext.Consumer>
                             {(user) => isUserInRole(user, 'Admin') &&
-                                <Link to={`/admin/edit/${topicSlug}/${statementId}`} className="float-right">
+                                <Link to={`/admin/edit/statements/${statementId}`} className="float-right">
                                     Edit
                                 </Link>
                             }
@@ -40,6 +37,15 @@ export default class Statement extends React.Component<Props, {}> {
                             {model.stance && <StanceView value={model.stance} />}
                             <span className="statement">{model.text}</span>
                         </h4>
+                        <ul className="topics-list">
+                            <li className="mr-1 mt-1">Topics:</li>
+                            {model.topics.map((x, i) =>
+                                <li key={`topic${i}`} className="mr-1 mb-1">
+                                    <Link to={`/topics/${x.slug}`} className="btn btn-sm btn-outline-secondary">
+                                        {x.name}
+                                    </Link>
+                                </li>)}
+                        </ul>
                         {model.stance === 'ProveIt' &&
                             <div className="alert alert-info" role="alert">
                                 This is a <strong>Request for Proof</strong>.
