@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { StatementListItemModel } from '../../server-models';
+import { StatementListItemModel, TopicValueModel } from '../../server-models';
 import AgreementRatingBarChart from './AgreementRatingBarChart';
 import NewStatement from './NewStatement';
 import StanceInput from './StanceInput';
@@ -8,7 +8,7 @@ import StanceView from './StanceView';
 
 interface Props {
     statements: StatementListItemModel[];
-    topicSlug: string;
+    topicValue: TopicValueModel;
 }
 
 interface State {
@@ -30,7 +30,7 @@ export default class StatementList extends React.Component<Props, State> {
         if (statements.length === 0) {
             return null;
         }
-        const { topicSlug } = this.props;
+        const { topicValue } = this.props;
         const { stanceFilter } = this.state;
 
         if (stanceFilter) {
@@ -48,7 +48,7 @@ export default class StatementList extends React.Component<Props, State> {
                     {statements.map((x, i) =>
                         <li key={`statement_${i}`}>
                             <Link
-                                to={`/${topicSlug}/${x.id}/${x.slug}`}
+                                to={`/${topicValue.slug}/${x.id}/${x.slug}`}
                                 className="btn btn-lg btn-outline-secondary statement-list-item"
                             >
                                 <StanceView value={x.stance} />
@@ -57,7 +57,7 @@ export default class StatementList extends React.Component<Props, State> {
                             </Link>
                         </li>)}
                     <li>
-                        <NewStatement topicSlug={topicSlug} />
+                        <NewStatement topicValue={topicValue} />
                     </li>
                 </ul>
             </>);

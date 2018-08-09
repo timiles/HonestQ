@@ -82,6 +82,10 @@ export interface EditTopicFormModel {
     isApproved: boolean;
 }
 
+export interface TopicAutocompleteResultsModel {
+    values: TopicValueModel[];
+}
+
 export interface TopicFormModel {
     name: string;
     summary: string;

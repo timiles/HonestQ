@@ -1,12 +1,18 @@
 import * as React from 'react';
-import { StatementFormModel } from '../../server-models';
+import { StatementFormModel, TopicValueModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import StanceInput from './StanceInput';
+import TopicAutocomplete from './TopicAutocomplete';
 
 type Props = FormProps<StatementFormModel>
-    & { topicSlug?: string, hideInfoBox?: boolean, isModal?: boolean, onCloseModalRequested?: () => void };
+    & {
+    initialTopicValues: TopicValueModel[],
+    hideInfoBox?: boolean,
+    isModal?: boolean,
+    onCloseModalRequested?: () => void,
+};
 
 export default class StatementForm extends React.Component<Props, StatementFormModel> {
 
@@ -20,9 +26,10 @@ export default class StatementForm extends React.Component<Props, StatementFormM
                 stance: props.initialState.stance,
                 topicSlugs: props.initialState.topicSlugs,
             } :
-            { text: '', source: '', stance: 'NA', topicSlugs: [props.topicSlug!] };
+            { text: '', source: '', stance: 'NA', topicSlugs: props.initialTopicValues.map((x) => x.slug) };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleTopicsChange = this.handleTopicsChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -34,7 +41,8 @@ export default class StatementForm extends React.Component<Props, StatementFormM
     }
 
     public render() {
-        const { hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
+        const { initialTopicValues, hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted }
+            = this.props;
         const { text, stance, source } = this.state;
         return (
             <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
@@ -89,6 +97,16 @@ export default class StatementForm extends React.Component<Props, StatementFormM
                             onChange={this.handleChange}
                         />
                     </div>
+                    <div className="form-group">
+                        <label>Topics</label>
+                        <div>
+                            <TopicAutocomplete
+                                name="topicSlugs"
+                                selectedTopics={initialTopicValues}
+                                onChange={this.handleTopicsChange}
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div className={isModal ? 'modal-footer' : 'form-group'}>
                     {isModal && onCloseModalRequested &&
@@ -108,6 +126,10 @@ export default class StatementForm extends React.Component<Props, StatementFormM
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLButtonElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
         this.setState((prevState) => ({ ...prevState, [name]: value }));
+    }
+
+    private handleTopicsChange(selectedTopics: TopicValueModel[]): void {
+        this.setState({ topicSlugs: selectedTopics.map((x) => x.slug) });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

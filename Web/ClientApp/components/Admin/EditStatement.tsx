@@ -52,7 +52,12 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
                 )}
                 <Loading {...this.props.statementModel} />
                 {loadedModel && (
-                    <StatementForm initialState={statementFormModel!} hideInfoBox={true} submit={this.handleSubmit} />
+                    <StatementForm
+                        initialState={statementFormModel!}
+                        initialTopicValues={loadedModel.topics}
+                        hideInfoBox={true}
+                        submit={this.handleSubmit}
+                    />
                 )}
             </div>
         );

@@ -27,6 +27,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
 
     private renderModel(slug: string, model: TopicModel) {
         const { name, summary, moreInfoUrl, statements } = model;
+        const topicValue = { name, slug };
         return (
             <>
                 <LoggedInUserContext.Consumer>
@@ -51,7 +52,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         }
                     </div>
                 }
-                <StatementList statements={statements} topicSlug={slug} />
+                <StatementList statements={statements} topicValue={topicValue} />
             </>
         );
     }

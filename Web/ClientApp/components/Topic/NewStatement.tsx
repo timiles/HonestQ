@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { StatementFormModel } from '../../server-models';
+import { StatementFormModel, TopicValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewStatementStore from '../../store/NewStatement';
 import Modal from '../shared/Modal';
@@ -8,7 +8,7 @@ import StatementForm from './StatementForm';
 
 type Props = NewStatementStore.NewStatementState
     & typeof NewStatementStore.actionCreators
-    & { topicSlug: string };
+    & { topicValue: TopicValueModel };
 
 interface State {
     isModalOpen: boolean;
@@ -34,7 +34,7 @@ class NewStatement extends React.Component<Props, State> {
     }
 
     public render() {
-        const { statementForm, topicSlug } = this.props;
+        const { statementForm, topicValue } = this.props;
         const { isModalOpen } = this.state;
 
         return (
@@ -49,7 +49,7 @@ class NewStatement extends React.Component<Props, State> {
                 <Modal title="Add a statement" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <StatementForm
                         {...statementForm}
-                        topicSlug={topicSlug}
+                        initialTopicValues={[topicValue]}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}

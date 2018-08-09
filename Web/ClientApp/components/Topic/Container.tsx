@@ -70,7 +70,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                         {topic.model && numberOfStatementsInTopic === 0 &&
                                             <>
                                                 <h2>Start the conversation</h2>
-                                                <NewStatement topicSlug={topic.slug} />
+                                                <NewStatement topicValue={topic.model} />
                                             </>}
                                     </div>
                                 </CSSTransition>
