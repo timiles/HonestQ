@@ -78,6 +78,8 @@ namespace Pobs.Web.Controllers
             }
         }
 
+        // NOTE: This is the main reason why we pass Slugs rather than Ids to the API:
+        //       the first entrypoint to the system only knows the topicSlug.
         [Route("{topicSlug}")]
         public async Task<IActionResult> Get(string topicSlug)
         {
