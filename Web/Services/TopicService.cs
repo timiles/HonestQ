@@ -21,9 +21,9 @@ namespace Pobs.Web.Services
 
     public class TopicService : ITopicService
     {
-        private PobsDbContext _context;
+        private OmnipopsDbContext _context;
 
-        public TopicService(PobsDbContext context)
+        public TopicService(OmnipopsDbContext context)
         {
             _context = context;
         }
@@ -95,9 +95,9 @@ namespace Pobs.Web.Services
         {
             var topic = await _context.Topics
                     // TODO: This could be more efficient if we aggregated Comment AgreementRating data in SQL
-                    .Include(x => x.StatementTopics).ThenInclude(x => x.Statement).ThenInclude(x => x.Comments)
-                    .Include(x => x.StatementTopics).ThenInclude(x => x.Statement).ThenInclude(x => x.StatementTopics)
-                    .Include(x => x.StatementTopics).ThenInclude(x => x.Statement).ThenInclude(x => x.StatementTopics).ThenInclude(x => x.Topic)
+                    .Include(x => x.PopTopics).ThenInclude(x => x.Pop).ThenInclude(x => x.Comments)
+                    .Include(x => x.PopTopics).ThenInclude(x => x.Pop).ThenInclude(x => x.PopTopics)
+                    .Include(x => x.PopTopics).ThenInclude(x => x.Pop).ThenInclude(x => x.PopTopics).ThenInclude(x => x.Topic)
                 .FirstOrDefaultAsync(x => x.Slug == topicSlug);
             if (topic == null || (!topic.IsApproved && !isAdmin))
             {

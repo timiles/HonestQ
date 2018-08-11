@@ -11,7 +11,7 @@ namespace Pobs.Domain.Entities
     {
         public Topic()
         {
-            this.Statements = new JoinCollectionFacade<Statement, Topic, StatementTopic>(this, this.StatementTopics);
+            this.Pops = new JoinCollectionFacade<Pop, Topic, PopTopic>(this, this.PopTopics);
         }
         public Topic(string slug, string name, User postedByUser, DateTime postedAt) : this()
         {
@@ -44,9 +44,9 @@ namespace Pobs.Domain.Entities
         public bool IsApproved { get; set; }
 
 
-        public ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
+        public ICollection<PopTopic> PopTopics { get; } = new List<PopTopic>();
 
         [NotMapped]
-        public ICollection<Statement> Statements { get; }
+        public ICollection<Pop> Pops { get; }
     }
 }

@@ -14,21 +14,21 @@ namespace Pobs.Tests.Integration.Helpers
 
         internal static AppSettings AppSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
 
-        static readonly Lazy<DbContextPool<PobsDbContext>> pobsDbContextPool = new Lazy<DbContextPool<PobsDbContext>>(() =>
+        static readonly Lazy<DbContextPool<OmnipopsDbContext>> omnipopsDbContextPool = new Lazy<DbContextPool<OmnipopsDbContext>>(() =>
         {
             var connectionString = TestSetup.Configuration.GetConnectionString("DefaultConnection");
-            var options = new DbContextOptionsBuilder<PobsDbContext>().UseMySql(
+            var options = new DbContextOptionsBuilder<OmnipopsDbContext>().UseMySql(
                 connectionString,
                 b =>
                 {
                     b.ServerVersion(new Version(5, 7, 21), ServerType.MySql);
                 }).Options;
-            return new DbContextPool<PobsDbContext>(options);
+            return new DbContextPool<OmnipopsDbContext>(options);
         });
 
-        internal static PobsDbContext CreateDbContext()
+        internal static OmnipopsDbContext CreateDbContext()
         {
-            return pobsDbContextPool.Value.Rent();
+            return omnipopsDbContextPool.Value.Rent();
         }
     }
 }

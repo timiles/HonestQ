@@ -44,7 +44,7 @@ namespace Pobs.Domain.Entities
 
 
         [Required]
-        public virtual Statement Statement { get; set; }
+        public virtual Pop Pop { get; set; }
 
         public virtual Comment ParentComment { get; set; }
         public virtual ICollection<Comment> ChildComments { get; set; }

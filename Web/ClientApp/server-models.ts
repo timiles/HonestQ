@@ -40,14 +40,14 @@ export interface CommentModel {
     comments: CommentModel[];
 }
 
-export interface StatementFormModel {
+export interface PopFormModel {
     text: string;
     source: string;
     type: string;
     topicSlugs: string[];
 }
 
-export interface StatementListItemModel {
+export interface PopListItemModel {
     id: number;
     slug: string;
     text: string;
@@ -56,7 +56,7 @@ export interface StatementListItemModel {
     agreementRatings: { [key: string]: number };
 }
 
-export interface StatementModel {
+export interface PopModel {
     slug: string;
     text: string;
     source: string;
@@ -71,7 +71,7 @@ export interface AdminTopicModel {
     name: string;
     summary: string;
     moreInfoUrl: string;
-    statements: StatementListItemModel[];
+    pops: PopListItemModel[];
 }
 
 export interface EditTopicFormModel {
@@ -97,7 +97,7 @@ export interface TopicModel {
     name: string;
     summary: string;
     moreInfoUrl: string;
-    statements: StatementListItemModel[];
+    pops: PopListItemModel[];
 }
 
 export interface TopicListItemModel {

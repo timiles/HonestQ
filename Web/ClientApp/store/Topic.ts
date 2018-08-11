@@ -3,7 +3,7 @@ import { AppThunkAction } from '.';
 import { TopicProps } from '../components/Topic/Topic';
 import { TopicModel } from '../server-models';
 import { getJson } from '../utils';
-import { NewStatementFormReceivedAction } from './NewStatement';
+import { NewPopFormReceivedAction } from './NewPop';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -35,7 +35,7 @@ interface GetTopicFailedAction {
 type KnownAction = GetTopicRequestedAction
     | GetTopicSuccessAction
     | GetTopicFailedAction
-    | NewStatementFormReceivedAction;
+    | NewPopFormReceivedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -86,7 +86,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             };
         case 'GET_TOPIC_SUCCESS':
             return {
-                // NOTE: Statement is possibly already set if GET_STATEMENT_REQUEST returned before GET_TOPIC_REQUEST
+                // NOTE: Pop is possibly already set if GET_POP_REQUEST returned before GET_TOPIC_REQUEST
                 ...state,
                 topic: {
                     slug: action.payload.topicSlug,
@@ -101,12 +101,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                     error: action.payload.error,
                 },
             };
-        case 'NEW_STATEMENT_FORM_RECEIVED': {
+        case 'NEW_POP_FORM_RECEIVED': {
             const topicModel = state.topic.model!;
             // Slice for immutability
-            const statementsNext = topicModel.statements.slice();
-            statementsNext.push(action.payload.statementListItem);
-            const topicNext = { ...topicModel, statements: statementsNext };
+            const popsNext = topicModel.pops.slice();
+            popsNext.push(action.payload.popListItem);
+            const topicNext = { ...topicModel, pops: popsNext };
             return {
                 ...state,
                 topic: {

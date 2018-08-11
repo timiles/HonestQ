@@ -1,30 +1,30 @@
 import * as AdminHome from './AdminHome';
-import * as EditStatement from './EditStatement';
+import * as EditPop from './EditPop';
 import * as EditTopic from './EditTopic';
 import * as Home from './Home';
 import * as Intro from './Intro';
 import * as Login from './Login';
 import * as NewComment from './NewComment';
-import * as NewStatement from './NewStatement';
+import * as NewPop from './NewPop';
 import * as NewTopic from './NewTopic';
+import * as Pop from './Pop';
 import * as Register from './Register';
-import * as Statement from './Statement';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
 
 // The top-level state object
 export interface ApplicationState {
     adminHome: AdminHome.AdminHomeState;
-    editStatement: EditStatement.EditStatementState;
+    editPop: EditPop.EditPopState;
     editTopic: EditTopic.EditTopicState;
     home: Home.HomeState;
     intro: Intro.IntroState;
     login: Login.LoginState;
     newComment: NewComment.NewCommentState;
-    newStatement: NewStatement.NewStatementState;
+    newPop: NewPop.NewPopState;
     newTopic: NewTopic.NewTopicState;
+    pop: Pop.ContainerState;
     register: Register.RegisterState;
-    statement: Statement.ContainerState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
 }
@@ -34,16 +34,16 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     adminHome: AdminHome.reducer,
-    editStatement: EditStatement.reducer,
+    editPop: EditPop.reducer,
     editTopic: EditTopic.reducer,
     home: Home.reducer,
     intro: Intro.reducer,
     login: Login.reducer,
     newComment: NewComment.reducer,
-    newStatement: NewStatement.reducer,
+    newPop: NewPop.reducer,
     newTopic: NewTopic.reducer,
+    pop: Pop.reducer,
     register: Register.reducer,
-    statement: Statement.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,
 };

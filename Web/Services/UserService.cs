@@ -18,9 +18,9 @@ namespace Pobs.Web.Services
 
     public class UserService : IUserService
     {
-        private PobsDbContext _context;
+        private OmnipopsDbContext _context;
 
-        public UserService(PobsDbContext context)
+        public UserService(OmnipopsDbContext context)
         {
             _context = context;
         }

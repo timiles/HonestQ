@@ -28,47 +28,47 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(User statementUser, int numberOfStatements = 0, int numberOfStatementsPerType = 0,
-            User commentUser = null, int numberOfCommentsPerStatement = 0,
+        public static Topic CreateTopic(User popUser, int numberOfPops = 0, int numberOfPopsPerType = 0,
+            User commentUser = null, int numberOfCommentsPerPop = 0,
             User childCommentUser = null, int numberOfChildCommentsPerComment = 0,
             bool isApproved = true, string topicNamePrefix = null)
         {
             // Guarantee slug has both upper & lower case characters
             topicNamePrefix = topicNamePrefix ?? "ABCabc";
             var name = topicNamePrefix + Utils.GenerateRandomString(10);
-            var topic = new Topic(name, name, statementUser, DateTime.UtcNow)
+            var topic = new Topic(name, name, popUser, DateTime.UtcNow)
             {
                 Summary = Utils.GenerateRandomString(50),
                 MoreInfoUrl = Utils.GenerateRandomString(50),
                 IsApproved = isApproved
             };
 
-            var numberOfStatementTypes = Enum.GetValues(typeof(StatementType)).Length;
-            var numberOfStatementsToCreate = Math.Max(numberOfStatements, numberOfStatementsPerType * numberOfStatementTypes);
-            for (int s = 0; s < numberOfStatementsToCreate; s++)
+            var numberOfPopTypes = Enum.GetValues(typeof(PopType)).Length;
+            var numberOfPopsToCreate = Math.Max(numberOfPops, numberOfPopsPerType * numberOfPopTypes);
+            for (int s = 0; s < numberOfPopsToCreate; s++)
             {
-                var type = (StatementType)(s % numberOfStatementTypes);
-                var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow, type)
+                var type = (PopType)(s % numberOfPopTypes);
+                var pop = new Pop(Utils.GenerateRandomString(10), popUser, DateTime.UtcNow, type)
                 {
                     Source = Utils.GenerateRandomString(10),
                 };
                 if (commentUser != null)
                 {
-                    for (int commentIndex = 0; commentIndex < numberOfCommentsPerStatement; commentIndex++)
+                    for (int commentIndex = 0; commentIndex < numberOfCommentsPerPop; commentIndex++)
                     {
                         var comment = new Comment(Utils.GenerateRandomString(10), commentUser, DateTime.UtcNow, AgreementRating.Neutral)
                         {
                             Source = Utils.GenerateRandomString(10)
                         };
-                        statement.Comments.Add(comment);
+                        pop.Comments.Add(comment);
                     }
                 }
-                topic.Statements.Add(statement);
+                topic.Pops.Add(pop);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                dbContext.Attach(statementUser);
+                dbContext.Attach(popUser);
                 if (commentUser != null)
                 {
                     dbContext.Attach(commentUser);
@@ -85,9 +85,9 @@ namespace Pobs.Tests.Integration.Helpers
                     dbContext.Attach(topic);
                     dbContext.Attach(childCommentUser);
 
-                    foreach (var statement in topic.Statements)
+                    foreach (var pop in topic.Pops)
                     {
-                        foreach (var comment in statement.Comments.ToArray())
+                        foreach (var comment in pop.Comments.ToArray())
                         {
                             for (int childCommentIndex = 0; childCommentIndex < numberOfChildCommentsPerComment; childCommentIndex++)
                             {
@@ -95,7 +95,7 @@ namespace Pobs.Tests.Integration.Helpers
                                 {
                                     Source = Utils.GenerateRandomString(10),
                                 };
-                                statement.Comments.Add(childComment);
+                                pop.Comments.Add(childComment);
                             }
                         }
                     }
@@ -113,9 +113,9 @@ namespace Pobs.Tests.Integration.Helpers
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var topic = dbContext.Topics.Find(topicId);
-                foreach (var statement in topic.Statements)
+                foreach (var pop in topic.Pops)
                 {
-                    foreach (var comment in statement.Comments.Where(x => x.ParentComment != null))
+                    foreach (var comment in pop.Comments.Where(x => x.ParentComment != null))
                     {
                         comment.ParentComment.ChildComments.Remove(comment);
                     }

@@ -46,44 +46,44 @@ namespace Pobs.Tests.Integration.Topics
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
                 Assert.Null(dynamicResponseModel.isApproved);
 
-                Assert.Equal(3, _topic.Statements.Count());
-                Assert.Equal(_topic.Statements.Count(), responseModel.Statements.Length);
+                Assert.Equal(3, _topic.Pops.Count());
+                Assert.Equal(_topic.Pops.Count(), responseModel.Pops.Length);
 
-                foreach (var statement in _topic.Statements)
+                foreach (var pop in _topic.Pops)
                 {
-                    var responseStatement = responseModel.Statements.Single(x => x.Id == statement.Id);
-                    Assert.Equal(statement.Slug, responseStatement.Slug);
-                    Assert.Equal(statement.Text, responseStatement.Text);
-                    Assert.Equal(statement.Type.ToString(), responseStatement.Type);
+                    var responsePop = responseModel.Pops.Single(x => x.Id == pop.Id);
+                    Assert.Equal(pop.Slug, responsePop.Slug);
+                    Assert.Equal(pop.Text, responsePop.Text);
+                    Assert.Equal(pop.Type.ToString(), responsePop.Type);
 
-                    Assert.Single(statement.Topics);
-                    Assert.Equal(_topic.Id, statement.Topics.Single().Id);
-                    Assert.Equal(_topic.Name, statement.Topics.Single().Name);
+                    Assert.Single(pop.Topics);
+                    Assert.Equal(_topic.Id, pop.Topics.Single().Id);
+                    Assert.Equal(_topic.Name, pop.Topics.Single().Name);
                 }
             }
         }
 
         [Fact]
-        public async Task StatementShouldHaveAgreementRatingSummary()
+        public async Task PopShouldHaveAgreementRatingSummary()
         {
-            // Add some Comments to the middle Statement
-            var statement = _topic.Statements.Skip(1).First();
-            void AddCommentsToStatement(AgreementRating agreementRating, int numberOfComments)
+            // Add some Comments to the middle Pop
+            var pop = _topic.Pops.Skip(1).First();
+            void AddCommentsToPop(AgreementRating agreementRating, int numberOfComments)
             {
                 for (int i = 0; i < numberOfComments; i++)
                 {
-                    statement.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, DateTime.UtcNow, agreementRating));
+                    pop.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, DateTime.UtcNow, agreementRating));
                 }
             };
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(_user);
-                dbContext.Attach(statement);
-                AddCommentsToStatement(AgreementRating.StronglyDisagree, 3);
-                AddCommentsToStatement(AgreementRating.Disagree, 4);
-                AddCommentsToStatement(AgreementRating.Neutral, 5);
-                AddCommentsToStatement(AgreementRating.Agree, 6);
-                AddCommentsToStatement(AgreementRating.StronglyAgree, 7);
+                dbContext.Attach(pop);
+                AddCommentsToPop(AgreementRating.StronglyDisagree, 3);
+                AddCommentsToPop(AgreementRating.Disagree, 4);
+                AddCommentsToPop(AgreementRating.Neutral, 5);
+                AddCommentsToPop(AgreementRating.Agree, 6);
+                AddCommentsToPop(AgreementRating.StronglyAgree, 7);
                 dbContext.SaveChanges();
             }
 
@@ -99,13 +99,13 @@ namespace Pobs.Tests.Integration.Topics
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
-                var statementResponseModel = responseModel.Statements.Single(x => x.Id == statement.Id);
+                var popResponseModel = responseModel.Pops.Single(x => x.Id == pop.Id);
 
-                Assert.Equal(3, statementResponseModel.AgreementRatings[AgreementRating.StronglyDisagree.ToString()]);
-                Assert.Equal(4, statementResponseModel.AgreementRatings[AgreementRating.Disagree.ToString()]);
-                Assert.Equal(5, statementResponseModel.AgreementRatings[AgreementRating.Neutral.ToString()]);
-                Assert.Equal(6, statementResponseModel.AgreementRatings[AgreementRating.Agree.ToString()]);
-                Assert.Equal(7, statementResponseModel.AgreementRatings[AgreementRating.StronglyAgree.ToString()]);
+                Assert.Equal(3, popResponseModel.AgreementRatings[AgreementRating.StronglyDisagree.ToString()]);
+                Assert.Equal(4, popResponseModel.AgreementRatings[AgreementRating.Disagree.ToString()]);
+                Assert.Equal(5, popResponseModel.AgreementRatings[AgreementRating.Neutral.ToString()]);
+                Assert.Equal(6, popResponseModel.AgreementRatings[AgreementRating.Agree.ToString()]);
+                Assert.Equal(7, popResponseModel.AgreementRatings[AgreementRating.StronglyAgree.ToString()]);
             }
         }
 

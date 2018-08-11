@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { TopicModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import StatementList from './StatementList';
+import PopList from './PopList';
 
 export interface TopicProps {
     loading?: boolean;
@@ -26,7 +26,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
     }
 
     private renderModel(slug: string, model: TopicModel) {
-        const { name, summary, moreInfoUrl, statements } = model;
+        const { name, summary, moreInfoUrl, pops } = model;
         const topicValue = { name, slug };
         return (
             <>
@@ -52,7 +52,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         }
                     </div>
                 }
-                <StatementList statements={statements} topicValue={topicValue} />
+                <PopList pops={pops} topicValue={topicValue} />
             </>
         );
     }
