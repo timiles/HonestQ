@@ -51,7 +51,7 @@ namespace Pobs.Tests.Integration.Statements
                 Assert.Equal(statement.Slug, responseModel.Slug);
                 Assert.Equal(statement.Text, responseModel.Text);
                 Assert.Equal(statement.Source, responseModel.Source);
-                Assert.Equal(statement.Stance.ToString(), responseModel.Stance);
+                Assert.Equal(statement.Type.ToString(), responseModel.Type);
 
                 Assert.Single(responseModel.Topics);
                 Assert.Equal(_topic.Name, responseModel.Topics.Single().Name);

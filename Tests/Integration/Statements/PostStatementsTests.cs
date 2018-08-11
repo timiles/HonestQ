@@ -29,10 +29,10 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task Authenticated_RequiredPropertiesOnly_ShouldAddStatement()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
-                Stance = Stance.NA.ToString(),
+                Type = StatementType.Statement.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -46,7 +46,7 @@ namespace Pobs.Tests.Integration.Statements
                 {
                     var statement = dbContext.Statements.Single(x => x.PostedByUser.Id == _userId);
                     Assert.Equal(payload.Text, statement.Text);
-                    Assert.Equal(payload.Stance, statement.Stance.ToString());
+                    Assert.Equal(payload.Type, statement.Type.ToString());
                     Assert.True(statement.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -55,7 +55,7 @@ namespace Pobs.Tests.Integration.Statements
                     Assert.Equal(statement.Id, responseModel.Id);
                     Assert.Equal(statement.Slug, responseModel.Slug);
                     Assert.Equal(statement.Text, responseModel.Text);
-                    Assert.Equal(statement.Stance.ToString(), responseModel.Stance);
+                    Assert.Equal(statement.Type.ToString(), responseModel.Type);
                 }
             }
         }
@@ -63,12 +63,12 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task AllProperties_ShouldPersist()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 // Include emoji in the Text, and quote marks around it
                 Text = "\"Here's a poop emoji: 💩\"",
                 Source = "https://example.com/💩",
-                Stance = Stance.Pro.ToString(),
+                Type = StatementType.Statement.ToString(),
                 TopicSlugs = new[] { _topic.Slug }
             };
             using (var server = new IntegrationTestingServer())
@@ -86,7 +86,7 @@ namespace Pobs.Tests.Integration.Statements
                         .Single(x => x.PostedByUser.Id == _userId);
                     Assert.Equal(payload.Text.Trim('"'), statement.Text);
                     Assert.Equal(payload.Source, statement.Source);
-                    Assert.Equal(payload.Stance, statement.Stance.ToString());
+                    Assert.Equal(payload.Type, statement.Type.ToString());
                     Assert.Equal("heres_a_poop_emoji", statement.Slug);
                     Assert.Equal(1, statement.Topics.Count);
                     Assert.Equal(_topic.Id, statement.Topics.Single().Id);
@@ -94,7 +94,7 @@ namespace Pobs.Tests.Integration.Statements
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
                     Assert.Equal(statement.Text, responseModel.Text);
-                    Assert.Equal(statement.Stance.ToString(), responseModel.Stance);
+                    Assert.Equal(statement.Type.ToString(), responseModel.Type);
                     Assert.Equal("heres_a_poop_emoji", responseModel.Slug);
                     Assert.Single(responseModel.Topics);
                     Assert.Equal(_topic.Name, responseModel.Topics.Single().Name);
@@ -106,10 +106,10 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task NotAuthenticated_ShouldBeDenied()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
-                Stance = Stance.NA.ToString(),
+                Type = StatementType.Statement.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -128,9 +128,9 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task NoText_ShouldGetBadRequest()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
-                Stance = Stance.NA.ToString(),
+                Type = StatementType.Statement.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -146,9 +146,9 @@ namespace Pobs.Tests.Integration.Statements
         }
 
         [Fact]
-        public async Task NoStance_ShouldGetBadRequest()
+        public async Task NoType_ShouldGetBadRequest()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
             };
@@ -161,17 +161,17 @@ namespace Pobs.Tests.Integration.Statements
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Stance is required", responseContent);
+                Assert.Equal("Type is required", responseContent);
             }
         }
 
         [Fact]
-        public async Task InvalidStance_ShouldGetBadRequest()
+        public async Task InvalidType_ShouldGetBadRequest()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
-                Stance = "BLAH",
+                Type = "BLAH",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -182,7 +182,7 @@ namespace Pobs.Tests.Integration.Statements
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Invalid Stance: " + payload.Stance, responseContent);
+                Assert.Equal("Invalid Type: " + payload.Type, responseContent);
             }
         }
 

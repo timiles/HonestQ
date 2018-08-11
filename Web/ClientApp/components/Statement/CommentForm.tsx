@@ -9,7 +9,7 @@ type Props = FormProps<CommentFormModel>
     & CommentFormProps;
 
 interface CommentFormProps {
-    stance: string;
+    type: string;
     isModal?: boolean;
     onCloseModalRequested?: () => void;
     parentCommentId: number | null;
@@ -23,10 +23,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     constructor(props: Props) {
         super(props);
 
-        this.hideAgreementRating = this.props.stance === 'ProveIt'
-            || this.props.stance === 'Question'
+        this.hideAgreementRating = this.props.type === 'ProveIt'
+            || this.props.type === 'Question'
             || !!this.props.parentCommentId;
-        this.hideText = (this.props.stance === 'ProveIt');
+        this.hideText = (this.props.type === 'ProveIt');
 
         this.state = {
             text: '',
@@ -48,10 +48,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public render() {
-        const { stance, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
+        const { type, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
         const { text, source, agreementRating } = this.state;
 
-        const label = (stance === 'Question') ? 'Answer' : 'Comment';
+        const label = (type === 'Question') ? 'Answer' : 'Comment';
 
         return (
             <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>

@@ -43,7 +43,7 @@ export interface CommentModel {
 export interface StatementFormModel {
     text: string;
     source: string;
-    stance: string;
+    type: string;
     topicSlugs: string[];
 }
 
@@ -51,7 +51,7 @@ export interface StatementListItemModel {
     id: number;
     slug: string;
     text: string;
-    stance: string;
+    type: string;
     topics: TopicValueModel[];
     agreementRatings: { [key: string]: number };
 }
@@ -60,7 +60,7 @@ export interface StatementModel {
     slug: string;
     text: string;
     source: string;
-    stance: string;
+    type: string;
     topics: TopicValueModel[];
     comments: CommentModel[];
 }

@@ -4,7 +4,7 @@ import { StatementModel } from '../../server-models';
 import { extractUrlFromText, isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
-import StanceView from '../shared/StanceView';
+import StatementTypeView from '../shared/StatementTypeView';
 import CommentList from './CommentList';
 import NewComment from './NewComment';
 
@@ -34,7 +34,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
                             }
                         </LoggedInUserContext.Consumer>
                         <h4>
-                            {model.stance && <StanceView value={model.stance} />}
+                            {model.type && <StatementTypeView value={model.type} />}
                             <span className="statement">{model.text}</span>
                         </h4>
                         <ul className="topics-list">
@@ -46,7 +46,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
                                     </Link>
                                 </li>)}
                         </ul>
-                        {model.stance === 'ProveIt' &&
+                        {model.type === 'ProveIt' &&
                             <div className="alert alert-info" role="alert">
                                 This is a <strong>Request for Proof</strong>.
                                 Please only post Sources which prove the statement.
@@ -56,7 +56,7 @@ export default class Statement extends React.Component<StatementProps, {}> {
                         <NewComment
                             parentCommentId={null}
                             statementId={statementId}
-                            stance={model!.stance}
+                            type={model!.type}
                         />
                         <CommentList
                             comments={model.comments}

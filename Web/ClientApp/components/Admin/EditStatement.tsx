@@ -37,7 +37,7 @@ class EditStatement extends React.Component<EditStatementProps, {}> {
             statementFormModel = {
                 text: loadedModel.text,
                 source: loadedModel.source,
-                stance: loadedModel.stance,
+                type: loadedModel.type,
                 topicSlugs: loadedModel.topics.map((x) => x.slug),
             };
         }

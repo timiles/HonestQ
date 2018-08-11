@@ -45,7 +45,7 @@ export const actionCreators = {
             return (async () => {
                 dispatch({ type: 'NEW_STATEMENT_FORM_SUBMITTED' });
 
-                if (!statementForm.text || !statementForm.stance) {
+                if (!statementForm.text || !statementForm.type) {
                     // Don't set an error message, the validation properties will display instead
                     dispatch({ type: 'NEW_STATEMENT_FORM_FAILED', payload: { error: null } });
                     return;

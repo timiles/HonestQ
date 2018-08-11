@@ -13,8 +13,8 @@ namespace Pobs.Web.Services
 {
     public interface IStatementService
     {
-        Task<StatementListItemModel> SaveStatement(string text, string source, Stance stance, string[] topicSlugs, int postedByUserId);
-        Task<StatementListItemModel> UpdateStatement(int statementId, string text, string source, Stance stance, string[] topicSlugs);
+        Task<StatementListItemModel> SaveStatement(string text, string source, StatementType type, string[] topicSlugs, int postedByUserId);
+        Task<StatementListItemModel> UpdateStatement(int statementId, string text, string source, StatementType type, string[] topicSlugs);
         Task<StatementModel> GetStatement(int statementId);
         Task<CommentModel> SaveComment(int statementId, string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId);
         Task<CommentModel> GetComment(int statementId, long commentId);
@@ -29,7 +29,7 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<StatementListItemModel> SaveStatement(string text, string source, Stance stance, string[] topicSlugs, int postedByUserId)
+        public async Task<StatementListItemModel> SaveStatement(string text, string source, StatementType type, string[] topicSlugs, int postedByUserId)
         {
             var topicTasks = new List<Task<Topic>>();
             if (topicSlugs != null)
@@ -42,10 +42,9 @@ namespace Pobs.Web.Services
 
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
 
-            var statement = new Statement(text, await postedByUserTask, DateTime.UtcNow)
+            var statement = new Statement(text, await postedByUserTask, DateTime.UtcNow, type)
             {
                 Source = source,
-                Stance = stance,
             };
 
             await Task.WhenAll(topicTasks);
@@ -63,7 +62,7 @@ namespace Pobs.Web.Services
             return new StatementListItemModel(statement);
         }
 
-        public async Task<StatementListItemModel> UpdateStatement(int statementId, string text, string source, Stance stance, string[] topicSlugs)
+        public async Task<StatementListItemModel> UpdateStatement(int statementId, string text, string source, StatementType type, string[] topicSlugs)
         {
             var topicTasks = new List<Task<Topic>>();
             if (topicSlugs != null)
@@ -86,7 +85,7 @@ namespace Pobs.Web.Services
             statement.Text = text;
             statement.Slug = text.ToSlug();
             statement.Source = source;
-            statement.Stance = stance;
+            statement.Type = type;
             statement.Topics.Clear();
 
             await Task.WhenAll(topicTasks);
@@ -136,9 +135,9 @@ namespace Pobs.Web.Services
                 {
                     throw new AppException("AgreementRating is invalid with ParentCommentId");
                 }
-                if (statement.Stance == Stance.ProveIt || statement.Stance == Stance.Question)
+                if (statement.Type == StatementType.ProveIt || statement.Type == StatementType.Question)
                 {
-                    throw new AppException($"AgreementRating is invalid when Stance is {statement.Stance}");
+                    throw new AppException($"AgreementRating is invalid when Type is {statement.Type}");
                 }
             }
 

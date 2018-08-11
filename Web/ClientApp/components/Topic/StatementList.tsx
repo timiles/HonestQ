@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { StatementListItemModel, TopicValueModel } from '../../server-models';
-import StanceView from '../shared/StanceView';
+import StatementTypeView from '../shared/StatementTypeView';
 import AgreementRatingBarChart from './AgreementRatingBarChart';
 import NewStatement from './NewStatement';
-import StanceInput from './StanceInput';
+import StatementTypeInput from './StatementTypeInput';
 
 interface Props {
     statements: StatementListItemModel[];
@@ -12,7 +12,7 @@ interface Props {
 }
 
 interface State {
-    stanceFilter?: string;
+    typeFilter?: string;
 }
 
 export default class StatementList extends React.Component<Props, State> {
@@ -22,7 +22,7 @@ export default class StatementList extends React.Component<Props, State> {
 
         this.state = {};
 
-        this.handleChangeStanceFilter = this.handleChangeStanceFilter.bind(this);
+        this.handleChangeTypeFilter = this.handleChangeTypeFilter.bind(this);
     }
 
     public render() {
@@ -31,10 +31,10 @@ export default class StatementList extends React.Component<Props, State> {
             return null;
         }
         const { topicValue } = this.props;
-        const { stanceFilter } = this.state;
+        const { typeFilter } = this.state;
 
-        if (stanceFilter) {
-            statements = statements.filter((x) => x.stance === stanceFilter);
+        if (typeFilter) {
+            statements = statements.filter((x) => x.type === typeFilter);
         }
 
         return (
@@ -42,7 +42,7 @@ export default class StatementList extends React.Component<Props, State> {
                 <h3>Here's a list of things people might say:</h3>
                 <form className="form-inline my-2 float-right">
                     <label className="my-1 mr-2">Filter</label>
-                    <StanceInput includeAll={true} onChange={this.handleChangeStanceFilter} />
+                    <StatementTypeInput includeAll={true} onChange={this.handleChangeTypeFilter} />
                 </form>
                 <ul className="list-unstyled">
                     {statements.map((x, i) =>
@@ -51,7 +51,7 @@ export default class StatementList extends React.Component<Props, State> {
                                 to={`/statements/${x.id}/${x.slug}`}
                                 className="btn btn-lg btn-outline-secondary statement-list-item"
                             >
-                                <StanceView value={x.stance} />
+                                <StatementTypeView value={x.type} />
                                 <span className="statement">{x.text}</span>
                                 {x.agreementRatings && <AgreementRatingBarChart {...x.agreementRatings} />}
                             </Link>
@@ -63,7 +63,7 @@ export default class StatementList extends React.Component<Props, State> {
             </>);
     }
 
-    private handleChangeStanceFilter(event: React.FormEvent<HTMLButtonElement>): void {
-        this.setState({ stanceFilter: event.currentTarget.value });
+    private handleChangeTypeFilter(event: React.FormEvent<HTMLButtonElement>): void {
+        this.setState({ typeFilter: event.currentTarget.value });
     }
 }

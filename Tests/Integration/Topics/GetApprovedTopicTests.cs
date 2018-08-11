@@ -54,7 +54,7 @@ namespace Pobs.Tests.Integration.Topics
                     var responseStatement = responseModel.Statements.Single(x => x.Id == statement.Id);
                     Assert.Equal(statement.Slug, responseStatement.Slug);
                     Assert.Equal(statement.Text, responseStatement.Text);
-                    Assert.Equal(statement.Stance.ToString(), responseStatement.Stance);
+                    Assert.Equal(statement.Type.ToString(), responseStatement.Type);
 
                     Assert.Single(statement.Topics);
                     Assert.Equal(_topic.Id, statement.Topics.Single().Id);

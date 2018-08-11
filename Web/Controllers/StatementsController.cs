@@ -29,16 +29,16 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest("Text is required");
             }
-            if (string.IsNullOrWhiteSpace(payload.Stance))
+            if (string.IsNullOrWhiteSpace(payload.Type))
             {
-                return BadRequest("Stance is required");
+                return BadRequest("Type is required");
             }
-            if (!Enum.TryParse<Stance>(payload.Stance, out Stance stance))
+            if (!Enum.TryParse<StatementType>(payload.Type, out StatementType type))
             {
-                return BadRequest($"Invalid Stance: {payload.Stance}");
+                return BadRequest($"Invalid Type: {payload.Type}");
             }
 
-            var statementModel = await _statementService.SaveStatement(payload.Text, payload.Source, stance, payload.TopicSlugs, User.Identity.ParseUserId());
+            var statementModel = await _statementService.SaveStatement(payload.Text, payload.Source, type, payload.TopicSlugs, User.Identity.ParseUserId());
             if (statementModel != null)
             {
                 return Ok(statementModel);
@@ -58,18 +58,18 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest("Text is required");
             }
-            if (string.IsNullOrWhiteSpace(payload.Stance))
+            if (string.IsNullOrWhiteSpace(payload.Type))
             {
-                return BadRequest("Stance is required");
+                return BadRequest("Type is required");
             }
-            if (!Enum.TryParse<Stance>(payload.Stance, out Stance stance))
+            if (!Enum.TryParse<StatementType>(payload.Type, out StatementType type))
             {
-                return BadRequest($"Invalid Stance: {payload.Stance}");
+                return BadRequest($"Invalid Type: {payload.Type}");
             }
 
             try
             {
-                var statementModel = await _statementService.UpdateStatement(statementId, payload.Text, payload.Source, stance, payload.TopicSlugs);
+                var statementModel = await _statementService.UpdateStatement(statementId, payload.Text, payload.Source, type, payload.TopicSlugs);
                 if (statementModel != null)
                 {
                     return Ok(statementModel);

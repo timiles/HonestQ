@@ -3,7 +3,7 @@ import { StatementFormModel, TopicValueModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import StanceInput from './StanceInput';
+import StatementTypeInput from './StatementTypeInput';
 import TopicAutocomplete from './TopicAutocomplete';
 
 type Props = FormProps<StatementFormModel>
@@ -23,10 +23,10 @@ export default class StatementForm extends React.Component<Props, StatementFormM
             {
                 text: props.initialState.text,
                 source: props.initialState.source,
-                stance: props.initialState.stance,
+                type: props.initialState.type,
                 topicSlugs: props.initialState.topicSlugs,
             } :
-            { text: '', source: '', stance: 'NA', topicSlugs: props.initialTopicValues.map((x) => x.slug) };
+            { text: '', source: '', type: 'NA', topicSlugs: props.initialTopicValues.map((x) => x.slug) };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
@@ -36,14 +36,14 @@ export default class StatementForm extends React.Component<Props, StatementFormM
     public componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a statement has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', stance: 'NA' });
+            this.setState({ text: '', source: '', type: 'NA' });
         }
     }
 
     public render() {
         const { initialTopicValues, hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted }
             = this.props;
-        const { text, stance, source } = this.state;
+        const { text, type, source } = this.state;
         return (
             <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
@@ -76,11 +76,11 @@ export default class StatementForm extends React.Component<Props, StatementFormM
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
                     <div className="form-group">
-                        <label>Stance</label>
+                        <label>Type</label>
                         <div>
-                            <StanceInput
-                                name="stance"
-                                value={stance}
+                            <StatementTypeInput
+                                name="type"
+                                value={type}
                                 onChange={this.handleChange}
                             />
                         </div>

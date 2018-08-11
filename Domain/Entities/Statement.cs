@@ -16,12 +16,13 @@ namespace Pobs.Domain.Entities
             this.Topics = new JoinCollectionFacade<Topic, Statement, StatementTopic>(this, this.StatementTopics);
             this.Comments = new Collection<Comment>();
         }
-        public Statement(string text, User postedByUser, DateTime postedAt) : this()
+        public Statement(string text, User postedByUser, DateTime postedAt, StatementType type) : this()
         {
             Text = text.CleanStatementText();
             Slug = Text.ToSlug();
             PostedByUser = postedByUser;
             PostedAt = postedAt;
+            Type = type;
         }
 
         public int Id { get; set; }
@@ -40,8 +41,7 @@ namespace Pobs.Domain.Entities
 
         public DateTime PostedAt { get; set; }
 
-        public Stance Stance { get; set; }
-
+        public StatementType Type { get; set; }
 
         public ICollection<StatementTopic> StatementTopics { get; } = new List<StatementTopic>();
 

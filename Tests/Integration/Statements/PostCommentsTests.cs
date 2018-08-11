@@ -23,8 +23,8 @@ namespace Pobs.Tests.Integration.Statements
         {
             var user = DataHelpers.CreateUser();
             _user = user;
-            // Create a statement for every Stance
-            _topic = DataHelpers.CreateTopic(user, numberOfStatementsPerStance: 1);
+            // Create a statement for every Type
+            _topic = DataHelpers.CreateTopic(user, numberOfStatementsPerType: 1);
         }
 
         [Fact]
@@ -198,9 +198,9 @@ namespace Pobs.Tests.Integration.Statements
         [Theory]
         [InlineData("ProveIt")]
         [InlineData("Question")]
-        public async Task Stance_WithAgreementRating_ShouldGetBadRequest(string stance)
+        public async Task Type_WithAgreementRating_ShouldGetBadRequest(string type)
         {
-            var statement = _topic.Statements.First(x => x.Stance.ToString() == stance);
+            var statement = _topic.Statements.First(x => x.Type.ToString() == type);
             var payload = new
             {
                 Text = "My insightful response",
@@ -215,7 +215,7 @@ namespace Pobs.Tests.Integration.Statements
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"AgreementRating is invalid when Stance is {stance}", responseContent);
+                Assert.Equal($"AgreementRating is invalid when Type is {type}", responseContent);
             }
         }
 

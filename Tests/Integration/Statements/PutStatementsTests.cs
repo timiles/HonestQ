@@ -34,11 +34,11 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task AuthenticatedAsAdmin_ShouldUpdateStatement()
         {
-            var differentStance = (Stance)(((int)_statement.Stance + 1) % Enum.GetValues(typeof(Stance)).Length);
-            var payload = new
+            var differentType = (StatementType)(((int)_statement.Type + 1) % Enum.GetValues(typeof(StatementType)).Length);
+            var payload = new StatementFormModel
             {
                 Text = Utils.GenerateRandomString(10),
-                Stance = differentStance.ToString(),
+                Type = differentType.ToString(),
                 Source = Utils.GenerateRandomString(10),
                 TopicSlugs = new[] { _topic2.Slug },
             };
@@ -54,7 +54,7 @@ namespace Pobs.Tests.Integration.Statements
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<StatementListItemModel>(responseContent);
                 Assert.Equal(payload.Text, responseModel.Text);
-                Assert.Equal(payload.Stance, responseModel.Stance);
+                Assert.Equal(payload.Type, responseModel.Type);
                 Assert.Equal(slug, responseModel.Slug);
                 Assert.Single(responseModel.Topics);
                 Assert.Equal(_topic2.Name, responseModel.Topics.Single().Name);
@@ -68,7 +68,7 @@ namespace Pobs.Tests.Integration.Statements
                     .Single(x => x.Id == _statement.Id);
                 Assert.Equal(payload.Text, statement.Text);
                 Assert.Equal(slug, statement.Slug);
-                Assert.Equal(payload.Stance, statement.Stance.ToString());
+                Assert.Equal(payload.Type, statement.Type.ToString());
                 Assert.Equal(payload.Source, statement.Source);
                 Assert.Single(statement.Topics);
                 Assert.Equal(_topic2.Id, statement.Topics.Single().Id);
@@ -78,9 +78,9 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task NoText_ShouldGetBadRequest()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
-                Stance = Stance.NA.ToString(),
+                Type = StatementType.Statement.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -96,9 +96,9 @@ namespace Pobs.Tests.Integration.Statements
         }
 
         [Fact]
-        public async Task NoStance_ShouldGetBadRequest()
+        public async Task NoType_ShouldGetBadRequest()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
             };
@@ -111,17 +111,17 @@ namespace Pobs.Tests.Integration.Statements
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Stance is required", responseContent);
+                Assert.Equal("Type is required", responseContent);
             }
         }
 
         [Fact]
-        public async Task InvalidStance_ShouldGetBadRequest()
+        public async Task InvalidType_ShouldGetBadRequest()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
-                Stance = "BLAH",
+                Type = "BLAH",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -132,17 +132,17 @@ namespace Pobs.Tests.Integration.Statements
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Invalid Stance: " + payload.Stance, responseContent);
+                Assert.Equal("Invalid Type: " + payload.Type, responseContent);
             }
         }
 
         [Fact]
         public async Task InvalidStatementId_ShouldGetNotFound()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
-                Stance = Stance.NA.ToString(),
+                Type = StatementType.Statement.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -157,10 +157,10 @@ namespace Pobs.Tests.Integration.Statements
         [Fact]
         public async Task NotAuthenticatedAsAdmin_ShouldBeDenied()
         {
-            var payload = new
+            var payload = new StatementFormModel
             {
                 Text = "My insightful statement on this topic",
-                Stance = Stance.NA.ToString(),
+                Type = StatementType.Statement.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

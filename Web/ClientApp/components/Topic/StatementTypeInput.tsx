@@ -11,9 +11,9 @@ interface State {
     value: string;
 }
 
-export default class StanceInput extends React.Component<Props, State> {
+export default class StatementTypeInput extends React.Component<Props, State> {
 
-    private readonly stanceValues = new Map();
+    private readonly values = new Map();
 
     constructor(props: Props) {
         super(props);
@@ -21,16 +21,12 @@ export default class StanceInput extends React.Component<Props, State> {
         this.state = { value: this.props.value || '' };
 
         if (this.props.includeAll) {
-            this.stanceValues.set('', 'All');
+            this.values.set('', 'All');
         }
-        [
-            ['NA', 'N/A'],
-            ['Pro', '👍'],
-            ['Con', '👎'],
-            ['ProveIt', '🕵'],
-            ['Question', '❓'],
-            ['Warning', '⚠️'],
-        ].map((x) => this.stanceValues.set(x[0], x[1]));
+        this.values.set('Statement', <span className="open-quote" />);
+        this.values.set('ProveIt', '🕵');
+        this.values.set('Question', '❓');
+        this.values.set('Warning', '⚠️');
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -40,16 +36,16 @@ export default class StanceInput extends React.Component<Props, State> {
         const { value } = this.state;
         return (
             <div className="btn-group" role="group">
-                {Array.from(this.stanceValues.keys()).map((key: string, i: number) =>
+                {Array.from(this.values.keys()).map((key: string, i: number) =>
                     <button
-                        key={`stance${i}`}
+                        key={`type${i}`}
                         type="button"
                         className={`btn btn-outline-secondary ${key === value ? 'active' : ''}`}
                         value={key}
                         name={name}
                         onClick={this.handleChange}
                     >
-                        {this.stanceValues.get(key)}
+                        {this.values.get(key)}
                     </button>)
                 }
             </div>

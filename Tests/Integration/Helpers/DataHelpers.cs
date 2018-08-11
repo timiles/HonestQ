@@ -28,7 +28,7 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(User statementUser, int numberOfStatements = 0, int numberOfStatementsPerStance = 0,
+        public static Topic CreateTopic(User statementUser, int numberOfStatements = 0, int numberOfStatementsPerType = 0,
             User commentUser = null, int numberOfCommentsPerStatement = 0,
             User childCommentUser = null, int numberOfChildCommentsPerComment = 0,
             bool isApproved = true, string topicNamePrefix = null)
@@ -43,14 +43,14 @@ namespace Pobs.Tests.Integration.Helpers
                 IsApproved = isApproved
             };
 
-            var numberOfStances = Enum.GetValues(typeof(Stance)).Length;
-            var numberOfStatementsToCreate = Math.Max(numberOfStatements, numberOfStatementsPerStance * numberOfStances);
+            var numberOfStatementTypes = Enum.GetValues(typeof(StatementType)).Length;
+            var numberOfStatementsToCreate = Math.Max(numberOfStatements, numberOfStatementsPerType * numberOfStatementTypes);
             for (int s = 0; s < numberOfStatementsToCreate; s++)
             {
-                var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow)
+                var type = (StatementType)(s % numberOfStatementTypes);
+                var statement = new Statement(Utils.GenerateRandomString(10), statementUser, DateTime.UtcNow, type)
                 {
                     Source = Utils.GenerateRandomString(10),
-                    Stance = (Stance)(s % numberOfStances)
                 };
                 if (commentUser != null)
                 {
