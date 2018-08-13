@@ -135,7 +135,7 @@ namespace Pobs.Web.Services
                 {
                     throw new AppException("AgreementRating is invalid with ParentCommentId");
                 }
-                if (pop.Type == PopType.ProveIt || pop.Type == PopType.Question)
+                if (pop.Type == PopType.RequestForProof || pop.Type == PopType.Question)
                 {
                     throw new AppException($"AgreementRating is invalid when Type is {pop.Type}");
                 }

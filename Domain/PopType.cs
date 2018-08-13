@@ -4,7 +4,7 @@ namespace Pobs.Domain
     {
         Invalid = 0,
         Statement = 1,
-        ProveIt = 2,
+        RequestForProof = 2,
         Question = 3,
         Warning = 4,
     }

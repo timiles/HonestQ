@@ -24,10 +24,9 @@ export default class PopTypeInput extends React.Component<Props, State> {
         if (this.props.includeAll) {
             this.values.set('', 'All');
         }
-        this.values.set('Statement', <PopTypeView value="statement" />);
-        this.values.set('ProveIt', <PopTypeView value="proveit" />);
-        this.values.set('Question', <PopTypeView value="question" />);
-        this.values.set('Warning', <PopTypeView value="warning" />);
+        ['Statement', 'RequestForProof', 'Question', 'Warning'].forEach((x) => {
+            this.values.set(x, <PopTypeView value={x} />);
+        });
 
         this.handleChange = this.handleChange.bind(this);
     }

@@ -46,7 +46,7 @@ export default class Pop extends React.Component<PopProps, {}> {
                                     </Link>
                                 </li>)}
                         </ul>
-                        {model.type === 'ProveIt' &&
+                        {model.type === 'RequestForProof' &&
                             <div className="alert alert-info" role="alert">
                                 This is a <strong>Request for Proof</strong>.
                                 Please only post Sources which prove the request.

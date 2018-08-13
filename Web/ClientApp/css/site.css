@@ -133,7 +133,7 @@ ul.topics-list li {
 .poptype-statement:before {
     content: "💬";
 }
-.poptype-proveit:before {
+.poptype-requestforproof:before {
     content: "🕵";
 }
 .poptype-question:before {

@@ -23,10 +23,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     constructor(props: Props) {
         super(props);
 
-        this.hideAgreementRating = this.props.type === 'ProveIt'
+        this.hideAgreementRating = this.props.type === 'RequestForProof'
             || this.props.type === 'Question'
             || !!this.props.parentCommentId;
-        this.hideText = (this.props.type === 'ProveIt');
+        this.hideText = (this.props.type === 'RequestForProof');
 
         this.state = {
             text: '',

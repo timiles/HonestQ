@@ -196,7 +196,7 @@ namespace Pobs.Tests.Integration.Pops
         }
 
         [Theory]
-        [InlineData("ProveIt")]
+        [InlineData("RequestForProof")]
         [InlineData("Question")]
         public async Task Type_WithAgreementRating_ShouldGetBadRequest(string type)
         {
