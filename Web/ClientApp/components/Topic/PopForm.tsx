@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { PopFormModel, TopicValueModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
+import PopTypeView from '../shared/PopTypeView';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import PopTypeInput from './PopTypeInput';
@@ -74,7 +75,9 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                     </div>
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="popText">{type.toSentenceCase()}</label>
-                        <div className={`poptype-${type.toLowerCase()} poptype-over-text-area`} />
+                        <div className="poptype-over-text-area">
+                            <PopTypeView value={type} />
+                        </div>
                         <SuperTextArea
                             id="popText"
                             name="text"

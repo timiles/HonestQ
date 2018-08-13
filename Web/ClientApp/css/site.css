@@ -146,12 +146,11 @@ ul.topics-list li {
 .poptype-over-text-area {
     position: absolute;
 }
-.poptype-over-text-area:before {
-    padding-left: 10px;
+.poptype-over-text-area .poptype:before {
+    margin-left: 10px;
     position: relative;
     top: 8px;
 }
-
 .pop-text-area {
     font-size: 18px;
     padding-left: 40px;
