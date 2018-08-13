@@ -49,10 +49,10 @@ export default class PopList extends React.Component<Props, State> {
                         <li key={`pop_${i}`}>
                             <Link
                                 to={`/pops/${x.id}/${x.slug}`}
-                                className="btn btn-lg btn-outline-secondary statement-list-item"
+                                className="btn btn-lg btn-outline-secondary pop-list-item"
                             >
                                 <PopTypeView value={x.type} />
-                                <span className="statement">{x.text}</span>
+                                <span className={`pop pop-${x.type.toLowerCase()}`}>{x.text}</span>
                                 {x.agreementRatings && <AgreementRatingBarChart {...x.agreementRatings} />}
                             </Link>
                         </li>)}

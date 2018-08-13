@@ -26,7 +26,7 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                 type: props.initialState.type,
                 topicSlugs: props.initialState.topicSlugs,
             } :
-            { text: '', source: '', type: 'NA', topicSlugs: props.initialTopicValues.map((x) => x.slug) };
+            { text: '', source: '', type: 'Statement', topicSlugs: props.initialTopicValues.map((x) => x.slug) };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
@@ -62,19 +62,6 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                         </div>
                     }
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                        <label htmlFor="popText">Pop</label>
-                        <div className="statement statement-floating-quotes" />
-                        <SuperTextArea
-                            id="popText"
-                            name="text"
-                            className="statement-text-area"
-                            value={text}
-                            maxLength={280}
-                            onChange={this.handleChange}
-                        />
-                        {submitted && !text && <div className="help-block">Text is required</div>}
-                    </div>
                     <div className="form-group">
                         <label>Type</label>
                         <div>
@@ -84,6 +71,19 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                                 onChange={this.handleChange}
                             />
                         </div>
+                    </div>
+                    <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
+                        <label htmlFor="popText">{type.toSentenceCase()}</label>
+                        <div className={`poptype-${type.toLowerCase()} poptype-over-text-area`} />
+                        <SuperTextArea
+                            id="popText"
+                            name="text"
+                            className="pop-text-area"
+                            value={text}
+                            maxLength={280}
+                            onChange={this.handleChange}
+                        />
+                        {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="popSource">Source (optional)</label>

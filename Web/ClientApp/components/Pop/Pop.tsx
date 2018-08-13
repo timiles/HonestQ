@@ -34,8 +34,8 @@ export default class Pop extends React.Component<PopProps, {}> {
                             }
                         </LoggedInUserContext.Consumer>
                         <h4>
-                            {model.type && <PopTypeView value={model.type} />}
-                            <span className="statement">{model.text}</span>
+                            <PopTypeView value={model.type} />
+                            <span className={`pop pop-${model.type.toLowerCase()}`}>{model.text}</span>
                         </h4>
                         <ul className="topics-list">
                             <li className="mr-1 mt-1">Topics:</li>

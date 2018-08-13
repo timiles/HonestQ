@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PopTypeView from '../shared/PopTypeView';
 
 interface Props {
     name?: string;
@@ -23,10 +24,10 @@ export default class PopTypeInput extends React.Component<Props, State> {
         if (this.props.includeAll) {
             this.values.set('', 'All');
         }
-        this.values.set('Statement', <span className="open-quote" />);
-        this.values.set('ProveIt', '🕵');
-        this.values.set('Question', '❓');
-        this.values.set('Warning', '⚠️');
+        this.values.set('Statement', <PopTypeView value="statement" />);
+        this.values.set('ProveIt', <PopTypeView value="proveit" />);
+        this.values.set('Question', <PopTypeView value="question" />);
+        this.values.set('Warning', <PopTypeView value="warning" />);
 
         this.handleChange = this.handleChange.bind(this);
     }
