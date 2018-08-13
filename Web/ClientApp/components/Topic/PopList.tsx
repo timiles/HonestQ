@@ -39,7 +39,6 @@ export default class PopList extends React.Component<Props, State> {
 
         return (
             <>
-                <h3>Here's a list of things people might say:</h3>
                 <form className="form-inline my-2 float-right">
                     <label className="my-1 mr-2">Filter</label>
                     <PopTypeInput includeAll={true} onChange={this.handleChangeTypeFilter} />

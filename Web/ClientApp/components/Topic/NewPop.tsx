@@ -44,9 +44,9 @@ class NewPop extends React.Component<Props, State> {
                     className="btn btn-lg btn-primary btn-new-pop"
                     onClick={this.handleOpen}
                 >
-                    Add a pop
+                    Got something new to say?
                 </button>
-                <Modal title="Add a pop" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                <Modal title="Say something" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <PopForm
                         {...popForm}
                         initialTopicValues={[topicValue]}
