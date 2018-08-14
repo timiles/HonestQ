@@ -14,7 +14,6 @@ namespace Pobs.Web.Models.Pops
             this.Source = comment.Source;
             this.AgreementRating = comment.AgreementRating.ToString();
             this.PostedAt = comment.PostedAt.UtcDateTime;
-            this.PostedByUsername = comment.PostedByUser.Username;
             this.Comments = comment.ChildComments.Select(x => new CommentModel(x)).ToArray();
         }
 
@@ -23,7 +22,6 @@ namespace Pobs.Web.Models.Pops
         public string Source { get; set; }
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
-        public string PostedByUsername { get; set; }
         public long? ParentCommentId { get; set; }
         public CommentModel[] Comments { get; set; }
     }
