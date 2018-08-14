@@ -37,7 +37,7 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
     public componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a pop has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', type: 'NA' });
+            this.setState({ text: '', source: '', type: 'Statement' });
         }
     }
 
