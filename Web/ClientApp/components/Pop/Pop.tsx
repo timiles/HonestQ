@@ -53,11 +53,13 @@ export default class Pop extends React.Component<PopProps, {}> {
                             </div>
                         }
                         {model.source && this.renderSource(model.source)}
-                        <NewComment
-                            parentCommentId={null}
-                            popId={popId}
-                            type={model!.type}
-                        />
+                        <div>
+                            <NewComment
+                                parentCommentId={null}
+                                popId={popId}
+                                type={model!.type}
+                            />
+                        </div>
                         <CommentList
                             comments={model.comments}
                             popId={popId!}
@@ -71,10 +73,10 @@ export default class Pop extends React.Component<PopProps, {}> {
     private renderSource(source: string) {
         const extractedUrl = extractUrlFromText(source);
         return (
-            <>
+            <div>
                 <p><small>Source: {source}</small></p>
                 {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
-            </>
+            </div>
         );
     }
 }
