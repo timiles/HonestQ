@@ -29,6 +29,23 @@ namespace Pobs.Domain
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             // NOTE: Pop Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
 
+            // Emoji-enabled columns. TODO: can this be done by an Attribute? Also probably needs Database and Tables altered before Columns...
+            modelBuilder.Entity<Topic>(x =>
+            {
+                x.Property(p => p.Name).HasCharSetForEmoji();
+                x.Property(p => p.Summary).HasCharSetForEmoji();
+            });
+            modelBuilder.Entity<Pop>(x =>
+            {
+                x.Property(p => p.Text).HasCharSetForEmoji();
+                x.Property(p => p.Source).HasCharSetForEmoji();
+            });
+            modelBuilder.Entity<Comment>(x =>
+            {
+                x.Property(p => p.Text).HasCharSetForEmoji();
+                x.Property(p => p.Source).HasCharSetForEmoji();
+            });
+
             // Don't cascade deletes from Collection to Parent
             modelBuilder.Entity<Comment>().HasOne(x => x.Pop).WithMany(x => x.Comments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;

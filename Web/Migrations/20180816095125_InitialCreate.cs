@@ -32,8 +32,8 @@ namespace Pobs.Web.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Slug = table.Column<string>(maxLength: 280, nullable: false),
-                    Text = table.Column<string>(maxLength: 280, nullable: false),
-                    Source = table.Column<string>(maxLength: 2000, nullable: true),
+                    Text = table.Column<string>(type: "VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL", maxLength: 280, nullable: false),
+                    Source = table.Column<string>(type: "VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", maxLength: 2000, nullable: true),
                     PostedByUserId = table.Column<int>(nullable: false),
                     PostedAt = table.Column<DateTime>(nullable: false),
                     Type = table.Column<int>(nullable: false)
@@ -56,8 +56,8 @@ namespace Pobs.Web.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Slug = table.Column<string>(maxLength: 100, nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Summary = table.Column<string>(maxLength: 280, nullable: true),
+                    Name = table.Column<string>(type: "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL", maxLength: 100, nullable: false),
+                    Summary = table.Column<string>(type: "VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", maxLength: 280, nullable: true),
                     MoreInfoUrl = table.Column<string>(maxLength: 2000, nullable: true),
                     PostedByUserId = table.Column<int>(nullable: false),
                     PostedAt = table.Column<DateTime>(nullable: false),
@@ -80,8 +80,8 @@ namespace Pobs.Web.Migrations
                 {
                     Id = table.Column<long>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Text = table.Column<string>(maxLength: 280, nullable: true),
-                    Source = table.Column<string>(maxLength: 2000, nullable: true),
+                    Text = table.Column<string>(type: "VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", maxLength: 280, nullable: true),
+                    Source = table.Column<string>(type: "VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", maxLength: 2000, nullable: true),
                     AgreementRating = table.Column<int>(nullable: true),
                     PostedByUserId = table.Column<int>(nullable: false),
                     PostedAt = table.Column<DateTimeOffset>(nullable: false),

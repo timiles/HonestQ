@@ -9,8 +9,8 @@ using Pobs.Domain;
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(OmnipopsDbContext))]
-    [Migration("20180811122433_CharSets")]
-    partial class CharSets
+    [Migration("20180816095125_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,11 @@ namespace Pobs.Web.Migrations
                     b.Property<int>("PostedByUserId");
 
                     b.Property<string>("Source")
+                        .HasColumnType("VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
                         .HasMaxLength(2000);
 
                     b.Property<string>("Text")
+                        .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
                         .HasMaxLength(280);
 
                     b.HasKey("Id");
@@ -65,10 +67,12 @@ namespace Pobs.Web.Migrations
                         .HasMaxLength(280);
 
                     b.Property<string>("Source")
+                        .HasColumnType("VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
                         .HasMaxLength(2000);
 
                     b.Property<string>("Text")
                         .IsRequired()
+                        .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
                         .HasMaxLength(280);
 
                     b.Property<int>("Type");
@@ -105,6 +109,7 @@ namespace Pobs.Web.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
                         .HasMaxLength(100);
 
                     b.Property<DateTime>("PostedAt");
@@ -116,6 +121,7 @@ namespace Pobs.Web.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Summary")
+                        .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
                         .HasMaxLength(280);
 
                     b.HasKey("Id");
