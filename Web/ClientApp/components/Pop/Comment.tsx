@@ -37,7 +37,7 @@ export default class Comment extends React.Component<Props, {}> {
                                         <span className="badge badge-secondary">
                                             {agreementRating.toSentenceCase()}
                                         </span>
-                                        <p>{text}</p>
+                                        {text && <p>{text}</p>}
                                         {source && <p><small>Source: {source}</small></p>}
                                         <footer className="blockquote-footer">
                                             <a href="javascript:void(0)" title={fullTime}>{friendlyTime}</a>
