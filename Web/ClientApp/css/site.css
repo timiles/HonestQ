@@ -139,9 +139,6 @@ ul.topics-list li {
 .poptype-question:before {
     content: "❓";
 }
-.poptype-warning:before {
-    content: "️️⚠️";
-}
 
 .poptype-over-text-area {
     position: absolute;

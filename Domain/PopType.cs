@@ -6,6 +6,5 @@ namespace Pobs.Domain
         Statement = 1,
         RequestForProof = 2,
         Question = 3,
-        Warning = 4,
     }
 }
