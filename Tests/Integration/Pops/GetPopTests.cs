@@ -31,10 +31,10 @@ namespace Pobs.Tests.Integration.Pops
         }
 
         [Fact]
-        public async Task ShouldGetPop()
+        public async Task ShouldGetStatementPop()
         {
-            // Don't get the first, just to be thorough
-            var pop = _topic.Pops.Skip(1).First();
+            // Get a Statement pop to test that the Stance is populated too
+            var pop = _topic.Pops.First(x => x.Type == PopType.Statement);
 
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -54,8 +54,10 @@ namespace Pobs.Tests.Integration.Pops
                 Assert.Equal(pop.Type.ToString(), responseModel.Type);
 
                 Assert.Single(responseModel.Topics);
-                Assert.Equal(_topic.Name, responseModel.Topics.Single().Name);
-                Assert.Equal(_topic.Slug, responseModel.Topics.Single().Slug);
+                var responseTopic = responseModel.Topics.Single();
+                Assert.Equal(_topic.Name, responseTopic.Name);
+                Assert.Equal(_topic.Slug, responseTopic.Slug);
+                Assert.Equal(pop.PopTopics.Single().Stance.ToString(), responseTopic.Stance);
 
                 Assert.Equal(3, pop.Comments.Count);
                 Assert.Equal(pop.Comments.Count, responseModel.Comments.Length);

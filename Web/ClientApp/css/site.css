@@ -125,7 +125,7 @@ ul.topics-list li {
     }
 
 
-.poptype:before {
+.poptype:before, .stance:before {
     display: inline-block;
     min-width: 23px;
     text-align: center;
@@ -138,6 +138,18 @@ ul.topics-list li {
 }
 .poptype-question:before {
     content: "❓";
+}
+.stance-neutral:before {
+    content: "😶";
+}
+.stance-pro:before {
+    content: "👍";
+}
+.stance-con:before {
+    content: "👎";
+}
+.stance-caution:before {
+    content: "⚠️";
 }
 
 .poptype-over-text-area {
@@ -164,6 +176,20 @@ ul.topics-list li {
 .btn-new-pop {
     width: 100%;
 }
+
+.stance-overlay {
+    margin-left: -12px;
+    position: relative;
+    top: 2px;
+}
+.stance-dropdown-menu .dropdown-item {
+    cursor: pointer;
+    padding-left: .5rem;
+}
+.stance-dropdown-menu .stance:before {
+    padding-right: .5rem;
+}
+
 
 .list-comments-nested {
     margin-left: 10px;

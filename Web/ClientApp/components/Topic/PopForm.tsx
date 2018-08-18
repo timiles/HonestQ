@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PopFormModel, TopicValueModel } from '../../server-models';
+import { PopFormModel, TopicValueStanceModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import PopTypeView from '../shared/PopTypeView';
 import SubmitButton from '../shared/SubmitButton';
@@ -9,7 +9,7 @@ import TopicAutocomplete from './TopicAutocomplete';
 
 type Props = FormProps<PopFormModel>
     & {
-    initialTopicValues: TopicValueModel[],
+    initialTopicValues: TopicValueStanceModel[],
     hideInfoBox?: boolean,
     isModal?: boolean,
     onCloseModalRequested?: () => void,
@@ -25,9 +25,9 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                 text: props.initialState.text,
                 source: props.initialState.source,
                 type: props.initialState.type,
-                topicSlugs: props.initialState.topicSlugs,
+                topics: props.initialState.topics,
             } :
-            { text: '', source: '', type: 'Statement', topicSlugs: props.initialTopicValues.map((x) => x.slug) };
+            { text: '', source: '', type: 'Statement', topics: props.initialTopicValues };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
@@ -37,7 +37,7 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
     public componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a pop has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', type: 'Statement' });
+            this.setState({ text: '', source: '', type: 'Statement', topics: [] });
         }
     }
 
@@ -105,6 +105,7 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                         <div>
                             <TopicAutocomplete
                                 name="topicSlugs"
+                                includeStance={type === 'Statement'}
                                 selectedTopics={initialTopicValues}
                                 onChange={this.handleTopicsChange}
                             />
@@ -131,8 +132,8 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
         this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
-    private handleTopicsChange(selectedTopics: TopicValueModel[]): void {
-        this.setState({ topicSlugs: selectedTopics.map((x) => x.slug) });
+    private handleTopicsChange(selectedTopics: TopicValueStanceModel[]): void {
+        this.setState({ topics: selectedTopics });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

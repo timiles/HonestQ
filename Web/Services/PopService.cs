@@ -13,8 +13,8 @@ namespace Pobs.Web.Services
 {
     public interface IPopService
     {
-        Task<PopListItemModel> SavePop(string text, string source, PopType type, string[] topicSlugs, int postedByUserId);
-        Task<PopListItemModel> UpdatePop(int popId, string text, string source, PopType type, string[] topicSlugs);
+        Task<PopListItemModel> SavePop(ValidatedPopModel model, int postedByUserId);
+        Task<PopListItemModel> UpdatePop(int popId, ValidatedPopModel model);
         Task<PopModel> GetPop(int popId);
         Task<CommentModel> SaveComment(int popId, string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId);
         Task<CommentModel> GetComment(int popId, long commentId);
@@ -29,12 +29,12 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<PopListItemModel> SavePop(string text, string source, PopType type, string[] topicSlugs, int postedByUserId)
+        public async Task<PopListItemModel> SavePop(ValidatedPopModel model, int postedByUserId)
         {
             var topicTasks = new List<Task<Topic>>();
-            if (topicSlugs != null)
+            if (model.Topics != null)
             {
-                foreach (var slug in topicSlugs)
+                foreach (var slug in model.Topics.Keys)
                 {
                     topicTasks.Add(_context.Topics.FirstOrDefaultAsync(x => x.Slug == slug));
                 }
@@ -42,17 +42,18 @@ namespace Pobs.Web.Services
 
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
 
-            var pop = new Pop(text, await postedByUserTask, DateTime.UtcNow, type)
+            var pop = new Pop(model.Text, await postedByUserTask, DateTime.UtcNow, model.Type)
             {
-                Source = source,
+                Source = model.Source,
             };
 
             await Task.WhenAll(topicTasks);
             foreach (var topicTask in topicTasks)
             {
-                if (topicTask.Result != null)
+                var topic = topicTask.Result;
+                if (topic != null)
                 {
-                    pop.Topics.Add(topicTask.Result);
+                    pop.AddTopic(topic, model.Topics[topic.Slug]);
                 }
             }
 
@@ -62,12 +63,12 @@ namespace Pobs.Web.Services
             return new PopListItemModel(pop);
         }
 
-        public async Task<PopListItemModel> UpdatePop(int popId, string text, string source, PopType type, string[] topicSlugs)
+        public async Task<PopListItemModel> UpdatePop(int popId, ValidatedPopModel model)
         {
             var topicTasks = new List<Task<Topic>>();
-            if (topicSlugs != null)
+            if (model.Topics != null)
             {
-                foreach (var slug in topicSlugs)
+                foreach (var slug in model.Topics.Keys)
                 {
                     topicTasks.Add(_context.Topics.FirstOrDefaultAsync(x => x.Slug == slug));
                 }
@@ -82,18 +83,19 @@ namespace Pobs.Web.Services
                 return null;
             }
 
-            pop.Text = text;
-            pop.Slug = text.ToSlug();
-            pop.Source = source;
-            pop.Type = type;
+            pop.Text = model.Text;
+            pop.Slug = model.Text.ToSlug();
+            pop.Source = model.Source;
+            pop.Type = model.Type;
             pop.Topics.Clear();
 
             await Task.WhenAll(topicTasks);
             foreach (var topicTask in topicTasks)
             {
-                if (topicTask.Result != null)
+                var topic = topicTask.Result;
+                if (topic != null)
                 {
-                    pop.Topics.Add(topicTask.Result);
+                    pop.AddTopic(topic, model.Topics[topic.Slug]);
                 }
             }
 

@@ -14,7 +14,7 @@ namespace Pobs.Web.Models.Pops
             this.Text = pop.Text;
             this.Source = pop.Source;
             this.Type = pop.Type.ToString();
-            this.Topics = pop.Topics.Select(x => new TopicValueModel(x)).ToArray();
+            this.Topics = pop.PopTopics.Select(x => new TopicValueStanceModel(x)).ToArray();
             this.Comments = topLevelComments.Select(x => new CommentModel(x)).ToArray();
         }
 
@@ -22,7 +22,7 @@ namespace Pobs.Web.Models.Pops
         public string Text { get; set; }
         public string Source { get; set; }
         public string Type { get; set; }
-        public TopicValueModel[] Topics { get; set; }
+        public TopicValueStanceModel[] Topics { get; set; }
         public CommentModel[] Comments { get; set; }
     }
 }

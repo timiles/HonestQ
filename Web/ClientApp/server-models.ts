@@ -43,7 +43,7 @@ export interface PopFormModel {
     text: string;
     source: string;
     type: string;
-    topicSlugs: string[];
+    topics: TopicStanceModel[];
 }
 
 export interface PopListItemModel {
@@ -51,7 +51,7 @@ export interface PopListItemModel {
     slug: string;
     text: string;
     type: string;
-    topics: TopicValueModel[];
+    topics: TopicValueStanceModel[];
     agreementRatings: { [key: string]: number };
 }
 
@@ -60,8 +60,19 @@ export interface PopModel {
     text: string;
     source: string;
     type: string;
-    topics: TopicValueModel[];
+    topics: TopicValueStanceModel[];
     comments: CommentModel[];
+}
+
+export interface TopicStanceModel {
+    slug: string;
+    stance?: string;
+}
+
+export interface TopicValueStanceModel {
+    stance?: string;
+    name: string;
+    slug: string;
 }
 
 export interface AdminTopicModel {

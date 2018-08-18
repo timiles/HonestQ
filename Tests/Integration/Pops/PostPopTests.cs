@@ -63,13 +63,14 @@ namespace Pobs.Tests.Integration.Pops
         [Fact]
         public async Task AllProperties_ShouldPersist()
         {
+            var stance = Stance.Pro;
             var payload = new PopFormModel
             {
                 // Include emoji in the Text, and quote marks around it
                 Text = "\"Here's a poop emoji: 💩\"",
                 Source = "https://example.com/💩",
                 Type = PopType.Statement.ToString(),
-                TopicSlugs = new[] { _topic.Slug }
+                Topics = new[] { new TopicStanceModel { Slug = _topic.Slug, Stance = stance.ToString() } }
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -96,9 +97,12 @@ namespace Pobs.Tests.Integration.Pops
                     Assert.Equal(pop.Text, responseModel.Text);
                     Assert.Equal(pop.Type.ToString(), responseModel.Type);
                     Assert.Equal("heres_a_poop_emoji", responseModel.Slug);
+
                     Assert.Single(responseModel.Topics);
-                    Assert.Equal(_topic.Name, responseModel.Topics.Single().Name);
-                    Assert.Equal(_topic.Slug, responseModel.Topics.Single().Slug);
+                    var responseTopic = responseModel.Topics.Single();
+                    Assert.Equal(_topic.Name, responseTopic.Name);
+                    Assert.Equal(_topic.Slug, responseTopic.Slug);
+                    Assert.Equal(stance.ToString(), responseTopic.Stance);
                 }
             }
         }
@@ -183,6 +187,72 @@ namespace Pobs.Tests.Integration.Pops
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal("Invalid Type: " + payload.Type, responseContent);
+            }
+        }
+
+        [Fact]
+        public async Task InvalidStance_ShouldGetBadRequest()
+        {
+            var payload = new PopFormModel
+            {
+                Text = "My insightful pop on this topic",
+                Type = PopType.Statement.ToString(),
+                Topics = new[] { new TopicStanceModel { Slug = _topic.Slug, Stance = "BLAH" } }
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var response = await client.PostAsync(_popsUrl, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Invalid Stance: " + payload.Topics[0].Stance, responseContent);
+            }
+        }
+
+        [Fact]
+        public async Task StatementWithNoStance_ShouldGetBadRequest()
+        {
+            var payload = new PopFormModel
+            {
+                Text = "My insightful pop on this topic",
+                Type = PopType.Statement.ToString(),
+                Topics = new[] { new TopicStanceModel { Slug = _topic.Slug } }
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var response = await client.PostAsync(_popsUrl, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Stance is required when Type is " + payload.Type, responseContent);
+            }
+        }
+
+        [Fact]
+        public async Task QuestionWithStance_ShouldGetBadRequest()
+        {
+            var payload = new PopFormModel
+            {
+                Text = "My insightful pop on this topic",
+                Type = PopType.Question.ToString(),
+                Topics = new[] { new TopicStanceModel { Slug = _topic.Slug, Stance = Stance.Pro.ToString() } }
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var response = await client.PostAsync(_popsUrl, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Stance is invalid when Type is " + payload.Type, responseContent);
             }
         }
 

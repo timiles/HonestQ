@@ -45,6 +45,15 @@ namespace Pobs.Domain.Entities
 
         public ICollection<PopTopic> PopTopics { get; } = new List<PopTopic>();
 
+        public void AddTopic(Topic topic, Stance? stance)
+        {
+            var popTopic = new PopTopic();
+            ((IJoinEntity<Topic>)popTopic).Navigation = topic;
+            ((IJoinEntity<Pop>)popTopic).Navigation = this;
+            popTopic.Stance = stance;
+            this.PopTopics.Add(popTopic);
+        }
+
         [NotMapped]
         public ICollection<Topic> Topics { get; }
 

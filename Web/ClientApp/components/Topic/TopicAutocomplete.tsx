@@ -1,19 +1,25 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { TopicValueModel } from '../../server-models';
+import { TopicValueModel, TopicValueStanceModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicAutocompleteStore from '../../store/TopicAutocomplete';
+import StanceInput from './StanceInput';
 
 // REVIEW: Is there a more performant way to pass suggestions to add/remove methods?
 // tslint:disable:jsx-no-lambda
 
 type TopicAutocompleteProps = TopicAutocompleteStore.TopicAutocompleteState
     & typeof TopicAutocompleteStore.actionCreators
-    & { name?: string, selectedTopics: TopicValueModel[], onChange: (selectedTopics: TopicValueModel[]) => void };
+    & {
+    name?: string,
+    selectedTopics: TopicValueModel[],
+    includeStance: boolean,
+    onChange: (selectedTopics: TopicValueModel[]) => void,
+};
 
 interface State {
     query: string;
-    selectedTopics: TopicValueModel[];
+    selectedTopics: TopicValueStanceModel[];
     suggestedTopics: TopicValueModel[] | null;
 }
 
@@ -35,7 +41,7 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
     }
 
     public render() {
-        const { name, loading, error } = this.props;
+        const { name, includeStance, loading, error } = this.props;
         const { query, selectedTopics, suggestedTopics } = this.state;
         const selectedSlugs = selectedTopics.map((x) => x.slug);
         let newSuggestedTopics: TopicValueModel[] | null = null;
@@ -46,14 +52,21 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
         return (
             <>
                 {selectedTopics.length > 0 &&
-                    <ul className="list-unstyled">
+                    <ul className="topics-list">
                         {selectedTopics.map((x) =>
-                            <li
-                                key={`selectedTopic-${x.slug}`}
-                                className="btn btn-sm btn-outline-secondary mr-1 mt-1"
-                                onClick={() => this.removeTopic(x)}
-                            >
-                                － {x.name}
+                            <li key={`selectedTopic-${x.slug}`} className="mb-1">
+                                <div className="btn-group mr-1" role="group">
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-secondary"
+                                        onClick={() => this.removeTopic(x)}
+                                    >
+                                        － {x.name}
+                                    </button>
+                                    {includeStance &&
+                                        <StanceInput value={x.stance} onChange={(y) => this.setStance(x, y)} />
+                                    }
+                                </div>
                             </li>)}
                     </ul>
                 }
@@ -102,6 +115,18 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
             const indexOfTopicToRemove = prevState.selectedTopics.indexOf(value);
             if (indexOfTopicToRemove >= 0) {
                 prevState.selectedTopics.splice(indexOfTopicToRemove, 1);
+                return { ...prevState, selectedTopics: prevState.selectedTopics };
+            }
+            return prevState;
+        },
+            () => this.props.onChange(this.state.selectedTopics));
+    }
+
+    private setStance(value: TopicValueModel, stance: string): void {
+        this.setState((prevState) => {
+            const indexOfTopic = prevState.selectedTopics.indexOf(value);
+            if (indexOfTopic >= 0) {
+                prevState.selectedTopics[indexOfTopic].stance = stance;
                 return { ...prevState, selectedTopics: prevState.selectedTopics };
             }
             return prevState;

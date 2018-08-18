@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { PopModel } from '../../server-models';
+import { PopModel, TopicValueStanceModel } from '../../server-models';
 import { extractUrlFromText, isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
@@ -41,7 +41,10 @@ export default class Pop extends React.Component<PopProps, {}> {
                             <li className="mr-1 mt-1">Topics:</li>
                             {model.topics.map((x, i) =>
                                 <li key={`topic${i}`} className="mr-1 mb-1">
-                                    <Link to={`/topics/${x.slug}`} className="btn btn-sm btn-outline-secondary">
+                                    <Link
+                                        to={`/topics/${x.slug}`}
+                                        className={`btn btn-sm btn-outline-secondary ${this.getStanceClass(x)}`}
+                                    >
                                         {x.name}
                                     </Link>
                                 </li>)}
@@ -68,6 +71,10 @@ export default class Pop extends React.Component<PopProps, {}> {
                 )}
             </>
         );
+    }
+
+    private getStanceClass(topic: TopicValueStanceModel): string {
+        return (topic.stance) ? `stance stance-${topic.stance.toLowerCase()}` : '';
     }
 
     private renderSource(source: string) {

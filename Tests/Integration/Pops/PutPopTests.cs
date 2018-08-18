@@ -40,7 +40,7 @@ namespace Pobs.Tests.Integration.Pops
                 Text = Utils.GenerateRandomString(10),
                 Type = differentType.ToString(),
                 Source = Utils.GenerateRandomString(10),
-                TopicSlugs = new[] { _topic2.Slug },
+                Topics = new[] { new TopicStanceModel { Slug = _topic2.Slug } },
             };
             var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())
@@ -56,9 +56,12 @@ namespace Pobs.Tests.Integration.Pops
                 Assert.Equal(payload.Text, responseModel.Text);
                 Assert.Equal(payload.Type, responseModel.Type);
                 Assert.Equal(slug, responseModel.Slug);
+
                 Assert.Single(responseModel.Topics);
-                Assert.Equal(_topic2.Name, responseModel.Topics.Single().Name);
-                Assert.Equal(_topic2.Slug, responseModel.Topics.Single().Slug);
+                var responseTopic = responseModel.Topics.Single();
+                Assert.Equal(_topic2.Name, responseTopic.Name);
+                Assert.Equal(_topic2.Slug, responseTopic.Slug);
+                Assert.Null(responseTopic.Stance);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

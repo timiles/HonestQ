@@ -38,7 +38,7 @@ class EditPop extends React.Component<EditPopProps, {}> {
                 text: loadedModel.text,
                 source: loadedModel.source,
                 type: loadedModel.type,
-                topicSlugs: loadedModel.topics.map((x) => x.slug),
+                topics: loadedModel.topics.map((x) => ({ slug: x.slug })),
             };
         }
 

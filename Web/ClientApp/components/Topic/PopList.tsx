@@ -51,6 +51,7 @@ export default class PopList extends React.Component<Props, State> {
                                 className="btn btn-lg btn-outline-secondary pop-list-item"
                             >
                                 <PopTypeView value={x.type} />
+                                {this.renderStance(x, topicValue.slug)}
                                 <span className={`pop pop-${x.type.toLowerCase()}`}>{x.text}</span>
                                 {x.agreementRatings && <AgreementRatingBarChart {...x.agreementRatings} />}
                             </Link>
@@ -60,6 +61,14 @@ export default class PopList extends React.Component<Props, State> {
                     </li>
                 </ul>
             </>);
+    }
+
+    private renderStance(model: PopListItemModel, topicSlug: string) {
+        const topic = model.topics.filter((x) => x.slug === topicSlug)[0];
+        if (topic && topic.stance) {
+            return <span className={`stance stance-${topic.stance.toLowerCase()} stance-overlay`} />;
+        }
+        return null;
     }
 
     private handleChangeTypeFilter(event: React.FormEvent<HTMLButtonElement>): void {

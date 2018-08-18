@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,20 +27,13 @@ namespace Pobs.Web.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> AddPop([FromBody] PopFormModel payload)
         {
-            if (string.IsNullOrWhiteSpace(payload.Text))
+            var validatedPopModel = Validate(payload);
+            if (validatedPopModel.error != null)
             {
-                return BadRequest("Text is required");
-            }
-            if (string.IsNullOrWhiteSpace(payload.Type))
-            {
-                return BadRequest("Type is required");
-            }
-            if (!Enum.TryParse<PopType>(payload.Type, out PopType type))
-            {
-                return BadRequest($"Invalid Type: {payload.Type}");
+                return BadRequest(validatedPopModel.error);
             }
 
-            var popModel = await _popService.SavePop(payload.Text, payload.Source, type, payload.TopicSlugs, User.Identity.ParseUserId());
+            var popModel = await _popService.SavePop(validatedPopModel.model, User.Identity.ParseUserId());
             if (popModel != null)
             {
                 return Ok(popModel);
@@ -54,22 +49,15 @@ namespace Pobs.Web.Controllers
                 return Forbid();
             }
 
-            if (string.IsNullOrWhiteSpace(payload.Text))
+            var validatedPopModel = Validate(payload);
+            if (validatedPopModel.error != null)
             {
-                return BadRequest("Text is required");
-            }
-            if (string.IsNullOrWhiteSpace(payload.Type))
-            {
-                return BadRequest("Type is required");
-            }
-            if (!Enum.TryParse<PopType>(payload.Type, out PopType type))
-            {
-                return BadRequest($"Invalid Type: {payload.Type}");
+                return BadRequest(validatedPopModel.error);
             }
 
             try
             {
-                var popModel = await _popService.UpdatePop(popId, payload.Text, payload.Source, type, payload.TopicSlugs);
+                var popModel = await _popService.UpdatePop(popId, validatedPopModel.model);
                 if (popModel != null)
                 {
                     return Ok(popModel);
@@ -80,6 +68,58 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        private static (ValidatedPopModel model, string error) Validate(PopFormModel form)
+        {
+            if (string.IsNullOrWhiteSpace(form.Text))
+            {
+                return (null, "Text is required");
+            }
+            if (string.IsNullOrWhiteSpace(form.Type))
+            {
+                return (null, "Type is required");
+            }
+            if (!Enum.TryParse<PopType>(form.Type, out PopType type))
+            {
+                return (null, $"Invalid Type: {form.Type}");
+            }
+
+            Dictionary<string, Stance?> topics = null;
+            if (form.Topics != null)
+            {
+                topics = new Dictionary<string, Stance?>();
+                foreach (var topic in form.Topics)
+                {
+                    if (topic.Stance == null)
+                    {
+                        if (type == PopType.Statement)
+                        {
+                            return (null, "Stance is required when Type is Statement");
+                        }
+                        topics[topic.Slug] = null;
+                        continue;
+                    }
+                    if (!Enum.TryParse<Stance>(topic.Stance, out Stance stance))
+                    {
+                        return (null, $"Invalid Stance: {topic.Stance}");
+                    }
+                    if (type != PopType.Statement)
+                    {
+                        return (null, $"Stance is invalid when Type is {type}");
+                    }
+                    topics[topic.Slug] = stance;
+                }
+            }
+
+            var validatedPopModel = new ValidatedPopModel
+            {
+                Text = form.Text,
+                Source = form.Source,
+                Type = type,
+                Topics = topics
+            };
+            return (validatedPopModel, null);
         }
 
         [HttpGet, Route("{popId}")]

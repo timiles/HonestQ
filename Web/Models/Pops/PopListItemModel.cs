@@ -15,7 +15,7 @@ namespace Pobs.Web.Models.Pops
             this.Slug = pop.Slug;
             this.Text = pop.Text;
             this.Type = pop.Type.ToString();
-            this.Topics = pop.Topics.Select(x => new TopicValueModel(x)).ToArray();
+            this.Topics = pop.PopTopics.Select(x => new TopicValueStanceModel(x)).ToArray();
             this.AgreementRatings = pop.Comments
                 .GroupBy(x => x.AgreementRating)
                 .ToDictionary(x => x.Key.ToString(), x => x.Count());
@@ -25,7 +25,7 @@ namespace Pobs.Web.Models.Pops
         public string Slug { get; set; }
         public string Text { get; set; }
         public string Type { get; set; }
-        public TopicValueModel[] Topics { get; set; }
+        public TopicValueStanceModel[] Topics { get; set; }
         public Dictionary<string, int> AgreementRatings { get; set; }
     }
 }

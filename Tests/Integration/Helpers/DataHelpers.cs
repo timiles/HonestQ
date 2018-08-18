@@ -63,7 +63,7 @@ namespace Pobs.Tests.Integration.Helpers
                         pop.Comments.Add(comment);
                     }
                 }
-                topic.Pops.Add(pop);
+                topic.AddPop(pop, pop.Type == PopType.Statement ? Stance.Neutral : null as Stance?);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

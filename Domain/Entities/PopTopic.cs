@@ -19,5 +19,7 @@ namespace Pobs.Domain.Entities
             get => Topic;
             set => Topic = value;
         }
+
+        public Stance? Stance { get; set; }
     }
 }
