@@ -38,6 +38,7 @@ namespace Pobs.Domain.Entities
 
         [Required]
         public virtual User PostedByUser { get; set; }
+        public int PostedByUserId { get; set; }
 
         public DateTime PostedAt { get; set; }
 

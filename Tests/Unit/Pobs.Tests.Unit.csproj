@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Pobs.Domain.csproj"></ProjectReference>
+    <ProjectReference Include="..\..\Web\Pobs.Web.csproj"></ProjectReference>
   </ItemGroup>
   
   <ItemGroup>

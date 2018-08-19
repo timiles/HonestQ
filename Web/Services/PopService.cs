@@ -106,7 +106,6 @@ namespace Pobs.Web.Services
         public async Task<PopModel> GetPop(int popId)
         {
             var pop = await _context.Pops
-                .Include(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.PopTopics).ThenInclude(x => x.Topic)
                 .Include(x => x.Comments).ThenInclude(x => x.ChildComments)
                 .FirstOrDefaultAsync(x => x.Id == popId);
@@ -114,7 +113,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return new PopModel(pop, pop.Comments.Where(x => x.ParentComment == null));
+            return new PopModel(pop);
         }
 
         public async Task<CommentModel> SaveComment(int popId,
@@ -158,8 +157,6 @@ namespace Pobs.Web.Services
         {
             var comment = await _context.Pops
                 .SelectMany(x => x.Comments)
-                    .Include(x => x.PostedByUser)
-                    .Include(x => x.ChildComments).ThenInclude(x => x.PostedByUser)
                     .Include(x => x.ChildComments).ThenInclude(x => x.ChildComments)
                 .FirstOrDefaultAsync(x => x.Pop.Id == popId && x.Id == commentId);
             if (comment == null)

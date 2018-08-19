@@ -17,7 +17,7 @@ export default class Comment extends React.Component<Props, {}> {
 
     public render(): any {
         const { popId } = this.props;
-        const { id, text, source, agreementRating, postedAt, postedByUsername, comments } = this.props;
+        const { id, text, source, agreementRating, postedAt, postedByUserPseudoId, comments } = this.props;
         const extractedUrl = extractUrlFromText(source) || extractUrlFromText(text);
 
         return (
@@ -40,7 +40,8 @@ export default class Comment extends React.Component<Props, {}> {
                                         {text && <p>{text}</p>}
                                         {source && <p><small>Source: {source}</small></p>}
                                         <footer className="blockquote-footer">
-                                            @{postedByUsername}, <a href="#" title={fullTime}>{friendlyTime}</a>
+                                            Thread user #{postedByUserPseudoId},&nsbp;
+                                            <a href="javascript:void(0);" title={fullTime}>{friendlyTime}</a>
                                         </footer>
                                         {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
                                     </blockquote>

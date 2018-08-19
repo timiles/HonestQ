@@ -7,13 +7,15 @@ namespace Pobs.Domain.Entities
 {
     public class Comment
     {
-        public Comment() { }
-        protected Comment(string text, User postedByUser, DateTimeOffset postedAt)
+        public Comment()
+        {
+            ChildComments = new Collection<Comment>();
+        }
+        protected Comment(string text, User postedByUser, DateTimeOffset postedAt) : this()
         {
             Text = text;
             PostedByUser = postedByUser;
             PostedAt = postedAt;
-            ChildComments = new Collection<Comment>();
         }
         public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating? agreementRating)
             : this(text, postedByUser, postedAt)
@@ -39,6 +41,7 @@ namespace Pobs.Domain.Entities
 
         [Required]
         public User PostedByUser { get; set; }
+        public int PostedByUserId { get; set; }
 
         public DateTimeOffset PostedAt { get; set; }
 
