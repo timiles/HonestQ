@@ -35,6 +35,7 @@ export interface CommentModel {
     source: string;
     agreementRating: string;
     postedAt: string;
+    postedByUsername: string;
     parentCommentId: number | null;
     comments: CommentModel[];
 }

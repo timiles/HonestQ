@@ -65,6 +65,7 @@ namespace Pobs.Tests.Integration.Pops
                     Assert.Equal(comment.Id, responseModel.Id);
                     Assert.Equal(comment.Text, responseModel.Text);
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
+                    Assert.Equal(comment.PostedByUser.Username, responseModel.PostedByUsername);
                 }
             }
         }

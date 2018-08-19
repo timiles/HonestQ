@@ -158,6 +158,8 @@ namespace Pobs.Web.Services
         {
             var comment = await _context.Pops
                 .SelectMany(x => x.Comments)
+                    .Include(x => x.PostedByUser)
+                    .Include(x => x.ChildComments).ThenInclude(x => x.PostedByUser)
                     .Include(x => x.ChildComments).ThenInclude(x => x.ChildComments)
                 .FirstOrDefaultAsync(x => x.Pop.Id == popId && x.Id == commentId);
             if (comment == null)
