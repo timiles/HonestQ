@@ -49,7 +49,7 @@ class NewPop extends React.Component<Props, State> {
                 <Modal title="Say something" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <PopForm
                         {...popForm}
-                        initialTopicValues={[topicValue]}
+                        initialTopicValues={[{ ...topicValue, stance: 'Neutral' }]}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}
