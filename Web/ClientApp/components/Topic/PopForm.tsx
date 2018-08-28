@@ -129,7 +129,18 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLButtonElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
-        this.setState((prevState) => ({ ...prevState, [name]: value }));
+
+        const topics = this.state.topics;
+        if (name === 'type') {
+            if (value === 'Statement') {
+                topics.forEach((x) => x.stance = 'Neutral');
+            } else {
+                // REVIEW: This should be null
+                topics.forEach((x) => x.stance = undefined);
+            }
+        }
+
+        this.setState((prevState) => ({ ...prevState, [name]: value, topics }));
     }
 
     private handleTopicsChange(selectedTopics: TopicValueStanceModel[]): void {
