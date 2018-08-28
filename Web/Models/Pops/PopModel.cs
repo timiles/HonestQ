@@ -26,24 +26,26 @@ namespace Pobs.Web.Models.Pops
         }
 
         public PopModel() { }
-        public PopModel(Pop pop)
+        public PopModel(Pop pop, int? loggedInUserId = null)
         {
             this.Slug = pop.Slug;
             this.Text = pop.Text;
             this.Source = pop.Source;
             this.Type = pop.Type.ToString();
             this.Topics = pop.PopTopics.Select(x => new TopicValueStanceModel(x)).ToArray();
+            this.IsPostedByLoggedInUser = pop.PostedByUserId == loggedInUserId;
 
             var pseudoIds = PseudonymiseUserIds(pop);
 
             var topLevelComments = pop.Comments.Where(x => x.ParentComment == null);
-            this.Comments = topLevelComments.Select(x => new CommentModel(x, pseudoIds)).ToArray();
+            this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, pseudoIds)).ToArray();
         }
 
         public string Slug { get; set; }
         public string Text { get; set; }
         public string Source { get; set; }
         public string Type { get; set; }
+        public bool IsPostedByLoggedInUser { get; set; }
         public TopicValueStanceModel[] Topics { get; set; }
         public CommentModel[] Comments { get; set; }
     }

@@ -15,9 +15,9 @@ namespace Pobs.Web.Services
     {
         Task<PopListItemModel> SavePop(ValidatedPopModel model, int postedByUserId);
         Task<PopListItemModel> UpdatePop(int popId, ValidatedPopModel model);
-        Task<PopModel> GetPop(int popId);
+        Task<PopModel> GetPop(int popId, int? loggedInUserId);
         Task<CommentModel> SaveComment(int popId, string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId);
-        Task<CommentModel> GetComment(int popId, long commentId);
+        Task<CommentModel> GetComment(int popId, long commentId, int? loggedInUserId);
     }
 
     public class PopService : IPopService
@@ -103,7 +103,7 @@ namespace Pobs.Web.Services
             return new PopListItemModel(pop);
         }
 
-        public async Task<PopModel> GetPop(int popId)
+        public async Task<PopModel> GetPop(int popId, int? loggedInUserId)
         {
             var pop = await _context.Pops
                 .Include(x => x.PopTopics).ThenInclude(x => x.Topic)
@@ -113,7 +113,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return new PopModel(pop);
+            return new PopModel(pop, loggedInUserId);
         }
 
         public async Task<CommentModel> SaveComment(int popId,
@@ -150,10 +150,10 @@ namespace Pobs.Web.Services
             pop.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return new CommentModel(comment) { ParentCommentId = parentCommentId };
+            return new CommentModel(comment, postedByUserId) { ParentCommentId = parentCommentId };
         }
 
-        public async Task<CommentModel> GetComment(int popId, long commentId)
+        public async Task<CommentModel> GetComment(int popId, long commentId, int? loggedInUserId)
         {
             var comment = await _context.Pops
                 .SelectMany(x => x.Comments)
@@ -163,7 +163,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return new CommentModel(comment);
+            return new CommentModel(comment, loggedInUserId);
         }
     }
 }

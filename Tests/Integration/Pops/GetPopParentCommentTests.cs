@@ -47,12 +47,21 @@ namespace Pobs.Tests.Integration.Pops
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<PopModel>(responseContent);
                 Assert.Equal(3, responseModel.Comments.Length);
+                Assert.True(responseModel.IsPostedByLoggedInUser);
 
                 foreach (var comment in _pop.Comments.Where(x => x.ParentComment == null))
                 {
                     var responseComment = responseModel.Comments.SingleOrDefault(x => x.Id == comment.Id);
                     Assert.NotNull(responseComment);
+                    Assert.Equal(0, responseComment.PostedByUserPseudoId);
+                    Assert.True(responseComment.IsPostedByLoggedInUser);
+
                     Assert.Equal(2, responseComment.Comments.Count());
+                    foreach (var responseChildComment in responseComment.Comments)
+                    {
+                        Assert.Equal(1, responseChildComment.PostedByUserPseudoId);
+                        Assert.False(responseChildComment.IsPostedByLoggedInUser);
+                    }
                 }
             }
         }

@@ -36,6 +36,7 @@ export interface CommentModel {
     agreementRating: string;
     postedAt: string;
     postedByUserPseudoId: number;
+    isPostedByLoggedInUser: boolean;
     parentCommentId: number | null;
     comments: CommentModel[];
 }
@@ -61,6 +62,7 @@ export interface PopModel {
     text: string;
     source: string;
     type: string;
+    isPostedByLoggedInUser: boolean;
     topics: TopicValueStanceModel[];
     comments: CommentModel[];
 }

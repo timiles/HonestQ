@@ -125,7 +125,8 @@ namespace Pobs.Web.Controllers
         [HttpGet, Route("{popId}")]
         public async Task<IActionResult> GetPop(int popId)
         {
-            var popModel = await _popService.GetPop(popId);
+            var popModel = await _popService.GetPop(popId,
+                User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?);
             if (popModel != null)
             {
                 return Ok(popModel);
@@ -173,7 +174,8 @@ namespace Pobs.Web.Controllers
         [HttpGet, Route("{popId}/comments/{commentId}")]
         public async Task<IActionResult> GetComment(int popId, long commentId)
         {
-            var commentModel = await _popService.GetComment(popId, commentId);
+            var commentModel = await _popService.GetComment(popId, commentId,
+                User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?);
             if (commentModel != null)
             {
                 return Ok(commentModel);

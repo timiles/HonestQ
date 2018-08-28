@@ -8,7 +8,7 @@ namespace Pobs.Web.Models.Pops
     public class CommentModel
     {
         public CommentModel() { }
-        public CommentModel(Comment comment, IDictionary<int, int> userPseudoIds = null)
+        public CommentModel(Comment comment, int? loggedInUserId = null, IDictionary<int, int> userPseudoIds = null)
         {
             this.Id = comment.Id;
             this.Text = comment.Text;
@@ -16,7 +16,8 @@ namespace Pobs.Web.Models.Pops
             this.AgreementRating = comment.AgreementRating.ToString();
             this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUserPseudoId = userPseudoIds?[comment.PostedByUserId] ?? 0;
-            this.Comments = comment.ChildComments.Select(x => new CommentModel(x, userPseudoIds)).ToArray();
+            this.IsPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
+            this.Comments = comment.ChildComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
         }
 
         public long Id { get; set; }
@@ -25,6 +26,7 @@ namespace Pobs.Web.Models.Pops
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
         public int PostedByUserPseudoId { get; set; }
+        public bool IsPostedByLoggedInUser { get; set; }
         public long? ParentCommentId { get; set; }
         public CommentModel[] Comments { get; set; }
     }

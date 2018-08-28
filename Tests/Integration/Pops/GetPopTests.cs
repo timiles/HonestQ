@@ -52,6 +52,7 @@ namespace Pobs.Tests.Integration.Pops
                 Assert.Equal(pop.Text, responseModel.Text);
                 Assert.Equal(pop.Source, responseModel.Source);
                 Assert.Equal(pop.Type.ToString(), responseModel.Type);
+                Assert.True(responseModel.IsPostedByLoggedInUser);
 
                 Assert.Single(responseModel.Topics);
                 var responseTopic = responseModel.Topics.Single();

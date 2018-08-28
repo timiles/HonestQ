@@ -17,8 +17,10 @@ export default class Comment extends React.Component<Props, {}> {
 
     public render(): any {
         const { popId } = this.props;
-        const { id, text, source, agreementRating, postedAt, postedByUserPseudoId, comments } = this.props;
+        const { id, text, source, agreementRating, comments } = this.props;
+        const { postedAt, postedByUserPseudoId, isPostedByLoggedInUser } = this.props;
         const extractedUrl = extractUrlFromText(source) || extractUrlFromText(text);
+        const postedBy = `Thread user #${postedByUserPseudoId}` + (isPostedByLoggedInUser ? ' (you)' : '');
 
         return (
             <LoggedInUserContext.Consumer>
@@ -40,7 +42,7 @@ export default class Comment extends React.Component<Props, {}> {
                                         {text && <p>{text}</p>}
                                         {source && <p><small>Source: {source}</small></p>}
                                         <footer className="blockquote-footer">
-                                            Thread user #{postedByUserPseudoId},&nsbp;
+                                            {postedBy},&nbsp;
                                             <a href="javascript:void(0);" title={fullTime}>{friendlyTime}</a>
                                         </footer>
                                         {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
