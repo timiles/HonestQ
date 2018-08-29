@@ -1,6 +1,6 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoadingProps } from '../components/shared/Loading';
+import { EditFormProps } from '../components/shared/EditFormProps';
 import { PopFormModel, PopModel } from '../server-models';
 import { getJson, putJson } from '../utils';
 
@@ -8,8 +8,8 @@ import { getJson, putJson } from '../utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface EditPopState {
-    popModel: LoadingProps<PopModel>;
-    successfullySaved?: boolean;
+    editPopForm: EditFormProps<PopFormModel>;
+    savedSlug?: string;
 }
 
 // -----------------
@@ -68,10 +68,8 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_POP_FAILED', payload: {
-                            popId,
-                            error: reason || 'Get topic failed',
-                        },
+                        type: 'GET_POP_FAILED',
+                        payload: { popId, error: reason || 'Get topic failed' },
                     });
                 });
         })();
@@ -91,10 +89,8 @@ export const actionCreators = {
                     `/api/pops/${popId}`, popForm, getState().login.loggedInUser!)
                     .then((popResponse: PopModel) => {
                         dispatch({
-                            type: 'EDIT_POP_FORM_RECEIVED', payload: {
-                                popId,
-                                pop: popResponse,
-                            },
+                            type: 'EDIT_POP_FORM_RECEIVED',
+                            payload: { popId, pop: popResponse },
                         });
                     })
                     .catch((reason: string) => {
@@ -108,35 +104,30 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: EditPopState = { popModel: {} };
+const defaultState: EditPopState = { editPopForm: {} };
 
 export const reducer: Reducer<EditPopState> = (state: EditPopState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_POP_REQUESTED':
             return {
-                popModel: {
-                    id: action.payload.popId.toString(),
+                editPopForm: {
                     loading: true,
                 },
-                editPopForm: {},
             };
         case 'GET_POP_SUCCESS':
             return {
-                popModel: {
-                    id: action.payload.popId.toString(),
-                    loadedModel: action.payload.pop,
+                editPopForm: {
+                    initialState: action.payload.pop,
                 },
             };
         case 'GET_POP_FAILED':
             return {
-                popModel: {
-                    id: action.payload.popId.toString(),
+                editPopForm: {
                     error: action.payload.error,
                 },
             };
         case 'EDIT_POP_FORM_SUBMITTED':
             return {
-                popModel: state.popModel,
                 editPopForm: {
                     submitting: true,
                     submitted: true,
@@ -144,19 +135,14 @@ export const reducer: Reducer<EditPopState> = (state: EditPopState, action: Know
             };
         case 'EDIT_POP_FORM_RECEIVED':
             return {
-                popModel: {
-                    id: action.payload.popId.toString(),
-                    loadedModel: action.payload.pop,
-                },
                 editPopForm: {
                     submitting: false,
                     submitted: false,
                 },
-                successfullySaved: true,
+                savedSlug: action.payload.pop.slug,
             };
         case 'EDIT_POP_FORM_FAILED':
             return {
-                popModel: state.popModel,
                 editPopForm: {
                     submitting: false,
                     submitted: true,

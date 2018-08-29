@@ -9,7 +9,7 @@ import TopicAutocomplete from './TopicAutocomplete';
 
 type Props = FormProps<PopFormModel>
     & {
-    initialTopicValues: TopicValueStanceModel[],
+    initialTopicValues?: TopicValueStanceModel[],
     hideInfoBox?: boolean,
     isModal?: boolean,
     onCloseModalRequested?: () => void,
@@ -27,7 +27,7 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                 type: props.initialState.type,
                 topics: props.initialState.topics,
             } :
-            { text: '', source: '', type: 'Statement', topics: props.initialTopicValues };
+            { text: '', source: '', type: 'Statement', topics: props.initialTopicValues || [] };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
@@ -42,9 +42,8 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
     }
 
     public render() {
-        const { initialTopicValues, hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted }
-            = this.props;
-        const { text, type, source } = this.state;
+        const { hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
+        const { text, type, source, topics } = this.state;
         return (
             <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
@@ -106,7 +105,7 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                             <TopicAutocomplete
                                 name="topicSlugs"
                                 includeStance={type === 'Statement'}
-                                selectedTopics={initialTopicValues}
+                                selectedTopics={topics}
                                 onChange={this.handleTopicsChange}
                             />
                         </div>

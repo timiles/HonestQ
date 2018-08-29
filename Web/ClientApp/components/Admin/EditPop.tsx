@@ -26,21 +26,9 @@ class EditPop extends React.Component<EditPopProps, {}> {
     }
 
     public render() {
-        const { successfullySaved } = this.props;
-        const { loadedModel } = this.props.popModel;
-        const successUrl = (successfullySaved && loadedModel)
-            ? `/pops/${this.props.match.params.popId}/${loadedModel.slug}`
-            : null;
-
-        let popFormModel: PopFormModel | null;
-        if (loadedModel) {
-            popFormModel = {
-                text: loadedModel.text,
-                source: loadedModel.source,
-                type: loadedModel.type,
-                topics: loadedModel.topics.map((x) => ({ slug: x.slug })),
-            };
-        }
+        const { savedSlug } = this.props;
+        const { initialState } = this.props.editPopForm;
+        const successUrl = (savedSlug) ? `/pops/${this.props.match.params.popId}/${savedSlug}` : null;
 
         return (
             <div className="col-lg-6 offset-lg-3">
@@ -50,11 +38,10 @@ class EditPop extends React.Component<EditPopProps, {}> {
                         Pop updated, check it out: <Link to={successUrl}>{successUrl}</Link>
                     </div>
                 )}
-                <Loading {...this.props.popModel} />
-                {loadedModel && (
+                <Loading {...this.props.editPopForm} />
+                {initialState && (
                     <PopForm
-                        initialState={popFormModel!}
-                        initialTopicValues={loadedModel.topics}
+                        initialState={initialState}
                         hideInfoBox={true}
                         submit={this.handleSubmit}
                     />
@@ -64,10 +51,7 @@ class EditPop extends React.Component<EditPopProps, {}> {
     }
 
     private shouldGetPop(): boolean {
-        if (!this.props.popModel.loadedModel) {
-            return true;
-        }
-        return (this.props.popModel.id !== this.props.match.params.popId.toString());
+        return (!this.props.editPopForm.initialState);
     }
 
     private handleSubmit(form: PopFormModel): void {

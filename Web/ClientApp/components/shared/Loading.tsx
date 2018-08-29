@@ -4,7 +4,7 @@ export interface LoadingProps<T> {
     id?: string;
     loading?: boolean;
     loadedModel?: T;
-    error?: string;
+    error?: string | null;
 }
 
 export default class Loading extends React.Component<LoadingProps<any>, {}> {
