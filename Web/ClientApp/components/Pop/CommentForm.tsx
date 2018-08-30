@@ -3,7 +3,7 @@ import { CommentFormModel } from '../../server-models';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import AgreementRatingScale from './AgreementRatingScale';
+import AgreementRatingInput from './AgreementRatingInput';
 
 type Props = FormProps<CommentFormModel>
     & CommentFormProps;
@@ -36,7 +36,6 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleAgreementRatingChange = this.handleAgreementRatingChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -92,7 +91,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                     </div>
                     {!this.hideAgreementRating &&
                         <div className="form-group">
-                            <AgreementRatingScale value={agreementRating} onChange={this.handleAgreementRatingChange} />
+                            <label htmlFor="agreementRating">Agreement rating</label>
+                            <div>
+                                <AgreementRatingInput
+                                    name="agreementRating"
+                                    value={agreementRating}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
                         </div>
                     }
                 </div>
@@ -111,13 +117,9 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         );
     }
 
-    private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
+    private handleChange(event: React.FormEvent<HTMLButtonElement | HTMLInputElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
         this.setState((prevState) => ({ ...prevState, [name]: value }));
-    }
-
-    private handleAgreementRatingChange(name: string, value: string): void {
-        this.setState({ agreementRating: value });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

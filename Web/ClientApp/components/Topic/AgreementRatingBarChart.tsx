@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default class AgreementRatingScale extends React.Component<{ [key: string]: number }, {}> {
+export default class AgreementRatingBarChart extends React.Component<{ [key: string]: number }, {}> {
 
     private readonly agreementRatingValues = ['StronglyDisagree', 'Disagree', 'Neutral', 'Agree', 'StronglyAgree'];
     private readonly agreementRatingColors = ['red', 'orange', 'gold', 'yellowgreen', 'seagreen'];
