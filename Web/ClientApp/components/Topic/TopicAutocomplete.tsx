@@ -103,7 +103,8 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
         this.setState((prevState) => {
             // Check we don't have this Topic already. (Might be possible under race conditions)
             if (prevState.selectedTopics.filter((x) => x.slug === value.slug).length === 0) {
-                return { ...prevState, selectedTopics: prevState.selectedTopics.concat(value) };
+                const topicStance = { ...value, stance: 'Neutral' };
+                return { ...prevState, selectedTopics: prevState.selectedTopics.concat(topicStance) };
             }
             return prevState;
         },
