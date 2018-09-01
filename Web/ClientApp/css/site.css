@@ -131,13 +131,13 @@ ul.topics-list li {
     text-align: center;
 }
 .agreement-rating-agree:before {
-    content: "👍";
+    content: "✔️";
 }
 .agreement-rating-neutral:before {
     content: "🤷";
 }
 .agreement-rating-disagree:before {
-    content: "👎";
+    content: "❌";
 }
 .poptype-statement:before {
     content: "💬";
