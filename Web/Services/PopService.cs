@@ -130,27 +130,18 @@ namespace Pobs.Web.Services
             }
 
             // Validate params
-            if (agreementRating.HasValue)
+            if (agreementRating.HasValue && pop.Type == PopType.RequestForProof)
             {
-                if (parentCommentId.HasValue)
-                {
-                    throw new AppException("AgreementRating is invalid with ParentCommentId");
-                }
-                if (pop.Type == PopType.RequestForProof || pop.Type == PopType.Question)
-                {
-                    throw new AppException($"AgreementRating is invalid when Type is {pop.Type}");
-                }
+                throw new AppException($"AgreementRating is invalid when Type is {pop.Type}");
             }
 
-            Comment comment = (parentCommentId.HasValue) ?
-                new Comment(text, await postedByUserTask, DateTime.UtcNow, parentCommentId.Value) :
-                new Comment(text, await postedByUserTask, DateTime.UtcNow, agreementRating);
+            var comment = new Comment(text, await postedByUserTask, DateTime.UtcNow, agreementRating, parentCommentId);
 
             comment.Source = source;
             pop.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return new CommentModel(comment, postedByUserId) { ParentCommentId = parentCommentId };
+            return new CommentModel(comment, postedByUserId);
         }
 
         public async Task<CommentModel> GetComment(int popId, long commentId, int? loggedInUserId)

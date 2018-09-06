@@ -36,9 +36,12 @@ class NewComment extends React.Component<Props, State> {
     public render() {
         const { commentForm, type, parentCommentId } = this.props;
         const { isModalOpen } = this.state;
-        const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
+        const headerText =
+            parentCommentId ? 'Reply' :
+                (type === 'Question') ? 'Add an answer' :
+                    'Add a new comment';
 
-        if (type === 'RequestForProof' || type === 'Question') {
+        if (type === 'RequestForProof') {
             return (
                 <CommentForm
                     {...commentForm}

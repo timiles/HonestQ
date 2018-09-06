@@ -25,7 +25,7 @@ export const routes = (
             <Route path="/logout" component={Logout} />
             <Route path="/newtopic" component={NewTopic} />
             <Route path="/register" component={Register} />
-            <Route path="/pops/:popId/:popSlug" component={Pop} />
+            <Route path="/pops/:popId/:popSlug/:commentId?/:commentSlug?" component={Pop} />
             <Route path="/topics/:topicSlug" component={Topic} />
         </Switch>
     </Layout>

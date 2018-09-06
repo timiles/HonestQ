@@ -17,6 +17,7 @@ namespace Pobs.Web.Models.Pops
             this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUserPseudoId = userPseudoIds?[comment.PostedByUserId] ?? 0;
             this.IsPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
+            this.ParentCommentId = comment.ParentComment?.Id;
             this.Comments = comment.ChildComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
         }
 

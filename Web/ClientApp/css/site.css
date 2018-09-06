@@ -148,6 +148,9 @@ ul.topics-list li {
 .poptype-question:before {
     content: "❓";
 }
+.poptype-answer:before {
+    content: "🙋";
+}
 .stance-neutral:before {
     content: "😶";
 }
@@ -176,7 +179,6 @@ ul.topics-list li {
 }
 
 .pop-list-item {
-    margin-bottom: 10px;
     text-align: left;
     white-space: normal;
     width: 100%;
@@ -185,6 +187,17 @@ ul.topics-list li {
 .btn-new-pop {
     width: 100%;
 }
+
+.btn-back-to-pop {
+    margin-top: 20px;
+    text-align: left;
+    white-space: normal;
+    width: 100%;
+}
+    .btn-back-to-pop .pop-text {
+        font-weight: bold;
+    }
+
 
 .stance-overlay {
     margin-left: -12px;
@@ -204,6 +217,51 @@ ul.topics-list li {
     margin-left: 10px;
 }
 
+
+
+/* Slide animation */
+.slide {
+    position: absolute;
+    width: 100%;
+    transition: left 500ms ease-in, opacity 500ms ease-in;
+}
+    .slide-left.slide-enter {
+        left: -110%;
+        opacity: 0;
+    }
+    .slide-left.slide-enter-active {
+        left: 0;
+        opacity: 1;
+    }
+
+    .slide-left.slide-exit {
+        left: 0;
+        opacity: 1;
+    }
+    .slide-left.slide-exit-active {
+        left: -110%;
+        opacity: 0;
+    }
+
+    .slide-right.slide-enter {
+        left: 110%;
+        opacity: 0;
+    }
+    .slide-right.slide-enter-active {
+        left: 0;
+        opacity: 1;
+    }
+
+    .slide-right.slide-exit {
+        left: 0;
+        opacity: 1;
+    }
+    .slide-right.slide-exit-active {
+        left: 110%;
+        opacity: 0;
+    }
+
+	
 
 .ReactModal__Overlay {
     -webkit-perspective: 600;

@@ -56,7 +56,7 @@ namespace Pobs.Tests.Integration.Helpers
                 {
                     for (int commentIndex = 0; commentIndex < numberOfCommentsPerPop; commentIndex++)
                     {
-                        var comment = new Comment(Utils.GenerateRandomString(10), commentUser, DateTime.UtcNow, AgreementRating.Neutral)
+                        var comment = new Comment(Utils.GenerateRandomString(10), commentUser, DateTime.UtcNow, AgreementRating.Neutral, null)
                         {
                             Source = Utils.GenerateRandomString(10)
                         };
@@ -91,7 +91,7 @@ namespace Pobs.Tests.Integration.Helpers
                         {
                             for (int childCommentIndex = 0; childCommentIndex < numberOfChildCommentsPerComment; childCommentIndex++)
                             {
-                                var childComment = new Comment(Utils.GenerateRandomString(10), childCommentUser, DateTime.UtcNow, comment.Id)
+                                var childComment = new Comment(Utils.GenerateRandomString(10), childCommentUser, DateTime.UtcNow, null, comment.Id)
                                 {
                                     Source = Utils.GenerateRandomString(10),
                                 };

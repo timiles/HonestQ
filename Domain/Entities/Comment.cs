@@ -17,15 +17,14 @@ namespace Pobs.Domain.Entities
             PostedByUser = postedByUser;
             PostedAt = postedAt;
         }
-        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating? agreementRating)
+        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating? agreementRating, long? parentCommentId)
             : this(text, postedByUser, postedAt)
         {
             AgreementRating = agreementRating;
-        }
-        public Comment(string text, User postedByUser, DateTimeOffset postedAt, long parentCommentId)
-            : this(text, postedByUser, postedAt)
-        {
-            ParentComment = new Comment { Id = parentCommentId };
+            if (parentCommentId.HasValue)
+            {
+                ParentComment = new Comment { Id = parentCommentId.Value };
+            }
         }
 
         public long Id { get; set; }

@@ -45,7 +45,7 @@ export default class PopList extends React.Component<Props, State> {
                 </form>
                 <ul className="list-unstyled">
                     {pops.map((x, i) =>
-                        <li key={`pop_${i}`}>
+                        <li key={`pop_${i}`} className="mb-2">
                             <Link
                                 to={`/pops/${x.id}/${x.slug}`}
                                 className="btn btn-lg btn-outline-secondary pop-list-item"

@@ -151,7 +151,7 @@ namespace Pobs.Tests.Integration.Pops
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(pop);
-                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral);
+                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral, null);
                 pop.Comments.Add(comment);
                 dbContext.SaveChanges();
             }
@@ -198,7 +198,6 @@ namespace Pobs.Tests.Integration.Pops
 
         [Theory]
         [InlineData("RequestForProof")]
-        [InlineData("Question")]
         public async Task Type_WithAgreementRating_ShouldGetBadRequest(string type)
         {
             var pop = _topic.Pops.First(x => x.Type.ToString() == type);
@@ -217,39 +216,6 @@ namespace Pobs.Tests.Integration.Pops
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal($"AgreementRating is invalid when Type is {type}", responseContent);
-            }
-        }
-
-        [Fact]
-        public async Task ParentCommentId_WithAgreementRating_ShouldGetBadRequest()
-        {
-            var pop = _topic.Pops.Skip(1).First();
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                dbContext.Attach(pop);
-                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral);
-                pop.Comments.Add(comment);
-                dbContext.SaveChanges();
-            }
-
-            var parentComment = pop.Comments.First();
-            var agreementRating = AgreementRating.Agree;
-            var payload = new
-            {
-                Text = "My insightful child comment on this parent comment",
-                AgreementRating = agreementRating.ToString(),
-                ParentCommentId = parentComment.Id,
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(pop.Id);
-                var response = await client.PostAsync(url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("AgreementRating is invalid with ParentCommentId", responseContent);
             }
         }
 

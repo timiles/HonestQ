@@ -24,8 +24,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         super(props);
 
         this.hideAgreementRating = this.props.type === 'RequestForProof'
-            || this.props.type === 'Question'
-            || !!this.props.parentCommentId;
+            || (this.props.type === 'Question' && !this.props.parentCommentId);
         this.textIsOptionalSourceIsRequired = (this.props.type === 'RequestForProof');
 
         this.state = {
