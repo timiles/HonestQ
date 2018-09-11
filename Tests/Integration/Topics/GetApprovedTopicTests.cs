@@ -79,11 +79,9 @@ namespace Pobs.Tests.Integration.Topics
             {
                 dbContext.Attach(_user);
                 dbContext.Attach(pop);
-                AddCommentsToPop(AgreementRating.StronglyDisagree, 3);
                 AddCommentsToPop(AgreementRating.Disagree, 4);
                 AddCommentsToPop(AgreementRating.Neutral, 5);
                 AddCommentsToPop(AgreementRating.Agree, 6);
-                AddCommentsToPop(AgreementRating.StronglyAgree, 7);
                 dbContext.SaveChanges();
             }
 
@@ -101,11 +99,9 @@ namespace Pobs.Tests.Integration.Topics
                 var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
                 var popResponseModel = responseModel.Pops.Single(x => x.Id == pop.Id);
 
-                Assert.Equal(3, popResponseModel.AgreementRatings[AgreementRating.StronglyDisagree.ToString()]);
                 Assert.Equal(4, popResponseModel.AgreementRatings[AgreementRating.Disagree.ToString()]);
                 Assert.Equal(5, popResponseModel.AgreementRatings[AgreementRating.Neutral.ToString()]);
                 Assert.Equal(6, popResponseModel.AgreementRatings[AgreementRating.Agree.ToString()]);
-                Assert.Equal(7, popResponseModel.AgreementRatings[AgreementRating.StronglyAgree.ToString()]);
             }
         }
 

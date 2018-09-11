@@ -79,7 +79,7 @@ namespace Pobs.Tests.Integration.Pops
             {
                 Text = "Here's a poop emoji: 💩",
                 Source = "https://example.com/💩",
-                AgreementRating = AgreementRating.StronglyAgree.ToString()
+                AgreementRating = AgreementRating.Agree.ToString()
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

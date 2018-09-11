@@ -2,8 +2,8 @@ import * as React from 'react';
 
 export default class AgreementRatingBarChart extends React.Component<{ [key: string]: number }, {}> {
 
-    private readonly agreementRatingValues = ['StronglyDisagree', 'Disagree', 'Neutral', 'Agree', 'StronglyAgree'];
-    private readonly agreementRatingColors = ['red', 'orange', 'gold', 'yellowgreen', 'seagreen'];
+    private readonly agreementRatingValues = ['Disagree', 'Neutral', 'Agree'];
+    private readonly agreementRatingColors = ['red', 'gold', 'seagreen'];
 
     constructor(props: { [key: string]: number }) {
         super(props);
@@ -17,8 +17,8 @@ export default class AgreementRatingBarChart extends React.Component<{ [key: str
             return null;
         }
 
-        const chartWidth = 50;
-        const barWidth = chartWidth / 5;
+        const barWidth = 10;
+        const chartWidth = this.agreementRatingValues.length * barWidth;
         const chartHeight = 20;
 
         const bars = this.agreementRatingValues.map((v, i) => ({

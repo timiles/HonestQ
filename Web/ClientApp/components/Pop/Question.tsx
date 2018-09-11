@@ -46,7 +46,7 @@ export default class Question extends React.Component<Props, {}> {
                         >
                             <PopTypeView value="Answer" />
                             <span className="pop pop-statement">{x.text}</span>
-                            {this.renderAgreementRating(x)}
+                            <span className="ml-1">{this.renderAgreementRating(x)}</span>
                         </Link>
                     </li>)}
                 </ol>

@@ -53,7 +53,10 @@ export default class PopList extends React.Component<Props, State> {
                                 <PopTypeView value={x.type} />
                                 {this.renderStance(x, topicValue.slug)}
                                 <span className={`pop pop-${x.type.toLowerCase()}`}>{x.text}</span>
-                                {x.agreementRatings && <AgreementRatingBarChart {...x.agreementRatings} />}
+                                {x.agreementRatings &&
+                                    <span className="ml-1">
+                                        <AgreementRatingBarChart {...x.agreementRatings} />
+                                    </span>}
                             </Link>
                         </li>)}
                     <li>
