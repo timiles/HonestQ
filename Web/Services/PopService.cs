@@ -15,6 +15,7 @@ namespace Pobs.Web.Services
     {
         Task<PopListItemModel> SavePop(ValidatedPopModel model, int postedByUserId);
         Task<PopListItemModel> UpdatePop(int popId, ValidatedPopModel model);
+        Task<PopsListModel> ListPops(PopType? popType);
         Task<PopModel> GetPop(int popId, int? loggedInUserId);
         Task<CommentModel> SaveComment(int popId, string text, string source, int postedByUserId, AgreementRating? agreementRating, long? parentCommentId);
         Task<CommentModel> GetComment(int popId, long commentId, int? loggedInUserId);
@@ -101,6 +102,14 @@ namespace Pobs.Web.Services
 
             await _context.SaveChangesAsync();
             return new PopListItemModel(pop);
+        }
+
+        public async Task<PopsListModel> ListPops(PopType? popType)
+        {
+            var pops = await _context.Pops
+                .Where(x => popType == null || x.Type == popType.Value)
+                .ToListAsync();
+            return new PopsListModel(pops);
         }
 
         public async Task<PopModel> GetPop(int popId, int? loggedInUserId)

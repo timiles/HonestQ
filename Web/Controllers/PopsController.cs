@@ -122,6 +122,26 @@ namespace Pobs.Web.Controllers
             return (validatedPopModel, null);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index(string type)
+        {
+            PopType? popType = null;
+            if (!string.IsNullOrWhiteSpace(type))
+            {
+                if (Enum.TryParse<PopType>(type, out PopType p))
+                {
+                    popType = p;
+                }
+                else
+                {
+                    return BadRequest($"Invalid Type: {type}");
+                }
+            }
+
+            var popsList = await _popService.ListPops(popType);
+            return Ok(popsList);
+        }
+
         [HttpGet, Route("{popId}")]
         public async Task<IActionResult> GetPop(int popId)
         {
