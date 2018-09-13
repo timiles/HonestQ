@@ -67,6 +67,10 @@ export interface PopModel {
     comments: CommentModel[];
 }
 
+export interface PopsListModel {
+    pops: PopListItemModel[];
+}
+
 export interface TopicStanceModel {
     slug: string;
     stance?: string;
