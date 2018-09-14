@@ -54,7 +54,8 @@ export const actionCreators = {
             }
             dispatch({ type: 'AUTOCOMPLETE_TOPICS_REQUESTED', payload: { query } });
 
-            getJson<TopicAutocompleteResultsModel>(`/api/topics/autocomplete?q=${query}`, getState().login.loggedInUser)
+            const queryUrl = `/api/topics/autocomplete?q=${encodeURIComponent(query)}`;
+            getJson<TopicAutocompleteResultsModel>(queryUrl, getState().login.loggedInUser)
                 .then((response: TopicAutocompleteResultsModel) => {
                     dispatch({
                         type: 'AUTOCOMPLETE_TOPICS_SUCCESS',
