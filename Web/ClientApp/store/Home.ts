@@ -3,6 +3,7 @@ import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
 import { PopsListModel, TopicsListModel } from '../server-models';
 import { getJson } from '../utils';
+import { NewPopFormReceivedAction } from './NewPop';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -30,6 +31,7 @@ type KnownAction =
     GetPopsListRequestedAction
     | GetPopsListSuccessAction
     | GetPopsListFailedAction
+    | NewPopFormReceivedAction
     | GetTopicsListRequestedAction
     | GetTopicsListSuccessAction
     | GetTopicsListFailedAction;
@@ -91,6 +93,22 @@ export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownActio
             return { loadingPopsList: { loadedModel: action.payload }, loadingTopicsList: state.loadingTopicsList };
         case 'GET_POPS_LIST_FAILED':
             return { loadingPopsList: { error: action.payload.error }, loadingTopicsList: state.loadingTopicsList };
+        case 'NEW_POP_FORM_RECEIVED': {
+            if (!state.loadingPopsList.loadedModel) {
+                // We could be posting a pop from the topics page
+                return state;
+            }
+            if (action.payload.popListItem.type !== 'Question') {
+                // Only displaying Questions on the home page
+                return state;
+            }
+            const popsListModel = state.loadingPopsList.loadedModel;
+            // Slice for immutability
+            const popsNext = popsListModel.pops.slice();
+            popsNext.push(action.payload.popListItem);
+            const popsListNext = { ...popsListModel, pops: popsNext };
+            return { loadingPopsList: { loadedModel: popsListNext }, loadingTopicsList: state.loadingTopicsList };
+        }
         case 'GET_TOPICS_LIST_REQUESTED':
             return { loadingPopsList: state.loadingPopsList, loadingTopicsList: { loading: true } };
         case 'GET_TOPICS_LIST_SUCCESS':

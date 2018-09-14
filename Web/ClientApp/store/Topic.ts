@@ -102,7 +102,11 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                 },
             };
         case 'NEW_POP_FORM_RECEIVED': {
-            const topicModel = state.topic.model!;
+            if (!state.topic.model) {
+                // We could be posting a pop from the home page
+                return state;
+            }
+            const topicModel = state.topic.model;
             // Slice for immutability
             const popsNext = topicModel.pops.slice();
             popsNext.push(action.payload.popListItem);
