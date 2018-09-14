@@ -13,6 +13,7 @@ type Props = FormProps<PopFormModel>
     hideInfoBox?: boolean,
     isModal?: boolean,
     onCloseModalRequested?: () => void,
+    fixedType?: string,
 };
 
 export default class PopForm extends React.Component<Props, PopFormModel> {
@@ -24,10 +25,10 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
             {
                 text: props.initialState.text,
                 source: props.initialState.source,
-                type: props.initialState.type,
+                type: props.fixedType || props.initialState.type,
                 topics: props.initialState.topics,
             } :
-            { text: '', source: '', type: 'Statement', topics: props.initialTopicValues || [] };
+            { text: '', source: '', type: props.fixedType || 'Statement', topics: props.initialTopicValues || [] };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
@@ -37,17 +38,18 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
     public componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a pop has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', type: 'Statement', topics: [] });
+            this.setState({ text: '', source: '', type: this.props.fixedType || 'Statement', topics: [] });
         }
     }
 
     public render() {
-        const { hideInfoBox, isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
+        const { hideInfoBox, isModal, onCloseModalRequested, fixedType, error, submitting, submitted } = this.props;
         const { text, type, source, topics } = this.state;
+
         return (
             <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
-                    {!hideInfoBox &&
+                    {!hideInfoBox && fixedType !== 'Question' &&
                         <div className="alert alert-info" role="alert">
                             <p>Please remember, Statements under a Topic are:</p>
                             <ul>
@@ -62,16 +64,18 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                         </div>
                     }
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className="form-group">
-                        <label>Type</label>
-                        <div>
-                            <PopTypeInput
-                                name="type"
-                                value={type}
-                                onChange={this.handleChange}
-                            />
+                    {!fixedType &&
+                        <div className="form-group">
+                            <label>Type</label>
+                            <div>
+                                <PopTypeInput
+                                    name="type"
+                                    value={type}
+                                    onChange={this.handleChange}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    }
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="popText">{type.toSentenceCase()}</label>
                         <div className="poptype-over-text-area">

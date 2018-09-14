@@ -49,7 +49,7 @@ class Home extends React.Component<HomeProps, {}> {
                                 </Link>
                             </li>)}
                         <li>
-                            <NewPop />
+                            <NewPop popType="Question" />
                         </li>
                     </ul>
                 }

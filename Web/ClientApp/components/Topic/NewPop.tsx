@@ -8,7 +8,7 @@ import PopForm from './PopForm';
 
 type Props = NewPopStore.NewPopState
     & typeof NewPopStore.actionCreators
-    & { topicValue: TopicValueModel };
+    & { popType: string, topicValue: TopicValueModel };
 
 interface State {
     isModalOpen: boolean;
@@ -34,8 +34,14 @@ class NewPop extends React.Component<Props, State> {
     }
 
     public render() {
-        const { popForm, topicValue } = this.props;
+        const { popForm, popType, topicValue } = this.props;
         const { isModalOpen } = this.state;
+        const buttonText = (popType === 'Question') ? 'Ask a question' : 'Got something new to say?';
+        const modalTitle = (popType === 'Question') ? 'Ask a question' : 'Say something';
+
+        const initialTopicValues = !topicValue ? [] :
+            (popType === 'Question') ? [{ ...topicValue }] :
+                [{ ...topicValue, stance: 'Neutral' }];
 
         return (
             <>
@@ -44,14 +50,15 @@ class NewPop extends React.Component<Props, State> {
                     className="btn btn-lg btn-primary btn-new-pop"
                     onClick={this.handleOpen}
                 >
-                    Got something new to say?
+                    {buttonText}
                 </button>
-                <Modal title="Say something" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                <Modal title={modalTitle} isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <PopForm
                         {...popForm}
-                        initialTopicValues={[{ ...topicValue, stance: 'Neutral' }]}
+                        initialTopicValues={initialTopicValues}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
+                        fixedType={popType}
                         submit={this.handleSubmit}
                     />
                 </Modal>
