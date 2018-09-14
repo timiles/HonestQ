@@ -46,6 +46,11 @@ export default class Question extends React.Component<Props, {}> {
                         >
                             <PopTypeView value="Answer" />
                             <span className="pop pop-statement">{x.text}</span>
+                            {this.isCitationNeeded(x) &&
+                                <small className="ml-1">
+                                    <span className="badge badge-info">Citation needed</span>
+                                </small>
+                            }
                             <span className="ml-1">{this.renderAgreementRating(x)}</span>
                         </Link>
                     </li>)}
@@ -59,6 +64,10 @@ export default class Question extends React.Component<Props, {}> {
                 </div>
             </div>
         );
+    }
+
+    private isCitationNeeded(answer: CommentModel): boolean {
+        return !answer.source && (answer.comments.filter((x) => x.source).length === 0);
     }
 
     private renderAgreementRating(answer: CommentModel): any {
