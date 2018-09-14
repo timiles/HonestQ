@@ -19,6 +19,8 @@ docker push $imageUri
 
 # Clean up
 docker rmi $imageUri pobsweb
+# NOTE: This is only necessary because I'm building on my dev machine
+rm -rf "../Web/wwwroot/dist"
 
 # Increment next already in case anything fails after here
 echo $((buildNumber+1)) > build/next-build-number.txt
