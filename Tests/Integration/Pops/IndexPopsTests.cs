@@ -53,6 +53,8 @@ namespace Pobs.Tests.Integration.Pops
                         Assert.Equal(pop.Slug, responsePop.Slug);
                         Assert.Equal(pop.Text, responsePop.Text);
                         Assert.Equal(pop.Type.ToString(), responsePop.Type);
+                        Assert.NotEmpty(responsePop.AgreementRatings);
+                        Assert.Equal(3, responsePop.ChildCommentsCount);
                     }
                 }
             }
@@ -83,6 +85,8 @@ namespace Pobs.Tests.Integration.Pops
                         Assert.Equal(pop.Text, responsePop.Text);
                         Assert.Equal(pop.Type.ToString(), responsePop.Type);
                         Assert.Equal(popType.ToString(), responsePop.Type);
+                        Assert.NotEmpty(responsePop.AgreementRatings);
+                        Assert.Equal(3, responsePop.ChildCommentsCount);
                     }
                 }
             }

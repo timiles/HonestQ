@@ -46,6 +46,10 @@ class Home extends React.Component<HomeProps, {}> {
                                 >
                                     <PopTypeView value={x.type} />
                                     <span className={`pop pop-${x.type.toLowerCase()}`}>{x.text}</span>
+                                    <small className="ml-1">
+                                        <span className="badge badge-info">{x.childCommentsCount}</span>
+                                        <span className="sr-only">answers</span>
+                                    </small>
                                 </Link>
                             </li>)}
                         <li>

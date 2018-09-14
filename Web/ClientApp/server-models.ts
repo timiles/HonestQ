@@ -55,6 +55,7 @@ export interface PopListItemModel {
     type: string;
     topics: TopicValueStanceModel[];
     agreementRatings: { [key: string]: number };
+    childCommentsCount: number;
 }
 
 export interface PopModel {

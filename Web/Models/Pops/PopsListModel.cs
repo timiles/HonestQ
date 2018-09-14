@@ -6,6 +6,7 @@ namespace Pobs.Web.Models.Pops
 {
     public class PopsListModel
     {
+        public PopsListModel() { }
         public PopsListModel(IEnumerable<Pop> pops)
         {
             this.Pops = pops.Select(x => new PopListItemModel(x)).ToArray();

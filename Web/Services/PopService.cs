@@ -107,6 +107,7 @@ namespace Pobs.Web.Services
         public async Task<PopsListModel> ListPops(PopType? popType)
         {
             var pops = await _context.Pops
+                .Include(x => x.Comments)
                 .Where(x => popType == null || x.Type == popType.Value)
                 .ToListAsync();
             return new PopsListModel(pops);

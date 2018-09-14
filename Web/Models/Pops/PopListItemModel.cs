@@ -19,6 +19,7 @@ namespace Pobs.Web.Models.Pops
             this.AgreementRatings = pop.Comments
                 .GroupBy(x => x.AgreementRating)
                 .ToDictionary(x => x.Key.ToString(), x => x.Count());
+            this.ChildCommentsCount = pop.Comments.Count(x => x.ParentComment == null);
         }
 
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace Pobs.Web.Models.Pops
         public string Type { get; set; }
         public TopicValueStanceModel[] Topics { get; set; }
         public Dictionary<string, int> AgreementRatings { get; set; }
+        public int ChildCommentsCount { get; set; }
     }
 }
