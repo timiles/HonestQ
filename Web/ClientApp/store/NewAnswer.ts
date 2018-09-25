@@ -1,15 +1,14 @@
-﻿import { push } from 'react-router-redux';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { FormProps } from '../components/shared/FormProps';
-import { PopFormModel, PopListItemModel } from '../server-models';
+import { AnswerFormModel, AnswerModel } from '../server-models';
 import { postJson } from '../utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface NewPopState {
-    popForm?: FormProps<PopFormModel>;
+export interface NewAnswerState {
+    answerForm?: FormProps<AnswerFormModel>;
 }
 
 // -----------------
@@ -17,56 +16,53 @@ export interface NewPopState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface NewPopFormSubmittedAction {
-    type: 'NEW_POP_FORM_SUBMITTED';
+interface NewAnswerFormSubmittedAction {
+    type: 'NEW_ANSWER_FORM_SUBMITTED';
 }
-export interface NewPopFormReceivedAction {
-    type: 'NEW_POP_FORM_RECEIVED';
-    payload: { popListItem: PopListItemModel; };
+export interface NewAnswerFormReceivedAction {
+    type: 'NEW_ANSWER_FORM_RECEIVED';
+    payload: { answer: AnswerModel; };
 }
-interface NewPopFormFailedAction {
-    type: 'NEW_POP_FORM_FAILED';
-    payload: { error: string | null; };
+interface NewAnswerFormFailedAction {
+    type: 'NEW_ANSWER_FORM_FAILED';
+    payload: { error?: string; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = NewPopFormSubmittedAction
-    | NewPopFormReceivedAction
-    | NewPopFormFailedAction;
+type KnownAction = NewAnswerFormSubmittedAction
+    | NewAnswerFormReceivedAction
+    | NewAnswerFormFailedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    submit: (popForm: PopFormModel):
+    submit: (questionId: number, answerForm: AnswerFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'NEW_POP_FORM_SUBMITTED' });
+                dispatch({ type: 'NEW_ANSWER_FORM_SUBMITTED' });
 
-                if (!popForm.text || !popForm.type) {
+                if (!answerForm.text) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'NEW_POP_FORM_FAILED', payload: { error: null } });
+                    dispatch({ type: 'NEW_ANSWER_FORM_FAILED', payload: {} });
                     return;
                 }
 
-                postJson<PopListItemModel>(
-                    `/api/pops`, popForm, getState().login.loggedInUser!)
-                    .then((responseModel: PopListItemModel) => {
+                postJson<AnswerModel>(
+                    `/api/questions/${questionId}/answers`,
+                    answerForm, getState().login.loggedInUser!)
+                    .then((responseModel: AnswerModel) => {
                         dispatch({
-                            type: 'NEW_POP_FORM_RECEIVED',
-                            payload: { popListItem: responseModel },
+                            type: 'NEW_ANSWER_FORM_RECEIVED',
+                            payload: { answer: responseModel },
                         });
-                        setTimeout(() => {
-                            // Wait a bit for modal to have closed, then slide onto new Pop
-                            dispatch(push(`/pops/${responseModel.id}/${responseModel.slug}`) as any);
-                        }, 700);
                     })
                     .catch((reason: string) => {
                         dispatch({
-                            type: 'NEW_POP_FORM_FAILED',
-                            payload: { error: reason || 'Posting pop failed' },
+                            type: 'NEW_ANSWER_FORM_FAILED',
+                            payload: { error: reason || 'Posting answer failed' },
                         });
                     });
             })();
@@ -77,23 +73,22 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: NewPopState = { popForm: {} };
+const defaultState: NewAnswerState = { answerForm: {} };
 
-export const reducer: Reducer<NewPopState> = (state: NewPopState, action: KnownAction) => {
+export const reducer: Reducer<NewAnswerState> = (state: NewAnswerState, action: KnownAction) => {
     switch (action.type) {
-        case 'NEW_POP_FORM_SUBMITTED':
+        case 'NEW_ANSWER_FORM_SUBMITTED':
             return {
-                popForm: {
+                answerForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'NEW_POP_FORM_RECEIVED':
+        case 'NEW_ANSWER_FORM_RECEIVED':
             return defaultState;
-        case 'NEW_POP_FORM_FAILED':
+        case 'NEW_ANSWER_FORM_FAILED':
             return {
-                popForm: {
-                    submitting: false,
+                answerForm: {
                     submitted: true,
                     error: action.payload.error,
                 },

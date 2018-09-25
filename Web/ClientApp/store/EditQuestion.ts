@@ -1,14 +1,14 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { EditFormProps } from '../components/shared/EditFormProps';
-import { PopFormModel, PopModel } from '../server-models';
+import { QuestionFormModel, QuestionModel } from '../server-models';
 import { getJson, putJson } from '../utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface EditPopState {
-    editPopForm: EditFormProps<PopFormModel>;
+export interface EditQuestionState {
+    editQuestionForm: EditFormProps<QuestionFormModel>;
     savedSlug?: string;
 }
 
@@ -17,84 +17,84 @@ export interface EditPopState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetPopRequestedAction {
-    type: 'GET_POP_REQUESTED';
+interface GetQuestionRequestedAction {
+    type: 'GET_QUESTION_REQUESTED';
     payload: { questionId: number; };
 }
-interface GetPopSuccessAction {
-    type: 'GET_POP_SUCCESS';
-    payload: { pop: PopModel; questionId: number; };
+interface GetQuestionSuccessAction {
+    type: 'GET_QUESTION_SUCCESS';
+    payload: { question: QuestionModel; questionId: number; };
 }
-interface GetPopFailedAction {
-    type: 'GET_POP_FAILED';
+interface GetQuestionFailedAction {
+    type: 'GET_QUESTION_FAILED';
     payload: { questionId: number; error: string; };
 }
-interface EditPopFormSubmittedAction {
-    type: 'EDIT_POP_FORM_SUBMITTED';
+interface EditQuestionFormSubmittedAction {
+    type: 'EDIT_QUESTION_FORM_SUBMITTED';
 }
-interface EditPopFormReceivedAction {
-    type: 'EDIT_POP_FORM_RECEIVED';
-    payload: { questionId: number; pop: PopModel; };
+interface EditQuestionFormReceivedAction {
+    type: 'EDIT_QUESTION_FORM_RECEIVED';
+    payload: { questionId: number; question: QuestionModel; };
 }
-interface EditPopFormFailedAction {
-    type: 'EDIT_POP_FORM_FAILED';
+interface EditQuestionFormFailedAction {
+    type: 'EDIT_QUESTION_FORM_FAILED';
     payload: { error: string | null; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetPopRequestedAction
-    | GetPopSuccessAction
-    | GetPopFailedAction
-    | EditPopFormSubmittedAction
-    | EditPopFormReceivedAction
-    | EditPopFormFailedAction;
+type KnownAction = GetQuestionRequestedAction
+    | GetQuestionSuccessAction
+    | GetQuestionFailedAction
+    | EditQuestionFormSubmittedAction
+    | EditQuestionFormReceivedAction
+    | EditQuestionFormFailedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getPop: (questionId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    getQuestion: (questionId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_POP_REQUESTED', payload: { questionId } });
+            dispatch({ type: 'GET_QUESTION_REQUESTED', payload: { questionId } });
 
-            getJson<PopModel>(`/api/pops/${questionId}`, getState().login.loggedInUser)
-                .then((popResponse: PopModel) => {
+            getJson<QuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
+                .then((questionResponse: QuestionModel) => {
                     dispatch({
-                        type: 'GET_POP_SUCCESS',
-                        payload: { pop: popResponse, questionId },
+                        type: 'GET_QUESTION_SUCCESS',
+                        payload: { question: questionResponse, questionId },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_POP_FAILED',
+                        type: 'GET_QUESTION_FAILED',
                         payload: { questionId, error: reason || 'Get topic failed' },
                     });
                 });
         })();
     },
-    submit: (questionId: number, popForm: PopFormModel):
+    submit: (questionId: number, questionForm: QuestionFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'EDIT_POP_FORM_SUBMITTED' });
+                dispatch({ type: 'EDIT_QUESTION_FORM_SUBMITTED' });
 
-                if (!popForm.text || !popForm.type) {
+                if (!questionForm.text) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'EDIT_POP_FORM_FAILED', payload: { error: null } });
+                    dispatch({ type: 'EDIT_QUESTION_FORM_FAILED', payload: { error: null } });
                     return;
                 }
 
-                putJson<PopModel>(
-                    `/api/pops/${questionId}`, popForm, getState().login.loggedInUser!)
-                    .then((popResponse: PopModel) => {
+                putJson<QuestionModel>(
+                    `/api/questions/${questionId}`, questionForm, getState().login.loggedInUser!)
+                    .then((questionResponse: QuestionModel) => {
                         dispatch({
-                            type: 'EDIT_POP_FORM_RECEIVED',
-                            payload: { questionId, pop: popResponse },
+                            type: 'EDIT_QUESTION_FORM_RECEIVED',
+                            payload: { questionId, question: questionResponse },
                         });
                     })
                     .catch((reason: string) => {
-                        dispatch({ type: 'EDIT_POP_FORM_FAILED', payload: { error: reason } });
+                        dispatch({ type: 'EDIT_QUESTION_FORM_FAILED', payload: { error: reason } });
                     });
             })();
         },
@@ -104,46 +104,46 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: EditPopState = { editPopForm: {} };
+const defaultState: EditQuestionState = { editQuestionForm: {} };
 
-export const reducer: Reducer<EditPopState> = (state: EditPopState, action: KnownAction) => {
+export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_POP_REQUESTED':
+        case 'GET_QUESTION_REQUESTED':
             return {
-                editPopForm: {
+                editQuestionForm: {
                     loading: true,
                 },
             };
-        case 'GET_POP_SUCCESS':
+        case 'GET_QUESTION_SUCCESS':
             return {
-                editPopForm: {
-                    initialState: action.payload.pop,
+                editQuestionForm: {
+                    initialState: action.payload.question,
                 },
             };
-        case 'GET_POP_FAILED':
+        case 'GET_QUESTION_FAILED':
             return {
-                editPopForm: {
+                editQuestionForm: {
                     error: action.payload.error,
                 },
             };
-        case 'EDIT_POP_FORM_SUBMITTED':
+        case 'EDIT_QUESTION_FORM_SUBMITTED':
             return {
-                editPopForm: {
+                editQuestionForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'EDIT_POP_FORM_RECEIVED':
+        case 'EDIT_QUESTION_FORM_RECEIVED':
             return {
-                editPopForm: {
+                editQuestionForm: {
                     submitting: false,
                     submitted: false,
                 },
-                savedSlug: action.payload.pop.slug,
+                savedSlug: action.payload.question.slug,
             };
-        case 'EDIT_POP_FORM_FAILED':
+        case 'EDIT_QUESTION_FORM_FAILED':
             return {
-                editPopForm: {
+                editQuestionForm: {
                     submitting: false,
                     submitted: true,
                     error: action.payload.error,

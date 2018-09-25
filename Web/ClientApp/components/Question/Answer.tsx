@@ -1,31 +1,31 @@
 import * as React from 'react';
-import { CommentModel } from '../../server-models';
-import PopTypeView from '../shared/PopTypeView';
+import { AnswerModel } from '../../server-models';
+import Emoji, { EmojiValue } from '../shared/Emoji';
 import CommentList from './CommentList';
 import NewComment from './NewComment';
 
-type Props = CommentModel
+type Props = AnswerModel
     & { questionId: number };
 
 export default class Answer extends React.Component<Props, {}> {
 
     public render() {
-        const { questionId, id, text, comments } = this.props;
+        const { questionId, id, text, source, comments } = this.props;
 
         return (
             <div>
                 <h4>
-                    <PopTypeView value="Answer" />
+                    <Emoji value={EmojiValue.Answer} />
                     <span className="pop pop-statement">{text}</span>
                 </h4>
+                {source && <p><small>Source: {source}</small></p>}
                 <div>
                     <NewComment
-                        parentCommentId={id}
                         questionId={questionId}
-                        type="Question"
+                        answerId={id}
                     />
                 </div>
-                <CommentList questionId={questionId} comments={comments} />
+                <CommentList questionId={questionId} answerId={id} comments={comments} />
             </div>
         );
     }

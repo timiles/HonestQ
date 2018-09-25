@@ -1,22 +1,19 @@
 import * as React from 'react';
-import { PopFormModel, TopicValueStanceModel } from '../../server-models';
+import { QuestionFormModel, TopicValueModel } from '../../server-models';
+import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
-import PopTypeView from '../shared/PopTypeView';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import PopTypeInput from './PopTypeInput';
 import TopicAutocomplete from './TopicAutocomplete';
 
-type Props = FormProps<PopFormModel>
+type Props = FormProps<QuestionFormModel>
     & {
-    initialTopicValues?: TopicValueStanceModel[],
-    hideInfoBox?: boolean,
+    initialTopicValues?: TopicValueModel[],
     isModal?: boolean,
     onCloseModalRequested?: () => void,
-    fixedType?: string,
 };
 
-export default class PopForm extends React.Component<Props, PopFormModel> {
+export default class QuestionForm extends React.Component<Props, QuestionFormModel> {
 
     constructor(props: Props) {
         super(props);
@@ -25,10 +22,9 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
             {
                 text: props.initialState.text,
                 source: props.initialState.source,
-                type: props.fixedType || props.initialState.type,
                 topics: props.initialState.topics,
             } :
-            { text: '', source: '', type: props.fixedType || 'Statement', topics: props.initialTopicValues || [] };
+            { text: '', source: '', topics: props.initialTopicValues || [] };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
@@ -36,53 +32,27 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
     }
 
     public componentWillReceiveProps(nextProps: Props) {
-        // This will reset the form when a pop has been successfully submitted
+        // This will reset the form when a Question has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', type: this.props.fixedType || 'Statement', topics: [] });
+            this.setState({ text: '', source: '', topics: [] });
         }
     }
 
     public render() {
-        const { hideInfoBox, isModal, onCloseModalRequested, fixedType, error, submitting, submitted } = this.props;
-        const { text, type, source, topics } = this.state;
+        const { isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
+        const { text, source, topics } = this.state;
 
         return (
             <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
-                    {!hideInfoBox && fixedType !== 'Question' &&
-                        <div className="alert alert-info" role="alert">
-                            <p>Please remember, Statements under a Topic are:</p>
-                            <ul>
-                                <li>Unique</li>
-                                <li>Anonymous</li>
-                                <li>A general summary of a fact or opinion that people believe</li>
-                            </ul>
-                            <p>
-                                Once you have submitted a Statement, you can then discuss whether you agree with it,
-                                provide further info, and see other people's points of view in the Comments section.
-                    </p>
-                        </div>
-                    }
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    {!fixedType &&
-                        <div className="form-group">
-                            <label>Type</label>
-                            <div>
-                                <PopTypeInput
-                                    name="type"
-                                    value={type}
-                                    onChange={this.handleChange}
-                                />
-                            </div>
-                        </div>
-                    }
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                        <label htmlFor="popText">{type.toSentenceCase()}</label>
+                        <label htmlFor="questionText">Question</label>
                         <div className="poptype-over-text-area">
-                            <PopTypeView value={type} />
+                            <Emoji value={EmojiValue.Question} />
                         </div>
                         <SuperTextArea
-                            id="popText"
+                            id="questionText"
                             name="text"
                             className="pop-text-area"
                             value={text}
@@ -92,11 +62,11 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                         {submitted && !text && <div className="help-block">Text is required</div>}
                     </div>
                     <div className="form-group">
-                        <label htmlFor="popSource">Source (optional)</label>
+                        <label htmlFor="questionSource">Source (optional)</label>
                         <input
                             type="text"
                             className="form-control"
-                            id="popSource"
+                            id="questionSource"
                             name="source"
                             value={source}
                             maxLength={2000}
@@ -108,7 +78,6 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
                         <div>
                             <TopicAutocomplete
                                 name="topicSlugs"
-                                includeStance={type === 'Statement'}
                                 selectedTopics={topics}
                                 onChange={this.handleTopicsChange}
                             />
@@ -132,21 +101,10 @@ export default class PopForm extends React.Component<Props, PopFormModel> {
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLButtonElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
-
-        const topics = this.state.topics;
-        if (name === 'type') {
-            if (value === 'Statement') {
-                topics.forEach((x) => x.stance = 'Neutral');
-            } else {
-                // REVIEW: This should be null
-                topics.forEach((x) => x.stance = undefined);
-            }
-        }
-
-        this.setState((prevState) => ({ ...prevState, [name]: value, topics }));
+        this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
-    private handleTopicsChange(selectedTopics: TopicValueStanceModel[]): void {
+    private handleTopicsChange(selectedTopics: TopicValueModel[]): void {
         this.setState({ topics: selectedTopics });
     }
 

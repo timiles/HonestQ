@@ -22,6 +22,22 @@ export interface IntroModel {
     content: string;
 }
 
+export interface AnswerFormModel {
+    text: string;
+    source: string;
+}
+
+export interface AnswerModel {
+    id: number;
+    text: string;
+    slug: string;
+    source: string;
+    postedAt: string;
+    postedByUserPseudoId: number;
+    isPostedByLoggedInUser: boolean;
+    comments: CommentModel[];
+}
+
 export interface CommentFormModel {
     text: string;
     source: string;
@@ -41,46 +57,31 @@ export interface CommentModel {
     comments: CommentModel[];
 }
 
-export interface PopFormModel {
+export interface QuestionFormModel {
     text: string;
     source: string;
-    type: string;
-    topics: TopicStanceModel[];
+    topics: TopicValueModel[];
 }
 
-export interface PopListItemModel {
+export interface QuestionListItemModel {
     id: number;
     slug: string;
     text: string;
-    type: string;
-    topics: TopicValueStanceModel[];
-    agreementRatings: { [key: string]: number };
-    childCommentsCount: number;
+    topics: TopicValueModel[];
+    answersCount: number;
 }
 
-export interface PopModel {
+export interface QuestionModel {
     slug: string;
     text: string;
     source: string;
-    type: string;
     isPostedByLoggedInUser: boolean;
-    topics: TopicValueStanceModel[];
-    comments: CommentModel[];
+    topics: TopicValueModel[];
+    answers: AnswerModel[];
 }
 
-export interface PopsListModel {
-    pops: PopListItemModel[];
-}
-
-export interface TopicStanceModel {
-    slug: string;
-    stance?: string;
-}
-
-export interface TopicValueStanceModel {
-    stance?: string;
-    name: string;
-    slug: string;
+export interface QuestionsListModel {
+    questions: QuestionListItemModel[];
 }
 
 export interface AdminTopicModel {
@@ -89,7 +90,7 @@ export interface AdminTopicModel {
     name: string;
     summary: string;
     moreInfoUrl: string;
-    pops: PopListItemModel[];
+    questions: QuestionListItemModel[];
 }
 
 export interface EditTopicFormModel {
@@ -115,7 +116,7 @@ export interface TopicModel {
     name: string;
     summary: string;
     moreInfoUrl: string;
-    pops: PopListItemModel[];
+    questions: QuestionListItemModel[];
 }
 
 export interface TopicListItemModel {

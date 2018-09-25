@@ -3,7 +3,7 @@ import { AppThunkAction } from '.';
 import { TopicProps } from '../components/Topic/Topic';
 import { TopicModel } from '../server-models';
 import { getJson } from '../utils';
-import { NewPopFormReceivedAction } from './NewPop';
+import { NewQuestionFormReceivedAction } from './NewQuestion';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -35,7 +35,7 @@ interface GetTopicFailedAction {
 type KnownAction = GetTopicRequestedAction
     | GetTopicSuccessAction
     | GetTopicFailedAction
-    | NewPopFormReceivedAction;
+    | NewQuestionFormReceivedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -86,7 +86,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             };
         case 'GET_TOPIC_SUCCESS':
             return {
-                // NOTE: Pop is possibly already set if GET_POP_REQUEST returned before GET_TOPIC_REQUEST
+                // NOTE: Question is possibly already set if GET_QUESTION_REQUEST returned before GET_TOPIC_REQUEST
                 ...state,
                 topic: {
                     slug: action.payload.topicSlug,
@@ -101,16 +101,16 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                     error: action.payload.error,
                 },
             };
-        case 'NEW_POP_FORM_RECEIVED': {
+        case 'NEW_QUESTION_FORM_RECEIVED': {
             if (!state.topic.model) {
-                // We could be posting a pop from the home page
+                // We could be posting a Question from the home page
                 return state;
             }
             const topicModel = state.topic.model;
             // Slice for immutability
-            const popsNext = topicModel.pops.slice();
-            popsNext.push(action.payload.popListItem);
-            const topicNext = { ...topicModel, pops: popsNext };
+            const questionsNext = topicModel.questions.slice();
+            questionsNext.push(action.payload.questionListItem);
+            const topicNext = { ...topicModel, questions: questionsNext };
             return {
                 ...state,
                 topic: {

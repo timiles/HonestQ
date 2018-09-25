@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { LoggedInUserModel, PopListItemModel, TopicListItemModel } from '../server-models';
+import { LoggedInUserModel, QuestionListItemModel, TopicListItemModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as HomeStore from '../store/Home';
+import Emoji, { EmojiValue } from './shared/Emoji';
 import Loading from './shared/Loading';
-import PopTypeView from './shared/PopTypeView';
-import NewPop from './Topic/NewPop';
+import NewQuestion from './Topic/NewQuestion';
 
 type HomeProps = HomeStore.HomeState
     & typeof HomeStore.actionCreators
@@ -21,8 +21,8 @@ class Home extends React.Component<HomeProps, {}> {
         if (!this.props.loggedInUser) {
             return;
         }
-        if (!this.props.loadingPopsList.loadedModel) {
-            this.props.getPopsList();
+        if (!this.props.loadingQuestionsList.loadedModel) {
+            this.props.getQuestionsList();
         }
         if (!this.props.loadingTopicsList.loadedModel) {
             this.props.getTopicsList();
@@ -30,30 +30,30 @@ class Home extends React.Component<HomeProps, {}> {
     }
 
     public render() {
-        const popsModel = this.props.loadingPopsList.loadedModel;
+        const questionsModel = this.props.loadingQuestionsList.loadedModel;
         const topicsModel = this.props.loadingTopicsList.loadedModel;
         return (
             <div className="col-md-12">
                 <h1>Recent questions</h1>
-                <Loading {...this.props.loadingPopsList} />
-                {popsModel &&
+                <Loading {...this.props.loadingQuestionsList} />
+                {questionsModel &&
                     <ul className="topics-list">
-                        {popsModel.pops.map((x: PopListItemModel, i: number) =>
-                            <li key={`pop_${i}`} className="mr-2 mb-2">
+                        {questionsModel.questions.map((x: QuestionListItemModel, i: number) =>
+                            <li key={`question_${i}`} className="mr-2 mb-2">
                                 <Link
-                                    to={`/pops/${x.id}/${x.slug}`}
+                                    to={`/questions/${x.id}/${x.slug}`}
                                     className="btn btn-lg btn-outline-secondary pop-list-item"
                                 >
-                                    <PopTypeView value={x.type} />
-                                    <span className={`pop pop-${x.type.toLowerCase()}`}>{x.text}</span>
+                                    <Emoji value={EmojiValue.Question} />
+                                    <span className="pop pop-question">{x.text}</span>
                                     <small className="ml-1">
-                                        <span className="badge badge-info">{x.childCommentsCount}</span>
+                                        <span className="badge badge-info">{x.answersCount}</span>
                                         <span className="sr-only">answers</span>
                                     </small>
                                 </Link>
                             </li>)}
                         <li>
-                            <NewPop popType="Question" />
+                            <NewQuestion />
                         </li>
                     </ul>
                 }
@@ -62,7 +62,7 @@ class Home extends React.Component<HomeProps, {}> {
                 {topicsModel &&
                     <ul className="topics-list">
                         {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
-                            <li key={`topic${i}`} className="mr-1 mb-1">
+                            <li key={`topic_${i}`} className="mr-1 mb-1">
                                 <Link to={`/topics/${x.slug}`} className="btn btn-sm btn-outline-secondary">
                                     {x.name}
                                 </Link>

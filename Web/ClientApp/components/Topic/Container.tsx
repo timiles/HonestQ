@@ -6,7 +6,7 @@ import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import NewPop from './NewPop';
+import NewQuestion from './NewQuestion';
 import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
@@ -35,7 +35,7 @@ class Container extends React.Component<ContainerProps, {}> {
             return false;
         }
 
-        const numberOfPopsInTopic = topic.model ? topic.model!.pops.length : 0;
+        const numberOfQuestionsInTopic = topic.model ? topic.model!.questions.length : 0;
 
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
@@ -45,10 +45,10 @@ class Container extends React.Component<ContainerProps, {}> {
                     <div className="row">
                         <div className="col-md-12">
                             <Topic {...topic} />
-                            {topic.model && numberOfPopsInTopic === 0 &&
+                            {topic.model && numberOfQuestionsInTopic === 0 &&
                                 <>
                                     <h2>Start the conversation</h2>
-                                    <NewPop topicValue={topic.model} />
+                                    <NewQuestion topicValue={topic.model} />
                                 </>}
                         </div>
                     </div>

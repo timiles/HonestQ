@@ -3,41 +3,36 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { CommentModel, LoggedInUserModel } from '../../server-models';
+import { AnswerModel, LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
-import * as PopStore from '../../store/Pop';
+import * as QuestionStore from '../../store/Question';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import Answer from './Answer';
-import BackToPopButton from './BackToPopButton';
-import Pop from './Pop';
+import BackToQuestionButton from './BackToQuestionButton';
 import Question from './Question';
 
-type ContainerProps = PopStore.ContainerState
-    & typeof PopStore.actionCreators
+type ContainerProps = QuestionStore.ContainerState
+    & typeof QuestionStore.actionCreators
     & { loggedInUser: LoggedInUserModel | undefined }
     // Important: questionId cannot be number as would still be a string in the underlying JavaScript?
-    & RouteComponentProps<{ questionId: string, commentId?: string }>;
+    & RouteComponentProps<{ questionId: string, answerId?: string }>;
 
 class Container extends React.Component<ContainerProps, {}> {
 
-    constructor(props: ContainerProps) {
-        super(props);
-    }
-
     public componentWillMount() {
         // This will also run on server side render
-        if (this.shouldGetPop()) {
-            this.props.getPop(Number(this.props.match.params.questionId));
+        if (this.shouldGetQuestion()) {
+            this.props.getQuestion(Number(this.props.match.params.questionId));
         }
     }
 
     public render() {
-        const { pop } = this.props;
+        const { question } = this.props;
 
-        let comment: CommentModel | undefined;
-        const commentId = Number(this.props.match.params.commentId);
-        if (pop.model && commentId > 0) {
-            comment = pop.model.comments.filter((x) => x.id === commentId)[0];
+        let answer: AnswerModel | undefined;
+        const answerId = Number(this.props.match.params.answerId);
+        if (question.model && answerId > 0) {
+            answer = question.model.answers.filter((x) => x.id === answerId)[0];
         }
 
         const slideDurationMilliseconds = 500;
@@ -46,47 +41,42 @@ class Container extends React.Component<ContainerProps, {}> {
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 {this.renderHelmetTags()}
 
-                {pop &&
+                {question &&
                     <>
                         <div className="col-lg-6 offset-lg-3">
                             <div className="row">
-                                {(pop.loading || pop.error) &&
+                                {(question.loading || question.error) &&
                                     <div className="col-md-12">
-                                        {pop.loading &&
+                                        {question.loading &&
                                             <p>Loading...</p>}
-                                        {pop.error &&
-                                            <div className="alert alert-danger" role="alert">{pop.error}</div>}
+                                        {question.error &&
+                                            <div className="alert alert-danger" role="alert">{question.error}</div>}
                                     </div>
                                 }
-                                {pop.model && pop.model.type !== 'Question' &&
-                                    <div className="col-md-12">
-                                        <Pop {...pop} />
-                                    </div>
-                                }
-                                {pop.model && pop.model.type === 'Question' &&
+                                {question.model &&
                                     <TransitionGroup component={undefined}>
-                                        {!this.props.match.params.commentId &&
+                                        {!this.props.match.params.answerId &&
                                             <CSSTransition
                                                 timeout={slideDurationMilliseconds}
                                                 classNames="slide"
                                             >
                                                 <div className="col-md-12 slide slide-left">
-                                                    <Question {...pop} />
+                                                    <Question {...question} />
                                                 </div>
                                             </CSSTransition>
                                         }
-                                        {comment &&
+                                        {answer &&
                                             <CSSTransition
                                                 timeout={slideDurationMilliseconds}
                                                 classNames="slide"
                                             >
                                                 <div className="col-md-12 slide slide-right">
-                                                    <BackToPopButton
-                                                        id={pop.questionId!}
-                                                        slug={pop.model.slug}
-                                                        text={pop.model.text}
+                                                    <BackToQuestionButton
+                                                        id={question.questionId!}
+                                                        slug={question.model.slug}
+                                                        text={question.model.text}
                                                     />
-                                                    <Answer {...comment} questionId={pop.questionId!} />
+                                                    <Answer {...answer} questionId={question.questionId!} />
                                                 </div>
                                             </CSSTransition>
                                         }
@@ -101,15 +91,15 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private renderHelmetTags() {
-        const { pop } = this.props;
+        const { question } = this.props;
 
         const pageTitleParts = ['POBS'];
         const canonicalUrlParts = ['https://pobs.local'];
 
-        if (this.props.match.params.questionId && pop && pop.model) {
-            pageTitleParts.push('\u201C' + pop.model.text + '\u201D');
-            canonicalUrlParts.push(pop.questionId!.toString());
-            canonicalUrlParts.push(pop.model.slug);
+        if (this.props.match.params.questionId && question && question.model) {
+            pageTitleParts.push('\u201C' + question.model.text + '\u201D');
+            canonicalUrlParts.push(question.questionId!.toString());
+            canonicalUrlParts.push(question.model.slug);
         }
 
         const pageTitle = pageTitleParts.join(' » ');
@@ -123,25 +113,25 @@ class Container extends React.Component<ContainerProps, {}> {
         );
     }
 
-    private shouldGetPop(): boolean {
+    private shouldGetQuestion(): boolean {
         if (!this.props.match.params.questionId) {
             return false;
         }
-        const popIdAsNumber = Number(this.props.match.params.questionId);
-        if (isNaN(popIdAsNumber)) {
+        const questionIdAsNumber = Number(this.props.match.params.questionId);
+        if (isNaN(questionIdAsNumber)) {
             return false;
         }
-        if (!this.props.pop) {
+        if (!this.props.question) {
             return true;
         }
-        if (this.props.pop.loading) {
+        if (this.props.question.loading) {
             return false;
         }
-        return (this.props.pop.questionId !== popIdAsNumber);
+        return (this.props.question.questionId !== questionIdAsNumber);
     }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => ({ ...state.pop, loggedInUser: state.login.loggedInUser }),
-    PopStore.actionCreators,
+    (state: ApplicationState, ownProps: any) => ({ ...state.question, loggedInUser: state.login.loggedInUser }),
+    QuestionStore.actionCreators,
 )(Container);

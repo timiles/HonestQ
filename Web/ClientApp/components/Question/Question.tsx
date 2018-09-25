@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { CommentModel, PopModel } from '../../server-models';
+import { AnswerModel, QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import PopTypeView from '../shared/PopTypeView';
+import Emoji, { EmojiValue } from '../shared/Emoji';
 import AgreementRatingBarChart from '../Topic/AgreementRatingBarChart';
-import NewComment from './NewComment';
+import NewAnswer from './NewAnswer';
 import TopicsList from './TopicsList';
 
-interface Props {
+export interface QuestionProps {
     loading?: boolean;
     error?: string;
     questionId?: number;
-    model?: PopModel;
+    model?: QuestionModel;
 }
 
-export default class Question extends React.Component<Props, {}> {
+export default class Question extends React.Component<QuestionProps, {}> {
 
     public render() {
         const { questionId, model } = this.props;
@@ -28,23 +28,24 @@ export default class Question extends React.Component<Props, {}> {
             <div>
                 <LoggedInUserContext.Consumer>
                     {(user) => isUserInRole(user, 'Admin') &&
-                        <Link to={`/admin/edit/pops/${questionId}`} className="float-right">
+                        <Link to={`/admin/edit/questions/${questionId}`} className="float-right">
                             Edit
                                 </Link>
                     }
                 </LoggedInUserContext.Consumer>
                 <h4>
-                    <PopTypeView value={model.type} />
-                    <span className={`pop pop-${model.type.toLowerCase()}`}>{model.text}</span>
+                    <Emoji value={EmojiValue.Question} />
+                    <span className="pop pop-question">{model.text}</span>
                 </h4>
+                {model.source && <p><small>Source: {model.source}</small></p>}
                 <TopicsList topics={model.topics} />
                 <ol className="list-unstyled mt-3 mb-3">
-                    {model.comments.map((x, i) => <li key={`comment_${i}`} className="mb-2">
+                    {model.answers.map((x, i) => <li key={`answer_${i}`} className="mb-2">
                         <Link
-                            to={`/pops/${questionId}/${model.slug}/${x.id}`}
+                            to={`/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
                             className="btn btn-lg btn-outline-secondary pop-list-item"
                         >
-                            <PopTypeView value="Answer" />
+                            <Emoji value={EmojiValue.Answer} />
                             <span className="pop pop-statement">{x.text}</span>
                             {this.isCitationNeeded(x) &&
                                 <small className="ml-1">
@@ -56,21 +57,17 @@ export default class Question extends React.Component<Props, {}> {
                     </li>)}
                 </ol>
                 <div>
-                    <NewComment
-                        parentCommentId={null}
-                        questionId={questionId}
-                        type={model!.type}
-                    />
+                    <NewAnswer questionId={questionId} />
                 </div>
             </div>
         );
     }
 
-    private isCitationNeeded(answer: CommentModel): boolean {
+    private isCitationNeeded(answer: AnswerModel): boolean {
         return !answer.source && (answer.comments.filter((x) => x.source).length === 0);
     }
 
-    private renderAgreementRating(answer: CommentModel): any {
+    private renderAgreementRating(answer: AnswerModel): any {
         const agreementRatings: { [key: string]: number } = {};
         if (answer.comments && answer.comments.length > 0) {
             answer.comments.forEach((x) => {

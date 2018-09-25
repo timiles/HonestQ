@@ -9,7 +9,6 @@ type Props = FormProps<CommentFormModel>
     & CommentFormProps;
 
 interface CommentFormProps {
-    type: string;
     isModal?: boolean;
     onCloseModalRequested?: () => void;
     parentCommentId: number | null;
@@ -17,20 +16,13 @@ interface CommentFormProps {
 
 export default class CommentForm extends React.Component<Props, CommentFormModel> {
 
-    private readonly hideAgreementRating: boolean;
-    private readonly textIsOptionalSourceIsRequired: boolean;
-
     constructor(props: Props) {
         super(props);
-
-        this.hideAgreementRating = this.props.type === 'RequestForProof'
-            || (this.props.type === 'Question' && !this.props.parentCommentId);
-        this.textIsOptionalSourceIsRequired = (this.props.type === 'RequestForProof');
 
         this.state = {
             text: '',
             source: '',
-            agreementRating: this.hideAgreementRating ? '' : 'Neutral',
+            agreementRating: 'Neutral',
             parentCommentId: this.props.parentCommentId,
         };
 
@@ -39,27 +31,22 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
-        // This will reset the form when a comment has been successfully submitted
+        // This will reset the form when a Comment has been successfully submitted
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '' });
         }
     }
 
     public render() {
-        const { type, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
+        const { isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
         const { text, source, agreementRating } = this.state;
-
-        let label = (type === 'Question') ? 'Answer' : 'Comment';
-        if (this.textIsOptionalSourceIsRequired) {
-            label += ' (optional)';
-        }
 
         return (
             <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
-                        <label htmlFor="commentText">{label}</label>
+                        <label htmlFor="commentText">Comment</label>
                         <SuperTextArea
                             id="commentText"
                             name="text"
@@ -67,7 +54,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             maxLength={280}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && !this.textIsOptionalSourceIsRequired && !source &&
+                        {submitted && !text && !source &&
                             <div className="help-block">Text or Source is required</div>}
                     </div>
                     <div className="form-group">
@@ -81,25 +68,20 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && !this.textIsOptionalSourceIsRequired && !source &&
+                        {submitted && !text && !source &&
                             <div className="help-block">Text or Source is required</div>
                         }
-                        {submitted && this.textIsOptionalSourceIsRequired && !source &&
-                            <div className="help-block">Source is required</div>
-                        }
                     </div>
-                    {!this.hideAgreementRating &&
-                        <div className="form-group">
-                            <label htmlFor="agreementRating">Agreement rating</label>
-                            <div>
-                                <AgreementRatingInput
-                                    name="agreementRating"
-                                    value={agreementRating}
-                                    onChange={this.handleChange}
-                                />
-                            </div>
+                    <div className="form-group">
+                        <label htmlFor="agreementRating">Agreement rating</label>
+                        <div>
+                            <AgreementRatingInput
+                                name="agreementRating"
+                                value={agreementRating}
+                                onChange={this.handleChange}
+                            />
                         </div>
-                    }
+                    </div>
                 </div>
                 <div className={isModal ? 'modal-footer' : 'form-group'}>
                     {isModal && onCloseModalRequested &&

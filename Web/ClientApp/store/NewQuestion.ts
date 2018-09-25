@@ -1,14 +1,15 @@
-﻿import { Reducer } from 'redux';
+﻿import { push } from 'react-router-redux';
+import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { FormProps } from '../components/shared/FormProps';
-import { CommentFormModel, CommentModel } from '../server-models';
+import { QuestionFormModel, QuestionListItemModel } from '../server-models';
 import { postJson } from '../utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface NewCommentState {
-    commentForm?: FormProps<CommentFormModel>;
+export interface NewQuestionState {
+    questionForm?: FormProps<QuestionFormModel>;
 }
 
 // -----------------
@@ -16,53 +17,56 @@ export interface NewCommentState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface NewCommentFormSubmittedAction {
-    type: 'NEW_COMMENT_FORM_SUBMITTED';
+interface NewQuestionFormSubmittedAction {
+    type: 'NEW_QUESTION_FORM_SUBMITTED';
 }
-export interface NewCommentFormReceivedAction {
-    type: 'NEW_COMMENT_FORM_RECEIVED';
-    payload: { answerId: number; comment: CommentModel; };
+export interface NewQuestionFormReceivedAction {
+    type: 'NEW_QUESTION_FORM_RECEIVED';
+    payload: { questionListItem: QuestionListItemModel; };
 }
-interface NewCommentFormFailedAction {
-    type: 'NEW_COMMENT_FORM_FAILED';
-    payload: { error?: string; };
+interface NewQuestionFormFailedAction {
+    type: 'NEW_QUESTION_FORM_FAILED';
+    payload: { error: string | null; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = NewCommentFormSubmittedAction
-    | NewCommentFormReceivedAction
-    | NewCommentFormFailedAction;
+type KnownAction = NewQuestionFormSubmittedAction
+    | NewQuestionFormReceivedAction
+    | NewQuestionFormFailedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    submit: (questionId: number, answerId: number, commentForm: CommentFormModel):
+    submit: (questionForm: QuestionFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'NEW_COMMENT_FORM_SUBMITTED' });
+                dispatch({ type: 'NEW_QUESTION_FORM_SUBMITTED' });
 
-                if (!commentForm.text && !commentForm.source) {
+                if (!questionForm.text) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'NEW_COMMENT_FORM_FAILED', payload: {} });
+                    dispatch({ type: 'NEW_QUESTION_FORM_FAILED', payload: { error: null } });
                     return;
                 }
 
-                postJson<CommentModel>(
-                    `/api/questions/${questionId}/answers/${answerId}/comments`,
-                    commentForm, getState().login.loggedInUser!)
-                    .then((responseModel: CommentModel) => {
+                postJson<QuestionListItemModel>(
+                    `/api/questions`, questionForm, getState().login.loggedInUser!)
+                    .then((responseModel: QuestionListItemModel) => {
                         dispatch({
-                            type: 'NEW_COMMENT_FORM_RECEIVED',
-                            payload: { answerId, comment: responseModel },
+                            type: 'NEW_QUESTION_FORM_RECEIVED',
+                            payload: { questionListItem: responseModel },
                         });
+                        setTimeout(() => {
+                            // Wait a bit for modal to have closed, then go to new Question
+                            dispatch(push(`/questions/${responseModel.id}/${responseModel.slug}`) as any);
+                        }, 700);
                     })
                     .catch((reason: string) => {
                         dispatch({
-                            type: 'NEW_COMMENT_FORM_FAILED',
-                            payload: { error: reason || 'Posting comment failed' },
+                            type: 'NEW_QUESTION_FORM_FAILED',
+                            payload: { error: reason || 'Posting Question failed' },
                         });
                     });
             })();
@@ -73,22 +77,23 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: NewCommentState = { commentForm: {} };
+const defaultState: NewQuestionState = { questionForm: {} };
 
-export const reducer: Reducer<NewCommentState> = (state: NewCommentState, action: KnownAction) => {
+export const reducer: Reducer<NewQuestionState> = (state: NewQuestionState, action: KnownAction) => {
     switch (action.type) {
-        case 'NEW_COMMENT_FORM_SUBMITTED':
+        case 'NEW_QUESTION_FORM_SUBMITTED':
             return {
-                commentForm: {
+                questionForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'NEW_COMMENT_FORM_RECEIVED':
+        case 'NEW_QUESTION_FORM_RECEIVED':
             return defaultState;
-        case 'NEW_COMMENT_FORM_FAILED':
+        case 'NEW_QUESTION_FORM_FAILED':
             return {
-                commentForm: {
+                questionForm: {
+                    submitting: false,
                     submitted: true,
                     error: action.payload.error,
                 },

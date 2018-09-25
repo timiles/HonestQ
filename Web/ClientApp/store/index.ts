@@ -1,13 +1,14 @@
 import * as AdminHome from './AdminHome';
-import * as EditPop from './EditPop';
+import * as EditQuestion from './EditQuestion';
 import * as EditTopic from './EditTopic';
 import * as Home from './Home';
 import * as Intro from './Intro';
 import * as Login from './Login';
+import * as NewAnswer from './NewAnswer';
 import * as NewComment from './NewComment';
-import * as NewPop from './NewPop';
+import * as NewQuestion from './NewQuestion';
 import * as NewTopic from './NewTopic';
-import * as Pop from './Pop';
+import * as Question from './Question';
 import * as Register from './Register';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
@@ -15,15 +16,16 @@ import * as TopicAutocomplete from './TopicAutocomplete';
 // The top-level state object
 export interface ApplicationState {
     adminHome: AdminHome.AdminHomeState;
-    editPop: EditPop.EditPopState;
+    editQuestion: EditQuestion.EditQuestionState;
     editTopic: EditTopic.EditTopicState;
     home: Home.HomeState;
     intro: Intro.IntroState;
     login: Login.LoginState;
+    newAnswer: NewAnswer.NewAnswerState;
     newComment: NewComment.NewCommentState;
-    newPop: NewPop.NewPopState;
+    newQuestion: NewQuestion.NewQuestionState;
     newTopic: NewTopic.NewTopicState;
-    pop: Pop.ContainerState;
+    question: Question.ContainerState;
     register: Register.RegisterState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
@@ -34,15 +36,16 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     adminHome: AdminHome.reducer,
-    editPop: EditPop.reducer,
+    editQuestion: EditQuestion.reducer,
     editTopic: EditTopic.reducer,
     home: Home.reducer,
     intro: Intro.reducer,
     login: Login.reducer,
+    newAnswer: NewAnswer.reducer,
     newComment: NewComment.reducer,
-    newPop: NewPop.reducer,
+    newQuestion: NewQuestion.reducer,
     newTopic: NewTopic.reducer,
-    pop: Pop.reducer,
+    question: Question.reducer,
     register: Register.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,

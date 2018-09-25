@@ -33,7 +33,7 @@ export default class AgreementRatingInput extends React.Component<Props, State> 
             <div className="btn-group" role="group">
                 {Array.from(this.values.keys()).map((key: string, i: number) =>
                     <button
-                        key={`rating${i}`}
+                        key={`rating_${i}`}
                         type="button"
                         className={`btn btn-outline-secondary ${key === value ? 'active' : ''}`}
                         value={key}

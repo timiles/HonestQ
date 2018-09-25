@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { PopFormModel, TopicValueModel } from '../../server-models';
+import { QuestionFormModel, TopicValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
-import * as NewPopStore from '../../store/NewPop';
+import * as NewQuestionStore from '../../store/NewQuestion';
 import Modal from '../shared/Modal';
-import PopForm from './PopForm';
+import QuestionForm from './QuestionForm';
 
-type Props = NewPopStore.NewPopState
-    & typeof NewPopStore.actionCreators
-    & { popType: string, topicValue: TopicValueModel };
+type Props = NewQuestionStore.NewQuestionState
+    & typeof NewQuestionStore.actionCreators
+    & { topicValue: TopicValueModel };
 
 interface State {
     isModalOpen: boolean;
 }
 
-class NewPop extends React.Component<Props, State> {
+class NewQuestion extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
@@ -27,21 +27,16 @@ class NewPop extends React.Component<Props, State> {
     }
 
     public componentWillReceiveProps(nextProps: Props) {
-        // This will close the modal when a pop has been successfully submitted
-        if (!nextProps.popForm!.submitted) {
+        // This will close the modal when a Question has been successfully submitted
+        if (!nextProps.questionForm!.submitted) {
             this.setState({ isModalOpen: false });
         }
     }
 
     public render() {
-        const { popForm, popType, topicValue } = this.props;
+        const { questionForm, topicValue } = this.props;
         const { isModalOpen } = this.state;
-        const buttonText = (popType === 'Question') ? 'Ask a question' : 'Got something new to say?';
-        const modalTitle = (popType === 'Question') ? 'Ask a question' : 'Say something';
-
-        const initialTopicValues = !topicValue ? [] :
-            (popType === 'Question') ? [{ ...topicValue }] :
-                [{ ...topicValue, stance: 'Neutral' }];
+        const initialTopicValues = !topicValue ? [] : [{ ...topicValue }];
 
         return (
             <>
@@ -50,15 +45,14 @@ class NewPop extends React.Component<Props, State> {
                     className="btn btn-lg btn-primary btn-new-pop"
                     onClick={this.handleOpen}
                 >
-                    {buttonText}
+                    Ask a question
                 </button>
-                <Modal title={modalTitle} isOpen={isModalOpen} onRequestClose={this.handleClose}>
-                    <PopForm
-                        {...popForm}
+                <Modal title="Ask a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                    <QuestionForm
+                        {...questionForm}
                         initialTopicValues={initialTopicValues}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
-                        fixedType={popType}
                         submit={this.handleSubmit}
                     />
                 </Modal>
@@ -74,12 +68,12 @@ class NewPop extends React.Component<Props, State> {
         this.setState({ isModalOpen: false });
     }
 
-    private handleSubmit(form: PopFormModel): void {
+    private handleSubmit(form: QuestionFormModel): void {
         this.props.submit(form);
     }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.newPop),
-    NewPopStore.actionCreators,
-)(NewPop);
+    (state: ApplicationState, ownProps: any) => (state.newQuestion),
+    NewQuestionStore.actionCreators,
+)(NewQuestion);

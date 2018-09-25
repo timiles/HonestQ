@@ -1,15 +1,16 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { PopProps } from '../components/Pop/Pop';
-import { CommentModel, PopModel } from '../server-models';
+import { QuestionProps } from '../components/Question/Question';
+import { CommentModel, QuestionModel } from '../server-models';
 import { getJson } from '../utils';
+import { NewAnswerFormReceivedAction } from './NewAnswer';
 import { NewCommentFormReceivedAction } from './NewComment';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContainerState {
-    pop: PopProps;
+    question: QuestionProps;
 }
 
 // -----------------
@@ -17,25 +18,26 @@ export interface ContainerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetPopRequestedAction {
-    type: 'GET_POP_REQUESTED';
+interface GetQuestionRequestedAction {
+    type: 'GET_QUESTION_REQUESTED';
     payload: { questionId: number; };
 }
-interface GetPopSuccessAction {
-    type: 'GET_POP_SUCCESS';
-    payload: { questionId: number; pop: PopModel; };
+interface GetQuestionSuccessAction {
+    type: 'GET_QUESTION_SUCCESS';
+    payload: { questionId: number; question: QuestionModel; };
 }
-interface GetPopFailedAction {
-    type: 'GET_POP_FAILED';
+interface GetQuestionFailedAction {
+    type: 'GET_QUESTION_FAILED';
     payload: { questionId: number; error: string; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetPopRequestedAction
-    | GetPopSuccessAction
-    | GetPopFailedAction
+    | GetQuestionRequestedAction
+    | GetQuestionSuccessAction
+    | GetQuestionFailedAction
+    | NewAnswerFormReceivedAction
     | NewCommentFormReceivedAction;
 
 // ----------------
@@ -43,25 +45,25 @@ type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getPop: (questionId: number): AppThunkAction<KnownAction> =>
+    getQuestion: (questionId: number): AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'GET_POP_REQUESTED', payload: { questionId } });
+                dispatch({ type: 'GET_QUESTION_REQUESTED', payload: { questionId } });
 
-                getJson<PopModel>(`/api/pops/${questionId}`,
+                getJson<QuestionModel>(`/api/questions/${questionId}`,
                     getState().login.loggedInUser)
-                    .then((popResponse: PopModel) => {
+                    .then((questionResponse: QuestionModel) => {
                         dispatch({
-                            type: 'GET_POP_SUCCESS',
-                            payload: { questionId, pop: popResponse },
+                            type: 'GET_QUESTION_SUCCESS',
+                            payload: { questionId, question: questionResponse },
                         });
                     })
                     .catch((reason) => {
                         dispatch({
-                            type: 'GET_POP_FAILED',
+                            type: 'GET_QUESTION_FAILED',
                             payload: {
                                 questionId,
-                                error: reason || 'Get pop failed',
+                                error: reason || 'Get Question failed',
                             },
                         });
                     });
@@ -73,47 +75,61 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ContainerState = { pop: {} };
+const defaultState: ContainerState = { question: {} };
 
 export const reducer: Reducer<ContainerState> = (state: ContainerState, anyAction: AnyAction) => {
     // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
     const action = anyAction as KnownAction;
     switch (action.type) {
-        case 'GET_POP_REQUESTED':
+        case 'GET_QUESTION_REQUESTED':
             return {
-                pop: {
+                question: {
                     loading: true,
                     questionId: action.payload.questionId,
                 },
             };
-        case 'GET_POP_SUCCESS':
+        case 'GET_QUESTION_SUCCESS':
             return {
-                pop: {
+                question: {
                     questionId: action.payload.questionId,
-                    model: action.payload.pop,
+                    model: action.payload.question,
                 },
             };
-        case 'GET_POP_FAILED':
+        case 'GET_QUESTION_FAILED':
             return {
-                pop: {
+                question: {
                     questionId: action.payload.questionId,
                     error: action.payload.error,
                 },
             };
-        case 'NEW_COMMENT_FORM_RECEIVED': {
-            const popModel = state.pop!.model!;
+        case 'NEW_ANSWER_FORM_RECEIVED': {
+            const questionModel = state.question!.model!;
             // Slice for immutability
-            const commentsNext = popModel.comments.slice();
-            if (action.payload.comment.parentCommentId) {
-                appendNewComment(commentsNext, action.payload.comment);
-            } else {
-                commentsNext.push(action.payload.comment);
-            }
-            const popNext = { ...popModel, comments: commentsNext };
+            const answersNext = questionModel.answers.slice();
+            answersNext.push(action.payload.answer);
+            const questionNext = { ...questionModel, answers: answersNext };
             return {
-                pop: {
-                    questionId: state.pop!.questionId,
-                    model: popNext,
+                question: {
+                    questionId: state.question!.questionId,
+                    model: questionNext,
+                },
+            };
+        }
+        case 'NEW_COMMENT_FORM_RECEIVED': {
+            const questionModel = state.question!.model!;
+            // Slice for immutability
+            const answersNext = questionModel.answers;
+            const answerModel = answersNext.filter((x) => x.id === action.payload.answerId)[0];
+            if (action.payload.comment.parentCommentId) {
+                appendNewComment(answerModel.comments, action.payload.comment);
+            } else {
+                answerModel.comments.push(action.payload.comment);
+            }
+            const questionNext = { ...questionModel, answers: answersNext };
+            return {
+                question: {
+                    questionId: state.question!.questionId,
+                    model: questionNext,
                 },
             };
         }

@@ -8,7 +8,7 @@ import CommentForm from './CommentForm';
 
 type Props = NewCommentStore.NewCommentState
     & typeof NewCommentStore.actionCreators
-    & { questionId: number, type: string, parentCommentId: number | null };
+    & { questionId: number, answerId: number, parentCommentId: number | null };
 
 interface State {
     isModalOpen: boolean;
@@ -34,23 +34,9 @@ class NewComment extends React.Component<Props, State> {
     }
 
     public render() {
-        const { commentForm, type, parentCommentId } = this.props;
+        const { commentForm, parentCommentId } = this.props;
         const { isModalOpen } = this.state;
-        const headerText =
-            parentCommentId ? 'Reply' :
-                (type === 'Question') ? 'Add an answer' :
-                    'Add a new comment';
-
-        if (type === 'RequestForProof') {
-            return (
-                <CommentForm
-                    {...commentForm}
-                    parentCommentId={parentCommentId}
-                    type={type}
-                    submit={this.handleSubmit}
-                />
-            );
-        }
+        const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
 
         return (
             <>
@@ -65,7 +51,6 @@ class NewComment extends React.Component<Props, State> {
                     <CommentForm
                         {...commentForm}
                         parentCommentId={parentCommentId}
-                        type={type}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}
@@ -84,7 +69,7 @@ class NewComment extends React.Component<Props, State> {
     }
 
     private handleSubmit(form: CommentFormModel): void {
-        this.props.submit(this.props.questionId, form);
+        this.props.submit(this.props.questionId, this.props.answerId, form);
     }
 }
 
