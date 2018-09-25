@@ -4,13 +4,13 @@ using Pobs.Domain.Entities;
 
 namespace Pobs.Domain
 {
-    public class OmnipopsDbContext : DbContext
+    public class HonestQDbContext : DbContext
     {
-        public OmnipopsDbContext(DbContextOptions<OmnipopsDbContext> options) : base(options)
+        public HonestQDbContext(DbContextOptions<HonestQDbContext> options) : base(options)
         {
         }
 
-        public DbSet<Pop> Pops { get; set; }
+        public DbSet<Question> Questions { get; set; }
 
         public DbSet<Topic> Topics { get; set; }
 
@@ -27,7 +27,7 @@ namespace Pobs.Domain
             // Unique contraints
             modelBuilder.Entity<Topic>().HasIndex(x => x.Slug).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
-            // NOTE: Pop Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
+            // NOTE: Question Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
 
             // Emoji-enabled columns. TODO: can this be done by an Attribute? Also probably needs Database and Tables altered before Columns...
             modelBuilder.Entity<Topic>(x =>
@@ -35,7 +35,12 @@ namespace Pobs.Domain
                 x.Property(p => p.Name).HasCharSetForEmoji();
                 x.Property(p => p.Summary).HasCharSetForEmoji();
             });
-            modelBuilder.Entity<Pop>(x =>
+            modelBuilder.Entity<Question>(x =>
+            {
+                x.Property(p => p.Text).HasCharSetForEmoji();
+                x.Property(p => p.Source).HasCharSetForEmoji();
+            });
+            modelBuilder.Entity<Answer>(x =>
             {
                 x.Property(p => p.Text).HasCharSetForEmoji();
                 x.Property(p => p.Source).HasCharSetForEmoji();
@@ -47,15 +52,17 @@ namespace Pobs.Domain
             });
 
             // Don't cascade deletes from Collection to Parent
-            modelBuilder.Entity<Comment>().HasOne(x => x.Pop).WithMany(x => x.Comments)
+            modelBuilder.Entity<Answer>().HasOne(x => x.Question).WithMany(x => x.Answers)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            modelBuilder.Entity<Comment>().HasOne(x => x.Answer).WithMany(x => x.Comments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             modelBuilder.Entity<Comment>().HasOne(x => x.ParentComment).WithMany(x => x.ChildComments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             // Many-to-many relationships
-            modelBuilder.Entity<PopTopic>().HasKey(x => new { x.PopId, x.TopicId });
-            modelBuilder.Entity<PopTopic>().HasOne(x => x.Pop).WithMany(x => x.PopTopics);
-            modelBuilder.Entity<PopTopic>().HasOne(x => x.Topic).WithMany(x => x.PopTopics);
+            modelBuilder.Entity<QuestionTopic>().HasKey(x => new { x.QuestionId, x.TopicId });
+            modelBuilder.Entity<QuestionTopic>().HasOne(x => x.Question).WithMany(x => x.QuestionTopics);
+            modelBuilder.Entity<QuestionTopic>().HasOne(x => x.Topic).WithMany(x => x.QuestionTopics);
         }
     }
 }

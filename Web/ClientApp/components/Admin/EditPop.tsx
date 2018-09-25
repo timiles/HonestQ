@@ -9,7 +9,7 @@ import PopForm from '../Topic/PopForm';
 
 type EditPopProps = EditPopStore.EditPopState
     & typeof EditPopStore.actionCreators
-    & RouteComponentProps<{ topicSlug: string, popId: number }>;
+    & RouteComponentProps<{ topicSlug: string, questionId: number }>;
 
 class EditPop extends React.Component<EditPopProps, {}> {
 
@@ -21,14 +21,14 @@ class EditPop extends React.Component<EditPopProps, {}> {
 
     public componentDidMount() {
         if (this.shouldGetPop()) {
-            this.props.getPop(this.props.match.params.popId);
+            this.props.getPop(this.props.match.params.questionId);
         }
     }
 
     public render() {
         const { savedSlug } = this.props;
         const { initialState } = this.props.editPopForm;
-        const successUrl = (savedSlug) ? `/pops/${this.props.match.params.popId}/${savedSlug}` : null;
+        const successUrl = (savedSlug) ? `/pops/${this.props.match.params.questionId}/${savedSlug}` : null;
 
         return (
             <div className="col-lg-6 offset-lg-3">
@@ -55,7 +55,7 @@ class EditPop extends React.Component<EditPopProps, {}> {
     }
 
     private handleSubmit(form: PopFormModel): void {
-        this.props.submit(this.props.match.params.popId, form);
+        this.props.submit(this.props.match.params.questionId, form);
     }
 }
 

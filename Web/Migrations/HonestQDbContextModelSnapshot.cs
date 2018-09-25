@@ -2,33 +2,64 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pobs.Domain;
 
 namespace Pobs.Web.Migrations
 {
-    [DbContext(typeof(OmnipopsDbContext))]
-    [Migration("20180816095125_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(HonestQDbContext))]
+    partial class HonestQDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.0-rtm-30799")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("Pobs.Domain.Entities.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTimeOffset>("PostedAt");
+
+                    b.Property<int>("PostedByUserId");
+
+                    b.Property<int>("QuestionId");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(280);
+
+                    b.Property<string>("Source")
+                        .HasColumnType("VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+                        .HasMaxLength(2000);
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
+                        .HasMaxLength(280);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostedByUserId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answer");
+                });
+
             modelBuilder.Entity("Pobs.Domain.Entities.Comment", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AgreementRating");
+                    b.Property<int>("AgreementRating");
+
+                    b.Property<int>("AnswerId");
 
                     b.Property<long?>("ParentCommentId");
-
-                    b.Property<int>("PopId");
 
                     b.Property<DateTimeOffset>("PostedAt");
 
@@ -44,16 +75,16 @@ namespace Pobs.Web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCommentId");
+                    b.HasIndex("AnswerId");
 
-                    b.HasIndex("PopId");
+                    b.HasIndex("ParentCommentId");
 
                     b.HasIndex("PostedByUserId");
 
                     b.ToTable("Comment");
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.Pop", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.Question", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -75,26 +106,24 @@ namespace Pobs.Web.Migrations
                         .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL")
                         .HasMaxLength(280);
 
-                    b.Property<int>("Type");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PostedByUserId");
 
-                    b.ToTable("Pop");
+                    b.ToTable("Question");
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.PopTopic", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.QuestionTopic", b =>
                 {
-                    b.Property<int>("PopId");
+                    b.Property<int>("QuestionId");
 
                     b.Property<int>("TopicId");
 
-                    b.HasKey("PopId", "TopicId");
+                    b.HasKey("QuestionId", "TopicId");
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("PopTopic");
+                    b.ToTable("QuestionTopic");
                 });
 
             modelBuilder.Entity("Pobs.Domain.Entities.Topic", b =>
@@ -167,25 +196,38 @@ namespace Pobs.Web.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("Pobs.Domain.Entities.Answer", b =>
+                {
+                    b.HasOne("Pobs.Domain.Entities.User", "PostedByUser")
+                        .WithMany()
+                        .HasForeignKey("PostedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Pobs.Domain.Entities.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("Pobs.Domain.Entities.Comment", b =>
                 {
+                    b.HasOne("Pobs.Domain.Entities.Answer", "Answer")
+                        .WithMany("Comments")
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Pobs.Domain.Entities.Comment", "ParentComment")
                         .WithMany("ChildComments")
                         .HasForeignKey("ParentCommentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Pobs.Domain.Entities.Pop", "Pop")
-                        .WithMany("Comments")
-                        .HasForeignKey("PopId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("Pobs.Domain.Entities.User", "PostedByUser")
                         .WithMany()
                         .HasForeignKey("PostedByUserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.Pop", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.Question", b =>
                 {
                     b.HasOne("Pobs.Domain.Entities.User", "PostedByUser")
                         .WithMany()
@@ -193,15 +235,15 @@ namespace Pobs.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.PopTopic", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.QuestionTopic", b =>
                 {
-                    b.HasOne("Pobs.Domain.Entities.Pop", "Pop")
-                        .WithMany("PopTopics")
-                        .HasForeignKey("PopId")
+                    b.HasOne("Pobs.Domain.Entities.Question", "Question")
+                        .WithMany("QuestionTopics")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Pobs.Domain.Entities.Topic", "Topic")
-                        .WithMany("PopTopics")
+                        .WithMany("QuestionTopics")
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

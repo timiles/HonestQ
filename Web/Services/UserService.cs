@@ -18,9 +18,9 @@ namespace Pobs.Web.Services
 
     public class UserService : IUserService
     {
-        private OmnipopsDbContext _context;
+        private HonestQDbContext _context;
 
-        public UserService(OmnipopsDbContext context)
+        public UserService(HonestQDbContext context)
         {
             _context = context;
         }

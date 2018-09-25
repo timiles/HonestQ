@@ -1,8 +1,8 @@
 ﻿namespace Pobs.Domain.Utils
 {
-    public static class CleanPopTextExtension
+    public static class CleanTextExtension
     {
-        public static string CleanPopText(this string value)
+        public static string CleanText(this string value)
         {
             value = value.Trim(' ', '\t');
             if (value.StartsWith("\"") || value.EndsWith("\""))

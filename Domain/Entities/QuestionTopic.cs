@@ -2,14 +2,14 @@ using Pobs.Domain.Entities.Helpers;
 
 namespace Pobs.Domain.Entities
 {
-    public class PopTopic : IJoinEntity<Pop>, IJoinEntity<Topic>
+    public class QuestionTopic : IJoinEntity<Question>, IJoinEntity<Topic>
     {
-        public int PopId { get; set; }
-        public Pop Pop { get; set; }
-        Pop IJoinEntity<Pop>.Navigation
+        public int QuestionId { get; set; }
+        public Question Question { get; set; }
+        Question IJoinEntity<Question>.Navigation
         {
-            get => Pop;
-            set => Pop = value;
+            get => Question;
+            set => Question = value;
         }
 
         public int TopicId { get; set; }
@@ -19,7 +19,5 @@ namespace Pobs.Domain.Entities
             get => Topic;
             set => Topic = value;
         }
-
-        public Stance? Stance { get; set; }
     }
 }

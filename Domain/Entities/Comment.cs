@@ -9,21 +9,18 @@ namespace Pobs.Domain.Entities
     {
         public Comment()
         {
-            ChildComments = new Collection<Comment>();
+            this.ChildComments = new Collection<Comment>();
         }
-        protected Comment(string text, User postedByUser, DateTimeOffset postedAt) : this()
+        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating agreementRating, long? parentCommentId)
+            : this()
         {
-            Text = text;
-            PostedByUser = postedByUser;
-            PostedAt = postedAt;
-        }
-        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating? agreementRating, long? parentCommentId)
-            : this(text, postedByUser, postedAt)
-        {
-            AgreementRating = agreementRating;
+            this.Text = text;
+            this.PostedByUser = postedByUser;
+            this.PostedAt = postedAt;
+            this.AgreementRating = agreementRating;
             if (parentCommentId.HasValue)
             {
-                ParentComment = new Comment { Id = parentCommentId.Value };
+                this.ParentComment = new Comment { Id = parentCommentId.Value };
             }
         }
 
@@ -36,7 +33,7 @@ namespace Pobs.Domain.Entities
         [MaxLength(2000)]
         public string Source { get; set; }
 
-        public AgreementRating? AgreementRating { get; set; }
+        public AgreementRating AgreementRating { get; set; }
 
         [Required]
         public User PostedByUser { get; set; }
@@ -46,7 +43,7 @@ namespace Pobs.Domain.Entities
 
 
         [Required]
-        public virtual Pop Pop { get; set; }
+        public virtual Answer Answer { get; set; }
 
         public virtual Comment ParentComment { get; set; }
         public virtual ICollection<Comment> ChildComments { get; set; }

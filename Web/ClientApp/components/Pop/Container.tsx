@@ -15,8 +15,8 @@ import Question from './Question';
 type ContainerProps = PopStore.ContainerState
     & typeof PopStore.actionCreators
     & { loggedInUser: LoggedInUserModel | undefined }
-    // Important: popId cannot be number as would still be a string in the underlying JavaScript?
-    & RouteComponentProps<{ popId: string, commentId?: string }>;
+    // Important: questionId cannot be number as would still be a string in the underlying JavaScript?
+    & RouteComponentProps<{ questionId: string, commentId?: string }>;
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -27,7 +27,7 @@ class Container extends React.Component<ContainerProps, {}> {
     public componentWillMount() {
         // This will also run on server side render
         if (this.shouldGetPop()) {
-            this.props.getPop(Number(this.props.match.params.popId));
+            this.props.getPop(Number(this.props.match.params.questionId));
         }
     }
 
@@ -82,11 +82,11 @@ class Container extends React.Component<ContainerProps, {}> {
                                             >
                                                 <div className="col-md-12 slide slide-right">
                                                     <BackToPopButton
-                                                        id={pop.popId!}
+                                                        id={pop.questionId!}
                                                         slug={pop.model.slug}
                                                         text={pop.model.text}
                                                     />
-                                                    <Answer {...comment} popId={pop.popId!} />
+                                                    <Answer {...comment} questionId={pop.questionId!} />
                                                 </div>
                                             </CSSTransition>
                                         }
@@ -106,9 +106,9 @@ class Container extends React.Component<ContainerProps, {}> {
         const pageTitleParts = ['POBS'];
         const canonicalUrlParts = ['https://pobs.local'];
 
-        if (this.props.match.params.popId && pop && pop.model) {
+        if (this.props.match.params.questionId && pop && pop.model) {
             pageTitleParts.push('\u201C' + pop.model.text + '\u201D');
-            canonicalUrlParts.push(pop.popId!.toString());
+            canonicalUrlParts.push(pop.questionId!.toString());
             canonicalUrlParts.push(pop.model.slug);
         }
 
@@ -124,10 +124,10 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private shouldGetPop(): boolean {
-        if (!this.props.match.params.popId) {
+        if (!this.props.match.params.questionId) {
             return false;
         }
-        const popIdAsNumber = Number(this.props.match.params.popId);
+        const popIdAsNumber = Number(this.props.match.params.questionId);
         if (isNaN(popIdAsNumber)) {
             return false;
         }
@@ -137,7 +137,7 @@ class Container extends React.Component<ContainerProps, {}> {
         if (this.props.pop.loading) {
             return false;
         }
-        return (this.props.pop.popId !== popIdAsNumber);
+        return (this.props.pop.questionId !== popIdAsNumber);
     }
 }
 

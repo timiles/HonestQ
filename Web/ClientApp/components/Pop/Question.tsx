@@ -11,16 +11,16 @@ import TopicsList from './TopicsList';
 interface Props {
     loading?: boolean;
     error?: string;
-    popId?: number;
+    questionId?: number;
     model?: PopModel;
 }
 
 export default class Question extends React.Component<Props, {}> {
 
     public render() {
-        const { popId, model } = this.props;
+        const { questionId, model } = this.props;
 
-        if (!model || !popId) {
+        if (!model || !questionId) {
             return null;
         }
 
@@ -28,7 +28,7 @@ export default class Question extends React.Component<Props, {}> {
             <div>
                 <LoggedInUserContext.Consumer>
                     {(user) => isUserInRole(user, 'Admin') &&
-                        <Link to={`/admin/edit/pops/${popId}`} className="float-right">
+                        <Link to={`/admin/edit/pops/${questionId}`} className="float-right">
                             Edit
                                 </Link>
                     }
@@ -41,7 +41,7 @@ export default class Question extends React.Component<Props, {}> {
                 <ol className="list-unstyled mt-3 mb-3">
                     {model.comments.map((x, i) => <li key={`comment_${i}`} className="mb-2">
                         <Link
-                            to={`/pops/${popId}/${model.slug}/${x.id}`}
+                            to={`/pops/${questionId}/${model.slug}/${x.id}`}
                             className="btn btn-lg btn-outline-secondary pop-list-item"
                         >
                             <PopTypeView value="Answer" />
@@ -58,7 +58,7 @@ export default class Question extends React.Component<Props, {}> {
                 <div>
                     <NewComment
                         parentCommentId={null}
-                        popId={popId}
+                        questionId={questionId}
                         type={model!.type}
                     />
                 </div>

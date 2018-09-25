@@ -39,7 +39,7 @@ type KnownAction = NewCommentFormSubmittedAction
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    submit: (popId: number, commentForm: CommentFormModel):
+    submit: (questionId: number, commentForm: CommentFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'NEW_COMMENT_FORM_SUBMITTED' });
@@ -51,7 +51,7 @@ export const actionCreators = {
                 }
 
                 postJson<CommentModel>(
-                    `/api/pops/${popId}/comments`,
+                    `/api/pops/${questionId}/comments`,
                     commentForm, getState().login.loggedInUser!)
                     .then((responseModel: CommentModel) => {
                         dispatch({ type: 'NEW_COMMENT_FORM_RECEIVED', payload: { comment: responseModel } });

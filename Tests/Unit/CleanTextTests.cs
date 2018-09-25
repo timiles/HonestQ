@@ -4,7 +4,7 @@ using Pobs.Domain.Utils;
 
 namespace Pobs.Tests.Unit
 {
-    public class CleanPopTextTests
+    public class CleanTextTests
     {
         [Theory]
         [InlineData("\"Hello there!\"", "Hello there!")]
@@ -15,7 +15,7 @@ namespace Pobs.Tests.Unit
         [InlineData("\"Hello\" is a polite greeting. So is \"hi\"", "\"Hello\" is a polite greeting. So is \"hi\"")]
         public void Assertions(string value, string expectedValue)
         {
-            Assert.Equal(expectedValue, value.CleanPopText());
+            Assert.Equal(expectedValue, value.CleanText());
         }
     }
 }

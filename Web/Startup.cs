@@ -42,7 +42,7 @@ namespace Pobs.Web
         {
             services.AddCors();
             services.AddMvc();
-            services.AddDbContextPool<OmnipopsDbContext>(
+            services.AddDbContextPool<HonestQDbContext>(
                 options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection"),
                     b =>
                     {
@@ -91,8 +91,8 @@ namespace Pobs.Web
             });
 
             // Configure DI for application services
-            services.AddScoped(provider => provider.GetService<DbContextPool<OmnipopsDbContext>>().Rent());
-            services.AddScoped<IPopService, PopService>();
+            services.AddScoped(provider => provider.GetService<DbContextPool<HonestQDbContext>>().Rent());
+            services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ITopicService, TopicService>();
             services.AddScoped<IUserService, UserService>();
 
@@ -103,7 +103,7 @@ namespace Pobs.Web
             using (var scope = scopeFactory.CreateScope())
             {
                 var provider = scope.ServiceProvider;
-                using (var dbContext = provider.GetRequiredService<OmnipopsDbContext>())
+                using (var dbContext = provider.GetRequiredService<HonestQDbContext>())
                 {
                     dbContext.Database.Migrate();
                 }

@@ -5,12 +5,12 @@ import CommentList from './CommentList';
 import NewComment from './NewComment';
 
 type Props = CommentModel
-    & { popId: number };
+    & { questionId: number };
 
 export default class Answer extends React.Component<Props, {}> {
 
     public render() {
-        const { popId, id, text, comments } = this.props;
+        const { questionId, id, text, comments } = this.props;
 
         return (
             <div>
@@ -21,11 +21,11 @@ export default class Answer extends React.Component<Props, {}> {
                 <div>
                     <NewComment
                         parentCommentId={id}
-                        popId={popId}
+                        questionId={questionId}
                         type="Question"
                     />
                 </div>
-                <CommentList popId={popId} comments={comments} />
+                <CommentList questionId={questionId} comments={comments} />
             </div>
         );
     }

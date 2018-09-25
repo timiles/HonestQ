@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Pobs.Domain.Entities;
 
-namespace Pobs.Web.Models.Pops
+namespace Pobs.Web.Models.Questions
 {
     public class CommentModel
     {

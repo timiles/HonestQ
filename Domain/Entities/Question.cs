@@ -4,57 +4,56 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Pobs.Domain.Entities.Helpers;
+using Pobs.Domain.Utils;
 
 namespace Pobs.Domain.Entities
 {
-    public class Topic
+    public class Question
     {
-        public Topic()
+        public Question()
         {
-            this.Questions = new JoinCollectionFacade<Question, Topic, QuestionTopic>(this, this.QuestionTopics);
+            this.Topics = new JoinCollectionFacade<Topic, Question, QuestionTopic>(this, this.QuestionTopics);
+            this.Answers = new Collection<Answer>();
         }
-        public Topic(string slug, string name, User postedByUser, DateTime postedAt) : this()
+        public Question(string text, User postedByUser, DateTime postedAt) : this()
         {
-            this.Slug = slug;
-            this.Name = name;
+            this.Text = text;
+            this.Slug = text.ToSlug();
             this.PostedByUser = postedByUser;
             this.PostedAt = postedAt;
         }
 
         public int Id { get; set; }
 
-        [Required, MaxLength(100)]
+        [Required, MaxLength(280)]
         public string Slug { get; set; }
 
-        [Required, MaxLength(100)]
-        public string Name { get; set; }
-
-        [MaxLength(280)]
-        public string Summary { get; set; }
+        [Required, MaxLength(280)]
+        public string Text { get; set; }
 
         [MaxLength(2000)]
-        public string MoreInfoUrl { get; set; }
-
+        public string Source { get; set; }
 
         [Required]
         public virtual User PostedByUser { get; set; }
+        public int PostedByUserId { get; set; }
 
         public DateTime PostedAt { get; set; }
 
-        public bool IsApproved { get; set; }
 
+        public virtual ICollection<Answer> Answers { get; set; }
 
         public ICollection<QuestionTopic> QuestionTopics { get; } = new List<QuestionTopic>();
 
-        public void AddQuestion(Question question)
+        public void AddTopic(Topic topic)
         {
             var questionTopic = new QuestionTopic();
-            ((IJoinEntity<Question>)questionTopic).Navigation = question;
-            ((IJoinEntity<Topic>)questionTopic).Navigation = this;
+            ((IJoinEntity<Topic>)questionTopic).Navigation = topic;
+            ((IJoinEntity<Question>)questionTopic).Navigation = this;
             this.QuestionTopics.Add(questionTopic);
         }
 
         [NotMapped]
-        public ICollection<Question> Questions { get; }
+        public ICollection<Topic> Topics { get; }
     }
 }

@@ -46,42 +46,35 @@ namespace Pobs.Tests.Integration.Topics
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
                 Assert.Null(dynamicResponseModel.isApproved);
 
-                Assert.Equal(3, _topic.Pops.Count());
-                Assert.Equal(_topic.Pops.Count(), responseModel.Pops.Length);
+                Assert.Equal(3, _topic.Questions.Count());
+                Assert.Equal(_topic.Questions.Count(), responseModel.Questions.Length);
 
-                foreach (var pop in _topic.Pops)
+                foreach (var question in _topic.Questions)
                 {
-                    var responsePop = responseModel.Pops.Single(x => x.Id == pop.Id);
-                    Assert.Equal(pop.Slug, responsePop.Slug);
-                    Assert.Equal(pop.Text, responsePop.Text);
-                    Assert.Equal(pop.Type.ToString(), responsePop.Type);
+                    var responseQuestion = responseModel.Questions.Single(x => x.Id == question.Id);
+                    Assert.Equal(question.Slug, responseQuestion.Slug);
+                    Assert.Equal(question.Text, responseQuestion.Text);
 
-                    Assert.Single(pop.Topics);
-                    Assert.Equal(_topic.Id, pop.Topics.Single().Id);
-                    Assert.Equal(_topic.Name, pop.Topics.Single().Name);
+                    Assert.Single(question.Topics);
+                    Assert.Equal(_topic.Id, question.Topics.Single().Id);
+                    Assert.Equal(_topic.Name, question.Topics.Single().Name);
                 }
             }
         }
 
         [Fact]
-        public async Task PopShouldHaveAgreementRatingSummary()
+        public async Task QuestionShouldHaveAnswerCount()
         {
-            // Add some Comments to the middle Pop
-            var pop = _topic.Pops.Skip(1).First();
-            void AddCommentsToPop(AgreementRating agreementRating, int numberOfComments)
-            {
-                for (int i = 0; i < numberOfComments; i++)
-                {
-                    pop.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, DateTime.UtcNow, agreementRating, null));
-                }
-            };
+            // Add some Answers to the middle Question
+            var question = _topic.Questions.Skip(1).First();
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(_user);
-                dbContext.Attach(pop);
-                AddCommentsToPop(AgreementRating.Disagree, 4);
-                AddCommentsToPop(AgreementRating.Neutral, 5);
-                AddCommentsToPop(AgreementRating.Agree, 6);
+                dbContext.Attach(question);
+                for (int i = 0; i < 2; i++)
+                {
+                    question.Answers.Add(new Answer(Utils.GenerateRandomString(10), _user, DateTime.UtcNow));
+                }
                 dbContext.SaveChanges();
             }
 
@@ -97,11 +90,9 @@ namespace Pobs.Tests.Integration.Topics
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<TopicModel>(responseContent);
-                var popResponseModel = responseModel.Pops.Single(x => x.Id == pop.Id);
+                var questionResponseModel = responseModel.Questions.Single(x => x.Id == question.Id);
 
-                Assert.Equal(4, popResponseModel.AgreementRatings[AgreementRating.Disagree.ToString()]);
-                Assert.Equal(5, popResponseModel.AgreementRatings[AgreementRating.Neutral.ToString()]);
-                Assert.Equal(6, popResponseModel.AgreementRatings[AgreementRating.Agree.ToString()]);
+                Assert.Equal(2, questionResponseModel.AnswersCount);
             }
         }
 

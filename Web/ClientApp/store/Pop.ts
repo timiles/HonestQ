@@ -19,15 +19,15 @@ export interface ContainerState {
 
 interface GetPopRequestedAction {
     type: 'GET_POP_REQUESTED';
-    payload: { popId: number; };
+    payload: { questionId: number; };
 }
 interface GetPopSuccessAction {
     type: 'GET_POP_SUCCESS';
-    payload: { popId: number; pop: PopModel; };
+    payload: { questionId: number; pop: PopModel; };
 }
 interface GetPopFailedAction {
     type: 'GET_POP_FAILED';
-    payload: { popId: number; error: string; };
+    payload: { questionId: number; error: string; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -43,24 +43,24 @@ type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getPop: (popId: number): AppThunkAction<KnownAction> =>
+    getPop: (questionId: number): AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'GET_POP_REQUESTED', payload: { popId } });
+                dispatch({ type: 'GET_POP_REQUESTED', payload: { questionId } });
 
-                getJson<PopModel>(`/api/pops/${popId}`,
+                getJson<PopModel>(`/api/pops/${questionId}`,
                     getState().login.loggedInUser)
                     .then((popResponse: PopModel) => {
                         dispatch({
                             type: 'GET_POP_SUCCESS',
-                            payload: { popId, pop: popResponse },
+                            payload: { questionId, pop: popResponse },
                         });
                     })
                     .catch((reason) => {
                         dispatch({
                             type: 'GET_POP_FAILED',
                             payload: {
-                                popId,
+                                questionId,
                                 error: reason || 'Get pop failed',
                             },
                         });
@@ -83,20 +83,20 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             return {
                 pop: {
                     loading: true,
-                    popId: action.payload.popId,
+                    questionId: action.payload.questionId,
                 },
             };
         case 'GET_POP_SUCCESS':
             return {
                 pop: {
-                    popId: action.payload.popId,
+                    questionId: action.payload.questionId,
                     model: action.payload.pop,
                 },
             };
         case 'GET_POP_FAILED':
             return {
                 pop: {
-                    popId: action.payload.popId,
+                    questionId: action.payload.questionId,
                     error: action.payload.error,
                 },
             };
@@ -112,7 +112,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             const popNext = { ...popModel, comments: commentsNext };
             return {
                 pop: {
-                    popId: state.pop!.popId,
+                    questionId: state.pop!.questionId,
                     model: popNext,
                 },
             };

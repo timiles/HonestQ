@@ -21,9 +21,9 @@ namespace Pobs.Web.Services
 
     public class TopicService : ITopicService
     {
-        private OmnipopsDbContext _context;
+        private HonestQDbContext _context;
 
-        public TopicService(OmnipopsDbContext context)
+        public TopicService(HonestQDbContext context)
         {
             _context = context;
         }
@@ -94,10 +94,10 @@ namespace Pobs.Web.Services
         public async Task<TopicModel> GetTopic(string topicSlug, bool isAdmin)
         {
             var topic = await _context.Topics
-                    // TODO: This could be more efficient if we aggregated Comment AgreementRating data in SQL
-                    .Include(x => x.PopTopics).ThenInclude(x => x.Pop).ThenInclude(x => x.Comments)
-                    .Include(x => x.PopTopics).ThenInclude(x => x.Pop).ThenInclude(x => x.PopTopics)
-                    .Include(x => x.PopTopics).ThenInclude(x => x.Pop).ThenInclude(x => x.PopTopics).ThenInclude(x => x.Topic)
+                    // TODO: This could be more efficient if we aggregated Answer counts in SQL
+                    .Include(x => x.QuestionTopics).ThenInclude(x => x.Question).ThenInclude(x => x.Answers)
+                    .Include(x => x.QuestionTopics).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTopics)
+                    .Include(x => x.QuestionTopics).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTopics).ThenInclude(x => x.Topic)
                 .FirstOrDefaultAsync(x => x.Slug == topicSlug);
             if (topic == null || (!topic.IsApproved && !isAdmin))
             {

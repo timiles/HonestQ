@@ -19,22 +19,22 @@ export interface EditPopState {
 
 interface GetPopRequestedAction {
     type: 'GET_POP_REQUESTED';
-    payload: { popId: number; };
+    payload: { questionId: number; };
 }
 interface GetPopSuccessAction {
     type: 'GET_POP_SUCCESS';
-    payload: { pop: PopModel; popId: number; };
+    payload: { pop: PopModel; questionId: number; };
 }
 interface GetPopFailedAction {
     type: 'GET_POP_FAILED';
-    payload: { popId: number; error: string; };
+    payload: { questionId: number; error: string; };
 }
 interface EditPopFormSubmittedAction {
     type: 'EDIT_POP_FORM_SUBMITTED';
 }
 interface EditPopFormReceivedAction {
     type: 'EDIT_POP_FORM_RECEIVED';
-    payload: { popId: number; pop: PopModel; };
+    payload: { questionId: number; pop: PopModel; };
 }
 interface EditPopFormFailedAction {
     type: 'EDIT_POP_FORM_FAILED';
@@ -55,26 +55,26 @@ type KnownAction = GetPopRequestedAction
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getPop: (popId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    getPop: (questionId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_POP_REQUESTED', payload: { popId } });
+            dispatch({ type: 'GET_POP_REQUESTED', payload: { questionId } });
 
-            getJson<PopModel>(`/api/pops/${popId}`, getState().login.loggedInUser)
+            getJson<PopModel>(`/api/pops/${questionId}`, getState().login.loggedInUser)
                 .then((popResponse: PopModel) => {
                     dispatch({
                         type: 'GET_POP_SUCCESS',
-                        payload: { pop: popResponse, popId },
+                        payload: { pop: popResponse, questionId },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
                         type: 'GET_POP_FAILED',
-                        payload: { popId, error: reason || 'Get topic failed' },
+                        payload: { questionId, error: reason || 'Get topic failed' },
                     });
                 });
         })();
     },
-    submit: (popId: number, popForm: PopFormModel):
+    submit: (questionId: number, popForm: PopFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'EDIT_POP_FORM_SUBMITTED' });
@@ -86,11 +86,11 @@ export const actionCreators = {
                 }
 
                 putJson<PopModel>(
-                    `/api/pops/${popId}`, popForm, getState().login.loggedInUser!)
+                    `/api/pops/${questionId}`, popForm, getState().login.loggedInUser!)
                     .then((popResponse: PopModel) => {
                         dispatch({
                             type: 'EDIT_POP_FORM_RECEIVED',
-                            payload: { popId, pop: popResponse },
+                            payload: { questionId, pop: popResponse },
                         });
                     })
                     .catch((reason: string) => {

@@ -7,54 +7,55 @@ using Newtonsoft.Json;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web.Models.Pops;
+using Pobs.Web.Models.Questions;
 using Pobs.Web.Models.Topics;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Pops
+namespace Pobs.Tests.Integration.Questions
 {
-    public class PostCommentsTests : IDisposable
+    public class PostCommentTests : IDisposable
     {
-        private string _generateUrl(int popId) => $"/api/pops/{popId}/comments";
+        private string _generateUrl(int questionId, int answerId) => $"/api/questions/{questionId}/answers/{answerId}/comments";
         private readonly User _user;
         private readonly Topic _topic;
 
-        public PostCommentsTests()
+        public PostCommentTests()
         {
             var user = DataHelpers.CreateUser();
             _user = user;
-            // Create a pop for every Type
-            _topic = DataHelpers.CreateTopic(user, numberOfPopsPerType: 1);
+            _topic = DataHelpers.CreateTopic(user, 1, user, 1);
         }
 
         [Fact]
         public async Task Authenticated_ShouldAddComment()
         {
-            var popId = _topic.Pops.Skip(1).First().Id;
-            var agreementRating = AgreementRating.Agree;
-            var payload = new
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
             {
-                Text = "My insightful comment on this pop",
-                AgreementRating = agreementRating.ToString()
+                Text = "Here's a poop emoji: 💩",
+                Source = "https://example.com/💩",
+                AgreementRating = AgreementRating.Agree.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(popId);
+                var url = _generateUrl(question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var pop = dbContext.Pops
-                        .Include(x => x.Comments)
-                        .Include(x => x.PostedByUser)
-                        .FirstOrDefault(x => x.Id == popId);
-                    var comment = pop.Comments.Single();
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
+                        .First(x => x.Id == question.Id);
+                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
+                    var comment = reloadedAnswer.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
-                    Assert.Equal(agreementRating, comment.AgreementRating);
+                    Assert.Equal(payload.Source, comment.Source);
+                    Assert.Equal(payload.AgreementRating, comment.AgreementRating.ToString());
                     Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
 
@@ -72,46 +73,11 @@ namespace Pobs.Tests.Integration.Pops
         }
 
         [Fact]
-        public async Task Emoji_ShouldPersist()
-        {
-            var popId = _topic.Pops.Skip(1).First().Id;
-            var payload = new
-            {
-                Text = "Here's a poop emoji: 💩",
-                Source = "https://example.com/💩",
-                AgreementRating = AgreementRating.Agree.ToString()
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(popId);
-                var response = await client.PostAsync(url, payload.ToJsonContent());
-                response.EnsureSuccessStatusCode();
-
-                using (var dbContext = TestSetup.CreateDbContext())
-                {
-                    var pop = dbContext.Pops
-                        .Include(x => x.Comments)
-                        .FirstOrDefault(x => x.Id == popId);
-                    var comment = pop.Comments.Single();
-                    Assert.Equal(payload.Text, comment.Text);
-                    Assert.Equal(payload.Source, comment.Source);
-
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
-                    Assert.Equal(comment.Text, responseModel.Text);
-                    Assert.Equal(comment.Source, responseModel.Source);
-                }
-            }
-        }
-
-        [Fact]
         public async Task SourceOnly_ShouldPersist()
         {
-            var popId = _topic.Pops.Skip(1).First().Id;
-            var payload = new
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
             {
                 Source = "https://example.com/",
                 AgreementRating = AgreementRating.Neutral.ToString()
@@ -121,18 +87,18 @@ namespace Pobs.Tests.Integration.Pops
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(popId);
+                var url = _generateUrl(question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var pop = dbContext.Pops
-                        .Include(x => x.Comments)
-                        .Include(x => x.PostedByUser)
-                        .Single(x => x.Id == popId);
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
+                        .First(x => x.Id == question.Id);
+                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
 
-                    var comment = pop.Comments.Single();
+                    var comment = reloadedAnswer.Comments.Single();
                     Assert.Null(comment.Text);
                     Assert.Equal(payload.Source, comment.Source);
 
@@ -147,19 +113,21 @@ namespace Pobs.Tests.Integration.Pops
         [Fact]
         public async Task ParentCommentId_ShouldPersist()
         {
-            var pop = _topic.Pops.Skip(1).First();
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                dbContext.Attach(pop);
+                dbContext.Attach(answer);
                 var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral, null);
-                pop.Comments.Add(comment);
+                answer.Comments.Add(comment);
                 dbContext.SaveChanges();
             }
 
-            var parentComment = pop.Comments.First();
-            var payload = new
+            var parentComment = answer.Comments.First();
+            var payload = new CommentFormModel
             {
                 Text = "My insightful child comment on this parent comment",
+                AgreementRating = AgreementRating.Agree.ToString(),
                 ParentCommentId = parentComment.Id,
             };
             using (var server = new IntegrationTestingServer())
@@ -167,17 +135,17 @@ namespace Pobs.Tests.Integration.Pops
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(pop.Id);
+                var url = _generateUrl(question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var reloadedPop = dbContext.Pops
-                        .Include(x => x.Comments)
-                        .Include(x => x.PostedByUser)
-                        .Single(x => x.Id == pop.Id);
-                    var reloadedParentComment = reloadedPop.Comments.Single(x => x.Id == parentComment.Id);
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
+                        .First(x => x.Id == question.Id);
+                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
+                    var reloadedParentComment = reloadedAnswer.Comments.First(x => x.Id == parentComment.Id);
                     var comment = reloadedParentComment.ChildComments.Single();
                     Assert.Equal(payload.Text, comment.Text);
 
@@ -196,34 +164,12 @@ namespace Pobs.Tests.Integration.Pops
             }
         }
 
-        [Theory]
-        [InlineData("RequestForProof")]
-        public async Task Type_WithAgreementRating_ShouldGetBadRequest(string type)
-        {
-            var pop = _topic.Pops.First(x => x.Type.ToString() == type);
-            var payload = new
-            {
-                Text = "My insightful response",
-                AgreementRating = AgreementRating.Disagree,
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(pop.Id);
-                var response = await client.PostAsync(url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"AgreementRating is invalid when Type is {type}", responseContent);
-            }
-        }
-
         [Fact]
         public async Task NoTextAndNoSource_ShouldGetBadRequest()
         {
-            var popId = _topic.Pops.Skip(1).First().Id;
-            var payload = new
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
             {
                 AgreementRating = AgreementRating.Neutral.ToString(),
             };
@@ -232,7 +178,7 @@ namespace Pobs.Tests.Integration.Pops
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(popId);
+                var url = _generateUrl(question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -244,18 +190,19 @@ namespace Pobs.Tests.Integration.Pops
         [Fact]
         public async Task InvalidAgreementRating_ShouldGetBadRequest()
         {
-            var popId = _topic.Pops.Skip(1).First().Id;
-            var payload = new
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
             {
-                Text = "My insightful comment on this pop",
-                AgreementRating = "NotReallySureToBeHonest"
+                Text = "My insightful comment on this answer",
+                AgreementRating = "NotReallySureToBeHonest",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(popId);
+                var url = _generateUrl(question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -267,43 +214,67 @@ namespace Pobs.Tests.Integration.Pops
         [Fact]
         public async Task NotAuthenticated_ShouldBeDenied()
         {
-            var popId = _topic.Pops.First().Id;
-            var payload = new
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
             {
-                Text = "My insightful pop on this topic"
+                Text = "My insightful comment on this answer",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl(popId);
+                var url = _generateUrl(question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var pop = dbContext.Pops
-                        .Include(x => x.Comments)
-                        .Single(x => x.Id == popId);
+                var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments)
+                        .First(x => x.Id == question.Id);
 
-                Assert.Empty(pop.Comments);
+                Assert.Empty(reloadedQuestion.Answers.First(x => x.Id == answer.Id).Comments);
             }
         }
 
         [Fact]
-        public async Task UnknownPopId_ShouldReturnNotFound()
+        public async Task UnknownQuestionId_ShouldReturnNotFound()
         {
-            var payload = new
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
             {
-                Text = "My insightful pop on this topic",
-                AgreementRating = AgreementRating.Neutral
+                Text = "My insightful comment on this answer",
+                AgreementRating = AgreementRating.Neutral.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(0);
+                var url = _generateUrl(0, answer.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task UnknownAnswerId_ShouldReturnNotFound()
+        {
+            var question = _topic.Questions.First();
+            var answer = question.Answers.First();
+            var payload = new CommentFormModel
+            {
+                Text = "My insightful comment on this answer",
+                AgreementRating = AgreementRating.Neutral.ToString(),
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(question.Id, 0);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
@@ -311,6 +282,7 @@ namespace Pobs.Tests.Integration.Pops
 
         public void Dispose()
         {
+            DataHelpers.DeleteAllComments(_topic.Id);
             DataHelpers.DeleteUser(_user.Id);
         }
     }

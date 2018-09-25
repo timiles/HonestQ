@@ -8,7 +8,7 @@ import CommentForm from './CommentForm';
 
 type Props = NewCommentStore.NewCommentState
     & typeof NewCommentStore.actionCreators
-    & { popId: number, type: string, parentCommentId: number | null };
+    & { questionId: number, type: string, parentCommentId: number | null };
 
 interface State {
     isModalOpen: boolean;
@@ -84,7 +84,7 @@ class NewComment extends React.Component<Props, State> {
     }
 
     private handleSubmit(form: CommentFormModel): void {
-        this.props.submit(this.props.popId, form);
+        this.props.submit(this.props.questionId, form);
     }
 }
 
