@@ -42,7 +42,7 @@ class NewQuestion extends React.Component<Props, State> {
             <>
                 <button
                     type="button"
-                    className="btn btn-lg btn-primary btn-new-pop"
+                    className="btn btn-lg btn-primary btn-new-question"
                     onClick={this.handleOpen}
                 >
                     Ask a question

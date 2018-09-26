@@ -42,10 +42,10 @@ class Home extends React.Component<HomeProps, {}> {
                             <li key={`question_${i}`} className="mr-2 mb-2">
                                 <Link
                                     to={`/questions/${x.id}/${x.slug}`}
-                                    className="btn btn-lg btn-outline-secondary pop-list-item"
+                                    className="btn btn-lg btn-outline-secondary question-list-item"
                                 >
                                     <Emoji value={EmojiValue.Question} />
-                                    <span className="pop pop-question">{x.text}</span>
+                                    <span className="question">{x.text}</span>
                                     <small className="ml-1">
                                         <span className="badge badge-info">{x.answersCount}</span>
                                         <span className="sr-only">answers</span>

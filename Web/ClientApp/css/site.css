@@ -87,45 +87,41 @@ ul.topics-list li {
     float: left;
 }
 
-
-.pop {
-    margin-left: 4px;
-}
-.pop-statement {
+.answer {
     quotes: "“" "”" "‘" "’";
     text-align: left;
 }
-    .pop-statement:before, .pop-statement:after {
+    .answer:before, .answer:after {
         font-family: Georgia, serif;
         font-size: 3.3em;
         line-height: 0;
         opacity: .2;
         position: relative;
     }
-    .pop-statement:before {
+    .answer:before {
         content: open-quote;
         margin-right: 6px;
         top: 32px;
     }
-    .pop-statement:after {
+    .answer:after {
         content: close-quote;
         margin-left: 6px;
         bottom: -32px;
     }
-    h4 .pop-statement:before, h4 .pop-statement:after {
+    h4 .answer:before, h4 .answer:after {
         font-size: 2.9em;
     }
-    h4 span.pop-statement:before {
+    h4 span.answer:before {
         margin-right: 4px;
         top: 34px;
     }
-    h4 span.pop-statement:after {
+    h4 span.answer:after {
         bottom: -34px;
         margin-left: 4px;
     }
 
 
-.agreement-rating:before, .poptype:before, .stance:before {
+.agreement-rating:before, .emoji:before, .stance:before {
     display: inline-block;
     min-width: 23px;
     text-align: center;
@@ -139,62 +135,47 @@ ul.topics-list li {
 .agreement-rating-disagree:before {
     content: "❌";
 }
-.poptype-statement:before {
-    content: "💬";
+
+.emoji {
+    margin-right: 4px;
 }
-.poptype-requestforproof:before {
-    content: "🕵";
-}
-.poptype-question:before {
+.emoji-question:before {
     content: "❓";
 }
-.poptype-answer:before {
+.emoji-answer:before {
     content: "🙋";
 }
-.stance-neutral:before {
-    content: "😶";
-}
-.stance-pro:before {
-    content: "👍";
-}
-.stance-con:before {
-    content: "👎";
-}
-.stance-caution:before {
-    content: "⚠️";
-}
-
-.poptype-over-text-area {
+.emoji-over-text-area {
     position: absolute;
 }
-.poptype-over-text-area .poptype:before {
+.emoji-over-text-area .emoji:before {
     margin-left: 10px;
     position: relative;
     top: 8px;
 }
-.pop-text-area {
+.emoji-text-area {
     font-size: 18px;
     padding-left: 40px;
     resize: none;
 }
 
-.pop-list-item {
+.question-list-item {
     text-align: left;
     white-space: normal;
     width: 100%;
 }
 
-.btn-new-pop {
+.btn-new-question {
     width: 100%;
 }
 
-.btn-back-to-pop {
+.btn-back-to-question {
     margin-top: 20px;
     text-align: left;
     white-space: normal;
     width: 100%;
 }
-    .btn-back-to-pop .pop-text {
+    .btn-back-to-question .question-text {
         font-weight: bold;
     }
 

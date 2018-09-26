@@ -12,6 +12,6 @@ export enum EmojiValue {
 export default class Emoji extends React.Component<Props, {}> {
 
     public render() {
-        return <span className={`poptype poptype-${EmojiValue[this.props.value].toLowerCase()}`} />;
+        return <span className={`emoji emoji-${EmojiValue[this.props.value].toLowerCase()}`} />;
     }
 }

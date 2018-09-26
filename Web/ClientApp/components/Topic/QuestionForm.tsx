@@ -48,13 +48,13 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
                         <label htmlFor="questionText">Question</label>
-                        <div className="poptype-over-text-area">
+                        <div className="emoji-over-text-area">
                             <Emoji value={EmojiValue.Question} />
                         </div>
                         <SuperTextArea
                             id="questionText"
                             name="text"
-                            className="pop-text-area"
+                            className="emoji-text-area"
                             value={text}
                             maxLength={280}
                             onChange={this.handleChange}

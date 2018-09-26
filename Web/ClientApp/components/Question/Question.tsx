@@ -35,7 +35,7 @@ export default class Question extends React.Component<QuestionProps, {}> {
                 </LoggedInUserContext.Consumer>
                 <h4>
                     <Emoji value={EmojiValue.Question} />
-                    <span className="pop pop-question">{model.text}</span>
+                    <span className="question">{model.text}</span>
                 </h4>
                 {model.source && <p><small>Source: {model.source}</small></p>}
                 <TopicsList topics={model.topics} />
@@ -43,10 +43,10 @@ export default class Question extends React.Component<QuestionProps, {}> {
                     {model.answers.map((x, i) => <li key={`answer_${i}`} className="mb-2">
                         <Link
                             to={`/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
-                            className="btn btn-lg btn-outline-secondary pop-list-item"
+                            className="btn btn-lg btn-outline-secondary question-list-item"
                         >
                             <Emoji value={EmojiValue.Answer} />
-                            <span className="pop pop-statement">{x.text}</span>
+                            <span className="answer">{x.text}</span>
                             {this.isCitationNeeded(x) &&
                                 <small className="ml-1">
                                     <span className="badge badge-info">Citation needed</span>

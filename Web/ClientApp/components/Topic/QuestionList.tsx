@@ -24,10 +24,10 @@ export default class QuestionList extends React.Component<Props, {}> {
                         <li key={`question_${i}`} className="mb-2">
                             <Link
                                 to={`/questions/${x.id}/${x.slug}`}
-                                className="btn btn-lg btn-outline-secondary pop-list-item"
+                                className="btn btn-lg btn-outline-secondary question-list-item"
                             >
                                 <Emoji value={EmojiValue.Question} />
-                                <span className="pop pop-question">{x.text}</span>
+                                <span className="question">{x.text}</span>
                             </Link>
                         </li>)}
                     <li>

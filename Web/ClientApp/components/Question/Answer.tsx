@@ -16,7 +16,7 @@ export default class Answer extends React.Component<Props, {}> {
             <div>
                 <h4>
                     <Emoji value={EmojiValue.Answer} />
-                    <span className="pop pop-statement">{text}</span>
+                    <span className="answer">{text}</span>
                 </h4>
                 {source && <p><small>Source: {source}</small></p>}
                 <div>
