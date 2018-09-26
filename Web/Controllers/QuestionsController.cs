@@ -110,6 +110,34 @@ namespace Pobs.Web.Controllers
             }
         }
 
+        [Authorize, HttpPut, Route("{questionId}/answers/{answerId}")]
+        public async Task<IActionResult> UpdateAnswer(int questionId, int answerId, [FromBody] AnswerFormModel payload)
+        {
+            if (!User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
+            if (string.IsNullOrWhiteSpace(payload.Text))
+            {
+                return BadRequest("Text is required");
+            }
+
+            try
+            {
+                var answerModel = await _questionService.UpdateAnswer(questionId, answerId, payload);
+                if (answerModel != null)
+                {
+                    return Ok(answerModel);
+                }
+                return NotFound();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost, Route("{questionId}/answers/{answerId}/comments"), Authorize]
         public async Task<IActionResult> AddComment(int questionId, int answerId, [FromBody] CommentFormModel payload)
         {

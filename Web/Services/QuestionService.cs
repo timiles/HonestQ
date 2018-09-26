@@ -18,7 +18,8 @@ namespace Pobs.Web.Services
         Task<QuestionsListModel> ListQuestions();
         Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId);
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
-        Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int v);
+        Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm);
+        Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId);
     }
 
     public class QuestionService : IQuestionService
@@ -144,6 +145,25 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
 
             return new AnswerModel(answer, postedByUserId);
+        }
+
+        public async Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm)
+        {
+            var question = await _context.Questions
+                .Include(x => x.Answers)
+                .FirstOrDefaultAsync(x => x.Id == questionId);
+            var answer = question?.Answers?.FirstOrDefault(x => x.Id == answerId);
+            if (answer == null)
+            {
+                return null;
+            }
+
+            answer.Text = answerForm.Text;
+            answer.Slug = answerForm.Text.ToSlug();
+            answer.Source = answerForm.Source;
+
+            await _context.SaveChangesAsync();
+            return new AnswerModel(answer);
         }
 
         public async Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId)
