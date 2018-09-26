@@ -118,7 +118,7 @@ namespace Pobs.Tests.Integration.Topics
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"A topic already exists at /{topic.Slug}", responseContent);
+                Assert.Equal($"A topic already exists at /{topic.Slug}.", responseContent);
             }
         }
 

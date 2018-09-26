@@ -171,6 +171,8 @@ namespace Pobs.Tests.Integration.Questions
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
+                Text = " ",
+                Source = " ",
                 AgreementRating = AgreementRating.Neutral.ToString(),
             };
             using (var server = new IntegrationTestingServer())
@@ -183,7 +185,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Text or Source is required", responseContent);
+                Assert.Equal("Text or Source is required.", responseContent);
             }
         }
 
@@ -207,7 +209,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"Invalid AgreementRating: {payload.AgreementRating}", responseContent);
+                Assert.Equal($"Invalid AgreementRating: {payload.AgreementRating}.", responseContent);
             }
         }
 

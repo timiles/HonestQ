@@ -42,7 +42,7 @@ namespace Pobs.Web.Services
             {
                 if (topicWithSameSlug.IsApproved)
                 {
-                    throw new AppException($"A topic already exists at /{slug}");
+                    throw new AppException($"A topic already exists at /{slug}.");
                 }
                 // If it's not yet approved, no-one needs to know?
                 return;
@@ -73,11 +73,11 @@ namespace Pobs.Web.Services
                 {
                     if (topicWithSameSlug.IsApproved)
                     {
-                        throw new AppException($"A topic already exists at /{newSlug}");
+                        throw new AppException($"A topic already exists at /{newSlug}.");
                     }
                     else
                     {
-                        throw new AppException($"Unapproved TopicId {topicWithSameSlug.Id} already has slug {newSlug}");
+                        throw new AppException($"Unapproved TopicId {topicWithSameSlug.Id} already has slug {newSlug}.");
                     }
                 }
             }

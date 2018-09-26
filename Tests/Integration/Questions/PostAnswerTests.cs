@@ -76,6 +76,7 @@ namespace Pobs.Tests.Integration.Questions
             var question = _topic.Questions.First();
             var payload = new AnswerFormModel
             {
+                Text = " ",
                 Source = "https://example.com/",
             };
             using (var server = new IntegrationTestingServer())
@@ -88,7 +89,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Text is required", responseContent);
+                Assert.Equal("The Text field is required.", responseContent);
             }
         }
 

@@ -27,9 +27,9 @@ namespace Pobs.Web.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> AddQuestion([FromBody] QuestionFormModel payload)
         {
-            if (string.IsNullOrWhiteSpace(payload.Text))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Text is required");
+                return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
             }
 
             var questionModel = await _questionService.SaveQuestion(payload, User.Identity.ParseUserId());
@@ -48,9 +48,9 @@ namespace Pobs.Web.Controllers
                 return Forbid();
             }
 
-            if (string.IsNullOrWhiteSpace(payload.Text))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Text is required");
+                return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
             }
 
             try
@@ -90,9 +90,9 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{questionId}/answers"), Authorize]
         public async Task<IActionResult> AddAnswer(int questionId, [FromBody] AnswerFormModel payload)
         {
-            if (string.IsNullOrWhiteSpace(payload.Text))
+            if (!ModelState.IsValid)
             {
-                return BadRequest($"{nameof(payload.Text)} is required");
+                return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
             }
 
             try
@@ -118,9 +118,9 @@ namespace Pobs.Web.Controllers
                 return Forbid();
             }
 
-            if (string.IsNullOrWhiteSpace(payload.Text))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Text is required");
+                return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
             }
 
             try
@@ -143,12 +143,12 @@ namespace Pobs.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(payload.Text) && string.IsNullOrWhiteSpace(payload.Source))
             {
-                return BadRequest($"{nameof(payload.Text)} or {nameof(payload.Source)} is required");
+                return BadRequest($"{nameof(payload.Text)} or {nameof(payload.Source)} is required.");
             }
             if (string.IsNullOrEmpty(payload.AgreementRating) ||
                 !Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
             {
-                return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}");
+                return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}.");
             }
 
             try

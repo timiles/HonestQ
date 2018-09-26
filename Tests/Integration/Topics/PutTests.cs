@@ -84,7 +84,7 @@ namespace Pobs.Tests.Integration.Topics
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"A topic already exists at /{topicWithSameSlug.Slug}", responseContent);
+                Assert.Equal($"A topic already exists at /{topicWithSameSlug.Slug}.", responseContent);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Pobs.Tests.Integration.Topics
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"Unapproved TopicId {topicWithSameSlug.Id} already has slug {topicWithSameSlug.Slug}", responseContent);
+                Assert.Equal($"Unapproved TopicId {topicWithSameSlug.Id} already has slug {topicWithSameSlug.Slug}.", responseContent);
             }
         }
 
