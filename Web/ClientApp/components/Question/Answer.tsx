@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { AnswerModel } from '../../server-models';
+import { isUserInRole } from '../../utils';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import CommentList from './CommentList';
 import NewComment from './NewComment';
@@ -14,6 +17,13 @@ export default class Answer extends React.Component<Props, {}> {
 
         return (
             <div>
+                <LoggedInUserContext.Consumer>
+                    {(user) => isUserInRole(user, 'Admin') &&
+                        <Link to={`/admin/edit/questions/${questionId}/answers/${id}`} className="float-right">
+                            Edit
+                        </Link>
+                    }
+                </LoggedInUserContext.Consumer>
                 <h4>
                     <Emoji value={EmojiValue.Answer} />
                     <span className="answer">{text}</span>

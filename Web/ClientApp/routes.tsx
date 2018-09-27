@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import EditAnswer from './components/Admin/EditAnswer';
 import EditQuestion from './components/Admin/EditQuestion';
 import EditTopic from './components/Admin/EditTopic';
 import AdminHome from './components/AdminHome';
@@ -19,6 +20,7 @@ export const routes = (
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/admin" component={AdminHome} />
             <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
+            <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
             <Route exact={true} path="/admin/edit/topics/:topicSlug" component={EditTopic} />
             <Route path="/intro" component={Intro} />
             <Route path="/login" component={Login} />

@@ -18,10 +18,12 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
     constructor(props: Props) {
         super(props);
 
-        this.state = {
-            text: '',
-            source: '',
-        };
+        this.state = (props.initialState) ?
+            {
+                text: props.initialState.text,
+                source: props.initialState.source,
+            } :
+            { text: '', source: '' };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);

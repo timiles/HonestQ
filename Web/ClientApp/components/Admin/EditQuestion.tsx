@@ -9,7 +9,7 @@ import QuestionForm from '../Topic/QuestionForm';
 
 type EditQuestionProps = EditQuestionStore.EditQuestionState
     & typeof EditQuestionStore.actionCreators
-    & RouteComponentProps<{ topicSlug: string, questionId: number }>;
+    & RouteComponentProps<{ topicSlug: string, questionId: string }>;
 
 class EditQuestion extends React.Component<EditQuestionProps, {}> {
 
@@ -21,7 +21,7 @@ class EditQuestion extends React.Component<EditQuestionProps, {}> {
 
     public componentDidMount() {
         if (this.shouldGetQuestion()) {
-            this.props.getQuestion(this.props.match.params.questionId);
+            this.props.getQuestion(Number(this.props.match.params.questionId));
         }
     }
 
@@ -54,7 +54,7 @@ class EditQuestion extends React.Component<EditQuestionProps, {}> {
     }
 
     private handleSubmit(form: QuestionFormModel): void {
-        this.props.submit(this.props.match.params.questionId, form);
+        this.props.submit(Number(this.props.match.params.questionId), form);
     }
 }
 
