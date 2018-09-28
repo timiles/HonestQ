@@ -52,6 +52,6 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => ({ ...state.adminHome, loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any): any => ({ ...state.adminHome, loggedInUser: state.login.loggedInUser }),
     AdminHomeStore.actionCreators,
 )(AdminHome);

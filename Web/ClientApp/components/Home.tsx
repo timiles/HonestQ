@@ -81,6 +81,6 @@ class Home extends React.Component<HomeProps, {}> {
 
 export default connect(
     // PRIVATE BETA: was just ` => (state.home)`
-    (state: ApplicationState, ownProps: any) => ({ ...state.home, loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any): any => ({ ...state.home, loggedInUser: state.login.loggedInUser }),
     HomeStore.actionCreators,
 )(Home);
