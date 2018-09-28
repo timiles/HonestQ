@@ -2,6 +2,11 @@
   "name": "pobs.web",
   "private": true,
   "version": "0.0.0",
+  "scripts": {
+    "lint": "tslint -c tslint.json 'ClientApp/**/*.{ts,tsx}'",
+    "test": "jest",
+    "testw": "jest --watch"
+  },
   "dependencies": {
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.1.3",
@@ -23,7 +28,10 @@
     "showdown": "^1.8.6"
   },
   "devDependencies": {
+    "@types/enzyme": "^3.1.14",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
     "@types/history": "^4.7.0",
+    "@types/jest": "^23.3.2",
     "@types/jwt-decode": "^2.2.1",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.8",
@@ -34,6 +42,7 @@
     "@types/react-router": "^4.0.31",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-router-redux": "^5.0.16",
+    "@types/react-test-renderer": "^16.0.2",
     "@types/react-transition-group": "^2.0.14",
     "@types/showdown": "^1.7.5",
     "@types/webpack": "^4.4.13",
@@ -42,13 +51,19 @@
     "aspnet-webpack-react": "^3.0.0",
     "awesome-typescript-loader": "^3.5.0",
     "css-loader": "^0.28.11",
+    "enzyme": "^3.6.0",
+    "enzyme-adapter-react-16": "^1.5.0",
+    "enzyme-to-json": "^3.3.4",
     "event-source-polyfill": "^0.0.9",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^0.11.2",
+    "jest": "^23.6.0",
     "jquery": "^3.3.1",
     "node-noop": "^1.0.0",
     "popper.js": "^1.14.4",
+    "raf": "^3.4.0",
     "style-loader": "^0.18.2",
+    "ts-jest": "^23.10.2",
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
     "typescript": "^2.9.2",
@@ -56,5 +71,23 @@
     "webpack": "^2.7.0",
     "webpack-hot-middleware": "^2.24.2",
     "webpack-merge": "^4.1.4"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "ts-jest"
+    },
+    "setupFiles": [
+      "raf/polyfill"
+    ],
+    "testRegex": "/_tests/.*\\.(ts|tsx|js)$",
+    "setupTestFrameworkScriptFile": "<rootDir>ClientApp/setupTests.ts",
+    "snapshotSerializers": [
+      "enzyme-to-json"
+    ]
   }
 }

@@ -63,7 +63,10 @@ class Home extends React.Component<HomeProps, {}> {
                     <ul className="topics-list">
                         {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
                             <li key={`topic_${i}`} className="mr-1 mb-1">
-                                <Link to={`/topics/${x.slug}`} className="btn btn-sm btn-outline-secondary">
+                                <Link
+                                    to={`/topics/${x.slug}`}
+                                    className="btn btn-sm btn-outline-secondary topic-list-item"
+                                >
                                     {x.name}
                                 </Link>
                             </li>)}

@@ -1,5 +1,10 @@
 pushd Web
-call tslint.bat
+call npm run lint
+popd
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+pushd Web
+call npm test
 popd
 if %errorlevel% neq 0 exit /b %errorlevel%
 

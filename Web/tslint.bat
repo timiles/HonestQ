@@ -1,1 +1,0 @@
-./node_modules/.bin/tslint -c tslint.json 'ClientApp/**/*.{ts,tsx}'

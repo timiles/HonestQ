@@ -16,6 +16,10 @@
             1,
             "exclude-class-expressions"
         ],
+        "no-implicit-dependencies": [
+            true,
+            "dev"
+        ],
         "object-literal-sort-keys": false,
         "quotemark": [
             true,
