@@ -7,6 +7,9 @@ interface Props {
 export enum EmojiValue {
     Answer,
     Question,
+    Agree,
+    Neutral,
+    Disagree,
 }
 
 export default class Emoji extends React.Component<Props, {}> {

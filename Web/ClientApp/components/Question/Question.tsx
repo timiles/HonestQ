@@ -35,7 +35,7 @@ export default class Question extends React.Component<QuestionProps, {}> {
                 </LoggedInUserContext.Consumer>
                 <h4>
                     <Emoji value={EmojiValue.Question} />
-                    <span className="question">{model.text}</span>
+                    <span className="ml-1 question">{model.text}</span>
                 </h4>
                 {model.source && <p><small>Source: {model.source}</small></p>}
                 <TopicsList topics={model.topics} />
@@ -46,7 +46,7 @@ export default class Question extends React.Component<QuestionProps, {}> {
                             className="btn btn-lg btn-outline-secondary question-list-item"
                         >
                             <Emoji value={EmojiValue.Answer} />
-                            <span className="answer">{x.text}</span>
+                            <span className="ml-1 answer">{x.text}</span>
                             {this.isCitationNeeded(x) &&
                                 <small className="ml-1">
                                     <span className="badge badge-info">Citation needed</span>

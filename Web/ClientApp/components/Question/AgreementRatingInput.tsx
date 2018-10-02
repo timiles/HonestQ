@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Emoji, { EmojiValue } from '../shared/Emoji';
 
 interface Props {
     name?: string;
@@ -19,9 +20,9 @@ export default class AgreementRatingInput extends React.Component<Props, State> 
 
         this.state = { value: this.props.value || '' };
 
-        ['Agree', 'Neutral', 'Disagree'].forEach((x) => {
-            this.values.set(x, <span className={`agreement-rating agreement-rating-${x.toLowerCase()}`} />);
-        });
+        this.values.set('Agree', <Emoji value={EmojiValue.Agree} />);
+        this.values.set('Neutral', <Emoji value={EmojiValue.Neutral} />);
+        this.values.set('Disagree', <Emoji value={EmojiValue.Disagree} />);
 
         this.handleChange = this.handleChange.bind(this);
     }

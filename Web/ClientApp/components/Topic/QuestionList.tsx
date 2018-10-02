@@ -27,7 +27,7 @@ export default class QuestionList extends React.Component<Props, {}> {
                                 className="btn btn-lg btn-outline-secondary question-list-item"
                             >
                                 <Emoji value={EmojiValue.Question} />
-                                <span className="question">{x.text}</span>
+                                <span className="ml-1 question">{x.text}</span>
                             </Link>
                         </li>)}
                     <li>

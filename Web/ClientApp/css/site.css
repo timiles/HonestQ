@@ -121,23 +121,10 @@ ul.topics-list li {
     }
 
 
-.agreement-rating:before, .emoji:before, .stance:before {
+.emoji:before {
     display: inline-block;
     min-width: 23px;
     text-align: center;
-}
-.agreement-rating-agree:before {
-    content: "✔️";
-}
-.agreement-rating-neutral:before {
-    content: "🤷";
-}
-.agreement-rating-disagree:before {
-    content: "❌";
-}
-
-.emoji {
-    margin-right: 4px;
 }
 .emoji-question:before {
     content: "❓";
@@ -145,6 +132,16 @@ ul.topics-list li {
 .emoji-answer:before {
     content: "🙋";
 }
+.emoji-agree:before {
+    content: "✔️";
+}
+.emoji-neutral:before {
+    content: "🤷";
+}
+.emoji-disagree:before {
+    content: "❌";
+}
+
 .emoji-over-text-area {
     position: absolute;
 }
@@ -178,20 +175,6 @@ ul.topics-list li {
     .btn-back-to-question .question-text {
         font-weight: bold;
     }
-
-
-.stance-overlay {
-    margin-left: -12px;
-    position: relative;
-    top: 2px;
-}
-.stance-dropdown-menu .dropdown-item {
-    cursor: pointer;
-    padding-left: .5rem;
-}
-.stance-dropdown-menu .stance:before {
-    padding-right: .5rem;
-}
 
 
 .list-comments-nested {

@@ -4,6 +4,7 @@ import { CommentModel } from '../../server-models';
 import { extractUrlFromText, parseDateWithTimeZoneOffset } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
+import Emoji, { EmojiValue } from '../shared/Emoji';
 import NewComment from './NewComment';
 
 type Props = CommentModel
@@ -26,12 +27,14 @@ export default class Comment extends React.Component<Props, {}> {
                     const postedAtMoment = moment(postedAtOffset);
                     const friendlyTime = postedAtMoment.fromNow();
                     const fullTime = postedAtMoment.format('LLLL');
+                    const emojiValue = this.getEmojiValue(agreementRating);
 
                     return (
                         <>
                             <div className="card">
                                 <div className="card-body">
                                     <blockquote className="blockquote mb-0">
+                                        {emojiValue && <Emoji value={emojiValue} />}
                                         <span className="badge badge-secondary">
                                             {agreementRating.toSentenceCase()}
                                         </span>
@@ -66,5 +69,14 @@ export default class Comment extends React.Component<Props, {}> {
                 }}
             </LoggedInUserContext.Consumer>
         );
+    }
+
+    private getEmojiValue(agreementRating: string): EmojiValue | null {
+        switch (agreementRating) {
+            case 'Agree': return EmojiValue.Agree;
+            case 'Neutral': return EmojiValue.Neutral;
+            case 'Disagree': return EmojiValue.Disagree;
+            default: return null;
+        }
     }
 }

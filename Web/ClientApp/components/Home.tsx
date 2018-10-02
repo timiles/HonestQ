@@ -45,7 +45,7 @@ class Home extends React.Component<HomeProps, {}> {
                                     className="btn btn-lg btn-outline-secondary question-list-item"
                                 >
                                     <Emoji value={EmojiValue.Question} />
-                                    <span className="question">{x.text}</span>
+                                    <span className="ml-1 question">{x.text}</span>
                                     <small className="ml-1">
                                         <span className="badge badge-info">{x.answersCount}</span>
                                         <span className="sr-only">answers</span>

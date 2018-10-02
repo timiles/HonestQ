@@ -18,7 +18,7 @@ export default class BackToQuestionButton extends React.Component<BackToQuestion
                 className="btn btn-md btn-outline-secondary btn-back-to-question mb-3"
             >
                 &larr; <Emoji value={EmojiValue.Question} />
-                <span className="question-text">{text}</span>
+                <span className="ml-1 question-text">{text}</span>
             </Link>
         );
     }
