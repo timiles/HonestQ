@@ -100,7 +100,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
     }
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLButtonElement | HTMLTextAreaElement>): void {
-        const { name, value } = event.currentTarget;
+        const { name, value } = event.target as HTMLInputElement | HTMLButtonElement | HTMLTextAreaElement;
         this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
