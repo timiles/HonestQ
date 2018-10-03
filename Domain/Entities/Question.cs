@@ -38,7 +38,7 @@ namespace Pobs.Domain.Entities
         public virtual User PostedByUser { get; set; }
         public int PostedByUserId { get; set; }
 
-        public DateTime PostedAt { get; set; }
+        public DateTimeOffset PostedAt { get; set; }
 
 
         public virtual ICollection<Answer> Answers { get; set; }

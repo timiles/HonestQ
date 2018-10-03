@@ -89,7 +89,7 @@ namespace Pobs.Web.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("PostedAt");
+                    b.Property<DateTimeOffset>("PostedAt");
 
                     b.Property<int>("PostedByUserId");
 

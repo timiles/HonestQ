@@ -77,6 +77,20 @@ namespace Pobs.Tests.Integration.Helpers
             return topic;
         }
 
+        public static void CreateComments(Answer answer, User commentUser, int numberOfComments)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(answer);
+                dbContext.Attach(commentUser);
+                for (var i = 0; i < numberOfComments; i++)
+                {
+                    answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, DateTime.UtcNow, AgreementRating.Agree, null));
+                }
+                dbContext.SaveChanges();
+            }
+        }
+
         /// <summary>Delete comments before cascading other deletes so as to not upset foreign key constraints.</summary>
         public static void DeleteAllComments(int topicId)
         {
