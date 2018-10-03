@@ -9,7 +9,8 @@ namespace Pobs.Web.Models.Activity
         public ActivityListModel(ActivityListItemModel[] activityItems)
         {
             this.ActivityItems = activityItems;
-            this.LastTimestamp = new DateTimeOffset(activityItems.Min(x => x.PostedAt)).ToUnixTimeMilliseconds();
+            this.LastTimestamp = activityItems.Any() ?
+                new DateTimeOffset(activityItems.Min(x => x.PostedAt)).ToUnixTimeMilliseconds() : 0;
         }
 
         public ActivityListItemModel[] ActivityItems { get; set; }

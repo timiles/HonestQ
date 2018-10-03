@@ -221,6 +221,26 @@ namespace Pobs.Tests.Integration.Activity
             }
         }
 
+        [Fact]
+        public async Task ShouldHandleZeroItems()
+        {
+            var beforeTimestamp = new DateTimeOffset(new DateTime(2000, 1, 1)).ToUnixTimeMilliseconds();
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_questionUserId);
+
+                var response = await client.GetAsync(_buildUrl(beforeTimestamp: beforeTimestamp));
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
+                Assert.Equal(0, responseModel.ActivityItems.Count());
+                Assert.Equal(0, responseModel.LastTimestamp);
+            }
+        }
+
         public void Dispose()
         {
             DataHelpers.DeleteAllComments(_topic.Id);
