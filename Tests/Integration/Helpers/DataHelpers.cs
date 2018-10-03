@@ -43,9 +43,11 @@ namespace Pobs.Tests.Integration.Helpers
                 IsApproved = isApproved
             };
 
-            for (int s = 0; s < numberOfQuestions; s++)
+            for (int questionIndex = 0; questionIndex < numberOfQuestions; questionIndex++)
             {
-                var question = new Question(Utils.GenerateRandomString(10), questionUser, DateTime.UtcNow)
+                // Stagger PostedAt times
+                var questionPostedAt = DateTime.UtcNow.AddHours(-1.0 * (questionIndex + 1) / numberOfQuestions);
+                var question = new Question(Utils.GenerateRandomString(10), questionUser, questionPostedAt)
                 {
                     Source = Utils.GenerateRandomString(10),
                 };
@@ -53,7 +55,9 @@ namespace Pobs.Tests.Integration.Helpers
                 {
                     for (int answerIndex = 0; answerIndex < numberOfAnswersPerQuestion; answerIndex++)
                     {
-                        var answer = new Answer(Utils.GenerateRandomString(10), answerUser, DateTime.UtcNow)
+                        // Stagger PostedAt times
+                        var answerPostedAt = DateTime.UtcNow.AddHours(-1.0 * (answerIndex + 1) / numberOfAnswersPerQuestion);
+                        var answer = new Answer(Utils.GenerateRandomString(10), answerUser, answerPostedAt)
                         {
                             Source = Utils.GenerateRandomString(10)
                         };
@@ -85,7 +89,9 @@ namespace Pobs.Tests.Integration.Helpers
                 dbContext.Attach(commentUser);
                 for (var i = 0; i < numberOfComments; i++)
                 {
-                    answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, DateTime.UtcNow, AgreementRating.Agree, null));
+                    // Stagger PostedAt times
+                    var postedAt = DateTime.UtcNow.AddHours(-1.0 * (i + 1) / numberOfComments);
+                    answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, AgreementRating.Agree, null));
                 }
                 dbContext.SaveChanges();
             }

@@ -15,7 +15,10 @@ namespace Pobs.Tests.Integration.Activity
 {
     public class IndexActivityTests : IDisposable
     {
-        private readonly string _url = "/api/activity";
+        private string _buildUrl(int? pageSize = null, long? beforeTimestamp = null) =>
+            "/api/activity?"
+                + (pageSize.HasValue ? $"pageSize={pageSize}&" : "")
+                + (beforeTimestamp.HasValue ? $"beforeTimestamp={beforeTimestamp}" : "");
         private readonly int _questionUserId;
         private readonly int _answerUserId;
         private readonly Topic _topic;
@@ -40,11 +43,13 @@ namespace Pobs.Tests.Integration.Activity
                 // PRIVATE BETA
                 client.AuthenticateAs(_questionUserId);
 
-                var response = await client.GetAsync(_url);
+                var response = await client.GetAsync(_buildUrl(1000));
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
+                // Not really sure how better to test the timestamp?
+                Assert.True(responseModel.LastTimestamp > 0);
 
                 // Check that all of this Topic is in the most recent activity
                 foreach (var question in _topic.Questions)
@@ -125,6 +130,92 @@ namespace Pobs.Tests.Integration.Activity
                                 Assert.True(false, $"Unexpected Type '{responseActivity.Type}'.");
                                 break;
                             }
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async Task PageSizeShouldBeOptional()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_questionUserId);
+
+                var response = await client.GetAsync(_buildUrl());
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
+                Assert.NotEmpty(responseModel.Activities);
+            }
+        }
+
+        [Fact]
+        public async Task ShouldGetPageSize()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_questionUserId);
+
+                var response = await client.GetAsync(_buildUrl(3));
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
+                Assert.Equal(3, responseModel.Activities.Count());
+            }
+        }
+
+        [Fact]
+        public async Task ShouldGetAllActivityBeforeTimestamp()
+        {
+            var minPostedAtTime = _topic.Questions.Min(x => x.PostedAt).ToUnixTimeMilliseconds();
+            var maxPostedAtTime = _topic.Questions.Max(x => x.PostedAt).ToUnixTimeMilliseconds();
+            var beforeTimestamp = (minPostedAtTime + maxPostedAtTime) / 2;
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(_questionUserId);
+
+                var response = await client.GetAsync(_buildUrl(1000, beforeTimestamp));
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
+
+                // Check that only Activity items before the cutoff time were returned
+                foreach (var question in _topic.Questions)
+                {
+                    var responseQuestion = responseModel.Activities.SingleOrDefault(x =>
+                            x.Type == "Question" &&
+                            x.QuestionId == question.Id);
+                    Assert.Equal(question.PostedAt.ToUnixTimeMilliseconds() < beforeTimestamp, responseQuestion != null);
+
+                    foreach (var answer in question.Answers)
+                    {
+                        var responseAnswer = responseModel.Activities.SingleOrDefault(x =>
+                            x.Type == "Answer" &&
+                            x.QuestionId == question.Id &&
+                            x.AnswerId == answer.Id);
+                        Assert.Equal(answer.PostedAt.ToUnixTimeMilliseconds() < beforeTimestamp, responseAnswer != null);
+
+                        foreach (var comment in answer.Comments)
+                        {
+                            var responseComment = responseModel.Activities.SingleOrDefault(x =>
+                                x.Type == "Comment" &&
+                                x.QuestionId == question.Id &&
+                                x.AnswerId == answer.Id &&
+                                x.CommentId == comment.Id);
+
+                            Assert.Equal(comment.PostedAt.ToUnixTimeMilliseconds() < beforeTimestamp, responseComment != null);
+                        }
                     }
                 }
             }

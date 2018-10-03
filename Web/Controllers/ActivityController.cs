@@ -19,9 +19,9 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageSize = 20, long? beforeTimestamp = null)
         {
-            var activityList = await _activityService.ListActivities(20);
+            var activityList = await _activityService.ListActivities(pageSize, beforeTimestamp);
             return Ok(activityList);
         }
     }

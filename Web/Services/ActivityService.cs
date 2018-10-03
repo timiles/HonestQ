@@ -12,11 +12,12 @@ namespace Pobs.Web.Services
 {
     public interface IActivityService
     {
-        Task<ActivityListModel> ListActivities(int pageSize);
+        Task<ActivityListModel> ListActivities(int pageSize, long? beforeUnixTimeMilliseconds = null);
     }
 
     public class ActivityService : IActivityService
     {
+        private static DateTime FirstOfJanuary1970 = new DateTime(1970, 1, 1);
         private HonestQDbContext _context;
 
         public ActivityService(HonestQDbContext context)
@@ -24,12 +25,17 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<ActivityListModel> ListActivities(int pageSize)
+        public async Task<ActivityListModel> ListActivities(int pageSize, long? beforeUnixTimeMilliseconds = null)
         {
+            var beforeTime = beforeUnixTimeMilliseconds.HasValue ?
+                FirstOfJanuary1970.AddMilliseconds(beforeUnixTimeMilliseconds.Value) :
+                DateTime.UtcNow;
+
             // TODO: This would be better loaded from a cache
             // NOTE: DbContext is not threadsafe to run multiple queries concurrently. Await each in turn.
             var questions = await _context.Questions
                 .Include(x => x.Answers)
+                .Where(x => x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();
@@ -38,6 +44,7 @@ namespace Pobs.Web.Services
                 .SelectMany(x => x.Answers)
                 .Include(x => x.Question)
                 .Include(x => x.Comments)
+                .Where(x => x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();
@@ -46,6 +53,7 @@ namespace Pobs.Web.Services
                 .SelectMany(x => x.Answers)
                 .SelectMany(x => x.Comments)
                 .Include(x => x.Answer).ThenInclude(x => x.Question)
+                .Where(x => x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();
