@@ -27,7 +27,7 @@ export default class Comment extends React.Component<Props, {}> {
                     const postedAtMoment = moment(postedAtOffset);
                     const friendlyTime = postedAtMoment.fromNow();
                     const fullTime = postedAtMoment.format('LLLL');
-                    const emojiValue = this.getEmojiValue(agreementRating);
+                    const emojiValue = EmojiValue[agreementRating as keyof typeof EmojiValue];
 
                     return (
                         <>
@@ -69,14 +69,5 @@ export default class Comment extends React.Component<Props, {}> {
                 }}
             </LoggedInUserContext.Consumer>
         );
-    }
-
-    private getEmojiValue(agreementRating: string): EmojiValue | null {
-        switch (agreementRating) {
-            case 'Agree': return EmojiValue.Agree;
-            case 'Neutral': return EmojiValue.Neutral;
-            case 'Disagree': return EmojiValue.Disagree;
-            default: return null;
-        }
     }
 }
