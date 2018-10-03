@@ -54,20 +54,20 @@ namespace Pobs.Tests.Integration.Activity
                 // Check that all of this Topic is in the most recent activity
                 foreach (var question in _topic.Questions)
                 {
-                    Assert.NotNull(responseModel.Activities.SingleOrDefault(x =>
+                    Assert.NotNull(responseModel.ActivityItems.SingleOrDefault(x =>
                         x.Type == "Question" &&
                         x.QuestionId == question.Id));
 
                     foreach (var answer in question.Answers)
                     {
-                        Assert.NotNull(responseModel.Activities.SingleOrDefault(x =>
+                        Assert.NotNull(responseModel.ActivityItems.SingleOrDefault(x =>
                             x.Type == "Answer" &&
                             x.QuestionId == question.Id &&
                             x.AnswerId == answer.Id));
 
                         foreach (var comment in answer.Comments)
                         {
-                            Assert.NotNull(responseModel.Activities.SingleOrDefault(x =>
+                            Assert.NotNull(responseModel.ActivityItems.SingleOrDefault(x =>
                                 x.Type == "Comment" &&
                                 x.QuestionId == question.Id &&
                                 x.AnswerId == answer.Id &&
@@ -76,7 +76,7 @@ namespace Pobs.Tests.Integration.Activity
                     }
                 }
 
-                foreach (var responseActivity in responseModel.Activities)
+                foreach (var responseActivity in responseModel.ActivityItems)
                 {
                     switch (responseActivity.Type)
                     {
@@ -149,7 +149,7 @@ namespace Pobs.Tests.Integration.Activity
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
-                Assert.NotEmpty(responseModel.Activities);
+                Assert.NotEmpty(responseModel.ActivityItems);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Pobs.Tests.Integration.Activity
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
-                Assert.Equal(3, responseModel.Activities.Count());
+                Assert.Equal(3, responseModel.ActivityItems.Count());
             }
         }
 
@@ -193,14 +193,14 @@ namespace Pobs.Tests.Integration.Activity
                 // Check that only Activity items before the cutoff time were returned
                 foreach (var question in _topic.Questions)
                 {
-                    var responseQuestion = responseModel.Activities.SingleOrDefault(x =>
+                    var responseQuestion = responseModel.ActivityItems.SingleOrDefault(x =>
                             x.Type == "Question" &&
                             x.QuestionId == question.Id);
                     Assert.Equal(question.PostedAt.ToUnixTimeMilliseconds() < beforeTimestamp, responseQuestion != null);
 
                     foreach (var answer in question.Answers)
                     {
-                        var responseAnswer = responseModel.Activities.SingleOrDefault(x =>
+                        var responseAnswer = responseModel.ActivityItems.SingleOrDefault(x =>
                             x.Type == "Answer" &&
                             x.QuestionId == question.Id &&
                             x.AnswerId == answer.Id);
@@ -208,7 +208,7 @@ namespace Pobs.Tests.Integration.Activity
 
                         foreach (var comment in answer.Comments)
                         {
-                            var responseComment = responseModel.Activities.SingleOrDefault(x =>
+                            var responseComment = responseModel.ActivityItems.SingleOrDefault(x =>
                                 x.Type == "Comment" &&
                                 x.QuestionId == question.Id &&
                                 x.AnswerId == answer.Id &&

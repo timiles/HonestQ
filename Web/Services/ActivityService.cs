@@ -12,7 +12,7 @@ namespace Pobs.Web.Services
 {
     public interface IActivityService
     {
-        Task<ActivityListModel> ListActivities(int pageSize, long? beforeUnixTimeMilliseconds = null);
+        Task<ActivityListModel> ListActivity(int pageSize, long? beforeUnixTimeMilliseconds = null);
     }
 
     public class ActivityService : IActivityService
@@ -25,7 +25,7 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<ActivityListModel> ListActivities(int pageSize, long? beforeUnixTimeMilliseconds = null)
+        public async Task<ActivityListModel> ListActivity(int pageSize, long? beforeUnixTimeMilliseconds = null)
         {
             var beforeTime = beforeUnixTimeMilliseconds.HasValue ?
                 FirstOfJanuary1970.AddMilliseconds(beforeUnixTimeMilliseconds.Value) :
@@ -58,9 +58,9 @@ namespace Pobs.Web.Services
                 .Take(pageSize)
                 .ToListAsync();
 
-            var questionsActivity = questions.Select(x => new ActivityModel(x)).ToList();
-            var answersActivity = answers.Select(x => new ActivityModel(x)).ToList();
-            var commentsActivity = comments.Select(x => new ActivityModel(x)).ToList();
+            var questionsActivity = questions.Select(x => new ActivityListItemModel(x)).ToList();
+            var answersActivity = answers.Select(x => new ActivityListItemModel(x)).ToList();
+            var commentsActivity = comments.Select(x => new ActivityListItemModel(x)).ToList();
 
             var allActivity = questionsActivity.Concat(answersActivity).Concat(commentsActivity)
                 .OrderByDescending(x => x.PostedAt).Take(pageSize).ToArray();

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Pobs.Web.Models.Activity
@@ -5,13 +6,13 @@ namespace Pobs.Web.Models.Activity
     public class ActivityListModel
     {
         public ActivityListModel() { }
-        public ActivityListModel(ActivityModel[] activities)
+        public ActivityListModel(ActivityListItemModel[] activityItems)
         {
-            this.Activities = activities;
-            this.LastTimestamp = activities.Min(x => x.PostedAt).ToUnixTimeMilliseconds();
+            this.ActivityItems = activityItems;
+            this.LastTimestamp = new DateTimeOffset(activityItems.Min(x => x.PostedAt)).ToUnixTimeMilliseconds();
         }
 
-        public ActivityModel[] Activities { get; set; }
+        public ActivityListItemModel[] ActivityItems { get; set; }
         public long LastTimestamp { get; set; }
     }
 }

@@ -4,20 +4,20 @@ using Pobs.Domain.Entities;
 
 namespace Pobs.Web.Models.Activity
 {
-    public class ActivityModel
+    public class ActivityListItemModel
     {
-        public ActivityModel() { }
-        public ActivityModel(Question x)
+        public ActivityListItemModel() { }
+        public ActivityListItemModel(Question x)
         {
             this.Type = "Question";
             this.QuestionId = x.Id;
             this.QuestionSlug = x.Slug;
             this.QuestionText = x.Text;
-            this.PostedAt = x.PostedAt;
+            this.PostedAt = x.PostedAt.UtcDateTime;
             this.ChildCount = x.Answers.Count;
         }
 
-        public ActivityModel(Answer x) : this(x.Question)
+        public ActivityListItemModel(Answer x) : this(x.Question)
         {
             this.Type = "Answer";
             this.QuestionId = x.Question.Id;
@@ -25,11 +25,11 @@ namespace Pobs.Web.Models.Activity
             this.AnswerId = x.Id;
             this.AnswerSlug = x.Slug;
             this.AnswerText = x.Text;
-            this.PostedAt = x.PostedAt;
+            this.PostedAt = x.PostedAt.UtcDateTime;
             this.ChildCount = x.Comments.Count;
         }
 
-        public ActivityModel(Comment x) : this(x.Answer)
+        public ActivityListItemModel(Comment x) : this(x.Answer)
         {
             this.Type = "Comment";
             this.QuestionId = x.Answer.Question.Id;
@@ -38,7 +38,7 @@ namespace Pobs.Web.Models.Activity
             this.AnswerSlug = x.Answer.Slug;
             this.CommentId = x.Id;
             this.CommentText = x.Text;
-            this.PostedAt = x.PostedAt;
+            this.PostedAt = x.PostedAt.UtcDateTime;
             this.AgreementRating = x.AgreementRating.ToString();
         }
 
@@ -54,7 +54,7 @@ namespace Pobs.Web.Models.Activity
         public long? CommentId { get; set; }
         public string CommentText { get; set; }
 
-        public DateTimeOffset PostedAt { get; set; }
+        public DateTime PostedAt { get; set; }
         public int? ChildCount { get; set; }
         public string AgreementRating { get; set; }
     }
