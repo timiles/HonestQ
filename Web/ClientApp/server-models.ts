@@ -18,6 +18,26 @@ export interface RegisterFormModel {
     password: string;
 }
 
+export interface ActivityListItemModel {
+    type: string;
+    questionId: number;
+    questionSlug: string;
+    questionText: string;
+    answerId?: number;
+    answerSlug?: string;
+    answerText?: string;
+    commentId?: number;
+    commentText?: string;
+    postedAt?: string;
+    childCount?: number;
+    agreementRating?: string;
+}
+
+export interface ActivityListModel {
+    activityItems: ActivityListItemModel[];
+    lastTimestamp: number;
+}
+
 export interface IntroModel {
     content: string;
 }

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { combineReducers, createStore } from 'redux';
-import { QuestionsListModel, TopicListItemModel, TopicsListModel } from '../../server-models';
+import { ActivityListItemModel, ActivityListModel, TopicListItemModel, TopicsListModel } from '../../server-models';
 import { reducers } from '../../store/index';
 import Home from '../Home';
 
@@ -16,25 +16,28 @@ describe('components/Home', () => {
             name: 'Healthy eating',
             slug: 'Healthy_eating',
         };
-        const question1 = {
-            id: 1,
-            text: 'Are toenails necessary?',
-            slug: 'are_toenails_necessary',
-            answersCount: 0,
-            topics: [],
+        const question1: ActivityListItemModel = {
+            type: 'Question',
+            questionId: 1,
+            questionText: 'Are toenails necessary?',
+            questionSlug: 'are_toenails_necessary',
+            childCount: 0,
         };
-        const question2 = {
-            id: 2,
-            text: 'Do I have to eat carbs?',
-            slug: 'do_i_have_to_eat_carbs',
-            answersCount: 3,
-            topics: [topic],
+        const question2: ActivityListItemModel = {
+            type: 'Question',
+            questionId: 2,
+            questionText: 'Do I have to eat carbs?',
+            questionSlug: 'do_i_have_to_eat_carbs',
+            childCount: 3,
         };
-        const questionsList: QuestionsListModel = { questions: [question1, question2] };
+        const activityList: ActivityListModel = {
+            activityItems: [question1, question2],
+            lastTimestamp: 0,
+        };
         const topicsList: TopicsListModel = { topics: [topic] };
 
         const store = createStore(combineReducers(reducers));
-        store.dispatch({ type: 'GET_QUESTIONS_LIST_SUCCESS', payload: questionsList });
+        store.dispatch({ type: 'GET_ACTIVITY_LIST_SUCCESS', payload: activityList });
         store.dispatch({ type: 'GET_TOPICS_LIST_SUCCESS', payload: topicsList });
 
         const wrapper = mount(<Provider store={store}><BrowserRouter><Home /></BrowserRouter></Provider>);

@@ -1,15 +1,16 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
-import { QuestionsListModel, TopicsListModel } from '../server-models';
+import { ActivityListModel, TopicsListModel } from '../server-models';
 import { getJson } from '../utils';
+import { ActivityListItemModel } from './../server-models';
 import { NewQuestionFormReceivedAction } from './NewQuestion';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface HomeState {
-    loadingQuestionsList: LoadingProps<QuestionsListModel>;
+    loadingActivityList: LoadingProps<ActivityListModel>;
     loadingTopicsList: LoadingProps<TopicsListModel>;
 }
 
@@ -18,9 +19,9 @@ export interface HomeState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetQuestionsListRequestedAction { type: 'GET_QUESTIONS_LIST_REQUESTED'; }
-interface GetQuestionsListSuccessAction { type: 'GET_QUESTIONS_LIST_SUCCESS'; payload: QuestionsListModel; }
-interface GetQuestionsListFailedAction { type: 'GET_QUESTIONS_LIST_FAILED'; payload: { error: string; }; }
+interface GetActivityListRequestedAction { type: 'GET_ACTIVITY_LIST_REQUESTED'; }
+interface GetActivityListSuccessAction { type: 'GET_ACTIVITY_LIST_SUCCESS'; payload: ActivityListModel; }
+interface GetActivityListFailedAction { type: 'GET_ACTIVITY_LIST_FAILED'; payload: { error: string; }; }
 interface GetTopicsListRequestedAction { type: 'GET_TOPICS_LIST_REQUESTED'; }
 interface GetTopicsListSuccessAction { type: 'GET_TOPICS_LIST_SUCCESS'; payload: TopicsListModel; }
 interface GetTopicsListFailedAction { type: 'GET_TOPICS_LIST_FAILED'; payload: { error: string; }; }
@@ -28,9 +29,9 @@ interface GetTopicsListFailedAction { type: 'GET_TOPICS_LIST_FAILED'; payload: {
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    GetQuestionsListRequestedAction
-    | GetQuestionsListSuccessAction
-    | GetQuestionsListFailedAction
+    GetActivityListRequestedAction
+    | GetActivityListSuccessAction
+    | GetActivityListFailedAction
     | NewQuestionFormReceivedAction
     | GetTopicsListRequestedAction
     | GetTopicsListSuccessAction
@@ -41,19 +42,19 @@ type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getQuestionsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    getActivityList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_QUESTIONS_LIST_REQUESTED' });
+            dispatch({ type: 'GET_ACTIVITY_LIST_REQUESTED' });
 
-            getJson<QuestionsListModel>('/api/questions', getState().login.loggedInUser)
-                .then((questionsListResponse: QuestionsListModel) => {
-                    dispatch({ type: 'GET_QUESTIONS_LIST_SUCCESS', payload: questionsListResponse });
+            getJson<ActivityListModel>('/api/activity', getState().login.loggedInUser)
+                .then((activityListResponse: ActivityListModel) => {
+                    dispatch({ type: 'GET_ACTIVITY_LIST_SUCCESS', payload: activityListResponse });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_QUESTIONS_LIST_FAILED',
+                        type: 'GET_ACTIVITY_LIST_FAILED',
                         payload: {
-                            error: reason || 'Get Questions list failed',
+                            error: reason || 'Get Activity list failed',
                         },
                     });
                 });
@@ -83,50 +84,57 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: HomeState = { loadingQuestionsList: {}, loadingTopicsList: {} };
+const defaultState: HomeState = { loadingActivityList: {}, loadingTopicsList: {} };
 
 export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_QUESTIONS_LIST_REQUESTED':
-            return { loadingQuestionsList: { loading: true }, loadingTopicsList: state.loadingTopicsList };
-        case 'GET_QUESTIONS_LIST_SUCCESS':
+        case 'GET_ACTIVITY_LIST_REQUESTED':
+            return { loadingActivityList: { loading: true }, loadingTopicsList: state.loadingTopicsList };
+        case 'GET_ACTIVITY_LIST_SUCCESS':
             return {
-                loadingQuestionsList: { loadedModel: action.payload },
+                loadingActivityList: { loadedModel: action.payload },
                 loadingTopicsList: state.loadingTopicsList,
             };
-        case 'GET_QUESTIONS_LIST_FAILED':
+        case 'GET_ACTIVITY_LIST_FAILED':
             return {
-                loadingQuestionsList: { error: action.payload.error },
+                loadingActivityList: { error: action.payload.error },
                 loadingTopicsList: state.loadingTopicsList,
             };
         case 'NEW_QUESTION_FORM_RECEIVED': {
-            if (!state.loadingQuestionsList.loadedModel) {
+            if (!state.loadingActivityList.loadedModel) {
                 // We could be posting a question from the topics page
                 return state;
             }
-            const questionsListModel = state.loadingQuestionsList.loadedModel;
+            const activityListModel = state.loadingActivityList.loadedModel;
             // Slice for immutability
-            const questionsNext = questionsListModel.questions.slice();
-            questionsNext.push(action.payload.questionListItem);
-            const questionsListNext = { ...questionsListModel, questions: questionsNext };
+            const activityItemsNext = activityListModel.activityItems.slice();
+            const newActivityItem: ActivityListItemModel = {
+                type: 'Question',
+                questionId: action.payload.questionListItem.id,
+                questionSlug: action.payload.questionListItem.slug,
+                questionText: action.payload.questionListItem.text,
+                childCount: action.payload.questionListItem.answersCount,
+            };
+            activityItemsNext.unshift(newActivityItem);
+            const activityListNext = { ...activityListModel, activityItems: activityItemsNext };
             return {
-                loadingQuestionsList: { loadedModel: questionsListNext },
+                loadingActivityList: { loadedModel: activityListNext },
                 loadingTopicsList: state.loadingTopicsList,
             };
         }
         case 'GET_TOPICS_LIST_REQUESTED':
             return {
-                loadingQuestionsList: state.loadingQuestionsList,
+                loadingActivityList: state.loadingActivityList,
                 loadingTopicsList: { loading: true },
             };
         case 'GET_TOPICS_LIST_SUCCESS':
             return {
-                loadingQuestionsList: state.loadingQuestionsList,
+                loadingActivityList: state.loadingActivityList,
                 loadingTopicsList: { loadedModel: action.payload },
             };
         case 'GET_TOPICS_LIST_FAILED':
             return {
-                loadingQuestionsList: state.loadingQuestionsList,
+                loadingActivityList: state.loadingActivityList,
                 loadingTopicsList: { error: action.payload.error },
             };
 

@@ -91,6 +91,9 @@ ul.topics-list li {
     quotes: "“" "”" "‘" "’";
     text-align: left;
 }
+    .answer:hover {
+        text-decoration: none;
+    }
     .answer:before, .answer:after {
         font-family: Georgia, serif;
         font-size: 3.3em;
@@ -118,6 +121,18 @@ ul.topics-list li {
     h4 span.answer:after {
         bottom: -34px;
         margin-left: 4px;
+    }
+    small .answer:before, small .answer:after {
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+    small .answer:before {
+        margin-right: 1px;
+        top: 9px;
+    }
+    small .answer:after {
+        bottom: -9px;
+        margin-left: 1px;
     }
 
 
