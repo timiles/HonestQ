@@ -19,7 +19,7 @@ class Home extends React.Component<HomeProps, {}> {
     constructor(props: HomeProps) {
         super(props);
 
-        this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
+        this.handleScroll = this.handleScroll.bind(this);
     }
 
     public componentWillMount() {
@@ -35,13 +35,30 @@ class Home extends React.Component<HomeProps, {}> {
         }
     }
 
+    public componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll);
+    }
+
+    public componentDidUpdate(prevProps: HomeProps) {
+        if (this.props.loadingActivityList.loadedModel &&
+            this.props.loadingActivityList.loadedModel.lastTimestamp === 0 &&
+            prevProps.loadingActivityList.loadedModel &&
+            prevProps.loadingActivityList.loadedModel.lastTimestamp > 0) {
+            // Reached the end of the list! Eat your heart out Twitter.
+            window.removeEventListener('scroll', this.handleScroll);
+        }
+    }
+
+    public componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll);
+    }
+
     public render() {
         const activityList = this.props.loadingActivityList.loadedModel;
         const topicsModel = this.props.loadingTopicsList.loadedModel;
         return (
             <div className="col-md-12 col-lg-6 offset-lg-3">
                 <h1>Recent activity</h1>
-                <Loading {...this.props.loadingActivityList} />
                 {activityList &&
                     <ul className="list-unstyled">
                         <li className="mb-2">
@@ -51,18 +68,14 @@ class Home extends React.Component<HomeProps, {}> {
                             <li key={`activity_${i}`} className="mb-2">
                                 {this.renderActivityItem(x)}
                             </li>)}
-                        <li>
-                            {activityList.lastTimestamp > 0 &&
-                                <button
-                                    type="button"
-                                    className="btn btn-lg btn-primary question-list-item"
-                                    onClick={this.handleLoadMoreClick}
-                                >
-                                    Load more...
-                                </button>}
-                        </li>
+                        {activityList.lastTimestamp === 0 &&
+                            <li>
+                                That's all, folks!
+                            </li>
+                        }
                     </ul>
                 }
+                <Loading {...this.props.loadingActivityList} />
                 <h2>Or browse by topic</h2>
                 <Loading {...this.props.loadingTopicsList} />
                 {topicsModel &&
@@ -180,8 +193,20 @@ class Home extends React.Component<HomeProps, {}> {
         }
     }
 
-    private handleLoadMoreClick(event: React.FormEvent<HTMLButtonElement>): void {
-        this.props.loadMoreActivityItems(this.props.loadingActivityList!.loadedModel!.lastTimestamp);
+    private handleScroll(event: UIEvent) {
+        // Tested in Chrome, Edge, Firefox
+        const scrollHeight = document.documentElement.scrollHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop; // Fallback for Edge
+        const clientHeight = document.documentElement.clientHeight;
+
+        // Give a few pixels grace to allow for rounding errors
+        if (scrollHeight - scrollTop - clientHeight < 3) {
+            // Prevent triggering multiple times
+            if (!this.props.loadingActivityList.loading &&
+                this.props.loadingActivityList.loadedModel!.lastTimestamp > 0) {
+                this.props.loadMoreActivityItems(this.props.loadingActivityList.loadedModel!.lastTimestamp);
+            }
+        }
     }
 }
 

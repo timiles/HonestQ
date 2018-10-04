@@ -62,6 +62,9 @@ export const actionCreators = {
     },
     loadMoreActivityItems: (beforeTimestamp: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
+            if (beforeTimestamp <= 0) {
+                return;
+            }
             dispatch({ type: 'GET_ACTIVITY_LIST_REQUESTED' });
 
             getJson<ActivityListModel>(`/api/activity?beforeTimestamp=${beforeTimestamp}`,
