@@ -60,6 +60,25 @@ export const actionCreators = {
                 });
         })();
     },
+    loadMoreActivityItems: (beforeTimestamp: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            dispatch({ type: 'GET_ACTIVITY_LIST_REQUESTED' });
+
+            getJson<ActivityListModel>(`/api/activity?beforeTimestamp=${beforeTimestamp}`,
+                getState().login.loggedInUser)
+                .then((activityListResponse: ActivityListModel) => {
+                    dispatch({ type: 'GET_ACTIVITY_LIST_SUCCESS', payload: activityListResponse });
+                })
+                .catch((reason) => {
+                    dispatch({
+                        type: 'GET_ACTIVITY_LIST_FAILED',
+                        payload: {
+                            error: reason || 'Get Activity list failed',
+                        },
+                    });
+                });
+        })();
+    },
     getTopicsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             dispatch({ type: 'GET_TOPICS_LIST_REQUESTED' });
@@ -89,15 +108,31 @@ const defaultState: HomeState = { loadingActivityList: {}, loadingTopicsList: {}
 export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_ACTIVITY_LIST_REQUESTED':
-            return { loadingActivityList: { loading: true }, loadingTopicsList: state.loadingTopicsList };
+            return {
+                loadingActivityList: { ...state.loadingActivityList, loading: true },
+                loadingTopicsList: state.loadingTopicsList,
+            };
         case 'GET_ACTIVITY_LIST_SUCCESS':
+            if (state.loadingActivityList.loadedModel) {
+                // Slice for immutability
+                const activityItemsNext = state.loadingActivityList.loadedModel.activityItems.slice();
+                for (const activityItem of action.payload.activityItems) {
+                    activityItemsNext.push(activityItem);
+                }
+                return {
+                    loadingActivityList: {
+                        loadedModel: { ...action.payload, activityItems: activityItemsNext },
+                    },
+                    loadingTopicsList: state.loadingTopicsList,
+                };
+            }
             return {
                 loadingActivityList: { loadedModel: action.payload },
                 loadingTopicsList: state.loadingTopicsList,
             };
         case 'GET_ACTIVITY_LIST_FAILED':
             return {
-                loadingActivityList: { error: action.payload.error },
+                loadingActivityList: { ...state.loadingActivityList, error: action.payload.error },
                 loadingTopicsList: state.loadingTopicsList,
             };
         case 'NEW_QUESTION_FORM_RECEIVED': {

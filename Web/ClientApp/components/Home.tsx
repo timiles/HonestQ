@@ -16,6 +16,12 @@ type HomeProps = HomeStore.HomeState
 
 class Home extends React.Component<HomeProps, {}> {
 
+    constructor(props: HomeProps) {
+        super(props);
+
+        this.handleLoadMoreClick = this.handleLoadMoreClick.bind(this);
+    }
+
     public componentWillMount() {
         // PRIVATE BETA
         if (!this.props.loggedInUser) {
@@ -45,6 +51,16 @@ class Home extends React.Component<HomeProps, {}> {
                             <li key={`activity_${i}`} className="mb-2">
                                 {this.renderActivityItem(x)}
                             </li>)}
+                        <li>
+                            {activityList.lastTimestamp > 0 &&
+                                <button
+                                    type="button"
+                                    className="btn btn-lg btn-primary question-list-item"
+                                    onClick={this.handleLoadMoreClick}
+                                >
+                                    Load more...
+                                </button>}
+                        </li>
                     </ul>
                 }
                 <h2>Or browse by topic</h2>
@@ -150,6 +166,10 @@ class Home extends React.Component<HomeProps, {}> {
             }
             default: return null;
         }
+    }
+
+    private handleLoadMoreClick(event: React.FormEvent<HTMLButtonElement>): void {
+        this.props.loadMoreActivityItems(this.props.loadingActivityList!.loadedModel!.lastTimestamp);
     }
 }
 
