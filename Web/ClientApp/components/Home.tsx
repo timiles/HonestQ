@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { ActivityListItemModel, LoggedInUserModel, TopicListItemModel } from '../server-models';
+import { ActivityListItemModel, LoggedInUserModel, TopicListItemModel, TopicValueModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as HomeStore from '../store/Home';
 import Emoji, { EmojiValue } from './shared/Emoji';
@@ -99,6 +99,18 @@ class Home extends React.Component<HomeProps, {}> {
                         <div>
                             <small>
                                 New question
+                                {activity.topics.length > 0 &&
+                                    <>&#32;in:&#32;
+                                        <ul className="list-comma-separated">
+                                            {activity.topics.map((x: TopicValueModel, i: number) =>
+                                                <li key={`topic_${i}`}>
+                                                    <Link to={`/topics/${x.slug}`}>
+                                                        <b>{x.name}</b>
+                                                    </Link>
+                                                </li>)}
+                                        </ul>
+                                    </>
+                                }
                             </small>
                         </div>
                         <Link to={questionUrl} className="btn btn-lg btn-outline-secondary question-list-item">

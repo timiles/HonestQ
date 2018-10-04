@@ -23,6 +23,7 @@ describe('components/Home', () => {
             questionSlug: 'are_toenails_necessary',
             childCount: 0,
             postedAt: '',
+            topics: [],
         };
         const question2: ActivityListItemModel = {
             type: 'Question',
@@ -31,6 +32,7 @@ describe('components/Home', () => {
             questionSlug: 'do_i_have_to_eat_carbs',
             childCount: 3,
             postedAt: '',
+            topics: [topic],
         };
         const activityList: ActivityListModel = {
             activityItems: [question1, question2],

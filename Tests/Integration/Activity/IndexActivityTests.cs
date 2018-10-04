@@ -90,6 +90,10 @@ namespace Pobs.Tests.Integration.Activity
                                     Assert.Equal(question.Text, responseActivity.QuestionText);
                                     AssertHelpers.Equal(question.PostedAt, responseActivity.PostedAt, 10);
                                     Assert.Equal(question.Answers.Count(), responseActivity.ChildCount);
+                                    var topic = responseActivity.Topics.SingleOrDefault();
+                                    Assert.NotNull(topic);
+                                    Assert.Equal(_topic.Name, topic.Name);
+                                    Assert.Equal(_topic.Slug, topic.Slug);
                                 }
                                 break;
                             }

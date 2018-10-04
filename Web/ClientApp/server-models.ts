@@ -31,6 +31,7 @@ export interface ActivityListItemModel {
     postedAt: string;
     childCount?: number;
     agreementRating?: string;
+    topics: TopicValueModel[];
 }
 
 export interface ActivityListModel {

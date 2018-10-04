@@ -150,6 +150,7 @@ export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownActio
                 questionText: action.payload.questionListItem.text,
                 childCount: action.payload.questionListItem.answersCount,
                 postedAt: 'TODO',
+                topics: action.payload.questionListItem.topics,
             };
             activityItemsNext.unshift(newActivityItem);
             const activityListNext = { ...activityListModel, activityItems: activityItemsNext };

@@ -73,6 +73,18 @@ blockquote p {
     color: #5bc0de;
 }
 
+ul.list-comma-separated {
+    display: inline-block;
+    list-style: none;
+    padding-left: 0;
+}
+ul.list-comma-separated li {
+    display: inline-block;
+}
+ul.list-comma-separated li:not(:last-child):after {
+    content: ',\0000a0';
+}
+
 ul.topics-list {
     padding-left: 0;
     list-style: none;
