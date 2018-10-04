@@ -1,10 +1,19 @@
-﻿namespace Pobs.Web.Models.Account
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Pobs.Web.Models.Account
 {
     public class RegisterFormModel
     {
+        [Required]
         public string FirstName { get; set; }
+
+        [Required]
         public string LastName { get; set; }
+
+        [Required]
         public string Username { get; set; }
+
+        [Required]
         public string Password { get; set; }
     }
 }

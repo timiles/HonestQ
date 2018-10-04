@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Pobs.Domain.Entities;
 
 namespace Pobs.Web.Models.Account
@@ -17,9 +18,15 @@ namespace Pobs.Web.Models.Account
             this.TimeZoneOffsetHours = 1; // Hard code to BST for now
         }
 
+        [Required]
         public string FirstName { get; set; }
+
+        [Required]
         public string Username { get; set; }
+
+        [Required]
         public string Token { get; set; }
+
         public double TimeZoneOffsetHours { get; }
     }
 }

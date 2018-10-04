@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Pobs.Domain.Entities;
 
 namespace Pobs.Web.Models.Activity
@@ -42,9 +43,15 @@ namespace Pobs.Web.Models.Activity
             this.AgreementRating = x.AgreementRating.ToString();
         }
 
+        [Required]
         public string Type { get; set; }
+
         public int QuestionId { get; set; }
+
+        [Required]
         public string QuestionSlug { get; set; }
+
+        [Required]
         public string QuestionText { get; set; }
 
         public int? AnswerId { get; set; }

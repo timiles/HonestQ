@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
@@ -19,9 +20,15 @@ namespace Pobs.Web.Models.Questions
         }
 
         public int Id { get; set; }
+
+        [Required]
         public string Slug { get; set; }
+
+        [Required]
         public string Text { get; set; }
+
         public TopicValueModel[] Topics { get; set; }
+
         public int AnswersCount { get; set; }
     }
 }

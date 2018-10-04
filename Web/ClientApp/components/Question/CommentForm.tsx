@@ -11,7 +11,7 @@ type Props = FormProps<CommentFormModel>
 interface CommentFormProps {
     isModal?: boolean;
     onCloseModalRequested?: () => void;
-    parentCommentId: number | null;
+    parentCommentId?: number;
 }
 
 export default class CommentForm extends React.Component<Props, CommentFormModel> {

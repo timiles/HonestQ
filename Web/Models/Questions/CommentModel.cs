@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain.Entities;
 
@@ -24,6 +25,7 @@ namespace Pobs.Web.Models.Questions
         public long Id { get; set; }
         public string Text { get; set; }
         public string Source { get; set; }
+        [Required]
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
         public int PostedByUserPseudoId { get; set; }

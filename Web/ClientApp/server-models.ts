@@ -28,7 +28,7 @@ export interface ActivityListItemModel {
     answerText?: string;
     commentId?: number;
     commentText?: string;
-    postedAt?: string;
+    postedAt: string;
     childCount?: number;
     agreementRating?: string;
 }
@@ -44,14 +44,14 @@ export interface IntroModel {
 
 export interface AnswerFormModel {
     text: string;
-    source: string;
+    source?: string;
 }
 
 export interface AnswerModel {
     id: number;
     text: string;
     slug: string;
-    source: string;
+    source?: string;
     postedAt: string;
     postedByUserPseudoId: number;
     isPostedByLoggedInUser: boolean;
@@ -60,27 +60,31 @@ export interface AnswerModel {
 
 export interface CommentFormModel {
     text: string;
-    source: string;
+    source?: string;
     agreementRating: string;
-    parentCommentId: number | null;
+    parentCommentId?: number;
 }
 
 export interface CommentModel {
     id: number;
-    text: string;
-    source: string;
+    text?: string;
+    source?: string;
     agreementRating: string;
     postedAt: string;
     postedByUserPseudoId: number;
     isPostedByLoggedInUser: boolean;
-    parentCommentId: number | null;
+    parentCommentId?: number;
     comments: CommentModel[];
+}
+
+export interface TopicValueFormModel {
+    slug: string;
 }
 
 export interface QuestionFormModel {
     text: string;
-    source: string;
-    topics: TopicValueModel[];
+    source?: string;
+    topics: TopicValueFormModel[];
 }
 
 export interface QuestionListItemModel {
@@ -94,7 +98,7 @@ export interface QuestionListItemModel {
 export interface QuestionModel {
     slug: string;
     text: string;
-    source: string;
+    source?: string;
     isPostedByLoggedInUser: boolean;
     topics: TopicValueModel[];
     answers: AnswerModel[];
@@ -108,16 +112,16 @@ export interface AdminTopicModel {
     isApproved: boolean;
     slug: string;
     name: string;
-    summary: string;
-    moreInfoUrl: string;
+    summary?: string;
+    moreInfoUrl?: string;
     questions: QuestionListItemModel[];
 }
 
 export interface EditTopicFormModel {
     slug: string;
     name: string;
-    summary: string;
-    moreInfoUrl: string;
+    summary?: string;
+    moreInfoUrl?: string;
     isApproved: boolean;
 }
 
@@ -128,14 +132,14 @@ export interface TopicAutocompleteResultsModel {
 export interface TopicFormModel {
     name: string;
     summary: string;
-    moreInfoUrl: string;
+    moreInfoUrl?: string;
 }
 
 export interface TopicModel {
     slug: string;
     name: string;
-    summary: string;
-    moreInfoUrl: string;
+    summary?: string;
+    moreInfoUrl?: string;
     questions: QuestionListItemModel[];
 }
 

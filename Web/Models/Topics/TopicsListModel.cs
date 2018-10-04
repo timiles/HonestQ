@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain.Entities;
 
@@ -23,7 +24,10 @@ namespace Pobs.Web.Models.Topics
                 this.Name = topic.Name;
             }
 
+            [Required]
             public string Slug { get; set; }
+
+            [Required]
             public string Name { get; set; }
         }
     }

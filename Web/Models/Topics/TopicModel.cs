@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain.Entities;
 using Pobs.Web.Models.Questions;
@@ -16,10 +17,16 @@ namespace Pobs.Web.Models.Topics
             this.Questions = topic.Questions.Select(x => new QuestionListItemModel(x)).ToArray();
         }
 
+        [Required]
         public string Slug { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
         public string Summary { get; set; }
+
         public string MoreInfoUrl { get; set; }
+
         public QuestionListItemModel[] Questions { get; set; }
     }
 }

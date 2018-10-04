@@ -16,7 +16,7 @@ export default class Comment extends React.Component<Props, {}> {
         const { questionId, answerId } = this.props;
         const { id, text, source, agreementRating, comments } = this.props;
         const { postedAt, postedByUserPseudoId, isPostedByLoggedInUser } = this.props;
-        const extractedUrl = extractUrlFromText(source) || extractUrlFromText(text);
+        const extractedUrl = (source ? extractUrlFromText(source) : null) || (text ? extractUrlFromText(text) : null);
         const postedBy = `Thread user #${postedByUserPseudoId}` + (isPostedByLoggedInUser ? ' (you)' : '');
 
         return (

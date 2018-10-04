@@ -8,7 +8,7 @@ import CommentForm from './CommentForm';
 
 type Props = NewCommentStore.NewCommentState
     & typeof NewCommentStore.actionCreators
-    & { questionId: number, answerId: number, parentCommentId: number | null };
+    & { questionId: number, answerId: number, parentCommentId?: number };
 
 interface State {
     isModalOpen: boolean;

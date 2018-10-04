@@ -38,7 +38,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = Utils.GenerateRandomString(10),
                 Source = Utils.GenerateRandomString(10),
-                Topics = new[] { new TopicValueModel { Slug = _topic2.Slug } },
+                Topics = new[] { new QuestionFormModel.TopicValueFormModel { Slug = _topic2.Slug } },
             };
             var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())

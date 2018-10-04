@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain.Entities;
 using Pobs.Web.Models.Topics;
@@ -18,11 +19,18 @@ namespace Pobs.Web.Models.Questions
             this.Answers = question.Answers.Select(x => new AnswerModel(x, loggedInUserId)).ToArray();
         }
 
+        [Required]
         public string Slug { get; set; }
+
+        [Required]
         public string Text { get; set; }
+
         public string Source { get; set; }
+
         public bool IsPostedByLoggedInUser { get; set; }
+
         public TopicValueModel[] Topics { get; set; }
+
         public AnswerModel[] Answers { get; set; }
     }
 }

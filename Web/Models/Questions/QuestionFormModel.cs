@@ -8,6 +8,13 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string Text { get; set; }
         public string Source { get; set; }
-        public TopicValueModel[] Topics { get; set; }
+        public TopicValueFormModel[] Topics { get; set; }
+
+
+        public class TopicValueFormModel
+        {
+            [Required]
+            public string Slug { get; set; }
+        }
     }
 }

@@ -64,7 +64,7 @@ namespace Pobs.Tests.Integration.Questions
                 // Include emoji in the Text
                 Text = "Here's a poop emoji: 💩",
                 Source = "https://example.com/💩",
-                Topics = new[] { new TopicValueModel { Slug = _topic.Slug } }
+                Topics = new[] { new QuestionFormModel.TopicValueFormModel { Slug = _topic.Slug } }
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

@@ -4,13 +4,13 @@ interface Props {
     id?: string;
     name?: string;
     className?: string;
-    value: string;
+    value?: string;
     maxLength: number;
     onChange: (event: React.FormEvent<HTMLTextAreaElement>) => void;
 }
 
 interface State {
-    value: string;
+    value?: string;
     scrollHeight: number;
     focused: boolean;
 }
@@ -37,7 +37,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     public render() {
         const { id, name, className, maxLength } = this.props;
         const { value, scrollHeight, focused } = this.state;
-        const remainingCharacterCount = maxLength - value.length;
+        const remainingCharacterCount = maxLength - (value ? value.length : 0);
         // Use rows to specify a minimum, then the min-height CSS will override it as the text grows
         const rowCount = (value || focused) ? 3 : 1;
         const minHeight = `${scrollHeight + 2}px`; // Add a pixel either side
