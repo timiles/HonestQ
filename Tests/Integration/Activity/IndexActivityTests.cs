@@ -236,7 +236,7 @@ namespace Pobs.Tests.Integration.Activity
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
-                Assert.Equal(0, responseModel.ActivityItems.Count());
+                Assert.Empty(responseModel.ActivityItems);
                 Assert.Equal(0, responseModel.LastTimestamp);
             }
         }
