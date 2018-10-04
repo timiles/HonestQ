@@ -57,46 +57,50 @@ class Home extends React.Component<HomeProps, {}> {
         const activityList = this.props.loadingActivityList.loadedModel;
         const topicsModel = this.props.loadingTopicsList.loadedModel;
         return (
-            <div className="col-md-12 col-lg-6 offset-lg-3">
-                <h1>Recent activity</h1>
-                {activityList &&
-                    <ul className="list-unstyled">
-                        <li className="mb-2">
-                            <NewQuestion />
-                        </li>
-                        {activityList.activityItems.map((x: ActivityListItemModel, i: number) =>
-                            <li key={`activity_${i}`} className="mb-2">
-                                {this.renderActivityItem(x)}
-                            </li>)}
-                        {activityList.lastTimestamp === 0 &&
-                            <li>
-                                That's all, folks!
+            <>
+                <div className="col-md-12 col-lg-6 offset-lg-3">
+                    <h1>Recent activity</h1>
+                    {activityList &&
+                        <ul className="list-unstyled">
+                            <li className="mb-2">
+                                <NewQuestion />
                             </li>
-                        }
-                    </ul>
-                }
-                <Loading {...this.props.loadingActivityList} />
-                <h2>Or browse by topic</h2>
-                <Loading {...this.props.loadingTopicsList} />
-                {topicsModel &&
-                    <ul className="topics-list">
-                        {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
-                            <li key={`topic_${i}`} className="mr-1 mb-1">
-                                <Link
-                                    to={`/topics/${x.slug}`}
-                                    className="btn btn-sm btn-outline-secondary topic-list-item"
-                                >
-                                    {x.name}
+                            {activityList.activityItems.map((x: ActivityListItemModel, i: number) =>
+                                <li key={`activity_${i}`} className="mb-2">
+                                    {this.renderActivityItem(x)}
+                                </li>)}
+                            {activityList.lastTimestamp === 0 &&
+                                <li>
+                                    That's all, folks!
+                                </li>
+                            }
+                        </ul>
+                    }
+                    <Loading {...this.props.loadingActivityList} />
+                </div>
+                <div className="col-md-3 d-none d-lg-block">
+                    <h2>Topics</h2>
+                    <Loading {...this.props.loadingTopicsList} />
+                    {topicsModel &&
+                        <ul className="topics-list">
+                            {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
+                                <li key={`topic_${i}`} className="mr-1 mb-1">
+                                    <Link
+                                        to={`/topics/${x.slug}`}
+                                        className="btn btn-sm btn-outline-secondary topic-list-item"
+                                    >
+                                        {x.name}
+                                    </Link>
+                                </li>)}
+                            <li>
+                                <Link to="/newtopic" className="btn btn-sm btn-primary">
+                                    Suggest a new Topic
                                 </Link>
-                            </li>)}
-                        <li>
-                            <Link to="/newtopic" className="btn btn-sm btn-primary">
-                                Suggest a new Topic
-                            </Link>
-                        </li>
-                    </ul>
-                }
-            </div>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </>
         );
     }
 
