@@ -78,6 +78,14 @@ if (!d.getElementById(id)){
                     {helmetData.link.toComponent()}
                     <base href="/" />
 
+                    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                    <link rel="manifest" href="/site.webmanifest" />
+                    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#f64e00" />
+                    <meta name="msapplication-TileColor" content="#9d543f" />
+                    <meta name="theme-color" content="#ffffff" />
+
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />
                 </head>

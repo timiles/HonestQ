@@ -12,7 +12,7 @@ export class Layout extends React.Component<{}, {}> {
         return (
             <>
                 <Helmet>
-                    <title>POBS</title>
+                    <title>HonestQ</title>
                 </Helmet>
                 <NavMenu />
                 <div className="container">

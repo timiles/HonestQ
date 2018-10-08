@@ -29,7 +29,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container">
-                    <Link className="navbar-brand" to={'/'}>Pobs</Link>
+                    <Link className="navbar-brand" to={'/'}>HonestQ</Link>
                     <button
                         className="navbar-toggler"
                         type="button"

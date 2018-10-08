@@ -60,21 +60,18 @@ class Container extends React.Component<ContainerProps, {}> {
     private renderHelmetTags() {
         const { topic } = this.props;
 
-        const pageTitleParts = ['POBS'];
-        const canonicalUrlParts = ['https://pobs.local'];
-
-        if (topic.model) {
-            pageTitleParts.push(topic.model.name);
-            canonicalUrlParts.push(topic.model.slug);
+        if (!topic.model) {
+            return (
+                <Helmet>
+                    <title>⌛ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
+                </Helmet>
+            );
         }
-
-        const pageTitle = pageTitleParts.join(' » ');
-        const canonicalUrl = canonicalUrlParts.join('/');
 
         return (
             <Helmet>
-                <title>{pageTitle}</title>
-                <link rel="canonical" href={canonicalUrl} />
+                <title>Topic: {topic.model.name}</title>
+                <link rel="canonical" href={`https://honestq.com/topics/${topic.model.slug}`} />
             </Helmet>
         );
     }

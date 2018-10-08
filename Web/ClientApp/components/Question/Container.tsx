@@ -28,12 +28,7 @@ class Container extends React.Component<ContainerProps, {}> {
 
     public render() {
         const { question } = this.props;
-
-        let answer: AnswerModel | undefined;
-        const answerId = Number(this.props.match.params.answerId);
-        if (question.model && answerId > 0) {
-            answer = question.model.answers.filter((x) => x.id === answerId)[0];
-        }
+        const answer = this.getCurrentAnswer();
 
         const slideDurationMilliseconds = 500;
 
@@ -90,20 +85,32 @@ class Container extends React.Component<ContainerProps, {}> {
         );
     }
 
+    private getCurrentAnswer(): AnswerModel | undefined {
+        const answerId = Number(this.props.match.params.answerId);
+        if (this.props.question.model && answerId > 0) {
+            return this.props.question.model.answers.filter((x) => x.id === answerId)[0];
+        }
+    }
+
     private renderHelmetTags() {
         const { question } = this.props;
 
-        const pageTitleParts = ['POBS'];
-        const canonicalUrlParts = ['https://pobs.local'];
-
-        if (this.props.match.params.questionId && question && question.model) {
-            pageTitleParts.push('\u201C' + question.model.text + '\u201D');
-            canonicalUrlParts.push(question.questionId!.toString());
-            canonicalUrlParts.push(question.model.slug);
+        if (!question.model) {
+            return (
+                <Helmet>
+                    <title>⌛ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
+                </Helmet>
+            );
         }
 
-        const pageTitle = pageTitleParts.join(' » ');
-        const canonicalUrl = canonicalUrlParts.join('/');
+        let pageTitle = `❓ ${question.model.text}`;
+        let canonicalUrl = `https://honestq.com/questions/${question.questionId}/${question.model.slug}`;
+
+        const answer = this.getCurrentAnswer();
+        if (answer) {
+            pageTitle += ` » 🙋 \u201C ${answer.text} \u201D`;
+            canonicalUrl += `/${answer.id}/${answer.slug}`;
+        }
 
         return (
             <Helmet>
