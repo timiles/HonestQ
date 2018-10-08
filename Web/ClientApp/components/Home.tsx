@@ -203,8 +203,8 @@ class Home extends React.Component<HomeProps, {}> {
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop; // Fallback for Edge
         const clientHeight = document.documentElement.clientHeight;
 
-        // Give a few pixels grace to allow for rounding errors
-        if (scrollHeight - scrollTop - clientHeight < 3) {
+        // Trigger 100px before we hit the bottom - this also helps mobile Chrome, which seems to be ~60px short??
+        if (scrollHeight - scrollTop - clientHeight < 100) {
             // Prevent triggering multiple times
             if (!this.props.loadingActivityList.loading &&
                 this.props.loadingActivityList.loadedModel!.lastTimestamp > 0) {
