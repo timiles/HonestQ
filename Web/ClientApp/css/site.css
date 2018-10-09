@@ -183,13 +183,18 @@ ul.topics-list li {
     resize: none;
 }
 
-.question-list-item {
+
+.post {
+    white-space: pre-wrap;
+}
+.post-list-item {
     text-align: left;
-    white-space: normal;
+    white-space: pre-wrap;
     width: 100%;
 }
 
-.btn-new-question {
+.btn-new-post {
+    text-align: center;
     width: 100%;
 }
 

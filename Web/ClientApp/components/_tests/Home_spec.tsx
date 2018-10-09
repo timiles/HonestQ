@@ -46,7 +46,7 @@ describe('components/Home', () => {
 
         const wrapper = mount(<Provider store={store}><BrowserRouter><Home /></BrowserRouter></Provider>);
 
-        const renderedQuestions = wrapper.find('.question-list-item').hostNodes();
+        const renderedQuestions = wrapper.find('.post-list-item').hostNodes();
         expect(renderedQuestions.length).toBe(2);
         expect(renderedQuestions.at(0).prop('href')).toBe('/questions/1/are_toenails_necessary');
         expect(renderedQuestions.at(0).find('.question').text()).toBe('Are toenails necessary?');

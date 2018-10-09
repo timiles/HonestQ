@@ -35,15 +35,15 @@ export default class Question extends React.Component<QuestionProps, {}> {
                 </LoggedInUserContext.Consumer>
                 <h4>
                     <Emoji value={EmojiValue.Question} />
-                    <span className="ml-1 question">{model.text}</span>
+                    <span className="ml-1 post">{model.text}</span>
                 </h4>
                 {model.source && <p><small>Source: {model.source}</small></p>}
                 <TopicsList topics={model.topics} />
-                <ol className="list-unstyled mt-3 mb-3">
+                <ul className="list-unstyled mt-3 mb-3">
                     {model.answers.map((x, i) => <li key={`answer_${i}`} className="mb-2">
                         <Link
                             to={`/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
-                            className="btn btn-lg btn-outline-secondary question-list-item"
+                            className="btn btn-lg btn-outline-secondary post-list-item"
                         >
                             <Emoji value={EmojiValue.Answer} />
                             <span className="ml-1 answer">{x.text}</span>
@@ -55,7 +55,7 @@ export default class Question extends React.Component<QuestionProps, {}> {
                             <span className="ml-1">{this.renderAgreementRating(x)}</span>
                         </Link>
                     </li>)}
-                </ol>
+                </ul>
                 <div>
                     <NewAnswer questionId={questionId} />
                 </div>

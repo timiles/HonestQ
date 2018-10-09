@@ -130,7 +130,7 @@ class Home extends React.Component<HomeProps, {}> {
                                 }
                             </small>
                         </div>
-                        <Link to={questionUrl} className="btn btn-lg btn-outline-secondary question-list-item">
+                        <Link to={questionUrl} className="btn btn-lg btn-outline-secondary post-list-item">
                             <Emoji value={EmojiValue.Question} />
                             <span className="ml-1 question">{activity.questionText}</span>
                             <small className="ml-1">
@@ -152,7 +152,7 @@ class Home extends React.Component<HomeProps, {}> {
                                 </Link>
                             </small>
                         </div>
-                        <Link to={answerUrl} className="btn btn-lg btn-outline-secondary question-list-item">
+                        <Link to={answerUrl} className="btn btn-lg btn-outline-secondary post-list-item">
                             <Emoji value={EmojiValue.Answer} />
                             <span className="ml-1 answer">{activity.answerText}</span>
                             <small className="ml-1">
@@ -181,10 +181,10 @@ class Home extends React.Component<HomeProps, {}> {
                         </div>
                         <Link
                             to={commentUrl}
-                            className="btn btn-lg btn-outline-secondary question-list-item"
+                            className="btn btn-lg btn-outline-secondary post-list-item"
                         >
                             {emojiValue && <Emoji value={emojiValue} />}
-                            <span className="ml-1">{activity.commentText}</span>
+                            <span className="ml-1 comment">{activity.commentText}</span>
                             <small className="ml-1">
                                 <span className="badge badge-info">{activity.childCount}</span>
                                 <span className="sr-only">answers</span>

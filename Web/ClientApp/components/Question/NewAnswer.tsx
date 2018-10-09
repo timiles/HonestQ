@@ -42,7 +42,7 @@ class NewAnswer extends React.Component<Props, State> {
             <>
                 <button
                     type="button"
-                    className="btn btn-link"
+                    className="btn btn-lg btn-primary btn-new-post"
                     onClick={this.handleOpen}
                 >
                     {headerText}
