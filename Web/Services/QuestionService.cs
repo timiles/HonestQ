@@ -20,6 +20,7 @@ namespace Pobs.Web.Services
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
         Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm);
         Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId);
+        Task<ReactionModel> SaveReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
     }
 
     public class QuestionService : IQuestionService
@@ -115,7 +116,7 @@ namespace Pobs.Web.Services
         {
             var question = await _context.Questions
                 .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
-                .Include(x => x.Answers).ThenInclude(x => x.Comments)
+                .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             if (question == null)
             {
@@ -194,6 +195,28 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
 
             return new CommentModel(comment, postedByUserId);
+        }
+
+        public async Task<ReactionModel> SaveReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId)
+        {
+            var comment = await _context.Questions
+                .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
+                .Include(x => x.Reactions)
+                .FirstOrDefaultAsync(x => x.Id == commentId && x.Answer.Id == answerId && x.Answer.Question.Id == questionId);
+            if (comment == null)
+            {
+                return null;
+            }
+
+            if (comment.Reactions.Any(x => x.PostedByUserId == postedByUserId && x.Type == reactionType))
+            {
+                throw new AppException("Reaction already exists.");
+            }
+
+            comment.Reactions.Add(new Reaction(reactionType, postedByUserId, DateTimeOffset.UtcNow));
+            await _context.SaveChangesAsync();
+
+            return new ReactionModel(questionId, answerId, comment, reactionType, postedByUserId);
         }
     }
 }

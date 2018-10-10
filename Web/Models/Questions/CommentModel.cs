@@ -20,6 +20,8 @@ namespace Pobs.Web.Models.Questions
             this.IsPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
             this.ParentCommentId = comment.ParentComment?.Id;
             this.Comments = comment.ChildComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
+            this.ReactionCounts = comment.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
+            this.MyReactions = comment.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
         }
 
         public long Id { get; set; }
@@ -32,5 +34,7 @@ namespace Pobs.Web.Models.Questions
         public bool IsPostedByLoggedInUser { get; set; }
         public long? ParentCommentId { get; set; }
         public CommentModel[] Comments { get; set; }
+        public Dictionary<string, int> ReactionCounts { get; set; }
+        public string[] MyReactions { get; set; }
     }
 }

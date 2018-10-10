@@ -165,5 +165,33 @@ namespace Pobs.Web.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost, Route("{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}"), Authorize]
+        public async Task<IActionResult> AddReaction(int questionId, int answerId, long commentId, string reactionType)
+        {
+            if (string.IsNullOrEmpty(reactionType) ||
+                !Enum.TryParse<ReactionType>(reactionType, out ReactionType r))
+            {
+                return BadRequest($"Invalid ReactionType: {reactionType}.");
+            }
+
+            try
+            {
+                var reactionModel = await _questionService.SaveReaction(questionId, answerId, commentId, r, User.Identity.ParseUserId());
+                if (reactionModel != null)
+                {
+                    return Ok(reactionModel);
+                }
+                return NotFound();
+            }
+            catch (AppException e)
+            {
+                if (e.Message == "Reaction already exists.")
+                {
+                    return Conflict(e.Message);
+                }
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

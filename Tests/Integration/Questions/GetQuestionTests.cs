@@ -56,6 +56,16 @@ namespace Pobs.Tests.Integration.Questions
                 dbContext.SaveChanges();
             }
 
+            // Add a Reaction to a Comment
+            var commentWithReaction = question.Answers.First().Comments.First();
+            var reactionType = ReactionType.YouBeTrolling;
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(commentWithReaction);
+                commentWithReaction.Reactions.Add(new Reaction(reactionType, _questionUserId, DateTimeOffset.UtcNow));
+                dbContext.SaveChanges();
+            }
+
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
@@ -89,6 +99,13 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(answer.Source, responseAnswer.Source);
                     Assert.Equal(2, responseAnswer.Comments.Length);
                 }
+
+                var responseCommentWithReaction = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == commentWithReaction.Id);
+                Assert.Single(responseCommentWithReaction.ReactionCounts);
+                Assert.Equal(reactionType.ToString(), responseCommentWithReaction.ReactionCounts.Keys.Single());
+                Assert.Equal(1, responseCommentWithReaction.ReactionCounts[reactionType.ToString()]);
+                Assert.Single(responseCommentWithReaction.MyReactions);
+                Assert.Equal(reactionType.ToString(), responseCommentWithReaction.MyReactions.Single());
             }
         }
 

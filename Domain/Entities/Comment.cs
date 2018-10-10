@@ -10,6 +10,7 @@ namespace Pobs.Domain.Entities
         public Comment()
         {
             this.ChildComments = new Collection<Comment>();
+            this.Reactions = new Collection<Reaction>();
         }
         public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating agreementRating, long? parentCommentId)
             : this()
@@ -47,5 +48,6 @@ namespace Pobs.Domain.Entities
 
         public virtual Comment ParentComment { get; set; }
         public virtual ICollection<Comment> ChildComments { get; set; }
+        public virtual ICollection<Reaction> Reactions { get; set; }
     }
 }
