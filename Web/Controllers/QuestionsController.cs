@@ -193,5 +193,22 @@ namespace Pobs.Web.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpDelete, Route("{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}"), Authorize]
+        public async Task<IActionResult> DeleteReaction(int questionId, int answerId, long commentId, string reactionType)
+        {
+            if (string.IsNullOrEmpty(reactionType) ||
+                !Enum.TryParse<ReactionType>(reactionType, out ReactionType r))
+            {
+                return BadRequest($"Invalid ReactionType: {reactionType}.");
+            }
+
+            var responseModel = await _questionService.RemoveReaction(questionId, answerId, commentId, r, User.Identity.ParseUserId());
+            if (responseModel != null)
+            {
+                return Ok(responseModel);
+            }
+            return NotFound();
+        }
     }
 }
