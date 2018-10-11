@@ -76,6 +76,8 @@ export interface CommentModel {
     isPostedByLoggedInUser: boolean;
     parentCommentId?: number;
     comments: CommentModel[];
+    reactionCounts: { [key: string]: number };
+    myReactions: string[];
 }
 
 export interface TopicValueFormModel {
@@ -107,6 +109,15 @@ export interface QuestionModel {
 
 export interface QuestionsListModel {
     questions: QuestionListItemModel[];
+}
+
+export interface ReactionModel {
+    questionId: number;
+    answerId: number;
+    commentId: number;
+    type: string;
+    newCount: number;
+    isMyReaction: boolean;
 }
 
 export interface AdminTopicModel {

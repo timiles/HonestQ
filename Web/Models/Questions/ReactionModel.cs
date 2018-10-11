@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
@@ -23,6 +24,7 @@ namespace Pobs.Web.Models.Questions
         public int QuestionId { get; set; }
         public int AnswerId { get; set; }
         public long CommentId { get; set; }
+        [Required]
         public string Type { get; set; }
         public int NewCount { get; set; }
         public bool IsMyReaction { get; set; }

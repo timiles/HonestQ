@@ -2,7 +2,8 @@
 import { AppThunkAction } from '.';
 import { QuestionProps } from '../components/Question/Question';
 import { CommentModel, QuestionModel } from '../server-models';
-import { getJson } from '../utils';
+import { deleteJson, getJson, postJson } from '../utils';
+import { ReactionModel } from './../server-models';
 import { NewAnswerFormReceivedAction } from './NewAnswer';
 import { NewCommentFormReceivedAction } from './NewComment';
 
@@ -30,6 +31,14 @@ interface GetQuestionFailedAction {
     type: 'GET_QUESTION_FAILED';
     payload: { questionId: number; error: string; };
 }
+interface AddReactionSuccessAction {
+    type: 'ADD_REACTION_SUCCESS';
+    payload: { reaction: ReactionModel; };
+}
+interface RemoveReactionSuccessAction {
+    type: 'REMOVE_REACTION_SUCCESS';
+    payload: { reaction: ReactionModel; };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -38,7 +47,10 @@ type KnownAction =
     | GetQuestionSuccessAction
     | GetQuestionFailedAction
     | NewAnswerFormReceivedAction
-    | NewCommentFormReceivedAction;
+    | NewCommentFormReceivedAction
+    | AddReactionSuccessAction
+    | RemoveReactionSuccessAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -66,6 +78,47 @@ export const actionCreators = {
                                 error: reason || 'Get Question failed',
                             },
                         });
+                    });
+            })();
+        },
+    addReaction: (questionId: number, answerId: number, commentId: number, reactionType: string):
+        AppThunkAction<KnownAction> =>
+        (dispatch, getState) => {
+            return (async () => {
+
+                const url =
+                    `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/${reactionType}`;
+                postJson<ReactionModel>(url,
+                    null,
+                    getState().login.loggedInUser)
+                    .then((reactionResponse: ReactionModel) => {
+                        dispatch({
+                            type: 'ADD_REACTION_SUCCESS',
+                            payload: { reaction: reactionResponse },
+                        });
+                    })
+                    .catch((reason) => {
+                        // TODO: Toast?
+                    });
+            })();
+        },
+    removeReaction: (questionId: number, answerId: number, commentId: number, reactionType: string):
+        AppThunkAction<KnownAction> =>
+        (dispatch, getState) => {
+            return (async () => {
+
+                const url =
+                    `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/${reactionType}`;
+                deleteJson<ReactionModel>(url,
+                    getState().login.loggedInUser)
+                    .then((reactionResponse: ReactionModel) => {
+                        dispatch({
+                            type: 'REMOVE_REACTION_SUCCESS',
+                            payload: { reaction: reactionResponse },
+                        });
+                    })
+                    .catch((reason) => {
+                        // TODO: Toast?
                     });
             })();
         },
@@ -121,9 +174,56 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             const answersNext = questionModel.answers;
             const answerModel = answersNext.filter((x) => x.id === action.payload.answerId)[0];
             if (action.payload.comment.parentCommentId) {
-                appendNewComment(answerModel.comments, action.payload.comment);
+                const parentComment = findComment(answerModel.comments, action.payload.comment.parentCommentId);
+                if (parentComment) {
+                    parentComment.comments.push(action.payload.comment);
+                }
+                // Else?
             } else {
                 answerModel.comments.push(action.payload.comment);
+            }
+            const questionNext = { ...questionModel, answers: answersNext };
+            return {
+                question: {
+                    questionId: state.question!.questionId,
+                    model: questionNext,
+                },
+            };
+        }
+        case 'ADD_REACTION_SUCCESS': {
+            const reaction = action.payload.reaction;
+            const questionModel = state.question!.model!;
+            // Slice for immutability
+            const answersNext = questionModel.answers;
+            const answerModel = answersNext.filter((x) => x.id === reaction.answerId)[0];
+            const comment = findComment(answerModel.comments, reaction.commentId);
+            if (comment) {
+                comment.reactionCounts[reaction.type] = reaction.newCount;
+                if (reaction.isMyReaction) {
+                    comment.myReactions.push(reaction.type);
+                }
+            }
+            const questionNext = { ...questionModel, answers: answersNext };
+            return {
+                question: {
+                    questionId: state.question!.questionId,
+                    model: questionNext,
+                },
+            };
+        }
+        case 'REMOVE_REACTION_SUCCESS': {
+            const reaction = action.payload.reaction;
+            const questionModel = state.question!.model!;
+            // Slice for immutability
+            const answersNext = questionModel.answers;
+            const answerModel = answersNext.filter((x) => x.id === reaction.answerId)[0];
+            const comment = findComment(answerModel.comments, reaction.commentId);
+            if (comment) {
+                comment.reactionCounts[reaction.type] = reaction.newCount;
+                const indexOfReactionToRemove = comment.myReactions.indexOf(reaction.type);
+                if (indexOfReactionToRemove >= 0) {
+                    comment.myReactions.splice(indexOfReactionToRemove, 1);
+                }
             }
             const questionNext = { ...questionModel, answers: answersNext };
             return {
@@ -144,15 +244,15 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     return state || defaultState;
 };
 
-function appendNewComment(comments: CommentModel[], newComments: CommentModel): boolean {
+function findComment(comments: CommentModel[], commentId: number): CommentModel | null {
     for (const comment of comments) {
-        if (comment.id === newComments.parentCommentId) {
-            comment.comments.push(newComments);
-            return true;
+        if (comment.id === commentId) {
+            return comment;
         }
-        if (appendNewComment(comment.comments, newComments)) {
-            return true;
+        const childComment = findComment(comment.comments, commentId);
+        if (childComment) {
+            return childComment;
         }
     }
-    return false;
+    return null;
 }

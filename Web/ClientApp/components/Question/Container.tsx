@@ -19,6 +19,12 @@ type ContainerProps = QuestionStore.ContainerState
 
 class Container extends React.Component<ContainerProps, {}> {
 
+    constructor(props: ContainerProps) {
+        super(props);
+
+        this.handleReaction = this.handleReaction.bind(this);
+    }
+
     public componentWillMount() {
         // This will also run on server side render
         if (this.shouldGetQuestion()) {
@@ -71,7 +77,11 @@ class Container extends React.Component<ContainerProps, {}> {
                                                         slug={question.model.slug}
                                                         text={question.model.text}
                                                     />
-                                                    <Answer {...answer} questionId={question.questionId!} />
+                                                    <Answer
+                                                        {...answer}
+                                                        questionId={question.questionId!}
+                                                        onReaction={this.handleReaction}
+                                                    />
                                                 </div>
                                             </CSSTransition>
                                         }
@@ -135,6 +145,16 @@ class Container extends React.Component<ContainerProps, {}> {
             return false;
         }
         return (this.props.question.questionId !== questionIdAsNumber);
+    }
+
+    private handleReaction(commentId: number, reactionType: string, on: boolean): void {
+        const questionId = Number(this.props.match.params.questionId!);
+        const answerId = Number(this.props.match.params.answerId!);
+        if (on) {
+            this.props.addReaction(questionId, answerId, commentId, reactionType);
+        } else {
+            this.props.removeReaction(questionId, answerId, commentId, reactionType);
+        }
     }
 }
 

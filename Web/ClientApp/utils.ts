@@ -26,6 +26,13 @@ export function putJson<T>(
     return fetchJson<T>('PUT', url, model, loggedInUser, false);
 }
 
+export function deleteJson<T>(
+    url: string,
+    loggedInUser: LoggedInUserModel | null | undefined): Promise<T> {
+
+    return fetchJson<T>('DELETE', url, null, loggedInUser, false);
+}
+
 function fetchJson<T>(
     method: string,
     url: string,

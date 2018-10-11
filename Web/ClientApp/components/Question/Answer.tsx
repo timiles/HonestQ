@@ -4,11 +4,14 @@ import { AnswerModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
-import CommentList from './CommentList';
+import Comment from './Comment';
 import NewComment from './NewComment';
 
 type Props = AnswerModel
-    & { questionId: number };
+    & {
+    questionId: number,
+    onReaction: (commentId: number, reactionType: string, on: boolean) => void,
+};
 
 export default class Answer extends React.Component<Props, {}> {
 
@@ -35,7 +38,15 @@ export default class Answer extends React.Component<Props, {}> {
                         answerId={id}
                     />
                 </div>
-                <CommentList questionId={questionId} answerId={id} comments={comments} />
+                <ol className="list-unstyled mb-3">
+                    {comments.map((x, i) => <li key={`comment_${i}`} className="mb-3">
+                        <Comment
+                            {...x}
+                            questionId={questionId}
+                            answerId={id}
+                            onReaction={this.props.onReaction}
+                        /></li>)}
+                </ol>
             </div>
         );
     }

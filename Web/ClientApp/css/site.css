@@ -153,20 +153,35 @@ ul.topics-list li {
     min-width: 23px;
     text-align: center;
 }
-.emoji-question:before {
+.emoji-Question:before {
     content: "❓";
 }
-.emoji-answer:before {
+.emoji-Answer:before {
     content: "🙋";
 }
-.emoji-agree:before {
+.emoji-Agree:before {
     content: "✔️";
 }
-.emoji-neutral:before {
+.emoji-Neutral:before {
     content: "🤷";
 }
-.emoji-disagree:before {
+.emoji-Disagree:before {
     content: "❌";
+}
+.emoji-GoodPointWellMade:before {
+    content: "💯";
+}
+.emoji-ThisMadeMeThink:before {
+    content: "🤔";
+}
+.emoji-ThisChangedMyView:before {
+    content: "🤯";
+}
+.emoji-NotRelevant:before {
+    content: "⁉";
+}
+.emoji-YouBeTrolling:before {
+    content: "🤡";
 }
 
 .emoji-over-text-area {

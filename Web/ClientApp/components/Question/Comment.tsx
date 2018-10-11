@@ -6,9 +6,14 @@ import { LoggedInUserContext } from '../LoggedInUserContext';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import NewComment from './NewComment';
+import ReactionsControl from './ReactionsControl';
 
 type Props = CommentModel
-    & { questionId: number, answerId: number };
+    & {
+    questionId: number,
+    answerId: number,
+    onReaction: (commentId: number, reactionType: string, on: boolean) => void,
+};
 
 export default class Comment extends React.Component<Props, {}> {
 
@@ -33,6 +38,9 @@ export default class Comment extends React.Component<Props, {}> {
                         <>
                             <div className="card">
                                 <div className="card-body">
+                                    <div className="float-right">
+                                        <ReactionsControl {...this.props} />
+                                    </div>
                                     <blockquote className="blockquote mb-0">
                                         {emojiValue && <Emoji value={emojiValue} />}
                                         <span className="badge badge-secondary">
@@ -61,6 +69,7 @@ export default class Comment extends React.Component<Props, {}> {
                                                 {...x}
                                                 questionId={questionId}
                                                 answerId={answerId}
+                                                onReaction={this.props.onReaction}
                                             />
                                         </li>)}
                                 </ol>}
