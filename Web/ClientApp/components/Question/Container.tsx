@@ -49,7 +49,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                 {(question.loading || question.error) &&
                                     <div className="col-md-12">
                                         {question.loading &&
-                                            <p>Loading...</p>}
+                                            <p>⏳ <i>Loading...</i></p>}
                                         {question.error &&
                                             <div className="alert alert-danger" role="alert">{question.error}</div>}
                                     </div>

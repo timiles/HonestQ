@@ -18,7 +18,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
         const { loading, error, slug, model } = this.props;
         return (
             <>
-                {loading && <p>Loading...</p>}
+                {loading && <p>⏳ <i>Loading...</i></p>}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 {slug && model && this.renderModel(slug!, model!)}
             </>

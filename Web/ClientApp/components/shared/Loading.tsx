@@ -12,7 +12,7 @@ export default class Loading extends React.Component<LoadingProps<any>, {}> {
         const { loading, error } = this.props;
         return (
             <>
-                {loading && <p>Loading...</p>}
+                {loading && <p>⏳ <i>Loading...</i></p>}
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
             </>
         );
