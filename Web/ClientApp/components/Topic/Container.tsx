@@ -63,7 +63,7 @@ class Container extends React.Component<ContainerProps, {}> {
         if (!topic.model) {
             return (
                 <Helmet>
-                    <title>⌛ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
+                    <title>⏳ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
                 </Helmet>
             );
         }
