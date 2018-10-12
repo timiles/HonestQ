@@ -15,15 +15,15 @@ namespace Pobs.Tests.Integration.Questions
     public class ReactionsDatabaseTests : IDisposable
     {
         private readonly User _user;
-        private readonly Topic _topic;
+        private readonly Question _question;
         private readonly Comment _comment;
 
         public ReactionsDatabaseTests()
         {
             _user = DataHelpers.CreateUser();
-            _topic = DataHelpers.CreateTopic(_user, 1, _user, 1);
-            DataHelpers.CreateComments(_topic.Questions.First().Answers.First(), _user, 1);
-            _comment = _topic.Questions.First().Answers.First().Comments.First();
+            _question = DataHelpers.CreateQuestions(_user, 1, _user, 1).Single();
+            DataHelpers.CreateComments(_question.Answers.First(), _user, 1);
+            _comment = _question.Answers.First().Comments.First();
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            DataHelpers.DeleteAllComments(_topic.Id);
+            DataHelpers.DeleteAllComments(_question.Id);
             DataHelpers.DeleteUser(_user.Id);
         }
     }

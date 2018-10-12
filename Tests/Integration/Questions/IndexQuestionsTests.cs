@@ -17,7 +17,7 @@ namespace Pobs.Tests.Integration.Questions
         private readonly string _url = "/api/questions";
         private readonly int _questionUserId;
         private readonly int _answerUserId;
-        private readonly Topic _topic;
+        private readonly IEnumerable<Question> _questions;
 
         public IndexQuestionsTests()
         {
@@ -26,7 +26,7 @@ namespace Pobs.Tests.Integration.Questions
             var answerUser = DataHelpers.CreateUser();
             _answerUserId = answerUser.Id;
             // Create multiple Questions and Answers
-            _topic = DataHelpers.CreateTopic(questionUser, 2, answerUser, 3, isApproved: true);
+            _questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Pobs.Tests.Integration.Questions
                 var responseModel = JsonConvert.DeserializeObject<QuestionsListModel>(responseContent);
                 foreach (var responseQuestion in responseModel.Questions)
                 {
-                    var question = _topic.Questions.FirstOrDefault(x => x.Id == responseQuestion.Id);
+                    var question = _questions.FirstOrDefault(x => x.Id == responseQuestion.Id);
                     if (question != null)
                     {
                         Assert.Equal(question.Slug, responseQuestion.Slug);

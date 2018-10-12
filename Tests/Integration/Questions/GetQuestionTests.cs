@@ -26,9 +26,8 @@ namespace Pobs.Tests.Integration.Questions
             var answerUser = DataHelpers.CreateUser();
             _answerUserId = answerUser.Id;
             // Create 3 questions so we can be sure we get the one we request
-            _topic = DataHelpers.CreateTopic(questionUser, 3, answerUser, 3,
-                 // commentUser: answerUser, numberOfCommentsPerAnswer: 2,
-                 isApproved: true);
+            var questions = DataHelpers.CreateQuestions(questionUser, 3, answerUser, 3);
+            _topic = DataHelpers.CreateTopic(questionUser, isApproved: true, questions: questions.ToArray());
         }
 
         [Fact]
@@ -37,23 +36,9 @@ namespace Pobs.Tests.Integration.Questions
             var question = _topic.Questions.Skip(1).First();
 
             // Add 2 Comments to each Answer
-            using (var dbContext = TestSetup.CreateDbContext())
+            foreach (var answer in question.Answers.ToArray())
             {
-                dbContext.Attach(question);
-
-                foreach (var answer in question.Answers.ToArray())
-                {
-                    for (int commentIndex = 0; commentIndex < 2; commentIndex++)
-                    {
-                        var comment = new Comment(Utils.GenerateRandomString(10), answer.PostedByUser, DateTime.UtcNow, AgreementRating.Neutral, null)
-                        {
-                            Source = Utils.GenerateRandomString(10),
-                        };
-                        answer.Comments.Add(comment);
-                    }
-                }
-
-                dbContext.SaveChanges();
+                DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
             }
 
             // Add a Reaction to a Comment
@@ -126,7 +111,10 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            DataHelpers.DeleteAllComments(_topic.Id);
+            foreach (var question in _topic.Questions)
+            {
+                DataHelpers.DeleteAllComments(question.Id);
+            }
             DataHelpers.DeleteUser(_answerUserId);
             DataHelpers.DeleteUser(_questionUserId);
         }

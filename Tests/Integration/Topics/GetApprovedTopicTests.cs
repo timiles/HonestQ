@@ -20,7 +20,8 @@ namespace Pobs.Tests.Integration.Topics
         public GetApprovedTopicTests()
         {
             _user = DataHelpers.CreateUser();
-            _topic = DataHelpers.CreateTopic(_user, 3, isApproved: true);
+            var questions = DataHelpers.CreateQuestions(_user, 3);
+            _topic = DataHelpers.CreateTopic(_user, isApproved: true, questions: questions.ToArray());
         }
 
         [Fact]

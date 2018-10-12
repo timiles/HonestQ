@@ -30,8 +30,9 @@ namespace Pobs.Tests.Integration.Activity
             var answerUser = DataHelpers.CreateUser();
             _answerUserId = answerUser.Id;
             // Create multiple Questions, Answers and Comments
-            _topic = DataHelpers.CreateTopic(questionUser, 2, answerUser, 3, isApproved: true);
-            DataHelpers.CreateComments(_topic.Questions.First().Answers.First(), answerUser, 4);
+            var questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
+            DataHelpers.CreateComments(questions.First().Answers.First(), answerUser, 4);
+            _topic = DataHelpers.CreateTopic(questionUser, isApproved: true, questions: questions.ToArray());
         }
 
         [Fact]
@@ -247,7 +248,10 @@ namespace Pobs.Tests.Integration.Activity
 
         public void Dispose()
         {
-            DataHelpers.DeleteAllComments(_topic.Id);
+            foreach (var question in _topic.Questions)
+            {
+                DataHelpers.DeleteAllComments(question.Id);
+            }
             DataHelpers.DeleteUser(_answerUserId);
             DataHelpers.DeleteUser(_questionUserId);
         }

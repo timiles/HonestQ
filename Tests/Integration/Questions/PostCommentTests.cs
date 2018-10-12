@@ -17,19 +17,19 @@ namespace Pobs.Tests.Integration.Questions
     {
         private string _generateUrl(int questionId, int answerId) => $"/api/questions/{questionId}/answers/{answerId}/comments";
         private readonly User _user;
-        private readonly Topic _topic;
+        private readonly Question _question;
 
         public PostCommentTests()
         {
             var user = DataHelpers.CreateUser();
             _user = user;
-            _topic = DataHelpers.CreateTopic(user, 1, user, 1);
+            _question = DataHelpers.CreateQuestions(user, 1, user, 1).Single();
         }
 
         [Fact]
         public async Task Authenticated_ShouldAddComment()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -75,7 +75,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task SourceOnly_ShouldPersist()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -113,7 +113,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task ParentCommentId_ShouldPersist()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             using (var dbContext = TestSetup.CreateDbContext())
             {
@@ -167,7 +167,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task NoTextAndNoSource_ShouldGetBadRequest()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -192,7 +192,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task InvalidAgreementRating_ShouldGetBadRequest()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -216,7 +216,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task NotAuthenticated_ShouldBeDenied()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -243,7 +243,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task UnknownQuestionId_ShouldReturnNotFound()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -264,7 +264,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task UnknownAnswerId_ShouldReturnNotFound()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var answer = question.Answers.First();
             var payload = new CommentFormModel
             {
@@ -284,7 +284,7 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            DataHelpers.DeleteAllComments(_topic.Id);
+            DataHelpers.DeleteAllComments(_question.Id);
             DataHelpers.DeleteUser(_user.Id);
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -18,17 +19,17 @@ namespace Pobs.Tests.Integration.Questions
     {
         private string _generateUrl(int questionId) => $"/api/questions/{questionId}";
         private readonly int _userId;
-        private readonly Topic _topic;
-        private readonly Topic _topic2;
         private readonly Question _question;
+        private readonly Topic _topic;
+        private readonly Topic _differentTopic;
 
         public PutQuestionTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
-            _topic = DataHelpers.CreateTopic(user, 3);
-            _topic2 = DataHelpers.CreateTopic(user);
-            _question = _topic.Questions.Skip(1).First();
+            _question = DataHelpers.CreateQuestions(user).Single();
+            _topic = DataHelpers.CreateTopic(user, questions: _question);
+            _differentTopic = DataHelpers.CreateTopic(user);
         }
 
         [Fact]
@@ -38,7 +39,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = Utils.GenerateRandomString(10),
                 Source = Utils.GenerateRandomString(10),
-                Topics = new[] { new QuestionFormModel.TopicValueFormModel { Slug = _topic2.Slug } },
+                Topics = new[] { new QuestionFormModel.TopicValueFormModel { Slug = _differentTopic.Slug } },
             };
             var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())
@@ -56,8 +57,8 @@ namespace Pobs.Tests.Integration.Questions
 
                 Assert.Single(responseModel.Topics);
                 var responseTopic = responseModel.Topics.Single();
-                Assert.Equal(_topic2.Name, responseTopic.Name);
-                Assert.Equal(_topic2.Slug, responseTopic.Slug);
+                Assert.Equal(_differentTopic.Name, responseTopic.Name);
+                Assert.Equal(_differentTopic.Slug, responseTopic.Slug);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -69,7 +70,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(slug, question.Slug);
                 Assert.Equal(payload.Source, question.Source);
                 Assert.Single(question.Topics);
-                Assert.Equal(_topic2.Id, question.Topics.Single().Id);
+                Assert.Equal(_differentTopic.Id, question.Topics.Single().Id);
             }
         }
 
@@ -128,9 +129,8 @@ namespace Pobs.Tests.Integration.Questions
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var topic = dbContext.Topics.Find(_topic.Id);
-                Assert.Equal(_topic.Slug, topic.Slug);
-                Assert.Equal(_topic.Name, topic.Name);
+                var reloadedQuestion = dbContext.Questions.Find(_question.Id);
+                Assert.Equal(_question.Text, reloadedQuestion.Text);
             }
         }
 

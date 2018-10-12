@@ -18,7 +18,6 @@ namespace Pobs.Tests.Integration.Questions
     {
         private string _generateUrl(int questionId, int answerId) => $"/api/questions/{questionId}/answers/{answerId}";
         private readonly int _userId;
-        private readonly Topic _topic;
         private readonly Question _question;
         private readonly Answer _answer;
 
@@ -26,8 +25,7 @@ namespace Pobs.Tests.Integration.Questions
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
-            _topic = DataHelpers.CreateTopic(user, 1, user, 1);
-            _question = _topic.Questions.First();
+            _question = DataHelpers.CreateQuestions(user, 1, user, 1).Single();
             _answer = _question.Answers.First();
         }
 
@@ -131,7 +129,7 @@ namespace Pobs.Tests.Integration.Questions
         {
             var payload = new AnswerFormModel
             {
-                Text = "My honest question",
+                Text = "My honest answer",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -145,9 +143,9 @@ namespace Pobs.Tests.Integration.Questions
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var topic = dbContext.Topics.Find(_topic.Id);
-                Assert.Equal(_topic.Slug, topic.Slug);
-                Assert.Equal(_topic.Name, topic.Name);
+                var reloadedQuestion = dbContext.Questions.Include(x => x.Answers).First(x => x.Id == _question.Id);
+                var reloadedAnswer = reloadedQuestion.Answers.Single(x => x.Id == _answer.Id);
+                Assert.Equal(_answer.Text, reloadedAnswer.Text);
             }
         }
 

@@ -17,19 +17,19 @@ namespace Pobs.Tests.Integration.Questions
     {
         private string _generateUrl(int questionId) => $"/api/questions/{questionId}/answers";
         private readonly User _user;
-        private readonly Topic _topic;
+        private readonly Question _question;
 
         public PostAnswerTests()
         {
             var user = DataHelpers.CreateUser();
             _user = user;
-            _topic = DataHelpers.CreateTopic(user, 1);
+            _question = DataHelpers.CreateQuestions(user, 1).Single();
         }
 
         [Fact]
         public async Task Authenticated_ShouldAddAnswer()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var payload = new AnswerFormModel
             {
                 // Include emoji in the Text, and quote marks around it
@@ -73,7 +73,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task NoText_ShouldGetBadRequest()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var payload = new AnswerFormModel
             {
                 Text = " ",
@@ -96,7 +96,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task NotAuthenticated_ShouldBeDenied()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var payload = new AnswerFormModel
             {
                 Text = "My insightful answer to this question"
@@ -122,7 +122,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task UnknownQuestionId_ShouldReturnNotFound()
         {
-            var question = _topic.Questions.First();
+            var question = _question;
             var payload = new AnswerFormModel
             {
                 Text = "My insightful answer to this question",

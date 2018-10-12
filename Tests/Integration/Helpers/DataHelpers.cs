@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
@@ -28,21 +29,38 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(
-            User questionUser, int numberOfQuestions = 0,
-            User answerUser = null, int numberOfAnswersPerQuestion = 0,
-            bool isApproved = true, string topicNamePrefix = null)
+        public static Topic CreateTopic(User user, bool isApproved = true, string topicNamePrefix = null, params Question[] questions)
         {
             // Guarantee slug has both upper & lower case characters
             topicNamePrefix = topicNamePrefix ?? "ABCabc";
             var name = topicNamePrefix + Utils.GenerateRandomString(10);
-            var topic = new Topic(name, name, questionUser, DateTime.UtcNow)
+            var topic = new Topic(name, name, user, DateTime.UtcNow)
             {
                 Summary = Utils.GenerateRandomString(50),
                 MoreInfoUrl = Utils.GenerateRandomString(50),
                 IsApproved = isApproved
             };
 
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(user);
+                foreach (var question in questions)
+                {
+                    dbContext.Attach(question);
+                    topic.Questions.Add(question);
+                }
+                dbContext.Topics.Add(topic);
+                dbContext.SaveChanges();
+            }
+
+            return topic;
+        }
+
+        public static IEnumerable<Question> CreateQuestions(
+            User questionUser, int numberOfQuestions = 1,
+            User answerUser = null, int numberOfAnswersPerQuestion = 0)
+        {
+            var questions = new List<Question>();
             for (int questionIndex = 0; questionIndex < numberOfQuestions; questionIndex++)
             {
                 // Stagger PostedAt times
@@ -64,7 +82,7 @@ namespace Pobs.Tests.Integration.Helpers
                         question.Answers.Add(answer);
                     }
                 }
-                topic.Questions.Add(question);
+                questions.Add(question);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -74,11 +92,11 @@ namespace Pobs.Tests.Integration.Helpers
                 {
                     dbContext.Attach(answerUser);
                 }
-                dbContext.Topics.Add(topic);
+                dbContext.Questions.AddRange(questions);
                 dbContext.SaveChanges();
             }
 
-            return topic;
+            return questions;
         }
 
         public static void CreateComments(Answer answer, User commentUser, int numberOfComments)
@@ -98,36 +116,29 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         /// <summary>Delete comments before cascading other deletes so as to not upset foreign key constraints.</summary>
-        public static void DeleteAllComments(int topicId)
+        public static void DeleteAllComments(int questionId)
         {
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var topic = dbContext.Topics
-                    .Include(x => x.QuestionTopics).ThenInclude(x => x.Question).ThenInclude(x => x.Answers).ThenInclude(x => x.Comments)
-                    .First(x => x.Id == topicId);
+                var question = dbContext.Questions.Include(x => x.Answers).ThenInclude(x => x.Comments)
+                    .First(x => x.Id == questionId);
 
                 // Delete child comments first
-                foreach (var question in topic.Questions)
+                foreach (var answer in question.Answers)
                 {
-                    foreach (var answer in question.Answers)
+                    foreach (var comment in answer.Comments.Where(x => x.ParentComment != null))
                     {
-                        foreach (var comment in answer.Comments.Where(x => x.ParentComment != null))
-                        {
-                            comment.ParentComment.ChildComments.Remove(comment);
-                        }
+                        comment.ParentComment.ChildComments.Remove(comment);
                     }
                 }
                 dbContext.SaveChanges();
 
                 // Delete rest of the Comments
-                foreach (var question in topic.Questions)
+                foreach (var answer in question.Answers)
                 {
-                    foreach (var answer in question.Answers)
+                    foreach (var comment in answer.Comments.ToArray())
                     {
-                        foreach (var comment in answer.Comments.ToArray())
-                        {
-                            dbContext.Remove(comment);
-                        }
+                        dbContext.Remove(comment);
                     }
                 }
                 dbContext.SaveChanges();
