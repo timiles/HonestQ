@@ -29,8 +29,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task Authenticated_ShouldAddComment()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = "Here's a poop emoji: 💩",
@@ -42,7 +41,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(question.Id, answer.Id);
+                var url = _generateUrl(_question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -50,7 +49,7 @@ namespace Pobs.Tests.Integration.Questions
                 {
                     var reloadedQuestion = dbContext.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
-                        .First(x => x.Id == question.Id);
+                        .First(x => x.Id == _question.Id);
                     var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
                     var comment = reloadedAnswer.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
@@ -75,8 +74,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task SourceOnly_ShouldPersist()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Source = "https://example.com/",
@@ -87,7 +85,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(question.Id, answer.Id);
+                var url = _generateUrl(_question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -95,7 +93,7 @@ namespace Pobs.Tests.Integration.Questions
                 {
                     var reloadedQuestion = dbContext.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
-                        .First(x => x.Id == question.Id);
+                        .First(x => x.Id == _question.Id);
                     var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
 
                     var comment = reloadedAnswer.Comments.Single();
@@ -113,8 +111,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task ParentCommentId_ShouldPersist()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(answer);
@@ -135,7 +132,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(question.Id, answer.Id);
+                var url = _generateUrl(_question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
 
@@ -143,7 +140,7 @@ namespace Pobs.Tests.Integration.Questions
                 {
                     var reloadedQuestion = dbContext.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
-                        .First(x => x.Id == question.Id);
+                        .First(x => x.Id == _question.Id);
                     var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
                     var reloadedParentComment = reloadedAnswer.Comments.First(x => x.Id == parentComment.Id);
                     var comment = reloadedParentComment.ChildComments.Single();
@@ -167,8 +164,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task NoTextAndNoSource_ShouldGetBadRequest()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = " ",
@@ -180,7 +176,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(question.Id, answer.Id);
+                var url = _generateUrl(_question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -192,8 +188,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task InvalidAgreementRating_ShouldGetBadRequest()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
@@ -204,7 +199,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(question.Id, answer.Id);
+                var url = _generateUrl(_question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -216,8 +211,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task NotAuthenticated_ShouldBeDenied()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
@@ -225,7 +219,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var url = _generateUrl(question.Id, answer.Id);
+                var url = _generateUrl(_question.Id, answer.Id);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
@@ -234,7 +228,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 var reloadedQuestion = dbContext.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.Comments)
-                        .First(x => x.Id == question.Id);
+                        .First(x => x.Id == _question.Id);
 
                 Assert.Empty(reloadedQuestion.Answers.First(x => x.Id == answer.Id).Comments);
             }
@@ -243,8 +237,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task UnknownQuestionId_ShouldReturnNotFound()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
@@ -264,8 +257,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task UnknownAnswerId_ShouldReturnNotFound()
         {
-            var question = _question;
-            var answer = question.Answers.First();
+            var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
@@ -276,7 +268,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _generateUrl(question.Id, 0);
+                var url = _generateUrl(_question.Id, 0);
                 var response = await client.PostAsync(url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
