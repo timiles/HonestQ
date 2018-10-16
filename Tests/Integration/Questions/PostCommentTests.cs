@@ -57,6 +57,8 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(payload.AgreementRating, comment.AgreementRating.ToString());
                     Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.False(comment.IsAnonymous);
+                    Assert.Equal(CommentStatus.OK, comment.Status);
 
 
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -67,6 +69,55 @@ namespace Pobs.Tests.Integration.Questions
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal(0, responseModel.PostedByUserPseudoId);
                     Assert.True(responseModel.IsPostedByLoggedInUser);
+                    Assert.Equal("OK", responseModel.Status);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task IsAnonymous_ShouldAddAsAwaitingApproval()
+        {
+            var answer = _question.Answers.First();
+            var payload = new CommentFormModel
+            {
+                Text = "Here's a poop emoji: 💩",
+                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAnonymous = true,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_question.Id, answer.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
+                        .First(x => x.Id == _question.Id);
+                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
+                    var comment = reloadedAnswer.Comments.Single();
+                    Assert.Equal(payload.Text, comment.Text);
+                    Assert.Equal(payload.Source, comment.Source);
+                    Assert.Equal(payload.AgreementRating, comment.AgreementRating.ToString());
+                    Assert.Equal(_user.Id, comment.PostedByUser.Id);
+                    Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.True(comment.IsAnonymous);
+                    Assert.Equal(CommentStatus.AwaitingApproval, comment.Status);
+
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
+
+                    Assert.Equal(comment.Id, responseModel.Id);
+                    Assert.Equal(comment.Text, responseModel.Text);
+                    AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
+                    Assert.Equal(0, responseModel.PostedByUserPseudoId);
+                    Assert.True(responseModel.IsPostedByLoggedInUser);
+                    Assert.Equal("AwaitingApproval", responseModel.Status);
                 }
             }
         }

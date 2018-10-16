@@ -24,6 +24,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
             source: '',
             agreementRating: 'Neutral',
             parentCommentId: this.props.parentCommentId,
+            isAnonymous: false,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -39,7 +40,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
     public render() {
         const { isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
-        const { text, source, agreementRating } = this.state;
+        const { text, source, agreementRating, isAnonymous } = this.state;
 
         return (
             <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
@@ -82,6 +83,18 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             />
                         </div>
                     </div>
+                    <div className="form-group">
+                        <div className="checkbox">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="isAnonymous"
+                                    checked={isAnonymous}
+                                    onChange={this.handleChange}
+                                /> Post anonymously (may take 48 hours to approve)
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div className={isModal ? 'modal-footer' : 'form-group'}>
                     {isModal && onCloseModalRequested &&
@@ -100,7 +113,12 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
     private handleChange(event: React.FormEvent<HTMLButtonElement | HTMLInputElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
-        this.setState((prevState) => ({ ...prevState, [name]: value }));
+        if (name === 'isAnonymous') {
+            const checked = (event.currentTarget as HTMLInputElement).checked;
+            this.setState((prevState) => ({ ...prevState, [name]: checked }));
+        } else {
+            this.setState((prevState) => ({ ...prevState, [name]: value }));
+        }
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

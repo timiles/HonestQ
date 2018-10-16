@@ -189,7 +189,9 @@ namespace Pobs.Web.Services
             Enum.TryParse<AgreementRating>(commentForm.AgreementRating, out AgreementRating agreementRating);
             var comment = new Comment(commentForm.Text, await postedByUserTask, DateTime.UtcNow, agreementRating, commentForm.ParentCommentId)
             {
-                Source = commentForm.Source
+                Source = commentForm.Source,
+                IsAnonymous = commentForm.IsAnonymous,
+                Status = commentForm.IsAnonymous ? CommentStatus.AwaitingApproval : CommentStatus.OK,
             };
 
             answer.Comments.Add(comment);

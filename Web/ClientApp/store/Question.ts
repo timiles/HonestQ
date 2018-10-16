@@ -169,6 +169,9 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             };
         }
         case 'NEW_COMMENT_FORM_RECEIVED': {
+            if (action.payload.comment.status !== 'OK') {
+                return state;
+            }
             const questionModel = state.question!.model!;
             // Slice for immutability
             const answersNext = questionModel.answers;

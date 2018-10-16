@@ -14,5 +14,7 @@ namespace Pobs.Web.Models.Questions
         public string AgreementRating { get; set; }
 
         public long? ParentCommentId { get; set; }
+
+        public bool IsAnonymous { get; set; }
     }
 }

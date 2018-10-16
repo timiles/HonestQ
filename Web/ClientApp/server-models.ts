@@ -64,6 +64,7 @@ export interface CommentFormModel {
     source?: string;
     agreementRating: string;
     parentCommentId?: number;
+    isAnonymous: boolean;
 }
 
 export interface CommentModel {
@@ -74,6 +75,7 @@ export interface CommentModel {
     postedAt: string;
     postedByUserPseudoId: number;
     isPostedByLoggedInUser: boolean;
+    status: string;
     parentCommentId?: number;
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };

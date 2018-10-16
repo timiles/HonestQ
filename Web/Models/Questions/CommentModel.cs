@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 
 namespace Pobs.Web.Models.Questions
@@ -18,6 +19,7 @@ namespace Pobs.Web.Models.Questions
             this.PostedAt = comment.PostedAt.UtcDateTime;
             this.PostedByUserPseudoId = userPseudoIds?[comment.PostedByUserId] ?? 0;
             this.IsPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
+            this.Status = comment.Status.ToString();
             this.ParentCommentId = comment.ParentComment?.Id;
             this.Comments = comment.ChildComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
             this.ReactionCounts = comment.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
@@ -32,6 +34,8 @@ namespace Pobs.Web.Models.Questions
         public DateTime PostedAt { get; set; }
         public int PostedByUserPseudoId { get; set; }
         public bool IsPostedByLoggedInUser { get; set; }
+        [Required]
+        public string Status { get; set; }
         public long? ParentCommentId { get; set; }
         public CommentModel[] Comments { get; set; }
         public Dictionary<string, int> ReactionCounts { get; set; }
