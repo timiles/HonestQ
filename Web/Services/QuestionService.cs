@@ -117,6 +117,7 @@ namespace Pobs.Web.Services
         {
             var question = await _context.Questions
                 .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             if (question == null)

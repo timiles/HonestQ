@@ -67,8 +67,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(comment.Id, responseModel.Id);
                     Assert.Equal(comment.Text, responseModel.Text);
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
-                    Assert.Equal(0, responseModel.PostedByUserPseudoId);
-                    Assert.True(responseModel.IsPostedByLoggedInUser);
+                    Assert.Equal(_user.Username, responseModel.PostedBy);
                     Assert.Equal("OK", responseModel.Status);
                 }
             }
@@ -115,8 +114,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(comment.Id, responseModel.Id);
                     Assert.Equal(comment.Text, responseModel.Text);
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
-                    Assert.Equal(0, responseModel.PostedByUserPseudoId);
-                    Assert.True(responseModel.IsPostedByLoggedInUser);
+                    Assert.Equal("Thread user #0 (you)", responseModel.PostedBy);
                     Assert.Equal("AwaitingApproval", responseModel.Status);
                 }
             }

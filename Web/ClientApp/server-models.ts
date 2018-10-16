@@ -73,8 +73,7 @@ export interface CommentModel {
     source?: string;
     agreementRating: string;
     postedAt: string;
-    postedByUserPseudoId: number;
-    isPostedByLoggedInUser: boolean;
+    postedBy?: string;
     status: string;
     parentCommentId?: number;
     comments: CommentModel[];

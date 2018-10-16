@@ -17,8 +17,18 @@ namespace Pobs.Web.Models.Questions
             this.Source = comment.Source;
             this.AgreementRating = comment.AgreementRating.ToString();
             this.PostedAt = comment.PostedAt.UtcDateTime;
-            this.PostedByUserPseudoId = userPseudoIds?[comment.PostedByUserId] ?? 0;
-            this.IsPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
+
+            if (comment.IsAnonymous)
+            {
+                var postedByUserPseudoId = userPseudoIds?[comment.PostedByUserId] ?? 0;
+                var isPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
+                this.PostedBy = $"Thread user #{postedByUserPseudoId}{(isPostedByLoggedInUser ? " (you)" : "")}";
+            }
+            else
+            {
+                this.PostedBy = comment.PostedByUser.Username;
+            }
+
             this.Status = comment.Status.ToString();
             this.ParentCommentId = comment.ParentComment?.Id;
             this.Comments = comment.ChildComments.Where(x => x.Status == CommentStatus.OK)
@@ -33,8 +43,7 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
-        public int PostedByUserPseudoId { get; set; }
-        public bool IsPostedByLoggedInUser { get; set; }
+        public string PostedBy { get; set; }
         [Required]
         public string Status { get; set; }
         public long? ParentCommentId { get; set; }
