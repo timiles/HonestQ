@@ -41,6 +41,14 @@ namespace Pobs.Tests.Integration.Questions
                 DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
             }
 
+            // Add an unapproved Comment
+            var unapprovedComment = DataHelpers.CreateComments(
+                question.Answers.First(), question.PostedByUser, 1, CommentStatus.AwaitingApproval).Single();
+            
+            // Add an unapproved Child Comment
+            var unapprovedChildComment = DataHelpers.CreateChildComments(
+                question.Answers.First().Comments.First(), question.PostedByUser, 1, CommentStatus.AwaitingApproval).Single();
+
             // Add a Reaction to a Comment
             var commentWithReaction = question.Answers.First().Comments.First();
             var reactionType = ReactionType.YouBeTrolling;
@@ -75,6 +83,13 @@ namespace Pobs.Tests.Integration.Questions
 
                 Assert.Equal(3, question.Answers.Count);
                 Assert.Equal(question.Answers.Count, responseModel.Answers.Length);
+
+                var commentWithUnapprovedComment = responseModel.Answers.Single(x => x.Id == unapprovedChildComment.Answer.Id)
+                    .Comments.Single(x => x.Id == unapprovedChildComment.ParentComment.Id);
+                Assert.DoesNotContain(unapprovedChildComment.Id, commentWithUnapprovedComment.Comments.Select(x => x.Id));
+
+                var answerWithUnapprovedComment = responseModel.Answers.Single(x => x.Id == unapprovedComment.Answer.Id);
+                Assert.DoesNotContain(unapprovedComment.Id, answerWithUnapprovedComment.Comments.Select(x => x.Id));
 
                 foreach (var answer in question.Answers)
                 {

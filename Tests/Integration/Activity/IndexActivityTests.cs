@@ -31,7 +31,10 @@ namespace Pobs.Tests.Integration.Activity
             _answerUserId = answerUser.Id;
             // Create multiple Questions, Answers and Comments
             var questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
-            DataHelpers.CreateComments(questions.First().Answers.First(), answerUser, 4);
+            var answer = questions.First().Answers.First();
+            DataHelpers.CreateComments(answer, answerUser, 4);
+            DataHelpers.CreateComments(answer, answerUser, 1, CommentStatus.AwaitingApproval);
+            DataHelpers.CreateChildComments(answer.Comments.First(), answer.PostedByUser, 1, CommentStatus.AwaitingApproval);
             _topic = DataHelpers.CreateTopic(questionUser, isApproved: true, questions: questions.ToArray());
         }
 
@@ -68,11 +71,13 @@ namespace Pobs.Tests.Integration.Activity
 
                         foreach (var comment in answer.Comments)
                         {
-                            Assert.NotNull(responseModel.ActivityItems.SingleOrDefault(x =>
+                            var commentModel = responseModel.ActivityItems.SingleOrDefault(x =>
                                 x.Type == "Comment" &&
                                 x.QuestionId == question.Id &&
                                 x.AnswerId == answer.Id &&
-                                x.CommentId == comment.Id));
+                                x.CommentId == comment.Id);
+                            // Ensure only approved Comments are returned.
+                            Assert.Equal(comment.Status == CommentStatus.OK, commentModel != null);
                         }
                     }
                 }
@@ -211,7 +216,7 @@ namespace Pobs.Tests.Integration.Activity
                             x.AnswerId == answer.Id);
                         Assert.Equal(answer.PostedAt.ToUnixTimeMilliseconds() < beforeTimestamp, responseAnswer != null);
 
-                        foreach (var comment in answer.Comments)
+                        foreach (var comment in answer.Comments.Where(x => x.Status == CommentStatus.OK))
                         {
                             var responseComment = responseModel.ActivityItems.SingleOrDefault(x =>
                                 x.Type == "Comment" &&

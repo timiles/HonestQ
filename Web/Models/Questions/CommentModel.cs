@@ -21,7 +21,8 @@ namespace Pobs.Web.Models.Questions
             this.IsPostedByLoggedInUser = comment.PostedByUserId == loggedInUserId;
             this.Status = comment.Status.ToString();
             this.ParentCommentId = comment.ParentComment?.Id;
-            this.Comments = comment.ChildComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
+            this.Comments = comment.ChildComments.Where(x => x.Status == CommentStatus.OK)
+                .Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
             this.ReactionCounts = comment.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
             this.MyReactions = comment.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
         }

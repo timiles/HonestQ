@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 
 namespace Pobs.Web.Models.Questions
@@ -39,7 +40,7 @@ namespace Pobs.Web.Models.Questions
             var userPseudoIds = PseudonymiseUserIds(answer);
             this.PostedByUserPseudoId = userPseudoIds?[answer.PostedByUserId] ?? 0;
             this.IsPostedByLoggedInUser = answer.PostedByUserId == loggedInUserId;
-            var topLevelComments = answer.Comments.Where(x => x.ParentComment == null);
+            var topLevelComments = answer.Comments.Where(x => x.Status == CommentStatus.OK && x.ParentComment == null);
             this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
         }
 

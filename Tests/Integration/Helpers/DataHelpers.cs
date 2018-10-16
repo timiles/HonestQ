@@ -99,20 +99,61 @@ namespace Pobs.Tests.Integration.Helpers
             return questions;
         }
 
-        public static void CreateComments(Answer answer, User commentUser, int numberOfComments)
+        public static IEnumerable<Comment> CreateComments(
+            Answer answer, User commentUser, int numberOfComments, CommentStatus commentStatus = CommentStatus.OK)
         {
+            var newComments = new List<Comment>();
+            for (var i = 0; i < numberOfComments; i++)
+            {
+                // Stagger PostedAt times
+                var postedAt = DateTime.UtcNow.AddHours(-1.0 * (i + 1) / numberOfComments);
+                newComments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, AgreementRating.Agree, null)
+                {
+                    Status = commentStatus
+                });
+            }
+
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(answer);
                 dbContext.Attach(commentUser);
-                for (var i = 0; i < numberOfComments; i++)
+                foreach (var comment in newComments)
                 {
-                    // Stagger PostedAt times
-                    var postedAt = DateTime.UtcNow.AddHours(-1.0 * (i + 1) / numberOfComments);
-                    answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, AgreementRating.Agree, null));
+                    answer.Comments.Add(comment);
                 }
                 dbContext.SaveChanges();
             }
+
+            return newComments;
+        }
+
+        public static IEnumerable<Comment> CreateChildComments(
+            Comment comment, User commentUser, int numberOfComments, CommentStatus commentStatus = CommentStatus.OK)
+        {
+            var newChildComments = new List<Comment>();
+            for (var i = 0; i < numberOfComments; i++)
+            {
+                // Stagger PostedAt times
+                var postedAt = DateTime.UtcNow.AddHours(-1.0 * (i + 1) / numberOfComments);
+                newChildComments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, AgreementRating.Agree, null)
+                {
+                    Status = commentStatus,
+                    ParentComment = comment,
+                });
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(comment);
+                dbContext.Attach(commentUser);
+                foreach (var childComment in newChildComments)
+                {
+                    comment.Answer.Comments.Add(childComment);
+                }
+                dbContext.SaveChanges();
+            }
+
+            return newChildComments;
         }
 
         /// <summary>Delete comments before cascading other deletes so as to not upset foreign key constraints.</summary>
