@@ -9,7 +9,7 @@ using Pobs.Web.Helpers;
 
 namespace Pobs.Tests.Integration.Helpers
 {
-    static class Extensions
+    internal static class Extensions
     {
         public static void AuthenticateAs(this HttpClient httpClient, int userId, params Role[] roles)
         {

@@ -1,3 +1,4 @@
+
 namespace Pobs.Domain
 {
     public enum ReactionType

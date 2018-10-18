@@ -14,13 +14,13 @@ namespace Pobs.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ISpaPrerenderer spaPrerenderer;
-        private readonly IUserService userService;
+        private readonly ISpaPrerenderer _spaPrerenderer;
+        private readonly IUserService _userService;
 
         public HomeController(ISpaPrerenderer spaPrerenderer, IUserService userService)
         {
-            this.spaPrerenderer = spaPrerenderer;
-            this.userService = userService;
+            _spaPrerenderer = spaPrerenderer;
+            _userService = userService;
         }
 
         public async Task<IActionResult> Index()
@@ -41,7 +41,7 @@ namespace Pobs.Web.Controllers
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 if (int.TryParse(identityClaim.Value, out int userId))
                 {
-                    var user = this.userService.GetById(userId);
+                    var user = _userService.GetById(userId);
                     if (user != null)
                     {
                         loggedInModel = new LoggedInUserModel(user, token);
@@ -69,7 +69,7 @@ namespace Pobs.Web.Controllers
                 }
             };
 
-            var renderResult = (RenderToStringResult)await this.spaPrerenderer.RenderToString("ClientApp/dist/main-server", null, data, 30000);
+            var renderResult = (RenderToStringResult)await _spaPrerenderer.RenderToString("ClientApp/dist/main-server", null, data, 30000);
             if (!string.IsNullOrEmpty(renderResult.RedirectUrl))
             {
                 if (renderResult.StatusCode != null && renderResult.StatusCode.Value == 301)

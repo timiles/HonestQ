@@ -1,3 +1,4 @@
+
 namespace Pobs.Domain.Entities.Helpers
 {
     public interface IJoinEntity<TEntity>

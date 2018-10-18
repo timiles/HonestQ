@@ -1,4 +1,5 @@
-﻿namespace Pobs.Domain.Utils
+﻿
+namespace Pobs.Domain.Utils
 {
     public static class CleanTextExtension
     {

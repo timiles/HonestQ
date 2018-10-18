@@ -12,11 +12,11 @@ namespace Pobs.Web.Controllers
     [Route("api/[controller]")]
     public class HealthController : Controller
     {
-        private readonly string exceptionlessApiKey;
+        private readonly string _exceptionlessApiKey;
 
         public HealthController(IOptions<AppSettings> appSettings)
         {
-            this.exceptionlessApiKey = appSettings.Value.ExceptionlessApiKey;
+            _exceptionlessApiKey = appSettings.Value.ExceptionlessApiKey;
         }
 
         public IActionResult Index(bool all)
@@ -25,9 +25,9 @@ namespace Pobs.Web.Controllers
             var errors = new Dictionary<string, Exception>();
             if (all)
             {
-                if (this.exceptionlessApiKey != null)
+                if (_exceptionlessApiKey != null)
                 {
-                    exceptionlessClient = new ExceptionlessClient(this.exceptionlessApiKey);
+                    exceptionlessClient = new ExceptionlessClient(_exceptionlessApiKey);
                     try
                     {
                         // Test our connection to exceptionless (if it was initialized)

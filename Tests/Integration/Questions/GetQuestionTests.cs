@@ -44,7 +44,7 @@ namespace Pobs.Tests.Integration.Questions
             // Add an unapproved Comment
             var unapprovedComment = DataHelpers.CreateComments(
                 question.Answers.First(), question.PostedByUser, 1, CommentStatus.AwaitingApproval).Single();
-            
+
             // Add an unapproved Child Comment
             var unapprovedChildComment = DataHelpers.CreateChildComments(
                 question.Answers.First().Comments.First(), question.PostedByUser, 1, CommentStatus.AwaitingApproval).Single();

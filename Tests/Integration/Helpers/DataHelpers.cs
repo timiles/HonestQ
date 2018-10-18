@@ -7,7 +7,7 @@ using Pobs.Domain.Entities;
 
 namespace Pobs.Tests.Integration.Helpers
 {
-    static class DataHelpers
+    internal static class DataHelpers
     {
         public static User CreateUser()
         {

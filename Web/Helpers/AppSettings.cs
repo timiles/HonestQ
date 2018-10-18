@@ -1,3 +1,4 @@
+
 namespace Pobs.Web.Helpers
 {
     public class AppSettings

@@ -13,22 +13,22 @@ namespace Pobs.Web.Middleware
 {
     public class FeatureLoggingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly IOptions<AppSettings> appSettings;
+        private readonly RequestDelegate _next;
+        private readonly IOptions<AppSettings> _appSettings;
 
         public FeatureLoggingMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
         {
-            this.next = next;
-            this.appSettings = appSettings;
+            _next = next;
+            _appSettings = appSettings;
         }
 
         public async Task Invoke(HttpContext context)
         {
             var stopwatch = Stopwatch.StartNew();
-            await this.next(context);
+            await _next(context);
             stopwatch.Stop();
 
-            if (this.appSettings.Value.ExceptionlessApiKey != null)
+            if (_appSettings.Value.ExceptionlessApiKey != null)
             {
                 try
                 {
@@ -43,7 +43,7 @@ namespace Pobs.Web.Middleware
                     var method = context.Request.Method;
                     var featureName = $"{method}-{controller}-{action}";
 
-                    var exceptionlessClient = new ExceptionlessClient(this.appSettings.Value.ExceptionlessApiKey);
+                    var exceptionlessClient = new ExceptionlessClient(_appSettings.Value.ExceptionlessApiKey);
                     var feature = exceptionlessClient.CreateFeatureUsage(featureName)
                         .SetProperty("RequestDurationMilliseconds", stopwatch.ElapsedMilliseconds)
                         .SetProperty("UserAgent", context.Request.Headers[HeaderNames.UserAgent].ToString());

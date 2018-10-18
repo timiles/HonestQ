@@ -9,17 +9,17 @@ namespace Pobs.Web.Controllers
     [Route("api/[controller]")]
     public class IntroController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
         public IntroController(IUserService userService)
         {
-            this.userService = userService;
+            _userService = userService;
         }
 
         [Authorize]
         public IActionResult Index()
         {
-            var user = this.userService.GetById(User.Identity.ParseUserId());
+            var user = _userService.GetById(User.Identity.ParseUserId());
 
             return Json(new IntroModel { Content = $@"
 # Hi {user.FirstName}! Welcome to the **POBS PRIVATE BETA**!

@@ -25,14 +25,14 @@ namespace Pobs.Web
 {
     public class Startup
     {
-        private readonly IHostingEnvironment env;
-        private readonly ILoggerFactory loggerFactory;
+        private readonly IHostingEnvironment _env;
+        private readonly ILoggerFactory _loggerFactory;
 
         public Startup(IHostingEnvironment env, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            this.env = env;
+            _env = env;
             Configuration = configuration;
-            this.loggerFactory = loggerFactory;
+            _loggerFactory = loggerFactory;
         }
 
         public IConfiguration Configuration { get; }
@@ -82,12 +82,12 @@ namespace Pobs.Web
 
             services.AddNodeServices(options =>
             {
-                if (this.env.IsDevelopment())
+                if (_env.IsDevelopment())
                 {
                     options.LaunchWithDebugging = true;
                     options.DebuggingPort = 9229;
                 }
-                options.NodeInstanceOutputLogger = this.loggerFactory.CreateLogger("Node Console Logger");
+                options.NodeInstanceOutputLogger = _loggerFactory.CreateLogger("Node Console Logger");
             });
 
             // Configure DI for application services

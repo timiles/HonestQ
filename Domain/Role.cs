@@ -1,4 +1,5 @@
-﻿namespace Pobs.Domain
+﻿
+namespace Pobs.Domain
 {
     public enum Role
     {
