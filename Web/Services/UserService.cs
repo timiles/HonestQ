@@ -58,10 +58,10 @@ namespace Pobs.Web.Services
         {
             // validation
             if (string.IsNullOrWhiteSpace(password))
-                throw new AppException("Password is required");
+                throw new AppException("Password is required.");
 
             if (_context.Users.Any(x => x.Username == user.Username))
-                throw new AppException("Username '" + user.Username + "' is already taken");
+                throw new AppException($"Username '{user.Username}' is already taken.");
 
             (byte[] passwordSalt, byte[] passwordHash) = AuthUtils.CreatePasswordHash(password);
 
@@ -74,35 +74,35 @@ namespace Pobs.Web.Services
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        public void Update(User user, string password = null)
         {
-            var user = _context.Users.Find(userParam.Id);
+            var existingUser = _context.Users.Find(user.Id);
 
-            if (user == null)
-                throw new AppException("User not found");
+            if (existingUser == null)
+                throw new AppException("User not found.");
 
-            if (userParam.Username != user.Username)
+            if (user.Username != existingUser.Username)
             {
-                // username has changed so check if the new username is already taken
-                if (_context.Users.Any(x => x.Username == userParam.Username))
-                    throw new AppException("Username " + userParam.Username + " is already taken");
+                // Username has changed so check if the new username is already taken
+                if (_context.Users.Any(x => x.Username == user.Username))
+                    throw new AppException($"Username '{user.Username}' is already taken.");
             }
 
-            // update user properties
-            user.FirstName = userParam.FirstName;
-            user.LastName = userParam.LastName;
-            user.Username = userParam.Username;
+            // Update user properties
+            existingUser.Name = user.Name;
+            existingUser.Email = user.Email;
+            existingUser.Username = user.Username;
 
-            // update password if it was entered
+            // Update password if it was entered
             if (!string.IsNullOrWhiteSpace(password))
             {
                 (byte[] passwordSalt, byte[] passwordHash) = AuthUtils.CreatePasswordHash(password);
 
-                user.PasswordSalt = passwordSalt;
-                user.PasswordHash = passwordHash;
+                existingUser.PasswordSalt = passwordSalt;
+                existingUser.PasswordHash = passwordHash;
             }
 
-            _context.Users.Update(user);
+            _context.Users.Update(existingUser);
             _context.SaveChanges();
         }
 

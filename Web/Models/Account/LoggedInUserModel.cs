@@ -8,7 +8,7 @@ namespace Pobs.Web.Models.Account
         public LoggedInUserModel() { }
         public LoggedInUserModel(User user, string token)
         {
-            this.FirstName = user.FirstName;
+            this.Name = user.Name;
             this.Username = user.Username;
             this.Token = token;
 
@@ -19,7 +19,7 @@ namespace Pobs.Web.Models.Account
         }
 
         [Required]
-        public string FirstName { get; set; }
+        public string Name { get; set; }
 
         [Required]
         public string Username { get; set; }

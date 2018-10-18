@@ -40,7 +40,7 @@ export const actionCreators = {
             dispatch({ type: 'SUBMIT_REGISTRATION', payload: form });
 
             const user = form;
-            if (!user.firstName || !user.lastName || !user.username || !user.password) {
+            if (!user.name || !user.email || !user.username || !user.password) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'REGISTRATION_FAILED', payload: { reason: '' } });
                 return;

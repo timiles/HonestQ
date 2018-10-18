@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Pobs.Domain;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Helpers;
+using Pobs.Web.Models.Account;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Account
@@ -17,12 +18,12 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task ValidInputs_ShouldCreateUser()
         {
-            var payload = new
+            var payload = new RegisterFormModel
             {
-                FirstName = "Mary",
-                LastName = "Coffeemug",
+                Name = "Mary Coffeemug 💩",
+                Email = "mary💩@example.com",
                 Username = _username,
-                Password = "Password1"
+                Password = "Password1",
             };
 
             using (var server = new IntegrationTestingServer())
@@ -40,9 +41,10 @@ namespace Pobs.Tests.Integration.Account
                 var user = dbContext.Users.FirstOrDefault(x => x.Username == payload.Username);
                 Assert.NotNull(user);
 
-                Assert.Equal(payload.FirstName, user.FirstName);
-                Assert.Equal(payload.LastName, user.LastName);
+                Assert.Equal(payload.Name, user.Name);
+                Assert.Equal(payload.Email, user.Email);
                 Assert.Equal(payload.Username, user.Username);
+                Assert.True(user.CreatedAt > DateTime.UtcNow.AddMinutes(-1));
 
                 Assert.True(AuthUtils.VerifyPasswordHash(payload.Password, user.PasswordHash, user.PasswordSalt));
             }
@@ -51,12 +53,12 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task ExistingUsername_ShouldError()
         {
-            var payload = new
+            var payload = new RegisterFormModel
             {
-                FirstName = "Mary",
-                LastName = "Coffeemug",
+                Name = "Mary Coffeemug",
+                Email = "mary@example.com",
                 Username = _username,
-                Password = "Password1"
+                Password = "Password1",
             };
 
             using (var server = new IntegrationTestingServer())
@@ -72,7 +74,7 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
 
                 var responseContent = await response2.Content.ReadAsStringAsync();
-                Assert.Equal($"Username '{_username}' is already taken", responseContent);
+                Assert.Equal($"Username '{_username}' is already taken.", responseContent);
             }
         }
 

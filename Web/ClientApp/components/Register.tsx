@@ -16,8 +16,8 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
         super(props);
 
         this.state = {
-            firstName: '',
-            lastName: '',
+            name: '',
+            email: '',
             password: '',
             username: '',
         };
@@ -27,7 +27,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
     }
 
     public render() {
-        const { firstName, lastName, username, password } = this.state;
+        const { name, email, username, password } = this.state;
         const { error, submitting, submitted } = this.props;
 
         return (
@@ -35,29 +35,29 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                 <h2>Register</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !firstName ? ' has-error' : '')}>
-                        <label htmlFor="firstName">First Name</label>
+                    <div className={'form-group' + (submitted && !name ? ' has-error' : '')}>
+                        <label htmlFor="name">Name</label>
                         <input
                             type="text"
                             className="form-control"
-                            id="firstName"
-                            name="firstName"
-                            value={firstName}
+                            id="name"
+                            name="name"
+                            value={name}
                             onChange={this.handleChange}
                         />
-                        {submitted && !firstName && <div className="help-block">First Name is required</div>}
+                        {submitted && !name && <div className="help-block">Name is required</div>}
                     </div>
-                    <div className={'form-group' + (submitted && !lastName ? ' has-error' : '')}>
-                        <label htmlFor="lastName">Last Name</label>
+                    <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
+                        <label htmlFor="email">Email</label>
                         <input
                             type="text"
                             className="form-control"
-                            id="lastName"
-                            name="lastName"
-                            value={lastName}
+                            id="email"
+                            name="email"
+                            value={email}
                             onChange={this.handleChange}
                         />
-                        {submitted && !lastName && <div className="help-block">Last Name is required</div>}
+                        {submitted && !email && <div className="help-block">Email is required</div>}
                     </div>
                     <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
                         <label htmlFor="username">Username</label>
@@ -76,7 +76,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                     <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
                         <label htmlFor="password">Password</label>
                         <input
-                            type="input"
+                            type="password"
                             autoCorrect="off"
                             autoCapitalize="none"
 

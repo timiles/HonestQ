@@ -22,7 +22,7 @@ namespace Pobs.Web.Controllers
             var user = _userService.GetById(User.Identity.ParseUserId());
 
             return Json(new IntroModel { Content = $@"
-# Hi {user.FirstName}! Welcome to the **POBS PRIVATE BETA**!
+# Hi {user.Name}! Welcome to the **POBS PRIVATE BETA**!
 
 (""POBS"" is just a working title, but stands for ""People On Both Sides"".)
 

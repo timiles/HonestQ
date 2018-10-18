@@ -20,9 +20,9 @@ namespace Pobs.Tests.Integration.Account
             _password = "Password1";
             _user = new User
             {
-                FirstName = "Mary",
-                LastName = "Coffeemug",
-                Username = "mary_coffeemug_" + Utils.GenerateRandomString(10)
+                Name = "Mary Coffeemug",
+                Email = "mary@example.com",
+                Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
             };
 
             (byte[] passwordSalt, byte[] passwordHash) = AuthUtils.CreatePasswordHash(_password);

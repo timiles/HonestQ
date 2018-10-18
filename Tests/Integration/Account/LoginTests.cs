@@ -23,9 +23,9 @@ namespace Pobs.Tests.Integration.Account
             _password = "Password1";
             _user = new User
             {
-                FirstName = "Mary",
-                LastName = "Coffeemug",
-                Username = "mary_coffeemug_" + Utils.GenerateRandomString(10)
+                Name = "Mary Coffeemug",
+                Email = "mary@example.com",
+                Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
             };
 
             (byte[] passwordSalt, byte[] passwordHash) = AuthUtils.CreatePasswordHash(_password);
@@ -42,7 +42,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task CorrectCredentials_ShouldLogin()
         {
-            var payload = new
+            var payload = new LoginFormModel
             {
                 Username = _user.Username,
                 Password = _password
@@ -55,7 +55,7 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
-                Assert.Equal(_user.FirstName, responseModel.FirstName);
+                Assert.Equal(_user.Name, responseModel.Name);
                 Assert.Equal(_user.Username, responseModel.Username);
 
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
@@ -74,7 +74,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task IncorrectPassword_ShouldBeDenied()
         {
-            var payload = new
+            var payload = new LoginFormModel
             {
                 Username = _user.Username,
                 Password = "WRONG_PASSWORD"
@@ -96,7 +96,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task InvalidUsername_ShouldBeDenied()
         {
-            var payload = new
+            var payload = new LoginFormModel
             {
                 Username = "i_do_not_exist",
                 Password = _password

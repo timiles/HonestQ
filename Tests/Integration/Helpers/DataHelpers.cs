@@ -13,11 +13,11 @@ namespace Pobs.Tests.Integration.Helpers
         {
             var user = new User
             {
-                FirstName = "First name",
-                LastName = "Last name",
+                Name = "Bobby Tables",
+                Email = "test@example.com",
                 Username = Utils.GenerateRandomString(10),
                 PasswordSalt = new byte[0],
-                PasswordHash = new byte[0]
+                PasswordHash = new byte[0],
             };
 
             using (var dbContext = TestSetup.CreateDbContext())

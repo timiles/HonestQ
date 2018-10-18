@@ -51,6 +51,12 @@ namespace Pobs.Domain
                 x.Property(p => p.Text).HasCharSetForEmoji();
                 x.Property(p => p.Source).HasCharSetForEmoji();
             });
+            modelBuilder.Entity<User>(x =>
+            {
+                x.Property(p => p.Name).HasCharSetForEmoji();
+                x.Property(p => p.Email).HasCharSetForEmoji();
+                x.Property(p => p.Username).HasCharSetForEmoji();
+            });
 
             // Don't cascade deletes from Collection to Parent
             modelBuilder.Entity<Answer>().HasOne(x => x.Question).WithMany(x => x.Answers)

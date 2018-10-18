@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pobs.Domain;
 
 namespace Pobs.Web.Migrations
 {
     [DbContext(typeof(HonestQDbContext))]
-    partial class HonestQDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181018103640_UserProperties")]
+    partial class UserProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,8 +196,6 @@ namespace Pobs.Web.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTimeOffset>("CreatedAt");
 
                     b.Property<string>("Email")
                         .IsRequired()

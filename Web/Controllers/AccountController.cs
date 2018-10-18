@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Pobs.Web.Models.Account;
 using Pobs.Domain;
+using System;
 
 namespace WebApi.Controllers
 {
@@ -63,12 +64,7 @@ namespace WebApi.Controllers
                 return Forbid();
             }
 
-            var user = new User
-            {
-                FirstName = registerFormModel.FirstName,
-                LastName = registerFormModel.LastName,
-                Username = registerFormModel.Username
-            };
+            var user = new User(registerFormModel.Name, registerFormModel.Email, registerFormModel.Username, DateTimeOffset.UtcNow);
 
             try
             {
