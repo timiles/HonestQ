@@ -9,6 +9,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Comms\Pobs.Comms.csproj"></ProjectReference>
     <ProjectReference Include="..\Domain\Pobs.Domain.csproj"></ProjectReference>
   </ItemGroup>
 

@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Moq;
+using Pobs.Comms;
 using Pobs.Domain;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Helpers;
@@ -26,7 +28,8 @@ namespace Pobs.Tests.Integration.Account
                 Password = "Password1",
             };
 
-            using (var server = new IntegrationTestingServer())
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
@@ -45,8 +48,13 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(payload.Email, user.Email);
                 Assert.Equal(payload.Username, user.Username);
                 Assert.True(user.CreatedAt > DateTime.UtcNow.AddMinutes(-1));
+                Assert.NotNull(user.EmailVerificationToken);
 
                 Assert.True(AuthUtils.VerifyPasswordHash(payload.Password, user.PasswordHash, user.PasswordSalt));
+
+                string urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
+                string expectedVerificationUrl = $"{TestSetup.AppSettings.Domain}/login/verify?token={urlEncodedToken}";
+                emailSenderMock.Verify(x => x.SendEmailVerification(payload.Email, payload.Username, expectedVerificationUrl));
             }
         }
 
@@ -61,7 +69,8 @@ namespace Pobs.Tests.Integration.Account
                 Password = "Password1",
             };
 
-            using (var server = new IntegrationTestingServer())
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 // PRIVATE BETA
@@ -70,12 +79,16 @@ namespace Pobs.Tests.Integration.Account
                 var response1 = await client.PostAsync(Url, payload.ToJsonContent());
                 response1.EnsureSuccessStatusCode();
 
+                emailSenderMock.Reset();
+
                 var response2 = await client.PostAsync(Url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
 
                 var responseContent = await response2.Content.ReadAsStringAsync();
                 Assert.Equal($"Username '{_username}' is already taken.", responseContent);
             }
+
+            emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
         public void Dispose()

@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using Pobs.Web.Models.Account;
 using Pobs.Domain;
 using System;
+using Pobs.Comms;
+using System.Security.Cryptography;
+using System.Net;
 
 namespace WebApi.Controllers
 {
@@ -17,11 +20,13 @@ namespace WebApi.Controllers
     public class AccountController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IEmailSender _emailSender;
         private readonly AppSettings _appSettings;
 
-        public AccountController(IUserService userService, IOptions<AppSettings> appSettings)
+        public AccountController(IUserService userService, IEmailSender emailSender, IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _emailSender = emailSender;
             _appSettings = appSettings.Value;
         }
 
@@ -64,18 +69,35 @@ namespace WebApi.Controllers
                 return Forbid();
             }
 
-            var user = new User(registerFormModel.Name, registerFormModel.Email, registerFormModel.Username, DateTimeOffset.UtcNow);
+            var user = new User(registerFormModel.Name, registerFormModel.Email, registerFormModel.Username, DateTimeOffset.UtcNow)
+            {
+                EmailVerificationToken = GenerateRandomString()
+            };
 
             try
             {
-                // save 
+                // Save
                 _userService.Create(user, registerFormModel.Password);
+                var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
+                var verifyEmailUrl = $"{this._appSettings.Domain}/login/verify?token={urlEncodedToken}";
+                _emailSender.SendEmailVerification(registerFormModel.Email, registerFormModel.Username, verifyEmailUrl);
                 return Ok();
             }
             catch (AppException ex)
             {
-                // return error message if there was an exception
+                // Return error message if there was an exception
                 return BadRequest(ex.Message);
+            }
+        }
+
+        private static string GenerateRandomString()
+        {
+            using (var randomNumberGenerator = new RNGCryptoServiceProvider())
+            {
+                // 24 bits should give a 32 character string
+                var data = new byte[24];
+                randomNumberGenerator.GetBytes(data);
+                return Convert.ToBase64String(data);
             }
         }
     }

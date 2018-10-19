@@ -35,6 +35,8 @@ namespace Pobs.Domain.Entities
 
         public DateTimeOffset CreatedAt { get; set; }
 
+        [MaxLength(32)]
+        public string EmailVerificationToken { get; set; }
 
         public virtual ICollection<Topic> Topics { get; set; }
     }

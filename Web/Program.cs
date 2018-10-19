@@ -20,6 +20,7 @@ namespace Pobs.Web
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureServices(Startup.ExternalServices.Configure)
                 .Build();
     }
 }

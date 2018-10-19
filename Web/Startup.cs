@@ -14,8 +14,10 @@ using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Pobs.Domain;
+using Pobs.Comms;
 using Pobs.Web.Helpers;
 using Pobs.Web.Middleware;
 using Pobs.Web.Services;
@@ -186,6 +188,18 @@ namespace Pobs.Web
                 RouteDirection routeDirection)
             {
                 return !values["clientRoute"].ToString().StartsWith("api/");
+            }
+        }
+
+        public static class ExternalServices
+        {
+            public static void Configure(IServiceCollection services)
+            {
+                services.AddScoped<IEmailSender>(provider =>
+                {
+                    var appSettings = provider.GetService<IOptions<AppSettings>>();
+                    return new EmailSender(appSettings.Value);
+                });
             }
         }
     }
