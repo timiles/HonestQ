@@ -90,6 +90,26 @@ namespace WebApi.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult VerifyEmail([FromBody] VerifyEmailFormModel model)
+        {
+            var user = _userService.GetById(model.UserId);
+            if (user == null)
+            {
+                return BadRequest("Unknown UserId.");
+            }
+            if (user.EmailVerificationToken != model.EmailVerificationToken)
+            {
+                // TODO: Log invalid attempts?
+                return BadRequest("Invalid email verification token.");
+            }
+
+            user.EmailVerificationToken = null;
+            _userService.Update(user);
+
+            return Ok();
+        }
+
         private static string GenerateRandomString()
         {
             using (var randomNumberGenerator = new RNGCryptoServiceProvider())
