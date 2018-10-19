@@ -72,6 +72,35 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
+        public async Task UnverifiedEmail_ShouldBeDenied()
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                user.EmailVerificationToken = "123qwe";
+                dbContext.SaveChanges();
+            }
+
+            var payload = new LoginFormModel
+            {
+                Username = _user.Username,
+                Password = _password
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Please verify your account first.", responseContent);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.Null(idTokenCookie);
+            }
+        }
+
+        [Fact]
         public async Task IncorrectPassword_ShouldBeDenied()
         {
             var payload = new LoginFormModel
@@ -86,7 +115,7 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Username or password is incorrect", responseContent);
+                Assert.Equal("Username or password is incorrect.", responseContent);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.Null(idTokenCookie);
@@ -108,7 +137,7 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Username or password is incorrect", responseContent);
+                Assert.Equal("Username or password is incorrect.", responseContent);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.Null(idTokenCookie);

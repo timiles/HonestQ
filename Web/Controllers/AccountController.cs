@@ -36,7 +36,13 @@ namespace WebApi.Controllers
             var user = _userService.Authenticate(userModel.Username, userModel.Password);
 
             if (user == null)
-                return BadRequest("Username or password is incorrect");
+            {
+                return BadRequest("Username or password is incorrect.");
+            }
+            if (!string.IsNullOrEmpty(user.EmailVerificationToken))
+            {
+                return BadRequest("Please verify your account first.");
+            }
 
             var roles = new List<Pobs.Domain.Role>();
             // TODO: proper roles in the database, this is a poor hack for now.
