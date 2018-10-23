@@ -12,6 +12,7 @@ using System;
 using Pobs.Comms;
 using System.Security.Cryptography;
 using System.Net;
+using System.Net.Mail;
 
 namespace WebApi.Controllers
 {
@@ -75,7 +76,17 @@ namespace WebApi.Controllers
                 return Forbid();
             }
 
-            var user = new User(registerFormModel.Name, registerFormModel.Email, registerFormModel.Username, DateTimeOffset.UtcNow)
+            MailAddress validEmail;
+            try
+            {
+                validEmail = new MailAddress(registerFormModel.Email);
+            }
+            catch (FormatException)
+            {
+                return BadRequest($"Invalid Email address: '{registerFormModel.Email}'.");
+            }
+
+            var user = new User(registerFormModel.Name, validEmail.Address, registerFormModel.Username, DateTimeOffset.UtcNow)
             {
                 EmailVerificationToken = GenerateRandomString()
             };

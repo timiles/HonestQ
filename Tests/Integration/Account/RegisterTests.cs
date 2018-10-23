@@ -84,7 +84,8 @@ namespace Pobs.Tests.Integration.Account
                 var payload2 = new RegisterFormModel
                 {
                     Name = "Mary Coffeemug 2",
-                    Email = payload.Email.ToUpper(), // Also test case-sensitivity
+                    // Also test case-sensitivity, white space
+                    Email = " \t\r\n" + payload.Email.ToUpper() + " \t\r\n",
                     Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
                     Password = "Password1",
                 };
@@ -92,7 +93,38 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
 
                 var responseContent = await response2.Content.ReadAsStringAsync();
-                Assert.Equal($"An account already exists for '{payload2.Email}'.", responseContent);
+                Assert.Equal($"An account already exists for '{payload2.Email.Trim()}'.", responseContent);
+            }
+
+            emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("invalidemail")]
+        [InlineData("invalidemail@")]
+        [InlineData("invalidemail@example@example.com")]
+        public async Task InvalidEmail_ShouldError(string email)
+        {
+            var payload = new RegisterFormModel
+            {
+                Name = "Mary Coffeemug",
+                Email = email,
+                Username = _username,
+                Password = "Password1",
+            };
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(1, Role.Admin);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal($"Invalid Email address: '{payload.Email}'.", responseContent);
             }
 
             emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
