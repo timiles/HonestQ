@@ -49,7 +49,7 @@ namespace Pobs.Web.Controllers
                 }
             }
             // PRIVATE BETA
-            else if (Request.Path != "/login" && Request.Path != "/register")
+            else if (Request.Path != "/login" && Request.Path != "/account/verifyemail" && Request.Path != "/register")
             {
                 return Redirect("/login");
             }

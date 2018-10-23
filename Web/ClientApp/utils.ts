@@ -13,9 +13,14 @@ export function postJson<T>(
     url: string,
     model: any,
     loggedInUser: LoggedInUserModel | null | undefined,
-    includeCredentials?: boolean): Promise<T> {
+    includeCredentials?: boolean,
+    awaitServerSide?: boolean): Promise<T> {
 
-    return fetchJson<T>('POST', url, model, loggedInUser, includeCredentials!);
+    const fetchTask = fetchJson<T>('POST', url, model, loggedInUser, includeCredentials!);
+    if (awaitServerSide) {
+        addTask(fetchTask);
+    }
+    return fetchTask;
 }
 
 export function putJson<T>(
@@ -122,4 +127,15 @@ export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: num
         date.setTime(date.getTime() + (hoursOffset * 60 * 60 * 1000));
     }
     return date;
+}
+
+export function parseQueryString(queryString: string): Map<string, string> {
+    const values = new Map<string, string>();
+    const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (const pair of pairs) {
+        const split = pair.split('=');
+        // WARNING: This will overwrite in the case of a repeated value. Not an issue yet.
+        values.set(decodeURIComponent(split[0]), decodeURIComponent(split[1] || ''));
+    }
+    return values;
 }

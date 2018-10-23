@@ -18,6 +18,16 @@ export interface RegisterFormModel {
     password: string;
 }
 
+export interface VerifyEmailFormModel {
+    userId: number;
+    emailVerificationToken: string;
+}
+
+export interface VerifyEmailResponseModel {
+    success: boolean;
+    error: string;
+}
+
 export interface ActivityListItemModel {
     type: string;
     questionId: number;

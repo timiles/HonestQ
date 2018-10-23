@@ -13,6 +13,7 @@ import * as Question from './Question';
 import * as Register from './Register';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
+import * as VerifyEmail from './VerifyEmail';
 
 // The top-level state object
 export interface ApplicationState {
@@ -31,6 +32,7 @@ export interface ApplicationState {
     register: Register.RegisterState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
+    verifyEmail: VerifyEmail.VerifyEmailState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -52,6 +54,7 @@ export const reducers = {
     register: Register.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,
+    verifyEmail: VerifyEmail.reducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

@@ -85,7 +85,7 @@ namespace WebApi.Controllers
                 // Save
                 _userService.Create(user, registerFormModel.Password);
                 var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
-                var verifyEmailUrl = $"{this._appSettings.Domain}/login/verify?token={urlEncodedToken}";
+                var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
                 _emailSender.SendEmailVerification(registerFormModel.Email, registerFormModel.Username, verifyEmailUrl);
                 return Ok();
             }
@@ -102,18 +102,18 @@ namespace WebApi.Controllers
             var user = _userService.GetById(model.UserId);
             if (user == null)
             {
-                return BadRequest("Unknown UserId.");
+                return Ok(new VerifyEmailResponseModel { Error = "Unknown UserId." });
             }
             if (user.EmailVerificationToken != model.EmailVerificationToken)
             {
                 // TODO: Log invalid attempts?
-                return BadRequest("Invalid email verification token.");
+                return Ok(new VerifyEmailResponseModel { Error = "Invalid email verification token." });
             }
 
             user.EmailVerificationToken = null;
             _userService.Update(user);
 
-            return Ok();
+            return Ok(new VerifyEmailResponseModel { Success = true });
         }
 
         private static string GenerateRandomString()

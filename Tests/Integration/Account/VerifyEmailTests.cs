@@ -51,6 +51,11 @@ namespace Pobs.Tests.Integration.Account
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<VerifyEmailResponseModel>(responseContent);
+                Assert.True(responseModel.Success);
+                Assert.Null(responseModel.Error);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -62,7 +67,7 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
-        public async Task IncorrectToken_ShouldGetBadRequest()
+        public async Task IncorrectToken_ShouldGetError()
         {
             var payload = new VerifyEmailFormModel
             {
@@ -74,10 +79,12 @@ namespace Pobs.Tests.Integration.Account
             using (var client = server.CreateClient())
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Invalid email verification token.", responseContent);
+                var responseModel = JsonConvert.DeserializeObject<VerifyEmailResponseModel>(responseContent);
+                Assert.False(responseModel.Success);
+                Assert.Equal("Invalid email verification token.", responseModel.Error);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -89,7 +96,7 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
-        public async Task InvalidUserId_ShouldGetBadRequest()
+        public async Task InvalidUserId_ShouldGetError()
         {
             var payload = new VerifyEmailFormModel
             {
@@ -100,10 +107,12 @@ namespace Pobs.Tests.Integration.Account
             using (var client = server.CreateClient())
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Unknown UserId.", responseContent);
+                var responseModel = JsonConvert.DeserializeObject<VerifyEmailResponseModel>(responseContent);
+                Assert.False(responseModel.Success);
+                Assert.Equal("Unknown UserId.", responseModel.Error);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

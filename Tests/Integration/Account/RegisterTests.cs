@@ -53,7 +53,7 @@ namespace Pobs.Tests.Integration.Account
                 Assert.True(AuthUtils.VerifyPasswordHash(payload.Password, user.PasswordHash, user.PasswordSalt));
 
                 string urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
-                string expectedVerificationUrl = $"{TestSetup.AppSettings.Domain}/login/verify?token={urlEncodedToken}";
+                string expectedVerificationUrl = $"{TestSetup.AppSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
                 emailSenderMock.Verify(x => x.SendEmailVerification(payload.Email, payload.Username, expectedVerificationUrl));
             }
         }
