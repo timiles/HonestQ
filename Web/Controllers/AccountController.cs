@@ -104,14 +104,18 @@ namespace WebApi.Controllers
             {
                 return Ok(new VerifyEmailResponseModel { Error = "Unknown UserId." });
             }
-            if (user.EmailVerificationToken != model.EmailVerificationToken)
-            {
-                // TODO: Log invalid attempts?
-                return Ok(new VerifyEmailResponseModel { Error = "Invalid email verification token." });
-            }
 
-            user.EmailVerificationToken = null;
-            _userService.Update(user);
+            if (user.EmailVerificationToken != null)
+            {
+                if (user.EmailVerificationToken != model.EmailVerificationToken)
+                {
+                    // TODO: Log invalid attempts?
+                    return Ok(new VerifyEmailResponseModel { Error = "Invalid email verification token." });
+                }
+
+                user.EmailVerificationToken = null;
+                _userService.Update(user);
+            }
 
             return Ok(new VerifyEmailResponseModel { Success = true });
         }

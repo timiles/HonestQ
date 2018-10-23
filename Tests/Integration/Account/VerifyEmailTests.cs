@@ -67,6 +67,34 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
+        public async Task AccountAlreadyVerified_ShouldReturnSuccess()
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var reloadedUser = dbContext.Users.Find(_user.Id);
+                reloadedUser.EmailVerificationToken = null;
+                dbContext.SaveChanges();
+            }
+
+            var payload = new VerifyEmailFormModel
+            {
+                UserId = _user.Id,
+                EmailVerificationToken = "anything",
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<VerifyEmailResponseModel>(responseContent);
+                Assert.True(responseModel.Success);
+                Assert.Null(responseModel.Error);
+            }
+        }
+
+        [Fact]
         public async Task IncorrectToken_ShouldGetError()
         {
             var payload = new VerifyEmailFormModel
