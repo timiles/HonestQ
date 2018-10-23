@@ -23,7 +23,7 @@ namespace Pobs.Tests.Integration.Account
             var payload = new RegisterFormModel
             {
                 Name = "Mary Coffeemug 💩",
-                Email = "mary💩@example.com",
+                Email = Utils.GenerateRandomString(10) + "💩@example.com",
                 Username = _username,
                 Password = "Password1",
             };
@@ -59,12 +59,52 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
+        public async Task ExistingEmail_ShouldError()
+        {
+            var payload = new RegisterFormModel
+            {
+                Name = "Mary Coffeemug",
+                Email = Utils.GenerateRandomString(10) + "@example.com",
+                Username = _username,
+                Password = "Password1",
+            };
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(1, Role.Admin);
+
+                var response1 = await client.PostAsync(Url, payload.ToJsonContent());
+                response1.EnsureSuccessStatusCode();
+
+                emailSenderMock.Reset();
+
+                var payload2 = new RegisterFormModel
+                {
+                    Name = "Mary Coffeemug 2",
+                    Email = payload.Email.ToUpper(), // Also test case-sensitivity
+                    Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
+                    Password = "Password1",
+                };
+                var response2 = await client.PostAsync(Url, payload2.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
+
+                var responseContent = await response2.Content.ReadAsStringAsync();
+                Assert.Equal($"An account already exists for '{payload2.Email}'.", responseContent);
+            }
+
+            emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Fact]
         public async Task ExistingUsername_ShouldError()
         {
             var payload = new RegisterFormModel
             {
                 Name = "Mary Coffeemug",
-                Email = "mary@example.com",
+                Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = _username,
                 Password = "Password1",
             };

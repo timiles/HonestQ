@@ -26,6 +26,7 @@ namespace Pobs.Domain
 
             // Unique contraints
             modelBuilder.Entity<Topic>().HasIndex(x => x.Slug).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             modelBuilder.Entity<Reaction>().HasIndex(x => new { x.CommentId, x.PostedByUserId, x.Type }).IsUnique();
             // NOTE: Question Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
