@@ -107,7 +107,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
 
     private handleChange(event: React.FormEvent<HTMLInputElement>): void {
         const { name, value } = event.currentTarget;
-        this.setState({ ...this.state, [name]: value });
+        this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

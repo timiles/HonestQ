@@ -96,7 +96,7 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
         const { name, value } = event.currentTarget;
-        this.setState({ ...this.state, [name]: value });
+        this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

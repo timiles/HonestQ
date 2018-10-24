@@ -86,9 +86,9 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
     private handleChange(event: React.FormEvent<HTMLInputElement>): void {
         const { name, value, checked } = event.currentTarget;
         if (name === 'rememberMe') {
-            this.setState({ ...this.state, [name]: checked });
+            this.setState((prevState) => ({ ...prevState, [name]: checked }));
         } else {
-            this.setState({ ...this.state, [name]: value });
+            this.setState((prevState) => ({ ...prevState, [name]: value }));
         }
     }
 
