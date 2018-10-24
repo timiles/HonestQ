@@ -22,6 +22,7 @@ using Pobs.Web.Helpers;
 using Pobs.Web.Middleware;
 using Pobs.Web.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using System.Linq;
 
 namespace Pobs.Web
 {
@@ -178,11 +179,28 @@ namespace Pobs.Web
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" },
-                    constraints: new { notApi = new NotApiConstraint() });
+                    constraints: new { excludeRoutes = new ExcludeRoutesByPrefixConstraint("api/", "docs/") });
             });
         }
 
-        private class NotApiConstraint : IRouteConstraint
+        private class ExcludeRoutesByPrefixConstraint : IRouteConstraint
+        {
+            private readonly string[] _routePrefixes;
+
+            public ExcludeRoutesByPrefixConstraint(params string[] routePrefixes)
+            {
+                _routePrefixes = routePrefixes;
+            }
+
+            public bool Match(HttpContext httpContext, IRouter route, string routeKey, RouteValueDictionary values,
+                RouteDirection routeDirection)
+            {
+                var clientRoute = values["clientRoute"].ToString();
+                return _routePrefixes.All(x => !clientRoute.StartsWith(x));
+            }
+        }
+
+        private class NotDocsConstraint : IRouteConstraint
         {
             public bool Match(HttpContext httpContext, IRouter route, string routeKey, RouteValueDictionary values,
                 RouteDirection routeDirection)

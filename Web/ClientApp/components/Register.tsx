@@ -89,6 +89,14 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                         {submitted && !password && <div className="help-block">Password is required</div>}
                     </div>
                     <div className="form-group">
+                        <small>
+                            By clicking <b>Register</b> below, you are agreeing to our&#32;
+                            <a href="/docs/TermsOfService" target="_blank">Terms of Service</a>&#32;
+                            and&#32;
+                            <a href="/docs/PrivacyPolicy" target="_blank">Privacy Policy</a>.
+                        </small>
+                    </div>
+                    <div className="form-group">
                         <SubmitButton submitting={submitting} text="Register" />
                         <Link to="/login" className="btn btn-link">Cancel</Link>
                     </div>
