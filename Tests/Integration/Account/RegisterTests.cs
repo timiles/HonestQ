@@ -163,6 +163,34 @@ namespace Pobs.Tests.Integration.Account
             emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         }
 
+        [Fact]
+        public async Task PasswordTooShort_ShouldError()
+        {
+            var payload = new RegisterFormModel
+            {
+                Name = "Mary Coffeemug",
+                Email = Utils.GenerateRandomString(10) + "@example.com",
+                Username = _username,
+                Password = "123456",
+            };
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
+            using (var client = server.CreateClient())
+            {
+                // PRIVATE BETA
+                client.AuthenticateAs(1, Role.Admin);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Password must be at least 7 characters.", responseContent);
+            }
+
+            emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
         public void Dispose()
         {
             using (var dbContext = TestSetup.CreateDbContext())

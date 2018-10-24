@@ -87,6 +87,9 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                             onChange={this.handleChange}
                         />
                         {submitted && !password && <div className="help-block">Password is required</div>}
+                        {submitted && password && password.length < 7 &&
+                            <div className="help-block">Password must be at least 7 characters</div>
+                        }
                     </div>
                     <div className="form-group">
                         <small>

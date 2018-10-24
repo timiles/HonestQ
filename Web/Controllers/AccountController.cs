@@ -86,6 +86,11 @@ namespace WebApi.Controllers
                 return BadRequest($"Invalid Email address: '{registerFormModel.Email}'.");
             }
 
+            if (registerFormModel.Password?.Length < 7)
+            {
+                return BadRequest("Password must be at least 7 characters.");
+            }
+
             var user = new User(registerFormModel.Name, validEmail.Address, registerFormModel.Username, DateTimeOffset.UtcNow)
             {
                 EmailVerificationToken = GenerateRandomString()
