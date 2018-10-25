@@ -143,7 +143,7 @@ namespace Pobs.Web.Controllers
         {
             if (string.IsNullOrWhiteSpace(payload.Text) && string.IsNullOrWhiteSpace(payload.Source))
             {
-                return BadRequest($"{nameof(payload.Text)} or {nameof(payload.Source)} is required.");
+                return BadRequest($"Comment {nameof(payload.Text)} or {nameof(payload.Source)} is required.");
             }
             if (string.IsNullOrEmpty(payload.AgreementRating) ||
                 !Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))

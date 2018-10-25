@@ -43,10 +43,10 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
         const { text, source, topics } = this.state;
 
         return (
-            <form className="form" autoComplete="off" onSubmit={this.handleSubmit}>
+            <form className="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="questionText">Question</label>
                         <div className="emoji-over-text-area">
                             <Emoji value={EmojiValue.Question} />
@@ -54,12 +54,13 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                         <SuperTextArea
                             id="questionText"
                             name="text"
-                            className="emoji-text-area"
+                            className={`form-control emoji-text-area
+                                ${submitted ? text ? 'is-valid' : 'is-invalid' : ''}`}
                             value={text}
                             maxLength={280}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && <div className="help-block">Text is required</div>}
+                        <div className="invalid-feedback">Text is required</div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="questionSource">Source (optional)</label>
@@ -74,7 +75,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                         />
                     </div>
                     <div className="form-group">
-                        <label>Topics</label>
+                        <label>Topics (optional)</label>
                         <div>
                             <TopicAutocomplete
                                 name="topicSlugs"

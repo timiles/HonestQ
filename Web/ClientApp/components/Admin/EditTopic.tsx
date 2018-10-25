@@ -70,36 +70,37 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
                 {loadedModel && (
                     <>
                         {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                        <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
-                            <div className={'form-group' + (submitted && !name ? ' has-error' : '')}>
+                        <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                            <div className="form-group">
                                 <label htmlFor="name">Topic name</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
                                     id="name"
                                     name="name"
                                     maxLength={100}
                                     value={name}
                                     onChange={this.handleChange}
                                 />
-                                {submitted && !name && <div className="help-block">Topic name is required</div>}
+                                <div className="invalid-feedback">Topic name is required</div>
                             </div>
-                            <div className={'form-group' + (submitted && !slug ? ' has-error' : '')}>
+                            <div className="form-group">
                                 <label htmlFor="slug">Slug</label>
                                 <input
                                     type="text"
-                                    className="form-control"
+                                    className={`form-control ${submitted ? slug ? 'is-valid' : 'is-invalid' : ''}`}
                                     id="slug"
                                     name="slug"
                                     maxLength={100}
                                     value={slug}
                                     onChange={this.handleChange}
                                 />
-                                {submitted && !slug && <div className="help-block">Slug is required</div>}
+                                <div className="invalid-feedback">Slug is required</div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="summary">Summary</label>
                                 <SuperTextArea
+                                    className="form-control"
                                     id="summary"
                                     name="summary"
                                     maxLength={280}

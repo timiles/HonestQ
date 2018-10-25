@@ -46,7 +46,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
                 <textarea
                     id={id}
                     name={name}
-                    className={'form-control ' + className}
+                    className={className}
                     style={{ minHeight }}
                     rows={rowCount}
                     maxLength={maxLength}

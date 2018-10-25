@@ -34,36 +34,36 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
             <div className="col-lg-6 offset-lg-3">
                 <h2>Register</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !name ? ' has-error' : '')}>
+                <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                    <div className="form-group">
                         <label htmlFor="name">Name</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
                             id="name"
                             name="name"
                             value={name}
                             onChange={this.handleChange}
                         />
-                        {submitted && !name && <div className="help-block">Name is required</div>}
+                        <div className="invalid-feedback">Name is required</div>
                     </div>
-                    <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="email">Email</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`form-control ${submitted ? email ? 'is-valid' : 'is-invalid' : ''}`}
                             id="email"
                             name="email"
                             value={email}
                             onChange={this.handleChange}
                         />
-                        {submitted && !email && <div className="help-block">Email is required</div>}
+                        <div className="invalid-feedback">Email is required</div>
                     </div>
-                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
                             id="username"
                             name="username"
                             autoCorrect="off"
@@ -71,25 +71,23 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                             value={username}
                             onChange={this.handleChange}
                         />
-                        {submitted && !username && <div className="help-block">Username is required</div>}
+                        <div className="invalid-feedback">Username is required</div>
                     </div>
-                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
                             autoCorrect="off"
                             autoCapitalize="none"
-
-                            className="form-control"
+                            className={`form-control
+                                ${submitted ? password && password.length >= 7 ? 'is-valid' : 'is-invalid' : ''}`}
                             id="password"
                             name="password"
                             value={password}
                             onChange={this.handleChange}
                         />
-                        {submitted && !password && <div className="help-block">Password is required</div>}
-                        {submitted && password && password.length < 7 &&
-                            <div className="help-block">Password must be at least 7 characters</div>
-                        }
+                        <div className="invalid-feedback">Password must be at least 7 characters</div>
+
                     </div>
                     <div className="form-group">
                         <small>

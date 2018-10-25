@@ -43,35 +43,35 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         const { text, source, agreementRating, isAnonymous } = this.state;
 
         return (
-            <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
+            <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="commentText">Comment</label>
                         <SuperTextArea
                             id="commentText"
                             name="text"
+                            className={`form-control
+                                ${submitted ? text ? 'is-valid' : !source ? 'is-invalid' : '' : ''}`}
                             value={text}
                             maxLength={280}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && !source &&
-                            <div className="help-block">Text or Source is required</div>}
+                        <div className="invalid-feedback">Comment Text or Source is required</div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="commentSource">Source</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`form-control
+                                ${submitted ? source ? 'is-valid' : !text ? 'is-invalid' : '' : ''}`}
                             id="commentSource"
                             name="source"
                             value={source}
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text && !source &&
-                            <div className="help-block">Text or Source is required</div>
-                        }
+                        <div className="invalid-feedback">Comment Text or Source is required</div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="agreementRating">Agreement rating</label>

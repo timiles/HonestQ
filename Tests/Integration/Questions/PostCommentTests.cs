@@ -230,7 +230,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Text or Source is required.", responseContent);
+                Assert.Equal("Comment Text or Source is required.", responseContent);
             }
         }
 

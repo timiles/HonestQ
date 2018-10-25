@@ -35,12 +35,12 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
             <div className="col-lg-6 offset-lg-3">
                 <h2>Login</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
+                <form name="form" noValidate={true} onSubmit={this.handleSubmit}>
+                    <div className="form-group">
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            className="form-control"
+                            className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
                             id="username"
                             name="username"
                             autoCorrect="off"
@@ -48,19 +48,19 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                             value={username}
                             onChange={this.handleChange}
                         />
-                        {submitted && !username && <div className="help-block">Username is required</div>}
+                        <div className="invalid-feedback">Username is required</div>
                     </div>
-                    <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
-                            className="form-control"
+                            className={`form-control ${submitted ? password ? 'is-valid' : 'is-invalid' : ''}`}
                             id="password"
                             name="password"
                             value={password}
                             onChange={this.handleChange}
                         />
-                        {submitted && !password && <div className="help-block">Password is required</div>}
+                        <div className="invalid-feedback">Password is required</div>
                     </div>
                     <div className="form-group">
                         <div className="checkbox">

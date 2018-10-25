@@ -41,10 +41,10 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
         const { text, source } = this.state;
 
         return (
-            <form name="form" autoComplete="off" onSubmit={this.handleSubmit}>
+            <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className={'form-group' + (submitted && !text ? ' has-error' : '')}>
+                    <div className="form-group">
                         <label htmlFor="answerText">Answer</label>
                         <div className="emoji-over-text-area">
                             <Emoji value={EmojiValue.Answer} />
@@ -52,16 +52,16 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
                         <SuperTextArea
                             id="answerText"
                             name="text"
-                            className="emoji-text-area"
+                            className={`form-control emoji-text-area
+                                ${submitted ? text ? 'is-valid' : 'is-invalid' : ''}`}
                             value={text}
                             maxLength={280}
                             onChange={this.handleChange}
                         />
-                        {submitted && !text &&
-                            <div className="help-block">Text is required</div>}
+                        <div className="invalid-feedback">Text is required</div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="answerSource">Source</label>
+                        <label htmlFor="answerSource">Source (optional)</label>
                         <input
                             type="text"
                             className="form-control"
