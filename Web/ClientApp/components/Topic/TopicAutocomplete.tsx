@@ -50,9 +50,9 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
         return (
             <>
                 {selectedTopics.length > 0 &&
-                    <ul className="topics-list">
+                    <ul className="list-inline">
                         {selectedTopics.map((x) =>
-                            <li key={`selectedTopic_${x.slug}`} className="mb-1">
+                            <li key={`selectedTopic_${x.slug}`} className="mb-1 list-inline-item">
                                 <div className="btn-group mr-1" role="group">
                                     <button
                                         type="button"

@@ -82,9 +82,9 @@ class Home extends React.Component<HomeProps, {}> {
                     <h2>Topics</h2>
                     <Loading {...this.props.loadingTopicsList} />
                     {topicsModel &&
-                        <ul className="topics-list">
+                        <ul className="list-inline">
                             {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
-                                <li key={`topic_${i}`} className="mr-1 mb-1">
+                                <li key={`topic_${i}`} className="mr-1 mb-1 list-inline-item">
                                     <Link
                                         to={`/topics/${x.slug}`}
                                         className="btn btn-sm btn-outline-secondary topic-list-item"
@@ -92,7 +92,7 @@ class Home extends React.Component<HomeProps, {}> {
                                         {x.name}
                                     </Link>
                                 </li>)}
-                            <li>
+                            <li className="list-inline-item">
                                 <Link to="/newtopic" className="btn btn-sm btn-primary">
                                     Suggest a new Topic
                                 </Link>
@@ -118,9 +118,9 @@ class Home extends React.Component<HomeProps, {}> {
                                 New question
                                 {activity.topics.length > 0 &&
                                     <>&#32;in:&#32;
-                                        <ul className="list-comma-separated">
+                                        <ul className="list-inline list-comma-separated">
                                             {activity.topics.map((x: TopicValueModel, i: number) =>
-                                                <li key={`topic_${i}`}>
+                                                <li key={`topic_${i}`} className="list-inline-item">
                                                     <Link to={`/topics/${x.slug}`}>
                                                         <b>{x.name}</b>
                                                     </Link>

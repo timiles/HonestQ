@@ -36,9 +36,9 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
                 {loadedModel && (loadedModel.topics.length === 0 ?
                     <p>All done!</p>
                     :
-                    <ul className="topics-list">
+                    <ul className="list-inline">
                         {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
-                            <li key={`topic_${i}`} className="mr-2 mb-2">
+                            <li key={`topic_${i}`} className="mr-2 mb-2 list-inline-item">
                                 <Link to={`/admin/edit/topics/${x.slug}`} className="btn btn-lg btn-outline-secondary">
                                     {x.name}
                                 </Link>
