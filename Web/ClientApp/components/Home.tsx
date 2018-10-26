@@ -198,6 +198,10 @@ class Home extends React.Component<HomeProps, {}> {
     }
 
     private handleScroll(event: UIEvent) {
+        if (!document.documentElement) {
+            return;
+        }
+
         // Tested in Chrome, Edge, Firefox
         const scrollHeight = document.documentElement.scrollHeight;
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop; // Fallback for Edge
