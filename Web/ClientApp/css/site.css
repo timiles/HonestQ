@@ -147,6 +147,13 @@ ul.topics-list li {
         margin-left: 1px;
     }
 
+dl.reaction-definitions {
+    min-width: 165px;
+}
+dl.reaction-definitions dt {
+    float: left;
+    margin-right: 5px;
+}
 
 .emoji:before {
     display: inline-block;

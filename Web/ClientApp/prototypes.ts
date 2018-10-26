@@ -1,5 +1,6 @@
 // support for JQuery tooltip plugin from Bootstrap 4
 interface JQuery {
+    popover(): any;
     tooltip(): any;
 }
 

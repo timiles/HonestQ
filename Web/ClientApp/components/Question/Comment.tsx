@@ -42,9 +42,6 @@ export default class Comment extends React.Component<Props, {}> {
                         <>
                             <div className="card">
                                 <div className="card-body">
-                                    <div className="float-right">
-                                        <ReactionsControl {...this.props} />
-                                    </div>
                                     <blockquote className="blockquote mb-0">
                                         {emojiValue && <Emoji value={emojiValue} />}
                                         <span className="badge badge-secondary">
@@ -65,6 +62,9 @@ export default class Comment extends React.Component<Props, {}> {
                                         </footer>
                                         {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
                                     </blockquote>
+                                    <div className="float-right">
+                                        <ReactionsControl {...this.props} />
+                                    </div>
                                     <NewComment
                                         questionId={questionId}
                                         answerId={answerId}
