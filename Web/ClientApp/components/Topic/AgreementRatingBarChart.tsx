@@ -29,9 +29,9 @@ export default class AgreementRatingBarChart extends React.Component<{ [key: str
 
         return (
             <svg width={chartWidth} height={chartHeight}>
-                {bars.map((bar, i) =>
+                {bars.map((bar, i: number) =>
                     <rect
-                        key={`rect_${i}`}
+                        key={i}
                         fill={bar.color}
                         x={bar.x}
                         width={barWidth}

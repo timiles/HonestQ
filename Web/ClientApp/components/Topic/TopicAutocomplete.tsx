@@ -51,8 +51,8 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
             <>
                 {selectedTopics.length > 0 &&
                     <ul className="list-inline">
-                        {selectedTopics.map((x) =>
-                            <li key={`selectedTopic_${x.slug}`} className="mb-1 list-inline-item">
+                        {selectedTopics.map((x: TopicValueModel, i: number) =>
+                            <li key={i} className="mb-1 list-inline-item">
                                 <div className="btn-group mr-1" role="group">
                                     <button
                                         type="button"
@@ -74,9 +74,9 @@ class TopicAutocomplete extends React.Component<TopicAutocompleteProps, State> {
                 />
                 {newSuggestedTopics && newSuggestedTopics.length > 0 &&
                     <ul className="list-unstyled mt-1">
-                        {newSuggestedTopics.map((x) =>
+                        {newSuggestedTopics.map((x: TopicValueModel, i: number) =>
                             <li
-                                key={`suggestedTopic_${x.slug}`}
+                                key={i}
                                 className="btn btn-sm btn-outline-secondary mr-1 mt-1"
                                 onClick={() => this.addTopic(x)}
                             >

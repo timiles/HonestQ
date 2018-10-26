@@ -17,8 +17,8 @@ export default class TopicsList extends React.Component<Props, {}> {
         return (
             <ul className="list-inline">
                 <li className="mr-1 mt-1 list-inline-item">Topics:</li>
-                {topics.map((x, i) =>
-                    <li key={`topic_${i}`} className="mr-1 mb-1 list-inline-item">
+                {topics.map((x: TopicValueModel, i: number) =>
+                    <li key={i} className="mr-1 mb-1 list-inline-item">
                         <Link
                             to={`/topics/${x.slug}`}
                             className="btn btn-sm btn-outline-secondary"

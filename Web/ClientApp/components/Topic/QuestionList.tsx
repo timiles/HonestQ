@@ -20,8 +20,8 @@ export default class QuestionList extends React.Component<Props, {}> {
         return (
             <>
                 <ul className="list-unstyled">
-                    {questions.map((x, i) =>
-                        <li key={`question_${i}`} className="mb-2">
+                    {questions.map((x: QuestionListItemModel, i: number) =>
+                        <li key={i} className="mb-2">
                             <Link
                                 to={`/questions/${x.id}/${x.slug}`}
                                 className="btn btn-lg btn-outline-secondary post-list-item"

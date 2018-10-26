@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { AnswerModel } from '../../server-models';
+import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
@@ -39,13 +39,14 @@ export default class Answer extends React.Component<Props, {}> {
                     />
                 </div>
                 <ol className="list-unstyled mb-3">
-                    {comments.map((x, i) => <li key={`comment_${i}`} className="mb-3">
-                        <Comment
-                            {...x}
-                            questionId={questionId}
-                            answerId={id}
-                            onReaction={this.props.onReaction}
-                        /></li>)}
+                    {comments.map((x: CommentModel, i: number) =>
+                        <li key={i} className="mb-3">
+                            <Comment
+                                {...x}
+                                questionId={questionId}
+                                answerId={id}
+                                onReaction={this.props.onReaction}
+                            /></li>)}
                 </ol>
             </div>
         );

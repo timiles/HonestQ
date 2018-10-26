@@ -40,21 +40,22 @@ export default class Question extends React.Component<QuestionProps, {}> {
                 {model.source && <p><small>Source: {model.source}</small></p>}
                 <TopicsList topics={model.topics} />
                 <ul className="list-unstyled mt-3 mb-3">
-                    {model.answers.map((x, i) => <li key={`answer_${i}`} className="mb-2">
-                        <Link
-                            to={`/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
-                            className="btn btn-lg btn-outline-secondary post-list-item"
-                        >
-                            <Emoji value={EmojiValue.Answer} />
-                            <span className="ml-1 answer">{x.text}</span>
-                            {this.isCitationNeeded(x) &&
-                                <small className="ml-1">
-                                    <span className="badge badge-info">Citation needed</span>
-                                </small>
-                            }
-                            <span className="ml-1">{this.renderAgreementRating(x)}</span>
-                        </Link>
-                    </li>)}
+                    {model.answers.map((x: AnswerModel, i: number) =>
+                        <li key={i} className="mb-2">
+                            <Link
+                                to={`/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
+                                className="btn btn-lg btn-outline-secondary post-list-item"
+                            >
+                                <Emoji value={EmojiValue.Answer} />
+                                <span className="ml-1 answer">{x.text}</span>
+                                {this.isCitationNeeded(x) &&
+                                    <small className="ml-1">
+                                        <span className="badge badge-info">Citation needed</span>
+                                    </small>
+                                }
+                                <span className="ml-1">{this.renderAgreementRating(x)}</span>
+                            </Link>
+                        </li>)}
                 </ul>
                 <div>
                     <NewAnswer questionId={questionId} />

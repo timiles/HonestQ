@@ -74,8 +74,8 @@ export default class Comment extends React.Component<Props, {}> {
                             </div>
                             {comments && comments.length > 0 &&
                                 <ol className="list-unstyled list-comments-nested">
-                                    {comments.map((x, i) =>
-                                        <li key={`comment_${i}`}>
+                                    {comments.map((x: CommentModel, i: number) =>
+                                        <li key={i}>
                                             <Comment
                                                 {...x}
                                                 questionId={questionId}

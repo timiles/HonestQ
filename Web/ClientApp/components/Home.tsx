@@ -66,7 +66,7 @@ class Home extends React.Component<HomeProps, {}> {
                                 <NewQuestion />
                             </li>
                             {activityList.activityItems.map((x: ActivityListItemModel, i: number) =>
-                                <li key={`activity_${i}`} className="mb-2">
+                                <li key={i} className="mb-2">
                                     {this.renderActivityItem(x)}
                                 </li>)}
                             {activityList.lastTimestamp === 0 &&
@@ -84,7 +84,7 @@ class Home extends React.Component<HomeProps, {}> {
                     {topicsModel &&
                         <ul className="list-inline">
                             {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
-                                <li key={`topic_${i}`} className="mr-1 mb-1 list-inline-item">
+                                <li key={i} className="mr-1 mb-1 list-inline-item">
                                     <Link
                                         to={`/topics/${x.slug}`}
                                         className="btn btn-sm btn-outline-secondary topic-list-item"
@@ -120,7 +120,7 @@ class Home extends React.Component<HomeProps, {}> {
                                     <>&#32;in:&#32;
                                         <ul className="list-inline list-comma-separated">
                                             {activity.topics.map((x: TopicValueModel, i: number) =>
-                                                <li key={`topic_${i}`} className="list-inline-item">
+                                                <li key={i} className="list-inline-item">
                                                     <Link to={`/topics/${x.slug}`}>
                                                         <b>{x.name}</b>
                                                     </Link>
