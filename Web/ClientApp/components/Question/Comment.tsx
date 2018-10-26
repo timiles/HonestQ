@@ -1,3 +1,4 @@
+import * as $ from 'jquery';
 import * as moment from 'moment';
 import * as React from 'react';
 import { CommentModel } from '../../server-models';
@@ -16,6 +17,10 @@ type Props = CommentModel
 };
 
 export default class Comment extends React.Component<Props, {}> {
+
+    public componentDidMount() {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
 
     public render(): any {
         const { questionId, answerId } = this.props;
@@ -49,7 +54,14 @@ export default class Comment extends React.Component<Props, {}> {
                                         {source && <p><small>Source: {source}</small></p>}
                                         <footer className="blockquote-footer">
                                             {postedBy},&nbsp;
-                                            <a href="javascript:void(0);" title={fullTime}>{friendlyTime}</a>
+                                            <a
+                                                href="javascript:void(0);"
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title={fullTime}
+                                            >
+                                                {friendlyTime}
+                                            </a>
                                         </footer>
                                         {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
                                     </blockquote>
