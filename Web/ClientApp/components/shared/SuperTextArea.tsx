@@ -40,14 +40,13 @@ export default class SuperTextArea extends React.Component<Props, State> {
         const remainingCharacterCount = maxLength - (value ? value.length : 0);
         // Use rows to specify a minimum, then the min-height CSS will override it as the text grows
         const rowCount = (value || focused) ? 3 : 1;
-        const minHeight = `${scrollHeight + 2}px`; // Add a pixel either side
         return (
             <>
                 <textarea
                     id={id}
                     name={name}
                     className={className}
-                    style={{ minHeight }}
+                    style={{ minHeight: `${scrollHeight}px` }}
                     rows={rowCount}
                     maxLength={maxLength}
                     value={value}
