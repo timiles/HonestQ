@@ -15,7 +15,7 @@ namespace Pobs.Web.Models.Account
             // TODO: Linux does not have the same time zone IDs. Use Noda time instead?
             // var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
             // this.TimeZoneOffsetHours = timeZoneInfo.GetUtcOffset(DateTime.UtcNow).TotalHours;
-            this.TimeZoneOffsetHours = 1; // Hard code to BST for now
+            this.TimeZoneOffsetHours = 0; // Hard code to GMT for now
         }
 
         [Required]
