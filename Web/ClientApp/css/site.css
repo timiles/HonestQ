@@ -92,9 +92,7 @@ ul.list-comma-separated li:not(:last-child):after {
     }
     .answer:before, .answer:after {
         font-family: Georgia, serif;
-        font-size: 3.3em;
         line-height: 0;
-        opacity: .2;
         position: relative;
     }
     .answer:before {
@@ -107,7 +105,12 @@ ul.list-comma-separated li:not(:last-child):after {
         margin-left: 6px;
         bottom: -32px;
     }
+    a.btn .answer:before, a.btn .answer:after {
+        color: rgba(0, 0, 0, 0.2);
+        font-size: 3.3em;
+    }
     h4 .answer:before, h4 .answer:after {
+        color: rgba(0, 0, 0, 0.2);
         font-size: 2.9em;
     }
     h4 span.answer:before {
