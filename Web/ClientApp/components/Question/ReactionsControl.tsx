@@ -12,20 +12,25 @@ interface State {
     myReactions: string[];
 }
 
+interface ReactionValue {
+    value: string;
+    description: string;
+}
+
 export default class ReactionsControl extends React.Component<Props, State> {
 
-    private readonly values = new Map<string, string>();
+    private readonly values = new Array<ReactionValue>();
 
     constructor(props: Props) {
         super(props);
 
         this.state = { reactionCounts: this.props.reactionCounts, myReactions: this.props.myReactions };
 
-        this.values.set('GoodPointWellMade', 'Good point!');
-        this.values.set('ThisMadeMeThink', 'This made me think');
-        this.values.set('ThisChangedMyView', 'This changed my view');
-        this.values.set('NotRelevant', 'Not relevant');
-        this.values.set('YouBeTrolling', 'You be trollin\'');
+        this.values.push({ value: 'GoodPointWellMade', description: 'Good point!' });
+        this.values.push({ value: 'ThisMadeMeThink', description: 'This made me think' });
+        this.values.push({ value: 'ThisChangedMyView', description: 'This changed my view' });
+        this.values.push({ value: 'NotRelevant', description: 'Not relevant' });
+        this.values.push({ value: 'YouBeTrolling', description: 'You be trollin\'' });
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -39,23 +44,23 @@ export default class ReactionsControl extends React.Component<Props, State> {
 
         const reactionDefinitionsHtml =
             `<dl class="reaction-definitions">
-            ${Array.from(this.values.keys()).map((key: string) =>
-                `<dt><span class="emoji emoji-${key}" /></dt><dd>${this.values.get(key)}</dd>`).join('')}
+            ${this.values.map((x: ReactionValue) =>
+                `<dt><span class="emoji emoji-${x.value}" /></dt><dd>${x.description}</dd>`).join('')}
             </dl>`;
 
         return (
             <>
                 <div className="btn-group">
-                    {Array.from(this.values.keys()).map((key: string, i: number) =>
+                    {this.values.map((x: ReactionValue, i: number) =>
                         <button
                             key={i}
                             type="button"
-                            className={`btn btn-outline-secondary ${myReactions.indexOf(key) >= 0 ? 'active' : ''}`}
-                            value={key}
+                            className={`btn btn-outline-secondary ${myReactions.indexOf(x.value) >= 0 ? 'active' : ''}`}
+                            value={x.value}
                             onClick={this.handleChange}
                         >
-                            <Emoji value={EmojiValue[key as keyof typeof EmojiValue]} />
-                            {reactionCounts[key] || 0}
+                            <Emoji value={EmojiValue[x.value as keyof typeof EmojiValue]} />
+                            {reactionCounts[x.value] || 0}
                         </button>)
                     }
                 </div>

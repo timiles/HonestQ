@@ -13,16 +13,14 @@ interface State {
 
 export default class AgreementRatingInput extends React.Component<Props, State> {
 
-    private readonly values = new Map();
+    private readonly values = new Array<string>();
 
     constructor(props: Props) {
         super(props);
 
         this.state = { value: this.props.value || '' };
 
-        this.values.set('Agree', <Emoji value={EmojiValue.Agree} />);
-        this.values.set('Neutral', <Emoji value={EmojiValue.Neutral} />);
-        this.values.set('Disagree', <Emoji value={EmojiValue.Disagree} />);
+        this.values = ['Agree', 'Neutral', 'Disagree'];
 
         this.handleChange = this.handleChange.bind(this);
     }
@@ -32,16 +30,16 @@ export default class AgreementRatingInput extends React.Component<Props, State> 
         const { value } = this.state;
         return (
             <div className="btn-group" role="group">
-                {Array.from(this.values.keys()).map((key: string, i: number) =>
+                {this.values.map((x: string, i: number) =>
                     <button
                         key={i}
                         type="button"
-                        className={`btn btn-outline-secondary ${key === value ? 'active' : ''}`}
-                        value={key}
+                        className={`btn btn-outline-secondary ${x === value ? 'active' : ''}`}
+                        value={x}
                         name={name}
                         onClick={this.handleChange}
                     >
-                        {this.values.get(key)}
+                        <Emoji value={EmojiValue[x as keyof typeof EmojiValue]} />
                     </button>)
                 }
             </div>

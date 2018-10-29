@@ -67,7 +67,7 @@ function fetchJson<T>(
                 if (response.ok) {
                     // return json if it was returned in the response
                     const contentType = response.headers.get('content-type');
-                    if (contentType && contentType.includes('application/json')) {
+                    if (contentType && contentType.indexOf('application/json') >= 0) {
                         response.json().then((json) => resolve(json as T));
                     } else {
                         resolve();
@@ -119,7 +119,7 @@ export function extractUrlFromText(text: string): string | null {
 
 export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number) {
     // If date from server ends with 'Z', javascript automatically applies the local time zone
-    if (dateString.endsWith('Z')) {
+    if (dateString && dateString[dateString.length - 1] === 'Z') {
         dateString = dateString.substring(0, dateString.length - 1);
     }
     const date = new Date(dateString);
