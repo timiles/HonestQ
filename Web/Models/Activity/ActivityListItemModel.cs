@@ -44,6 +44,7 @@ namespace Pobs.Web.Models.Activity
             this.CommentText = x.Text;
             this.PostedAt = x.PostedAt.UtcDateTime;
             this.AgreementRating = x.AgreementRating.ToString();
+            this.ChildCount = null;
         }
 
         [Required]

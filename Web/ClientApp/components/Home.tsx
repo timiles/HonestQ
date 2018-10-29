@@ -185,10 +185,6 @@ class Home extends React.Component<HomeProps, {}> {
                         >
                             {emojiValue && <Emoji value={emojiValue} />}
                             <span className="ml-1 comment">{activity.commentText}</span>
-                            <small className="ml-1">
-                                <span className="badge badge-info">{activity.childCount}</span>
-                                <span className="sr-only">answers</span>
-                            </small>
                         </Link>
                     </>
                 );

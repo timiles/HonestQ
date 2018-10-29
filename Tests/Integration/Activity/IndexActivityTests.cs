@@ -132,6 +132,7 @@ namespace Pobs.Tests.Integration.Activity
                                     Assert.Equal(comment.Text, responseActivity.CommentText);
                                     AssertHelpers.Equal(comment.PostedAt, responseActivity.PostedAt, 10);
                                     Assert.Equal(comment.AgreementRating.ToString(), responseActivity.AgreementRating);
+                                    Assert.Null(responseActivity.ChildCount);
                                 }
                                 break;
                             }
