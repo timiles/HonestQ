@@ -13,6 +13,8 @@ export class Layout extends React.Component<{}, {}> {
             <>
                 <Helmet>
                     <title>HonestQ</title>
+                    <meta name="title" content="HonestQ" />
+                    <meta name="description" content="No trolling or outrage, just honest questions and debate" />
                 </Helmet>
                 <NavMenu />
                 <div className="container">

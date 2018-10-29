@@ -76,6 +76,7 @@ if (!d.getElementById(id)){
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     {helmetData.title.toComponent()}
                     {helmetData.link.toComponent()}
+                    {helmetData.meta.toComponent()}
                     <base href="/" />
 
                     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

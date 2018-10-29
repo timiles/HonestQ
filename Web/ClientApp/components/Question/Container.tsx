@@ -126,6 +126,7 @@ class Container extends React.Component<ContainerProps, {}> {
             <Helmet>
                 <title>{pageTitle}</title>
                 <link rel="canonical" href={canonicalUrl} />
+                <meta property="og:url" content={canonicalUrl} />
             </Helmet>
         );
     }

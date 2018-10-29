@@ -68,10 +68,14 @@ class Container extends React.Component<ContainerProps, {}> {
             );
         }
 
+        const pageTitle = `Topic: ${topic.model.name}`;
+        const canonicalUrl = `https://honestq.com/topics/${topic.model.slug}`;
+
         return (
             <Helmet>
-                <title>Topic: {topic.model.name}</title>
-                <link rel="canonical" href={`https://honestq.com/topics/${topic.model.slug}`} />
+                <title>{pageTitle}</title>
+                <link rel="canonical" href={canonicalUrl} />
+                <meta property="og:url" content={canonicalUrl} />
             </Helmet>
         );
     }
