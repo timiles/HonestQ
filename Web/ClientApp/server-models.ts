@@ -49,10 +49,6 @@ export interface ActivityListModel {
     lastTimestamp: number;
 }
 
-export interface IntroModel {
-    content: string;
-}
-
 export interface AnswerFormModel {
     text: string;
     source?: string;

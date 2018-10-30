@@ -3,7 +3,6 @@ import * as EditAnswer from './EditAnswer';
 import * as EditQuestion from './EditQuestion';
 import * as EditTopic from './EditTopic';
 import * as Home from './Home';
-import * as Intro from './Intro';
 import * as Login from './Login';
 import * as NewAnswer from './NewAnswer';
 import * as NewComment from './NewComment';
@@ -22,7 +21,6 @@ export interface ApplicationState {
     editQuestion: EditQuestion.EditQuestionState;
     editTopic: EditTopic.EditTopicState;
     home: Home.HomeState;
-    intro: Intro.IntroState;
     login: Login.LoginState;
     newAnswer: NewAnswer.NewAnswerState;
     newComment: NewComment.NewCommentState;
@@ -44,7 +42,6 @@ export const reducers = {
     editQuestion: EditQuestion.reducer,
     editTopic: EditTopic.reducer,
     home: Home.reducer,
-    intro: Intro.reducer,
     login: Login.reducer,
     newAnswer: NewAnswer.reducer,
     newComment: NewComment.reducer,

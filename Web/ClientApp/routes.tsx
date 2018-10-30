@@ -6,7 +6,6 @@ import EditQuestion from './components/Admin/EditQuestion';
 import EditTopic from './components/Admin/EditTopic';
 import AdminHome from './components/AdminHome';
 import Home from './components/Home';
-import Intro from './components/Intro';
 import { Layout } from './components/Layout';
 import Login from './components/Login';
 import Logout from './components/Logout';
@@ -23,7 +22,6 @@ export const routes = (
             <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
             <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
             <Route exact={true} path="/admin/edit/topics/:topicSlug" component={EditTopic} />
-            <Route path="/intro" component={Intro} />
             <Route path="/login" component={Login} />
             <Route path="/account/verifyemail" component={VerifyEmail} />
             <Route path="/logout" component={Logout} />
