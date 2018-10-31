@@ -20,7 +20,7 @@ namespace Pobs.Tests.Integration.Topics
         }
 
         [Fact]
-        public async Task Authenticated_ShouldCreateUnapprovedTopic()
+        public async Task AuthenticatedAsAdmin_ShouldCreateUnapprovedTopic()
         {
             var payload = new
             {
@@ -31,7 +31,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id);
+                client.AuthenticateAs(_user.Id, Role.Admin);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -64,7 +64,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id);
+                client.AuthenticateAs(_user.Id, Role.Admin);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -93,7 +93,7 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id);
+                client.AuthenticateAs(_user.Id, Role.Admin);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -112,13 +112,38 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id);
+                client.AuthenticateAs(_user.Id, Role.Admin);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal($"A topic already exists at /{topic.Slug}.", responseContent);
+            }
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
+        {
+            var payload = new
+            {
+                Name = "Topic (1982)"
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                dbContext.Entry(user).Collection(b => b.Topics).Load();
+
+                Assert.Empty(user.Topics);
             }
         }
 

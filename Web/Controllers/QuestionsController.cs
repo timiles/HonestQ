@@ -24,6 +24,11 @@ namespace Pobs.Web.Controllers
         [HttpPost, Authorize]
         public async Task<IActionResult> AddQuestion([FromBody] QuestionFormModel payload)
         {
+            if (!User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));

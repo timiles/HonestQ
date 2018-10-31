@@ -112,7 +112,7 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task NotAuthenticatedAsAdmin_ShouldBeDenied()
+        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
         {
             var payload = new QuestionFormModel
             {

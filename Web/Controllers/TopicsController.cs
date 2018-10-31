@@ -40,6 +40,11 @@ namespace Pobs.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Post([FromBody] TopicFormModel payload)
         {
+            if (!User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
             try
             {
                 await _topicService.SaveTopic(payload.Name, payload.Summary, payload.MoreInfoUrl, User.Identity.ParseUserId());

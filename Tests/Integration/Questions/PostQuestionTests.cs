@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
@@ -26,7 +27,7 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task Authenticated_RequiredPropertiesOnly_ShouldAddQuestion()
+        public async Task AuthenticatedAsAdmin_RequiredPropertiesOnly_ShouldAddQuestion()
         {
             var payload = new QuestionFormModel
             {
@@ -35,7 +36,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_userId, Role.Admin);
 
                 var response = await client.PostAsync(_url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -69,7 +70,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_userId, Role.Admin);
 
                 var response = await client.PostAsync(_url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -95,6 +96,23 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(_topic.Name, responseTopic.Name);
                     Assert.Equal(_topic.Slug, responseTopic.Slug);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
+        {
+            var payload = new QuestionFormModel
+            {
+                Text = "My honest question",
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
             }
         }
 
@@ -129,7 +147,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_userId, Role.Admin);
 
                 var response = await client.PostAsync(_url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
