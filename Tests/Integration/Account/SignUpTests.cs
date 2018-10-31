@@ -12,15 +12,15 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Account
 {
-    public class RegisterTests : IDisposable
+    public class SignUpTests : IDisposable
     {
-        private const string Url = "/api/account/register";
+        private const string Url = "/api/account/signup";
         private readonly string _username = "mary_coffeemug_" + Utils.GenerateRandomString(10);
 
         [Fact]
         public async Task ValidInputs_ShouldCreateUser()
         {
-            var payload = new RegisterFormModel
+            var payload = new SignUpFormModel
             {
                 Name = "Mary Coffeemug 💩",
                 Email = Utils.GenerateRandomString(10) + "💩@example.com",
@@ -58,7 +58,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task ExistingEmail_ShouldError()
         {
-            var payload = new RegisterFormModel
+            var payload = new SignUpFormModel
             {
                 Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
@@ -75,7 +75,7 @@ namespace Pobs.Tests.Integration.Account
 
                 emailSenderMock.Reset();
 
-                var payload2 = new RegisterFormModel
+                var payload2 = new SignUpFormModel
                 {
                     Name = "Mary Coffeemug 2",
                     // Also test case-sensitivity, white space
@@ -99,7 +99,7 @@ namespace Pobs.Tests.Integration.Account
         [InlineData("invalidemail@example@example.com")]
         public async Task InvalidEmail_ShouldError(string email)
         {
-            var payload = new RegisterFormModel
+            var payload = new SignUpFormModel
             {
                 Name = "Mary Coffeemug",
                 Email = email,
@@ -124,7 +124,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task ExistingUsername_ShouldError()
         {
-            var payload = new RegisterFormModel
+            var payload = new SignUpFormModel
             {
                 Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
@@ -154,7 +154,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task PasswordTooShort_ShouldError()
         {
-            var payload = new RegisterFormModel
+            var payload = new SignUpFormModel
             {
                 Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",

@@ -57,7 +57,7 @@ export default class ButtonOrLogIn extends React.Component<Props, State> {
                             </div>
                             <div className="modal-footer">
                                 <Link to={'/login'} className="btn btn-primary">Log in</Link>
-                                <Link to={'/register'} className="btn btn-primary">Register</Link>
+                                <Link to={'/signup'} className="btn btn-primary">Sign up</Link>
                             </div>
                         </Modal>
                     </>

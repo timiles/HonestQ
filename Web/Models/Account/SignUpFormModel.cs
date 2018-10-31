@@ -2,7 +2,7 @@
 
 namespace Pobs.Web.Models.Account
 {
-    public class RegisterFormModel
+    public class SignUpFormModel
     {
         [Required]
         public string Name { get; set; }

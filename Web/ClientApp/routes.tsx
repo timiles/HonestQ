@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Login from './components/Account/Login';
 import Logout from './components/Account/Logout';
-import Register from './components/Account/Register';
+import SignUp from './components/Account/SignUp';
 import VerifyEmail from './components/Account/VerifyEmail';
 import AdminHome from './components/Admin/AdminHome';
 import EditAnswer from './components/Admin/EditAnswer';
@@ -26,7 +26,7 @@ export const routes = (
             <Route path="/account/verifyemail" component={VerifyEmail} />
             <Route path="/logout" component={Logout} />
             <Route path="/newtopic" component={NewTopic} />
-            <Route path="/register" component={Register} />
+            <Route path="/signup" component={SignUp} />
             <Route path="/questions/:questionId/:questionSlug/:answerId?/:answerSlug?" component={Question} />
             <Route path="/topics/:topicSlug" component={Topic} />
         </Switch>

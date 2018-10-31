@@ -1,13 +1,13 @@
 ﻿import { push } from 'react-router-redux';
 import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { RegisterFormModel } from '../server-models';
+import { SignUpFormModel } from '../server-models';
 import { postJson } from '../utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface RegisterState {
+export interface SignUpState {
     submitting: boolean;
     submitted: boolean;
     error?: string;
@@ -17,10 +17,10 @@ export interface RegisterState {
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface ResetRegistrationFormAction { type: 'RESET_REGISTRATION'; }
-interface SubmitRegistrationFormAction { type: 'SUBMIT_REGISTRATION'; payload: RegisterFormModel; }
-interface RegistrationSuccessAction { type: 'REGISTRATION_SUCCESS'; }
-interface RegistrationFailedAction { type: 'REGISTRATION_FAILED'; payload: { reason: string; }; }
+interface ResetRegistrationFormAction { type: 'RESET_SIGNUP'; }
+interface SubmitRegistrationFormAction { type: 'SUBMIT_SIGNUP'; payload: SignUpFormModel; }
+interface RegistrationSuccessAction { type: 'SIGNUP_SUCCESS'; }
+interface RegistrationFailedAction { type: 'SIGNUP_FAILED'; payload: { reason: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -35,29 +35,29 @@ type KnownAction = ResetRegistrationFormAction
 
 export const actionCreators = {
 
-    submitRegistrationForm: (form: RegisterFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    submitRegistrationForm: (form: SignUpFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'SUBMIT_REGISTRATION', payload: form });
+            dispatch({ type: 'SUBMIT_SIGNUP', payload: form });
 
             const user = form;
             if (!user.name || !user.email || !user.username || !user.password || user.password.length < 7) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'REGISTRATION_FAILED', payload: { reason: '' } });
+                dispatch({ type: 'SIGNUP_FAILED', payload: { reason: '' } });
                 return;
             }
 
-            postJson('/api/account/register', user, null)
+            postJson('/api/account/signup', user, null)
                 .then((response) => {
-                    dispatch({ type: 'REGISTRATION_SUCCESS' });
+                    dispatch({ type: 'SIGNUP_SUCCESS' });
 
                     setTimeout(() => {
                         // REVIEW: `KnownActions | RouterAction` causes other type inference issues. Investigate?
                         dispatch(push('/login') as any);
-                        dispatch({ type: 'RESET_REGISTRATION' });
+                        dispatch({ type: 'RESET_SIGNUP' });
                     }, 2000);
                 })
                 .catch((reason) => {
-                    dispatch({ type: 'REGISTRATION_FAILED', payload: { reason } });
+                    dispatch({ type: 'SIGNUP_FAILED', payload: { reason } });
                 });
         })();
     },
@@ -67,26 +67,26 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: RegisterState = {
+const defaultState: SignUpState = {
     submitting: false,
     submitted: false,
     error: undefined,
 };
 
-export const reducer: Reducer<RegisterState> = (state: RegisterState, action: KnownAction) => {
+export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownAction) => {
     switch (action.type) {
 
-        case 'RESET_REGISTRATION':
+        case 'RESET_SIGNUP':
             return defaultState;
-        case 'SUBMIT_REGISTRATION':
+        case 'SUBMIT_SIGNUP':
             return {
                 submitting: true,
                 submitted: true,
                 error: undefined,
             };
-        case 'REGISTRATION_SUCCESS':
+        case 'SIGNUP_SUCCESS':
             return defaultState;
-        case 'REGISTRATION_FAILED':
+        case 'SIGNUP_FAILED':
             return {
                 submitting: false,
                 submitted: true,

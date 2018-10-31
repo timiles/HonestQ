@@ -76,7 +76,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                     </div>
                     <div className="form-group">
                         <SubmitButton submitting={submitting} text="Login" />
-                        <Link to="/register" className="btn btn-link">Register</Link>
+                        <Link to="/signup" className="btn btn-link">Sign up</Link>
                     </div>
                 </form>
             </div>

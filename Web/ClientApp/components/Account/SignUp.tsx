@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { RegisterFormModel } from '../../server-models';
+import { SignUpFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
-import * as RegisterStore from '../../store/Register';
+import * as SignUpStore from '../../store/SignUp';
 import SubmitButton from '../shared/SubmitButton';
 
-type RegisterProps = RegisterStore.RegisterState
-    & typeof RegisterStore.actionCreators
+type SignUpProps = SignUpStore.SignUpState
+    & typeof SignUpStore.actionCreators
     & RouteComponentProps<{}>;
 
-class Register extends React.Component<RegisterProps, RegisterFormModel> {
+class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
 
-    constructor(props: RegisterProps) {
+    constructor(props: SignUpProps) {
         super(props);
 
         this.state = {
@@ -32,7 +32,7 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
 
         return (
             <div className="col-lg-6 offset-lg-3">
-                <h2>Register</h2>
+                <h2>Sign up</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                     <div className="form-group">
@@ -91,14 +91,14 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
                     </div>
                     <div className="form-group">
                         <small>
-                            By clicking <b>Register</b> below, you are agreeing to our&#32;
+                            By clicking <b>Sign up</b> below, you are agreeing to our&#32;
                             <a href="/docs/TermsOfService" target="_blank">Terms of Service</a>&#32;
                             and&#32;
                             <a href="/docs/PrivacyPolicy" target="_blank">Privacy Policy</a>.
                         </small>
                     </div>
                     <div className="form-group">
-                        <SubmitButton submitting={submitting} text="Register" />
+                        <SubmitButton submitting={submitting} text="Sign up" />
                         <Link to="/login" className="btn btn-link">Cancel</Link>
                     </div>
                 </form>
@@ -118,6 +118,6 @@ class Register extends React.Component<RegisterProps, RegisterFormModel> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.register),
-    RegisterStore.actionCreators,
-)(Register);
+    (state: ApplicationState, ownProps: any) => (state.signUp),
+    SignUpStore.actionCreators,
+)(SignUp);

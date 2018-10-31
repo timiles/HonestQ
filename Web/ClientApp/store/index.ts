@@ -9,7 +9,7 @@ import * as NewComment from './NewComment';
 import * as NewQuestion from './NewQuestion';
 import * as NewTopic from './NewTopic';
 import * as Question from './Question';
-import * as Register from './Register';
+import * as SignUp from './SignUp';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
 import * as VerifyEmail from './VerifyEmail';
@@ -27,7 +27,7 @@ export interface ApplicationState {
     newQuestion: NewQuestion.NewQuestionState;
     newTopic: NewTopic.NewTopicState;
     question: Question.ContainerState;
-    register: Register.RegisterState;
+    signUp: SignUp.SignUpState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
     verifyEmail: VerifyEmail.VerifyEmailState;
@@ -48,7 +48,7 @@ export const reducers = {
     newQuestion: NewQuestion.reducer,
     newTopic: NewTopic.reducer,
     question: Question.reducer,
-    register: Register.reducer,
+    signUp: SignUp.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,
     verifyEmail: VerifyEmail.reducer,

@@ -68,24 +68,24 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register([FromBody]RegisterFormModel registerFormModel)
+        public IActionResult SignUp([FromBody]SignUpFormModel signUpFormModel)
         {
             MailAddress validEmail;
             try
             {
-                validEmail = new MailAddress(registerFormModel.Email);
+                validEmail = new MailAddress(signUpFormModel.Email);
             }
             catch (FormatException)
             {
-                return BadRequest($"Invalid Email address: '{registerFormModel.Email}'.");
+                return BadRequest($"Invalid Email address: '{signUpFormModel.Email}'.");
             }
 
-            if (registerFormModel.Password?.Length < 7)
+            if (signUpFormModel.Password?.Length < 7)
             {
                 return BadRequest("Password must be at least 7 characters.");
             }
 
-            var user = new User(registerFormModel.Name, validEmail.Address, registerFormModel.Username, DateTimeOffset.UtcNow)
+            var user = new User(signUpFormModel.Name, validEmail.Address, signUpFormModel.Username, DateTimeOffset.UtcNow)
             {
                 EmailVerificationToken = GenerateRandomString()
             };
@@ -93,10 +93,10 @@ namespace WebApi.Controllers
             try
             {
                 // Save
-                _userService.Create(user, registerFormModel.Password);
+                _userService.Create(user, signUpFormModel.Password);
                 var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
                 var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
-                _emailSender.SendEmailVerification(registerFormModel.Email, registerFormModel.Username, verifyEmailUrl);
+                _emailSender.SendEmailVerification(signUpFormModel.Email, signUpFormModel.Username, verifyEmailUrl);
                 return Ok();
             }
             catch (AppException ex)
