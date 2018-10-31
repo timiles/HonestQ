@@ -58,7 +58,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                                 </>
                                 ||
                                 <>
-                                    <AutoCollapseNavLink to={'/login'}>Login</AutoCollapseNavLink>
+                                    <AutoCollapseNavLink to={'/login'}>Log in</AutoCollapseNavLink>
                                     <AutoCollapseNavLink to={'/register'}>Register</AutoCollapseNavLink>
                                 </>}
                         </ul>
