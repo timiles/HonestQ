@@ -32,7 +32,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login([FromBody]LoginFormModel userModel)
+        public IActionResult LogIn([FromBody]LogInFormModel userModel)
         {
             var user = _userService.Authenticate(userModel.Username, userModel.Password);
 
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Logout()
+        public IActionResult LogOut()
         {
             this.Response.Cookies.Delete("id_token");
             return Ok();

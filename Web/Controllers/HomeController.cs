@@ -33,7 +33,7 @@ namespace Pobs.Web.Controllers
 
                 if (decodedToken.ValidTo < DateTime.UtcNow)
                 {
-                    // JWT expired? Clear the cookie and redirect to login
+                    // JWT expired? Clear the cookie and redirect to /login
                     this.Response.Cookies.Delete("id_token");
                     return Redirect("/login");
                 }

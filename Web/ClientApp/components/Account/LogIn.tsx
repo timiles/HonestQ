@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
-import { LoginFormModel } from '../../server-models';
+import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
 import SubmitButton from '../shared/SubmitButton';
 
-type LoginProps = LoginStore.LoginState
+type LogInProps = LoginStore.LoginState
     & typeof LoginStore.actionCreators
     & RouteComponentProps<{}>;
 
-class Login extends React.Component<LoginProps, LoginFormModel> {
+class LogIn extends React.Component<LogInProps, LogInFormModel> {
 
-    constructor(props: LoginProps) {
+    constructor(props: LogInProps) {
         super(props);
 
         this.state = {
@@ -33,7 +33,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
         const { submitting, submitted, error } = this.props;
         return (
             <div className="col-lg-6 offset-lg-3">
-                <h2>Login</h2>
+                <h2>Log in</h2>
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" noValidate={true} onSubmit={this.handleSubmit}>
                     <div className="form-group">
@@ -75,7 +75,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                         </div>
                     </div>
                     <div className="form-group">
-                        <SubmitButton submitting={submitting} text="Login" />
+                        <SubmitButton submitting={submitting} text="Log in" />
                         <Link to="/signup" className="btn btn-link">Sign up</Link>
                     </div>
                 </form>
@@ -94,11 +94,11 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
-        this.props.login(this.state);
+        this.props.logIn(this.state);
     }
 }
 
 export default connect(
     (state: ApplicationState, ownProps: any) => (state.login),
     LoginStore.actionCreators,
-)(Login);
+)(LogIn);

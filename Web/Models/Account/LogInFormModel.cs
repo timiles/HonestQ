@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Web.Models.Account
 {
-    public class LoginFormModel
+    public class LogInFormModel
     {
         [Required]
         public string Username { get; set; }

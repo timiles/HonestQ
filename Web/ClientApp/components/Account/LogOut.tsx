@@ -4,14 +4,14 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
 
-type LogoutProps = LoginStore.LoginState
+type LogOutProps = LoginStore.LoginState
     & typeof LoginStore.actionCreators
     & RouteComponentProps<{}>;
 
-class Logout extends React.Component<LogoutProps> {
+class Logout extends React.Component<LogOutProps> {
 
     public componentDidMount() {
-        this.props.logout();
+        this.props.logOut();
     }
 
     public render() {

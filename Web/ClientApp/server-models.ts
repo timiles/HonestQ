@@ -5,7 +5,7 @@ export interface LoggedInUserModel {
     timeZoneOffsetHours: number;
 }
 
-export interface LoginFormModel {
+export interface LogInFormModel {
     username: string;
     password: string;
     rememberMe: boolean;

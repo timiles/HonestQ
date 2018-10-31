@@ -1,6 +1,6 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoggedInUserModel, LoginFormModel } from '../server-models';
+import { LoggedInUserModel, LogInFormModel } from '../server-models';
 import { postJson } from '../utils';
 
 // -----------------
@@ -18,52 +18,52 @@ export interface LoginState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface StartLoginAction { type: 'START_LOGIN'; }
-interface LoginSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
-interface LoginFailedAction { type: 'LOGIN_FAILED'; payload: { error: string | null; }; }
-interface StartLogoutAction { type: 'START_LOGOUT'; }
-interface LogoutSuccessAction { type: 'LOGOUT_SUCCESS'; }
-interface LogoutFailedAction { type: 'LOGOUT_FAILED'; }
+interface StartLogInAction { type: 'START_LOGIN'; }
+interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
+interface LogInFailedAction { type: 'LOGIN_FAILED'; payload: { error: string | null; }; }
+interface StartLogOutAction { type: 'START_LOGOUT'; }
+interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
+interface LogOutFailedAction { type: 'LOGOUT_FAILED'; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = StartLoginAction
-    | LoginSuccessAction
-    | LoginFailedAction
-    | StartLogoutAction
-    | LogoutSuccessAction
-    | LogoutFailedAction;
+type KnownAction = StartLogInAction
+    | LogInSuccessAction
+    | LogInFailedAction
+    | StartLogOutAction
+    | LogOutSuccessAction
+    | LogOutFailedAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    login: (loginForm: LoginFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    logIn: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             dispatch({ type: 'START_LOGIN' });
 
-            if (!loginForm.username || !loginForm.password) {
+            if (!logInForm.username || !logInForm.password) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'LOGIN_FAILED', payload: { error: null } });
                 return;
             }
 
-            postJson<LoggedInUserModel>('/api/account/login', loginForm, null, true)
-                .then((loginResponse: LoggedInUserModel) => {
-                    // Login successful if there's a jwt token in the response
-                    if (loginResponse && loginResponse.token) {
-                        dispatch({ type: 'LOGIN_SUCCESS', payload: loginResponse });
+            postJson<LoggedInUserModel>('/api/account/login', logInForm, null, true)
+                .then((logInResponse: LoggedInUserModel) => {
+                    // Log in successful if there's a jwt token in the response
+                    if (logInResponse && logInResponse.token) {
+                        dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
                     } else {
                         dispatch({ type: 'LOGIN_FAILED', payload: { error: 'An error occurred, please try again' } });
                     }
                 })
                 .catch((reason: string) => {
-                    dispatch({ type: 'LOGIN_FAILED', payload: { error: reason || 'Login failed' } });
+                    dispatch({ type: 'LOGIN_FAILED', payload: { error: reason || 'LogIn failed' } });
                 });
         })();
     },
-    logout: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             dispatch({ type: 'START_LOGOUT' });
 

@@ -12,13 +12,13 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Account
 {
-    public class LoginTests : IDisposable
+    public class LogInTests : IDisposable
     {
         private const string Url = "/api/account/login";
         private readonly string _password;
         private readonly User _user;
 
-        public LoginTests()
+        public LogInTests()
         {
             _password = "Password1";
             _user = new User
@@ -40,9 +40,9 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
-        public async Task CorrectCredentials_ShouldLogin()
+        public async Task CorrectCredentials_ShouldLogIn()
         {
-            var payload = new LoginFormModel
+            var payload = new LogInFormModel
             {
                 Username = _user.Username,
                 Password = _password
@@ -81,7 +81,7 @@ namespace Pobs.Tests.Integration.Account
                 dbContext.SaveChanges();
             }
 
-            var payload = new LoginFormModel
+            var payload = new LogInFormModel
             {
                 Username = _user.Username,
                 Password = _password
@@ -103,7 +103,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task IncorrectPassword_ShouldBeDenied()
         {
-            var payload = new LoginFormModel
+            var payload = new LogInFormModel
             {
                 Username = _user.Username,
                 Password = "WRONG_PASSWORD"
@@ -125,7 +125,7 @@ namespace Pobs.Tests.Integration.Account
         [Fact]
         public async Task InvalidUsername_ShouldBeDenied()
         {
-            var payload = new LoginFormModel
+            var payload = new LogInFormModel
             {
                 Username = "i_do_not_exist",
                 Password = _password

@@ -8,14 +8,14 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Account
 {
-    public class LogoutTests : IDisposable
+    public class LogOutTests : IDisposable
     {
-        private const string LoginUrl = "/api/account/login";
-        private const string LogoutUrl = "/api/account/logout";
+        private const string LogInUrl = "/api/account/login";
+        private const string LogOutUrl = "/api/account/logout";
         private readonly string _password;
         private readonly User _user;
 
-        public LogoutTests()
+        public LogOutTests()
         {
             _password = "Password1";
             _user = new User
@@ -37,7 +37,7 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
-        public async Task LoggedIn_ShouldLogout()
+        public async Task LoggedIn_ShouldLogOut()
         {
             var payload = new
             {
@@ -48,14 +48,14 @@ namespace Pobs.Tests.Integration.Account
             using (var client = server.CreateClient())
             {
                 // First log in to get the cookie
-                var response = await client.PostAsync(LoginUrl, payload.ToJsonContent());
+                var response = await client.PostAsync(LogInUrl, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
                 Assert.NotNull(response.Headers.GetIdTokenCookie());
 
                 // Now log out and check cookie is removed
-                var logoutResponse = await client.PostAsync(LogoutUrl, null);
-                logoutResponse.EnsureSuccessStatusCode();
-                var idTokenCookie = logoutResponse.Headers.GetIdTokenCookie();
+                var logOutResponse = await client.PostAsync(LogOutUrl, null);
+                logOutResponse.EnsureSuccessStatusCode();
+                var idTokenCookie = logOutResponse.Headers.GetIdTokenCookie();
                 // Expires is probably 1 Jan 1970, but as long as it's in the past that's ok
                 Assert.True(idTokenCookie.Expires < DateTime.UtcNow);
             }

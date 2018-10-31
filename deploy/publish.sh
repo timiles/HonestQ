@@ -8,7 +8,7 @@ set -e
 rm -rf build/app
 dotnet publish "../Web" -c Release -r linux-x64 -o "$(pwd)/build/app"
 
-# Login
+# Log in
 $(aws ecr get-login --no-include-email --region eu-west-2)
 
 # Build & push
