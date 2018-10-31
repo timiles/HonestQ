@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { ApplicationState } from '../store';
-import * as LoginStore from '../store/Login';
+import { ApplicationState } from '../../store';
+import * as LoginStore from '../../store/Login';
 
 type LogoutProps = LoginStore.LoginState
     & typeof LoginStore.actionCreators

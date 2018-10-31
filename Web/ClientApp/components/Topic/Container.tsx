@@ -6,7 +6,7 @@ import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import NewQuestion from './NewQuestion';
+import NewQuestion from '../QuestionForm/NewQuestion';
 import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState

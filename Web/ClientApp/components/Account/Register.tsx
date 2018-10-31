@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { RegisterFormModel } from '../server-models';
-import { ApplicationState } from '../store';
-import * as RegisterStore from '../store/Register';
-import SubmitButton from './shared/SubmitButton';
+import { RegisterFormModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as RegisterStore from '../../store/Register';
+import SubmitButton from '../shared/SubmitButton';
 
 type RegisterProps = RegisterStore.RegisterState
     & typeof RegisterStore.actionCreators

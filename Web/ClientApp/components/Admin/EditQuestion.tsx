@@ -4,8 +4,8 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { QuestionFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as EditQuestionStore from '../../store/EditQuestion';
+import QuestionForm from '../QuestionForm/QuestionForm';
 import Loading from '../shared/Loading';
-import QuestionForm from '../Topic/QuestionForm';
 
 type EditQuestionProps = EditQuestionStore.EditQuestionState
     & typeof EditQuestionStore.actionCreators

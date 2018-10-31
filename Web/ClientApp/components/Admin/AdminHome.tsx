@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
-import { LoggedInUserModel, TopicListItemModel } from '../server-models';
-import { ApplicationState } from '../store';
-import * as AdminHomeStore from '../store/AdminHome';
-import { isUserInRole } from '../utils';
-import Loading from './shared/Loading';
+import { LoggedInUserModel, TopicListItemModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as AdminHomeStore from '../../store/AdminHome';
+import { isUserInRole } from '../../utils';
+import Loading from '../shared/Loading';
 
 type AdminHomeProps = AdminHomeStore.AdminHomeState
     & typeof AdminHomeStore.actionCreators

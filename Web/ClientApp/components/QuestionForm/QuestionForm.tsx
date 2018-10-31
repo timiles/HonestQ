@@ -4,7 +4,7 @@ import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import TopicAutocomplete from './TopicAutocomplete';
+import TopicAutocomplete from '../Topic/TopicAutocomplete';
 
 type Props = FormProps<QuestionFormModel>
     & {

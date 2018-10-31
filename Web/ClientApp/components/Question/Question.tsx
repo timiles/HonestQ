@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { AnswerModel, QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
+import AgreementRatingBarChart from '../QuestionForm/AgreementRatingBarChart';
 import Emoji, { EmojiValue } from '../shared/Emoji';
-import AgreementRatingBarChart from '../Topic/AgreementRatingBarChart';
 import NewAnswer from './NewAnswer';
 import TopicsList from './TopicsList';
 

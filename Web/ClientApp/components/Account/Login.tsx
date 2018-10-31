@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
-import { LoginFormModel } from '../server-models';
-import { ApplicationState } from '../store';
-import * as LoginStore from '../store/Login';
-import SubmitButton from './shared/SubmitButton';
+import { LoginFormModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as LoginStore from '../../store/Login';
+import SubmitButton from '../shared/SubmitButton';
 
 type LoginProps = LoginStore.LoginState
     & typeof LoginStore.actionCreators

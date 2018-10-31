@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { ActivityListItemModel, TopicListItemModel, TopicValueModel } from '../server-models';
-import { ApplicationState } from '../store';
-import * as HomeStore from '../store/Home';
-import Emoji, { EmojiValue } from './shared/Emoji';
-import Loading from './shared/Loading';
-import NewQuestion from './Topic/NewQuestion';
+import { ActivityListItemModel, TopicListItemModel, TopicValueModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as HomeStore from '../../store/Home';
+import NewQuestion from '../QuestionForm/NewQuestion';
+import Emoji, { EmojiValue } from '../shared/Emoji';
+import Loading from '../shared/Loading';
 
 type HomeProps = HomeStore.HomeState
     & typeof HomeStore.actionCreators

@@ -1,18 +1,18 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import Login from './components/Account/Login';
+import Logout from './components/Account/Logout';
+import Register from './components/Account/Register';
 import VerifyEmail from './components/Account/VerifyEmail';
+import AdminHome from './components/Admin/AdminHome';
 import EditAnswer from './components/Admin/EditAnswer';
 import EditQuestion from './components/Admin/EditQuestion';
 import EditTopic from './components/Admin/EditTopic';
-import AdminHome from './components/AdminHome';
-import Home from './components/Home';
+import Home from './components/Home/Home';
 import { Layout } from './components/Layout';
-import Login from './components/Login';
-import Logout from './components/Logout';
-import NewTopic from './components/NewTopic';
 import Question from './components/Question/Container';
-import Register from './components/Register';
 import Topic from './components/Topic/Container';
+import NewTopic from './components/Topic/NewTopic';
 
 export const routes = (
     <Layout>

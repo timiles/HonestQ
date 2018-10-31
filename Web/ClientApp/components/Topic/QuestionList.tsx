@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { QuestionListItemModel, TopicValueModel } from '../../server-models';
+import NewQuestion from '../QuestionForm/NewQuestion';
 import Emoji, { EmojiValue } from '../shared/Emoji';
-import NewQuestion from './NewQuestion';
 
 interface Props {
     questions: QuestionListItemModel[];

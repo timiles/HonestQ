@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { TopicFormModel } from '../server-models';
-import { ApplicationState } from '../store';
-import * as NewTopicStore from '../store/NewTopic';
-import SubmitButton from './shared/SubmitButton';
-import SuperTextArea from './shared/SuperTextArea';
+import { TopicFormModel } from '../../server-models';
+import { ApplicationState } from '../../store';
+import * as NewTopicStore from '../../store/NewTopic';
+import SubmitButton from '../shared/SubmitButton';
+import SuperTextArea from '../shared/SuperTextArea';
 
 type NewTopicProps = NewTopicStore.NewTopicState
     & typeof NewTopicStore.actionCreators
