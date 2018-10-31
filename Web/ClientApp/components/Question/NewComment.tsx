@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { CommentFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewCommentStore from '../../store/NewComment';
+import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Modal from '../shared/Modal';
 import CommentForm from './CommentForm';
 
@@ -41,13 +42,13 @@ class NewComment extends React.Component<Props, State> {
 
         return (
             <>
-                <button
+                <ButtonOrLogIn
                     type="button"
                     className={btnClass}
                     onClick={this.handleOpen}
                 >
                     {headerText}
-                </button>
+                </ButtonOrLogIn>
                 <Modal title={headerText} isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <CommentForm
                         {...commentForm}

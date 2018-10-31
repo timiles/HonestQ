@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { AnswerFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewAnswerStore from '../../store/NewAnswer';
+import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Modal from '../shared/Modal';
 import AnswerForm from './AnswerForm';
 
@@ -40,13 +41,13 @@ class NewAnswer extends React.Component<Props, State> {
 
         return (
             <>
-                <button
+                <ButtonOrLogIn
                     type="button"
                     className="btn btn-lg btn-primary btn-new-post"
                     onClick={this.handleOpen}
                 >
                     {headerText}
-                </button>
+                </ButtonOrLogIn>
                 <Modal title={headerText} isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <AnswerForm
                         {...answerForm}

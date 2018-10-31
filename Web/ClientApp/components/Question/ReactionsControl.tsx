@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import * as React from 'react';
 import { CommentModel } from '../../server-models';
+import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
 type Props = CommentModel & {
@@ -52,7 +53,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
             <>
                 <div className="btn-group">
                     {this.values.map((x: ReactionValue, i: number) =>
-                        <button
+                        <ButtonOrLogIn
                             key={i}
                             type="button"
                             className={`btn btn-outline-secondary ${myReactions.indexOf(x.value) >= 0 ? 'active' : ''}`}
@@ -61,7 +62,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
                         >
                             <Emoji value={EmojiValue[x.value as keyof typeof EmojiValue]} />
                             {reactionCounts[x.value] || 0}
-                        </button>)
+                        </ButtonOrLogIn>)
                     }
                 </div>
 
