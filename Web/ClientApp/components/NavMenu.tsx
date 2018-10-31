@@ -47,18 +47,20 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                             {isAdmin && <AutoCollapseNavLink to={'/admin'}>Admin</AutoCollapseNavLink>}
                         </ul>
                         <ul className="navbar-nav ml-auto">
-                            {loggedInUser && (
+                            {loggedInUser &&
                                 <>
                                     <li className="d-none d-lg-block">
                                         <span className="navbar-text">
                                             Hi, {loggedInUser.name} ({loggedInUser.username})!
                                         </span>
                                     </li>
-                                    {isAdmin && <AutoCollapseNavLink to={'/register'}>Register</AutoCollapseNavLink>}
                                     <AutoCollapseNavLink to={'/logout'}>Log out</AutoCollapseNavLink>
                                 </>
-                            )}
-                            {!loggedInUser && <AutoCollapseNavLink to={'/login'}>Login</AutoCollapseNavLink>}
+                                ||
+                                <>
+                                    <AutoCollapseNavLink to={'/login'}>Login</AutoCollapseNavLink>
+                                    <AutoCollapseNavLink to={'/register'}>Register</AutoCollapseNavLink>
+                                </>}
                         </ul>
                     </div>
                 </div>
