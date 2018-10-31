@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { QuestionFormModel, TopicValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewQuestionStore from '../../store/NewQuestion';
+import { isUserInRole } from '../../utils';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 import Modal from '../shared/Modal';
 import QuestionForm from './QuestionForm';
 
@@ -48,13 +50,45 @@ class NewQuestion extends React.Component<Props, State> {
                     Ask a question
                 </button>
                 <Modal title="Ask a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
-                    <QuestionForm
-                        {...questionForm}
-                        initialTopicValues={initialTopicValues}
-                        isModal={true}
-                        onCloseModalRequested={this.handleClose}
-                        submit={this.handleSubmit}
-                    />
+                    <LoggedInUserContext.Consumer>
+                        {(user) => isUserInRole(user, 'Admin') &&
+                            <QuestionForm
+                                {...questionForm}
+                                initialTopicValues={initialTopicValues}
+                                isModal={true}
+                                onCloseModalRequested={this.handleClose}
+                                submit={this.handleSubmit}
+                            />
+                            ||
+                            <>
+                                <div className="modal-body">
+                                    <h3>Coming soon...</h3>
+                                    <p>HonestQ is still in its early stages. We will be adding new questions slowly,
+                                    to ensure that we're building a quality system.</p>
+                                    <p>
+                                        If you would like to submit your own honest question, please&#32;
+                                        <a
+                                            href="https://twitter.com/intent/tweet?text=.@HonestQ_com%20%23HonestQ"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            tweet @HonestQ_com
+                                        </a>, or email <b>ask@HonestQ.com</b>.
+                                    </p>
+                                    <p>Thanks!</p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={this.handleClose}
+                                    >
+                                        You're welcome
+                                    </button>
+                                </div>
+                            </>
+                        }
+                    </LoggedInUserContext.Consumer>
                 </Modal>
             </>
         );
