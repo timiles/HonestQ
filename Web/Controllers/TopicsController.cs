@@ -8,9 +8,6 @@ using Pobs.Web.Services;
 
 namespace Pobs.Web.Controllers
 {
-    // PRIVATE BETA
-    [Authorize]
-
     [Route("api/[controller]")]
     public class TopicsController : Controller
     {

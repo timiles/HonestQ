@@ -70,12 +70,6 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Register([FromBody]RegisterFormModel registerFormModel)
         {
-            // PRIVATE BETA
-            if (registerFormModel.Username != "poi" && !User.IsInRole(Role.Admin))
-            {
-                return Forbid();
-            }
-
             MailAddress validEmail;
             try
             {

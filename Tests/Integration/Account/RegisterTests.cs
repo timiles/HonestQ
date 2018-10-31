@@ -32,9 +32,6 @@ namespace Pobs.Tests.Integration.Account
             using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(1, Role.Admin);
-
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
             }
@@ -73,9 +70,6 @@ namespace Pobs.Tests.Integration.Account
             using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(1, Role.Admin);
-
                 var response1 = await client.PostAsync(Url, payload.ToJsonContent());
                 response1.EnsureSuccessStatusCode();
 
@@ -117,9 +111,6 @@ namespace Pobs.Tests.Integration.Account
             using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(1, Role.Admin);
-
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -145,9 +136,6 @@ namespace Pobs.Tests.Integration.Account
             using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(1, Role.Admin);
-
                 var response1 = await client.PostAsync(Url, payload.ToJsonContent());
                 response1.EnsureSuccessStatusCode();
 
@@ -178,9 +166,6 @@ namespace Pobs.Tests.Integration.Account
             using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(1, Role.Admin);
-
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 

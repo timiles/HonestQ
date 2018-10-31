@@ -40,9 +40,6 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_userId);
-
                 var response = await client.GetAsync(_generateUrl());
                 response.EnsureSuccessStatusCode();
 
@@ -69,7 +66,6 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
                 client.AuthenticateAs(_userId, Role.Admin);
 
                 var response = await client.GetAsync(_generateUrl(false));
@@ -98,7 +94,6 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
                 client.AuthenticateAs(_userId);
 
                 var response = await client.GetAsync(_generateUrl(false));

@@ -31,7 +31,7 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task ShouldGetQuestion()
+        public async Task NotAuthenticated_ShouldGetQuestion()
         {
             var question = _topic.Questions.Skip(1).First();
 
@@ -49,22 +49,9 @@ namespace Pobs.Tests.Integration.Questions
             var unapprovedChildComment = DataHelpers.CreateChildComments(
                 question.Answers.First().Comments.First(), question.PostedByUser, 1, CommentStatus.AwaitingApproval).Single();
 
-            // Add a Reaction to a Comment
-            var commentWithReaction = question.Answers.First().Comments.First();
-            var reactionType = ReactionType.YouBeTrolling;
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                dbContext.Attach(commentWithReaction);
-                commentWithReaction.Reactions.Add(new Reaction(reactionType, _questionUserId, DateTimeOffset.UtcNow));
-                dbContext.SaveChanges();
-            }
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var url = _generateUrl(question.Id);
                 var response = await client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
@@ -74,7 +61,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Source, responseModel.Source);
-                Assert.True(responseModel.IsPostedByLoggedInUser);
+                Assert.False(responseModel.IsPostedByLoggedInUser);
 
                 Assert.Single(responseModel.Topics);
                 var responseTopic = responseModel.Topics.Single();
@@ -99,6 +86,48 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(answer.Source, responseAnswer.Source);
                     Assert.Equal(2, responseAnswer.Comments.Length);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task Authenticated_ShouldGetQuestionWithMyReactions()
+        {
+            var question = _topic.Questions.Skip(1).First();
+
+            // Add 2 Comments to each Answer
+            foreach (var answer in question.Answers.ToArray())
+            {
+                DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
+            }
+
+            // Add a Reaction to a Comment
+            var commentWithReaction = question.Answers.First().Comments.First();
+            var reactionType = ReactionType.YouBeTrolling;
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(commentWithReaction);
+                commentWithReaction.Reactions.Add(new Reaction(reactionType, _questionUserId, DateTimeOffset.UtcNow));
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_questionUserId);
+
+                var url = _generateUrl(question.Id);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
+                Assert.Equal(question.Slug, responseModel.Slug);
+                Assert.Equal(question.Text, responseModel.Text);
+                Assert.Equal(question.Source, responseModel.Source);
+                Assert.True(responseModel.IsPostedByLoggedInUser);
+
+                Assert.Single(responseModel.Topics);
+                Assert.Equal(3, question.Answers.Count);
 
                 var responseCommentWithReaction = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == commentWithReaction.Id);
                 Assert.Single(responseCommentWithReaction.ReactionCounts);
@@ -115,9 +144,6 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var url = _generateUrl(0);
                 var response = await client.GetAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);

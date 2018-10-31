@@ -35,9 +35,6 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var response = await client.GetAsync(_url);
                 response.EnsureSuccessStatusCode();
 

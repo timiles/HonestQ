@@ -51,7 +51,6 @@ namespace Pobs.Tests.Integration.Topics
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
                 client.AuthenticateAs(_userId);
 
                 var url = _generateTopicUrl(_topic.Slug);

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { ActivityListItemModel, LoggedInUserModel, TopicListItemModel, TopicValueModel } from '../server-models';
+import { ActivityListItemModel, TopicListItemModel, TopicValueModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as HomeStore from '../store/Home';
 import Emoji, { EmojiValue } from './shared/Emoji';
@@ -10,9 +10,7 @@ import NewQuestion from './Topic/NewQuestion';
 
 type HomeProps = HomeStore.HomeState
     & typeof HomeStore.actionCreators
-    & RouteComponentProps<{}>
-    // PRIVATE BETA
-    & { loggedInUser: LoggedInUserModel };
+    & RouteComponentProps<{}>;
 
 class Home extends React.Component<HomeProps, {}> {
 
@@ -23,10 +21,6 @@ class Home extends React.Component<HomeProps, {}> {
     }
 
     public componentWillMount() {
-        // PRIVATE BETA
-        if (!this.props.loggedInUser) {
-            return;
-        }
         if (!this.props.loadingActivityList.loadedModel) {
             this.props.getActivityList();
         }
@@ -215,7 +209,6 @@ class Home extends React.Component<HomeProps, {}> {
 }
 
 export default connect(
-    // PRIVATE BETA: was just ` => (state.home)`
-    (state: ApplicationState, ownProps: any): any => ({ ...state.home, loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any): any => ({ ...state.home }),
     HomeStore.actionCreators,
 )(Home);

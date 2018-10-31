@@ -46,8 +46,7 @@ export const actionCreators = {
                 return;
             }
 
-            // PRIVATE BETA: don't really need to pass logged in user
-            postJson('/api/account/register', user, getState().login.loggedInUser)
+            postJson('/api/account/register', user, null)
                 .then((response) => {
                     dispatch({ type: 'REGISTRATION_SUCCESS' });
 

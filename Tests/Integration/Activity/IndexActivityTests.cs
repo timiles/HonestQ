@@ -44,9 +44,6 @@ namespace Pobs.Tests.Integration.Activity
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var response = await client.GetAsync(_buildUrl(1000));
                 response.EnsureSuccessStatusCode();
 
@@ -152,9 +149,6 @@ namespace Pobs.Tests.Integration.Activity
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var response = await client.GetAsync(_buildUrl());
                 response.EnsureSuccessStatusCode();
 
@@ -170,9 +164,6 @@ namespace Pobs.Tests.Integration.Activity
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var response = await client.GetAsync(_buildUrl(3));
                 response.EnsureSuccessStatusCode();
 
@@ -192,9 +183,6 @@ namespace Pobs.Tests.Integration.Activity
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var response = await client.GetAsync(_buildUrl(1000, beforeTimestamp));
                 response.EnsureSuccessStatusCode();
 
@@ -239,9 +227,6 @@ namespace Pobs.Tests.Integration.Activity
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                // PRIVATE BETA
-                client.AuthenticateAs(_questionUserId);
-
                 var response = await client.GetAsync(_buildUrl(beforeTimestamp: beforeTimestamp));
                 response.EnsureSuccessStatusCode();
 

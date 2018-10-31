@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
 import { LoginFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as LoginStore from '../store/Login';
@@ -76,7 +76,7 @@ class Login extends React.Component<LoginProps, LoginFormModel> {
                     </div>
                     <div className="form-group">
                         <SubmitButton submitting={submitting} text="Login" />
-                        {/* PRIVATE BETA: <Link to="/register" className="btn btn-link">Register</Link> */}
+                        <Link to="/register" className="btn btn-link">Register</Link>
                     </div>
                 </form>
             </div>
