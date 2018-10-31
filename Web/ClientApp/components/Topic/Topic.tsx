@@ -47,7 +47,7 @@ export default class Topic extends React.Component<TopicProps, {}> {
                         {moreInfoUrl &&
                             <>
                                 <h4>More info</h4>
-                                <Link to={moreInfoUrl} target="_blank" rel="noopener noreferrer">{moreInfoUrl}</Link>
+                                <a href={moreInfoUrl} target="_blank" rel="noopener noreferrer">{moreInfoUrl}</a>
                             </>
                         }
                     </div>
