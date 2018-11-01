@@ -66,7 +66,7 @@ class Home extends React.Component<HomeProps, {}> {
                                 <li key={i} className="mb-2">
                                     {this.renderActivityItem(x)}
                                 </li>)}
-                            {activityList.lastTimestamp === 0 &&
+                            {activityList.lastTimestamp === 0 && activityList.activityItems.length > 40 &&
                                 <li>
                                     That's all, folks!
                                 </li>
