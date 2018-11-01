@@ -6,17 +6,25 @@ import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Comment from './Comment';
 import NewComment from './NewComment';
+import ReactionsControl from './ReactionsControl';
 
 type Props = AnswerModel
     & {
     questionId: number,
-    onReaction: (commentId: number, reactionType: string, on: boolean) => void,
+    onReaction: (reactionType: string, on: boolean, commentId?: number) => void,
 };
 
 export default class Answer extends React.Component<Props, {}> {
 
+    constructor(props: Props) {
+        super(props);
+
+        this.handleAnswerReaction = this.handleAnswerReaction.bind(this);
+        this.handleCommentReaction = this.handleCommentReaction.bind(this);
+    }
+
     public render() {
-        const { questionId, id, text, source, comments } = this.props;
+        const { questionId, id, text, source, comments, reactionCounts, myReactions } = this.props;
 
         return (
             <div>
@@ -32,6 +40,13 @@ export default class Answer extends React.Component<Props, {}> {
                     <span className="ml-1 post answer">{text}</span>
                 </h4>
                 {source && <p><small>Source: {source}</small></p>}
+                <div className="float-right mb-2">
+                    <ReactionsControl
+                        reactionCounts={reactionCounts}
+                        myReactions={myReactions}
+                        onReaction={this.handleAnswerReaction}
+                    />
+                </div>
                 <div>
                     <NewComment
                         questionId={questionId}
@@ -45,10 +60,18 @@ export default class Answer extends React.Component<Props, {}> {
                                 {...x}
                                 questionId={questionId}
                                 answerId={id}
-                                onReaction={this.props.onReaction}
+                                onReaction={this.handleCommentReaction}
                             /></li>)}
                 </ol>
             </div>
         );
+    }
+
+    private handleAnswerReaction(reactionType: string, on: boolean): void {
+        this.props.onReaction(reactionType, on);
+    }
+
+    private handleCommentReaction(reactionType: string, on: boolean, commentId: number): void {
+        this.props.onReaction(reactionType, on, commentId);
     }
 }

@@ -13,10 +13,16 @@ type Props = CommentModel
     & {
     questionId: number,
     answerId: number,
-    onReaction: (commentId: number, reactionType: string, on: boolean) => void,
+    onReaction: (reactionType: string, on: boolean, commentId: number) => void,
 };
 
 export default class Comment extends React.Component<Props, {}> {
+
+    constructor(props: Props) {
+        super(props);
+
+        this.handleCommentReaction = this.handleCommentReaction.bind(this);
+    }
 
     public componentDidMount() {
         $('[data-toggle="tooltip"]').tooltip();
@@ -24,7 +30,7 @@ export default class Comment extends React.Component<Props, {}> {
 
     public render(): any {
         const { questionId, answerId } = this.props;
-        const { id, text, source, agreementRating, comments } = this.props;
+        const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
         const { postedAt, postedBy } = this.props;
         const extractedUrl = (source ? extractUrlFromText(source) : null) || (text ? extractUrlFromText(text) : null);
 
@@ -63,7 +69,11 @@ export default class Comment extends React.Component<Props, {}> {
                                         {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
                                     </blockquote>
                                     <div className="float-right">
-                                        <ReactionsControl {...this.props} />
+                                        <ReactionsControl
+                                            reactionCounts={reactionCounts}
+                                            myReactions={myReactions}
+                                            onReaction={this.handleCommentReaction}
+                                        />
                                     </div>
                                     <NewComment
                                         questionId={questionId}
@@ -89,5 +99,9 @@ export default class Comment extends React.Component<Props, {}> {
                 }}
             </LoggedInUserContext.Consumer>
         );
+    }
+
+    private handleCommentReaction(reactionType: string, on: boolean): void {
+        this.props.onReaction(reactionType, on, this.props.id);
     }
 }

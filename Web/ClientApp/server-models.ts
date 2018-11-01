@@ -63,6 +63,8 @@ export interface AnswerModel {
     postedByUserPseudoId: number;
     isPostedByLoggedInUser: boolean;
     comments: CommentModel[];
+    reactionCounts: { [key: string]: number };
+    myReactions: string[];
 }
 
 export interface CommentFormModel {
@@ -121,7 +123,7 @@ export interface QuestionsListModel {
 export interface ReactionModel {
     questionId: number;
     answerId: number;
-    commentId: number;
+    commentId?: number;
     type: string;
     newCount: number;
     isMyReaction: boolean;

@@ -1,12 +1,13 @@
 import * as $ from 'jquery';
 import * as React from 'react';
-import { CommentModel } from '../../server-models';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
-type Props = CommentModel & {
-    onReaction: (commentId: number, reactionType: string, on: boolean) => void,
-};
+interface Props {
+    reactionCounts: { [key: string]: number };
+    myReactions: string[];
+    onReaction: (reactionType: string, on: boolean) => void;
+}
 
 interface State {
     reactionCounts: { [key: string]: number };
@@ -82,9 +83,8 @@ export default class ReactionsControl extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
-        const { id } = this.props;
         const { myReactions } = this.state;
         const { value } = event.currentTarget;
-        this.props.onReaction(id, value, myReactions.indexOf(value) < 0);
+        this.props.onReaction(value, myReactions.indexOf(value) < 0);
     }
 }
