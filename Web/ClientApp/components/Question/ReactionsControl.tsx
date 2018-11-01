@@ -30,8 +30,6 @@ export default class ReactionsControl extends React.Component<Props, State> {
         this.values.push({ value: 'GoodPointWellMade', description: 'Good point!' });
         this.values.push({ value: 'ThisMadeMeThink', description: 'This made me think' });
         this.values.push({ value: 'ThisChangedMyView', description: 'This changed my view' });
-        this.values.push({ value: 'NotRelevant', description: 'Not relevant' });
-        this.values.push({ value: 'YouBeTrolling', description: 'You be trollin\'' });
 
         this.handleChange = this.handleChange.bind(this);
     }
