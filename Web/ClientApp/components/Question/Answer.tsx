@@ -45,6 +45,7 @@ export default class Answer extends React.Component<Props, {}> {
                         reactionCounts={reactionCounts}
                         myReactions={myReactions}
                         onReaction={this.handleAnswerReaction}
+                        showHelp={true}
                     />
                 </div>
                 <div>

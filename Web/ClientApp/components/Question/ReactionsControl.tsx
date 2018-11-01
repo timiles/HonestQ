@@ -7,6 +7,7 @@ interface Props {
     reactionCounts: { [key: string]: number };
     myReactions: string[];
     onReaction: (reactionType: string, on: boolean) => void;
+    showHelp?: boolean;
 }
 
 interface State {
@@ -22,6 +23,7 @@ interface ReactionValue {
 export default class ReactionsControl extends React.Component<Props, State> {
 
     private readonly values = new Array<ReactionValue>();
+    private readonly reactionDefinitionsHtml: string = '';
 
     constructor(props: Props) {
         super(props);
@@ -32,6 +34,14 @@ export default class ReactionsControl extends React.Component<Props, State> {
         this.values.push({ value: 'ThisMadeMeThink', description: 'This made me think' });
         this.values.push({ value: 'ThisChangedMyView', description: 'This changed my view' });
 
+        if (this.props.showHelp) {
+            this.reactionDefinitionsHtml =
+                `<dl class="reaction-definitions">
+                ${this.values.map((x: ReactionValue) =>
+                    `<dt><span class="emoji emoji-${x.value}" /></dt><dd>${x.description}</dd>`).join('')}
+                </dl>`;
+        }
+
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -40,13 +50,8 @@ export default class ReactionsControl extends React.Component<Props, State> {
     }
 
     public render() {
+        const { showHelp } = this.props;
         const { reactionCounts, myReactions } = this.state;
-
-        const reactionDefinitionsHtml =
-            `<dl class="reaction-definitions">
-            ${this.values.map((x: ReactionValue) =>
-                `<dt><span class="emoji emoji-${x.value}" /></dt><dd>${x.description}</dd>`).join('')}
-            </dl>`;
 
         return (
             <>
@@ -64,20 +69,21 @@ export default class ReactionsControl extends React.Component<Props, State> {
                         </ButtonOrLogIn>)
                     }
                 </div>
-
-                <button
-                    tabIndex={0}
-                    className="btn badge badge-pill badge-info ml-1"
-                    role="button"
-                    data-toggle="popover"
-                    data-trigger="focus"
-                    title="Reaction buttons"
-                    data-content={reactionDefinitionsHtml}
-                    data-html={true}
-                    data-placement="top"
-                >
-                    ?
-                </button>
+                {showHelp &&
+                    <button
+                        tabIndex={0}
+                        className="btn badge badge-pill badge-info ml-1"
+                        role="button"
+                        data-toggle="popover"
+                        data-trigger="focus"
+                        title="Reaction buttons"
+                        data-content={this.reactionDefinitionsHtml}
+                        data-html={true}
+                        data-placement="top"
+                    >
+                        ?
+                    </button>
+                }
             </>
         );
     }
