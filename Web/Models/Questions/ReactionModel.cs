@@ -9,21 +9,34 @@ namespace Pobs.Web.Models.Questions
     public class ReactionModel
     {
         public ReactionModel() { }
-        public ReactionModel(int questionId, int answerId, Comment comment, ReactionType reactionType, int loggedInUserId)
+
+        private ReactionModel(IEnumerable<Reaction> reactions, ReactionType reactionType, int loggedInUserId) : this()
         {
-            this.QuestionId = questionId;
-            this.AnswerId = answerId;
-            this.CommentId = comment.Id;
             this.Type = reactionType.ToString();
 
-            var reactionOfThisType = comment.Reactions.Where(x => x.Type == reactionType);
+            var reactionOfThisType = reactions.Where(x => x.Type == reactionType);
             this.NewCount = reactionOfThisType.Count();
             this.IsMyReaction = reactionOfThisType.Any(x => x.PostedByUserId == loggedInUserId);
         }
 
+        public ReactionModel(int questionId, Answer answer, ReactionType reactionType, int loggedInUserId)
+            : this(answer.Reactions, reactionType, loggedInUserId)
+        {
+            this.QuestionId = questionId;
+            this.AnswerId = answer.Id;
+        }
+
+        public ReactionModel(int questionId, int answerId, Comment comment, ReactionType reactionType, int loggedInUserId)
+            : this(comment.Reactions, reactionType, loggedInUserId)
+        {
+            this.QuestionId = questionId;
+            this.AnswerId = answerId;
+            this.CommentId = comment.Id;
+        }
+
         public int QuestionId { get; set; }
         public int AnswerId { get; set; }
-        public long CommentId { get; set; }
+        public long? CommentId { get; set; }
         [Required]
         public string Type { get; set; }
         public int NewCount { get; set; }

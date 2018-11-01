@@ -42,9 +42,12 @@ namespace Pobs.Web.Models.Questions
             this.IsPostedByLoggedInUser = answer.PostedByUserId == loggedInUserId;
             var topLevelComments = answer.Comments.Where(x => x.Status == CommentStatus.OK && x.ParentComment == null);
             this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
+
+            this.ReactionCounts = answer.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
+            this.MyReactions = answer.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
         }
 
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Text { get; set; }
@@ -57,5 +60,7 @@ namespace Pobs.Web.Models.Questions
         public int PostedByUserPseudoId { get; set; }
         public bool IsPostedByLoggedInUser { get; set; }
         public CommentModel[] Comments { get; set; }
+        public Dictionary<string, int> ReactionCounts { get; set; }
+        public string[] MyReactions { get; set; }
     }
 }

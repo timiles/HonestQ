@@ -140,6 +140,51 @@ namespace Pobs.Web.Controllers
             }
         }
 
+        [HttpPost, Route("{questionId}/answers/{answerId}/reactions/{reactionType}"), Authorize]
+        public async Task<IActionResult> AddAnswerReaction(int questionId, int answerId, string reactionType)
+        {
+            if (string.IsNullOrEmpty(reactionType) ||
+                !Enum.TryParse<ReactionType>(reactionType, out ReactionType r))
+            {
+                return BadRequest($"Invalid ReactionType: {reactionType}.");
+            }
+
+            try
+            {
+                var reactionModel = await _questionService.SaveAnswerReaction(questionId, answerId, r, User.Identity.ParseUserId());
+                if (reactionModel != null)
+                {
+                    return Ok(reactionModel);
+                }
+                return NotFound();
+            }
+            catch (AppException e)
+            {
+                if (e.Message == "Reaction already exists.")
+                {
+                    return Conflict(e.Message);
+                }
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete, Route("{questionId}/answers/{answerId}/reactions/{reactionType}"), Authorize]
+        public async Task<IActionResult> DeleteAnswerReaction(int questionId, int answerId, string reactionType)
+        {
+            if (string.IsNullOrEmpty(reactionType) ||
+                !Enum.TryParse<ReactionType>(reactionType, out ReactionType r))
+            {
+                return BadRequest($"Invalid ReactionType: {reactionType}.");
+            }
+
+            var responseModel = await _questionService.RemoveAnswerReaction(questionId, answerId, r, User.Identity.ParseUserId());
+            if (responseModel != null)
+            {
+                return Ok(responseModel);
+            }
+            return NotFound();
+        }
+
         [HttpPost, Route("{questionId}/answers/{answerId}/comments"), Authorize]
         public async Task<IActionResult> AddComment(int questionId, int answerId, [FromBody] CommentFormModel payload)
         {
@@ -169,7 +214,7 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpPost, Route("{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}"), Authorize]
-        public async Task<IActionResult> AddReaction(int questionId, int answerId, long commentId, string reactionType)
+        public async Task<IActionResult> AddCommentReaction(int questionId, int answerId, long commentId, string reactionType)
         {
             if (string.IsNullOrEmpty(reactionType) ||
                 !Enum.TryParse<ReactionType>(reactionType, out ReactionType r))
@@ -179,7 +224,7 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                var reactionModel = await _questionService.SaveReaction(questionId, answerId, commentId, r, User.Identity.ParseUserId());
+                var reactionModel = await _questionService.SaveCommentReaction(questionId, answerId, commentId, r, User.Identity.ParseUserId());
                 if (reactionModel != null)
                 {
                     return Ok(reactionModel);
@@ -197,7 +242,7 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpDelete, Route("{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}"), Authorize]
-        public async Task<IActionResult> DeleteReaction(int questionId, int answerId, long commentId, string reactionType)
+        public async Task<IActionResult> DeleteCommentReaction(int questionId, int answerId, long commentId, string reactionType)
         {
             if (string.IsNullOrEmpty(reactionType) ||
                 !Enum.TryParse<ReactionType>(reactionType, out ReactionType r))
@@ -205,7 +250,7 @@ namespace Pobs.Web.Controllers
                 return BadRequest($"Invalid ReactionType: {reactionType}.");
             }
 
-            var responseModel = await _questionService.RemoveReaction(questionId, answerId, commentId, r, User.Identity.ParseUserId());
+            var responseModel = await _questionService.RemoveCommentReaction(questionId, answerId, commentId, r, User.Identity.ParseUserId());
             if (responseModel != null)
             {
                 return Ok(responseModel);

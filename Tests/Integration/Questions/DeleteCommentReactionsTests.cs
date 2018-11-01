@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Questions
 {
-    public class PostReactionsTests : IDisposable
+    public class DeleteCommentReactionsTests : IDisposable
     {
         private string _generateUrl(int questionId, int answerId, long commentId, string reactionType) =>
             $"/api/questions/{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}";
@@ -23,7 +23,7 @@ namespace Pobs.Tests.Integration.Questions
         private readonly Question _question;
         private readonly Comment _comment;
 
-        public PostReactionsTests()
+        public DeleteCommentReactionsTests()
         {
             _user = DataHelpers.CreateUser();
             _differentUser = DataHelpers.CreateUser();
@@ -33,124 +33,7 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task Authenticated_ShouldAddReaction()
-        {
-            var reactionType = ReactionType.ThisMadeMeThink;
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(_comment, reactionType);
-                var response = await client.PostAsync(url, null);
-                response.EnsureSuccessStatusCode();
-
-                using (var dbContext = TestSetup.CreateDbContext())
-                {
-                    var reloadedComment = dbContext.Questions
-                        .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
-                        .Include(x => x.Reactions)
-                        .First(x => x.Id == _comment.Id);
-
-                    Assert.Single(reloadedComment.Reactions);
-                    var reloadedReaction = reloadedComment.Reactions.Single();
-                    Assert.Equal(reactionType, reloadedReaction.Type);
-                    Assert.Equal(_user.Id, reloadedReaction.PostedByUserId);
-
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<ReactionModel>(responseContent);
-
-                    Assert.Equal(_comment.Answer.Question.Id, responseModel.QuestionId);
-                    Assert.Equal(_comment.Answer.Id, responseModel.AnswerId);
-                    Assert.Equal(_comment.Id, responseModel.CommentId);
-                    Assert.Equal(reactionType.ToString(), responseModel.Type);
-                    Assert.Equal(1, responseModel.NewCount);
-                    Assert.True(responseModel.IsMyReaction);
-                }
-            }
-        }
-
-        [Fact]
-        public async Task ExistingDifferentReactionFromSameUser_ShouldAddNewReaction()
-        {
-            var reactionType = ReactionType.ThisMadeMeThink;
-            var differentReactionType = ReactionType.YouBeTrolling;
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                dbContext.Attach(_comment);
-                _comment.Reactions.Add(new Reaction(differentReactionType, _user.Id, DateTimeOffset.UtcNow));
-                dbContext.SaveChanges();
-            }
-
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(_comment, reactionType);
-                var response = await client.PostAsync(url, null);
-                response.EnsureSuccessStatusCode();
-
-                using (var dbContext = TestSetup.CreateDbContext())
-                {
-                    var reloadedComment = dbContext.Questions
-                        .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
-                        .Include(x => x.Reactions)
-                        .First(x => x.Id == _comment.Id);
-
-                    var reactionTypes = reloadedComment.Reactions.Select(x => x.Type).ToList();
-                    Assert.Contains(reactionType, reactionTypes);
-                    Assert.Contains(differentReactionType, reactionTypes);
-                }
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<ReactionModel>(responseContent);
-                Assert.Equal(reactionType.ToString(), responseModel.Type);
-                Assert.Equal(1, responseModel.NewCount);
-                Assert.True(responseModel.IsMyReaction);
-            }
-        }
-
-        [Fact]
-        public async Task ExistingSameReactionFromDifferentUser_ShouldAddNewReaction()
-        {
-            var reactionType = ReactionType.ThisMadeMeThink;
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                dbContext.Attach(_comment);
-                _comment.Reactions.Add(new Reaction(reactionType, _differentUser.Id, DateTimeOffset.UtcNow));
-                dbContext.SaveChanges();
-            }
-
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(_comment, reactionType);
-                var response = await client.PostAsync(url, null);
-                response.EnsureSuccessStatusCode();
-
-                using (var dbContext = TestSetup.CreateDbContext())
-                {
-                    var reloadedComment = dbContext.Questions
-                        .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
-                        .Include(x => x.Reactions)
-                        .First(x => x.Id == _comment.Id);
-
-                    Assert.Equal(2, reloadedComment.Reactions.Count(x => x.Type == reactionType));
-                }
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                var responseModel = JsonConvert.DeserializeObject<ReactionModel>(responseContent);
-                Assert.Equal(reactionType.ToString(), responseModel.Type);
-                Assert.Equal(2, responseModel.NewCount);
-                Assert.True(responseModel.IsMyReaction);
-            }
-        }
-
-        [Fact]
-        public async Task ExistingSameReactionFromSameUser_ShouldReturnConflict()
+        public async Task Authenticated_ShouldDeleteReaction()
         {
             var reactionType = ReactionType.ThisMadeMeThink;
             using (var dbContext = TestSetup.CreateDbContext())
@@ -166,8 +49,93 @@ namespace Pobs.Tests.Integration.Questions
                 client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_comment, reactionType);
-                var response = await client.PostAsync(url, null);
-                Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+                var response = await client.DeleteAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedComment = dbContext.Questions
+                        .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
+                        .Include(x => x.Reactions)
+                        .First(x => x.Id == _comment.Id);
+
+                    Assert.Empty(reloadedComment.Reactions);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<ReactionModel>(responseContent);
+
+                    Assert.Equal(_comment.Answer.Question.Id, responseModel.QuestionId);
+                    Assert.Equal(_comment.Answer.Id, responseModel.AnswerId);
+                    Assert.Equal(_comment.Id, responseModel.CommentId);
+                    Assert.Equal(reactionType.ToString(), responseModel.Type);
+                    Assert.Equal(0, responseModel.NewCount);
+                    Assert.False(responseModel.IsMyReaction);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task ExistingDifferentReactionFromSameUser_ShouldOnlyDeleteThisReaction()
+        {
+            var reactionType = ReactionType.ThisMadeMeThink;
+            var differentReactionType = ReactionType.YouBeTrolling;
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(_comment);
+                _comment.Reactions.Add(new Reaction(reactionType, _user.Id, DateTimeOffset.UtcNow));
+                _comment.Reactions.Add(new Reaction(differentReactionType, _user.Id, DateTimeOffset.UtcNow));
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_comment, reactionType);
+                var response = await client.DeleteAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedComment = dbContext.Questions
+                        .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
+                        .Include(x => x.Reactions)
+                        .First(x => x.Id == _comment.Id);
+
+                    var reactionTypes = reloadedComment.Reactions.Select(x => x.Type).ToList();
+                    Assert.DoesNotContain(reactionType, reactionTypes);
+                    Assert.Contains(differentReactionType, reactionTypes);
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<ReactionModel>(responseContent);
+                Assert.Equal(reactionType.ToString(), responseModel.Type);
+                Assert.Equal(0, responseModel.NewCount);
+                Assert.False(responseModel.IsMyReaction);
+            }
+        }
+
+        [Fact]
+        public async Task ExistingSameReactionFromDifferentUser_ShouldOnlyDeleteThisReaction()
+        {
+            var reactionType = ReactionType.ThisMadeMeThink;
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(_comment);
+                _comment.Reactions.Add(new Reaction(reactionType, _user.Id, DateTimeOffset.UtcNow));
+                _comment.Reactions.Add(new Reaction(reactionType, _differentUser.Id, DateTimeOffset.UtcNow));
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_comment, reactionType);
+                var response = await client.DeleteAsync(url);
+                response.EnsureSuccessStatusCode();
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
@@ -177,6 +145,38 @@ namespace Pobs.Tests.Integration.Questions
                         .First(x => x.Id == _comment.Id);
 
                     Assert.Equal(1, reloadedComment.Reactions.Count(x => x.Type == reactionType));
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<ReactionModel>(responseContent);
+                Assert.Equal(reactionType.ToString(), responseModel.Type);
+                Assert.Equal(1, responseModel.NewCount);
+                Assert.False(responseModel.IsMyReaction);
+            }
+        }
+
+        [Fact]
+        public async Task NoExistingReactionFromUser_ShouldReturnNotFound()
+        {
+            var reactionType = ReactionType.ThisMadeMeThink;
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_comment, reactionType);
+                var response = await client.DeleteAsync(url);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedComment = dbContext.Questions
+                        .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
+                        .Include(x => x.Reactions)
+                        .First(x => x.Id == _comment.Id);
+
+                    Assert.Equal(0, reloadedComment.Reactions.Count(x => x.Type == reactionType));
                 }
             }
         }
@@ -189,7 +189,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var client = server.CreateClient())
             {
                 var url = _generateUrl(_comment, reactionType);
-                var response = await client.PostAsync(url, null);
+                var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
 
                 using (var dbContext = TestSetup.CreateDbContext())
@@ -213,7 +213,7 @@ namespace Pobs.Tests.Integration.Questions
                 client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(0, _comment.Answer.Id, _comment.Id, ReactionType.ThisMadeMeThink.ToString());
-                var response = await client.PostAsync(url, null);
+                var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
@@ -227,7 +227,7 @@ namespace Pobs.Tests.Integration.Questions
                 client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_comment.Answer.Question.Id, 0, _comment.Id, ReactionType.ThisMadeMeThink.ToString());
-                var response = await client.PostAsync(url, null);
+                var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
@@ -241,7 +241,7 @@ namespace Pobs.Tests.Integration.Questions
                 client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_comment.Answer.Question.Id, _comment.Answer.Id, 0, ReactionType.ThisMadeMeThink.ToString());
-                var response = await client.PostAsync(url, null);
+                var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
@@ -256,7 +256,7 @@ namespace Pobs.Tests.Integration.Questions
                 client.AuthenticateAs(_user.Id);
 
                 var url = _generateUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id, reactionType);
-                var response = await client.PostAsync(url, null);
+                var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();

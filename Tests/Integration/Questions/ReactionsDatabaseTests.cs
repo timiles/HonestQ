@@ -16,18 +16,33 @@ namespace Pobs.Tests.Integration.Questions
     {
         private readonly User _user;
         private readonly Question _question;
+        private readonly Answer _answer;
         private readonly Comment _comment;
 
         public ReactionsDatabaseTests()
         {
             _user = DataHelpers.CreateUser();
             _question = DataHelpers.CreateQuestions(_user, 1, _user, 1).Single();
-            DataHelpers.CreateComments(_question.Answers.First(), _user, 1);
-            _comment = _question.Answers.First().Comments.First();
+            _answer = _question.Answers.First();
+            DataHelpers.CreateComments(_answer, _user, 1);
+            _comment = _answer.Comments.First();
         }
 
         [Fact]
-        public void ShouldNotSaveDuplicateReactions()
+        public void ShouldNotSaveDuplicateAnswerReactions()
+        {
+            var reactionType = ReactionType.ThisMadeMeThink;
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(_answer);
+                _answer.Reactions.Add(new Reaction(reactionType, _user.Id, DateTimeOffset.UtcNow));
+                _answer.Reactions.Add(new Reaction(reactionType, _user.Id, DateTimeOffset.UtcNow));
+                Assert.Throws<DbUpdateException>(() => dbContext.SaveChanges());
+            }
+        }
+
+        [Fact]
+        public void ShouldNotSaveDuplicateCommentReactions()
         {
             var reactionType = ReactionType.ThisMadeMeThink;
             using (var dbContext = TestSetup.CreateDbContext())

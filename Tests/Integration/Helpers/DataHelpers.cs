@@ -161,7 +161,9 @@ namespace Pobs.Tests.Integration.Helpers
         {
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var question = dbContext.Questions.Include(x => x.Answers).ThenInclude(x => x.Comments)
+                var question = dbContext.Questions
+                    .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
+                    .Include(x => x.Answers).ThenInclude(x => x.Reactions)
                     .First(x => x.Id == questionId);
 
                 // Delete child comments first
@@ -169,6 +171,10 @@ namespace Pobs.Tests.Integration.Helpers
                 {
                     foreach (var comment in answer.Comments.Where(x => x.ParentComment != null))
                     {
+                        foreach (var reaction in comment.Reactions.ToArray())
+                        {
+                            dbContext.Remove(reaction);
+                        }
                         comment.ParentComment.ChildComments.Remove(comment);
                     }
                 }
@@ -180,6 +186,10 @@ namespace Pobs.Tests.Integration.Helpers
                     foreach (var comment in answer.Comments.ToArray())
                     {
                         dbContext.Remove(comment);
+                    }
+                    foreach (var reaction in answer.Reactions.ToArray())
+                    {
+                        dbContext.Remove(reaction);
                     }
                 }
                 dbContext.SaveChanges();

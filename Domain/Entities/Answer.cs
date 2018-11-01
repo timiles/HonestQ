@@ -11,6 +11,7 @@ namespace Pobs.Domain.Entities
         public Answer()
         {
             this.Comments = new Collection<Comment>();
+            this.Reactions = new Collection<Reaction>();
         }
         public Answer(string text, User postedByUser, DateTimeOffset postedAt) : this()
         {
@@ -40,7 +41,7 @@ namespace Pobs.Domain.Entities
 
         [Required]
         public virtual Question Question { get; set; }
-
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Reaction> Reactions { get; set; }
     }
 }

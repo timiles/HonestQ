@@ -19,9 +19,11 @@ namespace Pobs.Web.Services
         Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId);
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
         Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm);
+        Task<ReactionModel> SaveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
+        Task<ReactionModel> RemoveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
         Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId);
-        Task<ReactionModel> SaveReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
-        Task<ReactionModel> RemoveReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
+        Task<ReactionModel> SaveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
+        Task<ReactionModel> RemoveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
     }
 
     public class QuestionService : IQuestionService
@@ -117,6 +119,7 @@ namespace Pobs.Web.Services
         {
             var question = await _context.Questions
                 .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.Answers).ThenInclude(x => x.Reactions)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
@@ -169,6 +172,47 @@ namespace Pobs.Web.Services
             return new AnswerModel(answer);
         }
 
+        public async Task<ReactionModel> SaveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId)
+        {
+            var answer = await _context.Questions
+                .SelectMany(x => x.Answers)
+                .Include(x => x.Reactions)
+                .FirstOrDefaultAsync(x => x.Id == answerId && x.Question.Id == questionId);
+            if (answer == null)
+            {
+                return null;
+            }
+
+            if (answer.Reactions.Any(x => x.PostedByUserId == postedByUserId && x.Type == reactionType))
+            {
+                throw new AppException("Reaction already exists.");
+            }
+
+            answer.Reactions.Add(new Reaction(reactionType, postedByUserId, DateTimeOffset.UtcNow));
+            await _context.SaveChangesAsync();
+
+            return new ReactionModel(questionId, answer, reactionType, postedByUserId);
+        }
+
+        public async Task<ReactionModel> RemoveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId)
+        {
+            var answer = await _context.Questions
+                .SelectMany(x => x.Answers)
+                .Include(x => x.Reactions)
+                .FirstOrDefaultAsync(x => x.Id == answerId && x.Question.Id == questionId);
+
+            var reaction = answer?.Reactions.FirstOrDefault(x => x.PostedByUserId == postedByUserId && x.Type == reactionType);
+            if (reaction == null)
+            {
+                return null;
+            }
+
+            answer.Reactions.Remove(reaction);
+            await _context.SaveChangesAsync();
+
+            return new ReactionModel(questionId, answer, reactionType, postedByUserId);
+        }
+
         public async Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId)
         {
             var questionTask = _context.Questions
@@ -201,7 +245,7 @@ namespace Pobs.Web.Services
             return new CommentModel(comment, postedByUserId);
         }
 
-        public async Task<ReactionModel> SaveReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId)
+        public async Task<ReactionModel> SaveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId)
         {
             var comment = await _context.Questions
                 .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
@@ -223,7 +267,7 @@ namespace Pobs.Web.Services
             return new ReactionModel(questionId, answerId, comment, reactionType, postedByUserId);
         }
 
-        public async Task<ReactionModel> RemoveReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId)
+        public async Task<ReactionModel> RemoveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId)
         {
             var comment = await _context.Questions
                 .SelectMany(x => x.Answers).SelectMany(x => x.Comments)

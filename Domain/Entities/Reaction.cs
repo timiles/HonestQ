@@ -25,8 +25,9 @@ namespace Pobs.Domain.Entities
         public DateTimeOffset PostedAt { get; set; }
 
 
-        [Required]
+        public virtual Answer Answer { get; set; }
+        public int? AnswerId { get; set; }
         public virtual Comment Comment { get; set; }
-        public long CommentId { get; set; }
+        public long? CommentId { get; set; }
     }
 }
