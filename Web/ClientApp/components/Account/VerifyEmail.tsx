@@ -33,10 +33,12 @@ class VerifyEmail extends React.Component<VerifyEmailProps> {
 
         // Due to SSR, probably won't ever see the Submitting view, but just in case.
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Verifying your email</h2>
-                {submitting && <p>⏳ <i>Submitting...</i></p>}
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Verifying your email</h2>
+                    {submitting && <p>⏳ <i>Submitting...</i></p>}
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                </div>
             </div>
         );
     }

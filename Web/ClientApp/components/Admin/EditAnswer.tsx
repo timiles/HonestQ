@@ -31,20 +31,22 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
         const successUrl = (savedSuccessfully) ? `/questions/${this.props.match.params.questionId}/todo` : null;
 
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Edit Answer</h2>
-                {successUrl && (
-                    <div className="alert alert-success" role="alert">
-                        Answer updated, check it out: <Link to={successUrl}>{successUrl}</Link>
-                    </div>
-                )}
-                <Loading {...this.props.editAnswerForm} />
-                {initialState && (
-                    <AnswerForm
-                        initialState={initialState}
-                        submit={this.handleSubmit}
-                    />
-                )}
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Edit Answer</h2>
+                    {successUrl && (
+                        <div className="alert alert-success" role="alert">
+                            Answer updated, check it out: <Link to={successUrl}>{successUrl}</Link>
+                        </div>
+                    )}
+                    <Loading {...this.props.editAnswerForm} />
+                    {initialState && (
+                        <AnswerForm
+                            initialState={initialState}
+                            submit={this.handleSubmit}
+                        />
+                    )}
+                </div>
             </div>
         );
     }

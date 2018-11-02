@@ -58,85 +58,87 @@ class EditTopic extends React.Component<EditTopicProps, EditTopicFormModel> {
             : null;
 
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Edit Topic</h2>
-                {loadedModel && successUrl && (
-                    <div className="alert alert-success" role="alert">
-                        "{loadedModel.name}" approved,
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Edit Topic</h2>
+                    {loadedModel && successUrl && (
+                        <div className="alert alert-success" role="alert">
+                            "{loadedModel.name}" approved,
                         check it out: <Link to={successUrl}>{successUrl}</Link>
-                    </div>
-                )}
-                <Loading {...this.props.topicModel} />
-                {loadedModel && (
-                    <>
-                        {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                        <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
-                            <div className="form-group">
-                                <label htmlFor="name">Topic name</label>
-                                <input
-                                    type="text"
-                                    className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
-                                    id="name"
-                                    name="name"
-                                    maxLength={100}
-                                    value={name}
-                                    onChange={this.handleChange}
-                                />
-                                <div className="invalid-feedback">Topic name is required</div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="slug">Slug</label>
-                                <input
-                                    type="text"
-                                    className={`form-control ${submitted ? slug ? 'is-valid' : 'is-invalid' : ''}`}
-                                    id="slug"
-                                    name="slug"
-                                    maxLength={100}
-                                    value={slug}
-                                    onChange={this.handleChange}
-                                />
-                                <div className="invalid-feedback">Slug is required</div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="summary">Summary</label>
-                                <SuperTextArea
-                                    className="form-control"
-                                    id="summary"
-                                    name="summary"
-                                    maxLength={280}
-                                    value={summary}
-                                    onChange={this.handleChange}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="moreInfoUrl"
-                                    name="moreInfoUrl"
-                                    maxLength={2000}
-                                    value={moreInfoUrl}
-                                    onChange={this.handleChange}
-                                />
-                            </div>
-                            <div className="form-group form-check">
-                                <input
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    id="isApproved"
-                                    name="isApproved"
-                                    checked={isApproved}
-                                    onChange={this.handleChange}
-                                />
-                                <label className="form-check-label" htmlFor="isApproved">Mark as Approved</label>
-                            </div>
-                            <div className="form-group">
-                                <SubmitButton submitting={submitting} />
-                            </div>
-                        </form>
-                    </>
-                )}
+                        </div>
+                    )}
+                    <Loading {...this.props.topicModel} />
+                    {loadedModel && (
+                        <>
+                            {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                            <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="name">Topic name</label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
+                                        id="name"
+                                        name="name"
+                                        maxLength={100}
+                                        value={name}
+                                        onChange={this.handleChange}
+                                    />
+                                    <div className="invalid-feedback">Topic name is required</div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="slug">Slug</label>
+                                    <input
+                                        type="text"
+                                        className={`form-control ${submitted ? slug ? 'is-valid' : 'is-invalid' : ''}`}
+                                        id="slug"
+                                        name="slug"
+                                        maxLength={100}
+                                        value={slug}
+                                        onChange={this.handleChange}
+                                    />
+                                    <div className="invalid-feedback">Slug is required</div>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="summary">Summary</label>
+                                    <SuperTextArea
+                                        className="form-control"
+                                        id="summary"
+                                        name="summary"
+                                        maxLength={280}
+                                        value={summary}
+                                        onChange={this.handleChange}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="moreInfoUrl"
+                                        name="moreInfoUrl"
+                                        maxLength={2000}
+                                        value={moreInfoUrl}
+                                        onChange={this.handleChange}
+                                    />
+                                </div>
+                                <div className="form-group form-check">
+                                    <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        id="isApproved"
+                                        name="isApproved"
+                                        checked={isApproved}
+                                        onChange={this.handleChange}
+                                    />
+                                    <label className="form-check-label" htmlFor="isApproved">Mark as Approved</label>
+                                </div>
+                                <div className="form-group">
+                                    <SubmitButton submitting={submitting} />
+                                </div>
+                            </form>
+                        </>
+                    )}
+                </div>
             </div>
         );
     }

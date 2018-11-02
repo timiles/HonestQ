@@ -43,7 +43,7 @@ class Container extends React.Component<ContainerProps, {}> {
                 {this.renderHelmetTags()}
 
                 {question &&
-                    <>
+                    <div className="row">
                         <div className="col-lg-6 offset-lg-3">
                             <div className="row">
                                 {(question.loading || question.error) &&
@@ -89,7 +89,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                 }
                             </div>
                         </div>
-                    </>
+                    </div>
                 }
             </LoggedInUserContext.Provider>
         );

@@ -17,7 +17,9 @@ class Logout extends React.Component<LogOutProps> {
     public render() {
         if (this.props.loggedInUser) {
             return (
-                <div>Logging out....</div>
+                <div className="row">
+                    <div>Logging out....</div>
+                </div>
             );
         } else {
             return <Redirect to="/" />;

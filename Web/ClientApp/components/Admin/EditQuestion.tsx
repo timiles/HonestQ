@@ -31,20 +31,22 @@ class EditQuestion extends React.Component<EditQuestionProps, {}> {
         const successUrl = (savedSlug) ? `/questions/${this.props.match.params.questionId}/${savedSlug}` : null;
 
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Edit Question</h2>
-                {successUrl && (
-                    <div className="alert alert-success" role="alert">
-                        Question updated, check it out: <Link to={successUrl}>{successUrl}</Link>
-                    </div>
-                )}
-                <Loading {...this.props.editQuestionForm} />
-                {initialState && (
-                    <QuestionForm
-                        initialState={initialState}
-                        submit={this.handleSubmit}
-                    />
-                )}
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Edit Question</h2>
+                    {successUrl && (
+                        <div className="alert alert-success" role="alert">
+                            Question updated, check it out: <Link to={successUrl}>{successUrl}</Link>
+                        </div>
+                    )}
+                    <Loading {...this.props.editQuestionForm} />
+                    {initialState && (
+                        <QuestionForm
+                            initialState={initialState}
+                            submit={this.handleSubmit}
+                        />
+                    )}
+                </div>
             </div>
         );
     }

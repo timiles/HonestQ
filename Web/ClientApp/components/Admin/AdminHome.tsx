@@ -29,23 +29,28 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         }
         const { loadedModel } = this.props.unapprovedTopicsList;
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h1>Admin</h1>
-                <h2>Topics awaiting Approval:</h2>
-                <Loading {...this.props.unapprovedTopicsList} />
-                {loadedModel && (loadedModel.topics.length === 0 ?
-                    <p>All done!</p>
-                    :
-                    <ul className="list-inline">
-                        {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
-                            <li key={i} className="mr-2 mb-2 list-inline-item">
-                                <Link to={`/admin/edit/topics/${x.slug}`} className="btn btn-lg btn-outline-secondary">
-                                    {x.name}
-                                </Link>
-                            </li>)
-                        }
-                    </ul>
-                )}
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h1>Admin</h1>
+                    <h2>Topics awaiting Approval:</h2>
+                    <Loading {...this.props.unapprovedTopicsList} />
+                    {loadedModel && (loadedModel.topics.length === 0 ?
+                        <p>All done!</p>
+                        :
+                        <ul className="list-inline">
+                            {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
+                                <li key={i} className="mr-2 mb-2 list-inline-item">
+                                    <Link
+                                        to={`/admin/edit/topics/${x.slug}`}
+                                        className="btn btn-lg btn-outline-secondary"
+                                    >
+                                        {x.name}
+                                    </Link>
+                                </li>)
+                            }
+                        </ul>
+                    )}
+                </div>
             </div>
         );
     }

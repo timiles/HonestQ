@@ -55,50 +55,52 @@ class Home extends React.Component<HomeProps, {}> {
         const topicsModel = this.props.loadingTopicsList.loadedModel;
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <div className="col-md-12 col-lg-6 offset-lg-3">
-                    <h1>Recent activity</h1>
-                    {activityList &&
-                        <ul className="list-unstyled">
-                            <li className="mb-2">
-                                <NewQuestion />
-                            </li>
-                            {activityList.activityItems.map((x: ActivityListItemModel, i: number) =>
-                                <li key={i} className="mb-2">
-                                    {this.renderActivityItem(x)}
-                                </li>)}
-                            {activityList.lastTimestamp === 0 && activityList.activityItems.length > 40 &&
-                                <li>
-                                    That's all, folks!
+                <div className="row">
+                    <div className="col-md-12 col-lg-6 offset-lg-3">
+                        <h1>Recent activity</h1>
+                        {activityList &&
+                            <ul className="list-unstyled">
+                                <li className="mb-2">
+                                    <NewQuestion />
                                 </li>
-                            }
-                        </ul>
-                    }
-                    <Loading {...this.props.loadingActivityList} />
-                </div>
-                <div className="col-md-3 d-none d-lg-block">
-                    <h2>Topics</h2>
-                    <Loading {...this.props.loadingTopicsList} />
-                    {topicsModel &&
-                        <ul className="list-inline">
-                            {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
-                                <li key={i} className="mr-1 mb-1 list-inline-item">
-                                    <Link
-                                        to={`/topics/${x.slug}`}
-                                        className="btn btn-sm btn-outline-secondary topic-list-item"
-                                    >
-                                        {x.name}
-                                    </Link>
-                                </li>)}
-                            <LoggedInUserContext.Consumer>
-                                {(user) => isUserInRole(user, 'Admin') &&
-                                    <li className="list-inline-item">
-                                        <Link to="/newtopic" className="btn btn-sm btn-primary">
-                                            Suggest a new Topic
+                                {activityList.activityItems.map((x: ActivityListItemModel, i: number) =>
+                                    <li key={i} className="mb-2">
+                                        {this.renderActivityItem(x)}
+                                    </li>)}
+                                {activityList.lastTimestamp === 0 && activityList.activityItems.length > 40 &&
+                                    <li>
+                                        That's all, folks!
+                                </li>
+                                }
+                            </ul>
+                        }
+                        <Loading {...this.props.loadingActivityList} />
+                    </div>
+                    <div className="col-md-3 d-none d-lg-block">
+                        <h2>Topics</h2>
+                        <Loading {...this.props.loadingTopicsList} />
+                        {topicsModel &&
+                            <ul className="list-inline">
+                                {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
+                                    <li key={i} className="mr-1 mb-1 list-inline-item">
+                                        <Link
+                                            to={`/topics/${x.slug}`}
+                                            className="btn btn-sm btn-outline-secondary topic-list-item"
+                                        >
+                                            {x.name}
                                         </Link>
-                                    </li>}
-                            </LoggedInUserContext.Consumer>
-                        </ul>
-                    }
+                                    </li>)}
+                                <LoggedInUserContext.Consumer>
+                                    {(user) => isUserInRole(user, 'Admin') &&
+                                        <li className="list-inline-item">
+                                            <Link to="/newtopic" className="btn btn-sm btn-primary">
+                                                Suggest a new Topic
+                                        </Link>
+                                        </li>}
+                                </LoggedInUserContext.Consumer>
+                            </ul>
+                        }
+                    </div>
                 </div>
             </LoggedInUserContext.Provider>
         );

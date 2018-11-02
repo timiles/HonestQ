@@ -42,55 +42,57 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
         const { submitting, submitted, error } = this.props;
         const previous = this.props.previouslySubmittedTopicFormModel;
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Suggest a new Topic</h2>
-                {previous && (
-                    <div className="alert alert-success" role="alert">
-                        Your topic "{previous.name}" has been created and is awaiting approval!
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Suggest a new Topic</h2>
+                    {previous && (
+                        <div className="alert alert-success" role="alert">
+                            Your topic "{previous.name}" has been created and is awaiting approval!
                     </div>
-                )}
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="name">Topic name</label>
-                        <input
-                            type="text"
-                            className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="name"
-                            name="name"
-                            maxLength={100}
-                            value={name}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Topic name is required</div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="summary">Summary (optional)</label>
-                        <SuperTextArea
-                            className="form-control"
-                            id="summary"
-                            name="summary"
-                            maxLength={280}
-                            value={summary}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page (optional)</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="moreInfoUrl"
-                            name="moreInfoUrl"
-                            maxLength={2000}
-                            value={moreInfoUrl}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <SubmitButton submitting={submitting} />
-                    </div>
-                </form>
+                    )}
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="name">Topic name</label>
+                            <input
+                                type="text"
+                                className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
+                                id="name"
+                                name="name"
+                                maxLength={100}
+                                value={name}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Topic name is required</div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="summary">Summary (optional)</label>
+                            <SuperTextArea
+                                className="form-control"
+                                id="summary"
+                                name="summary"
+                                maxLength={280}
+                                value={summary}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page (optional)</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="moreInfoUrl"
+                                name="moreInfoUrl"
+                                maxLength={2000}
+                                value={moreInfoUrl}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <SubmitButton submitting={submitting} />
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }

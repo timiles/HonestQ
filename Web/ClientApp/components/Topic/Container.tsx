@@ -41,15 +41,17 @@ class Container extends React.Component<ContainerProps, {}> {
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 {this.renderHelmetTags()}
 
-                <div className="col-lg-6 offset-lg-3">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <Topic {...topic} />
-                            {topic.model && numberOfQuestionsInTopic === 0 &&
-                                <>
-                                    <h2>Start the conversation</h2>
-                                    <NewQuestion topicValue={topic.model} />
-                                </>}
+                <div className="row">
+                    <div className="col-lg-6 offset-lg-3">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <Topic {...topic} />
+                                {topic.model && numberOfQuestionsInTopic === 0 &&
+                                    <>
+                                        <h2>Start the conversation</h2>
+                                        <NewQuestion topicValue={topic.model} />
+                                    </>}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -32,53 +32,55 @@ class LogIn extends React.Component<LogInProps, LogInFormModel> {
         const { username, password, rememberMe } = this.state;
         const { submitting, submitted, error } = this.props;
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Log in</h2>
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" noValidate={true} onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <input
-                            type="text"
-                            className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="username"
-                            name="username"
-                            autoCorrect="off"
-                            autoCapitalize="none"
-                            value={username}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Username is required</div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            className={`form-control ${submitted ? password ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Password is required</div>
-                    </div>
-                    <div className="form-group">
-                        <div className="checkbox">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="rememberMe"
-                                    checked={rememberMe}
-                                    onChange={this.handleChange}
-                                /> Remember me
-                            </label>
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Log in</h2>
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    <form name="form" noValidate={true} onSubmit={this.handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
+                                id="username"
+                                name="username"
+                                autoCorrect="off"
+                                autoCapitalize="none"
+                                value={username}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Username is required</div>
                         </div>
-                    </div>
-                    <div className="form-group">
-                        <SubmitButton submitting={submitting} text="Log in" />
-                        <Link to="/signup" className="btn btn-link">Sign up</Link>
-                    </div>
-                </form>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                type="password"
+                                className={`form-control ${submitted ? password ? 'is-valid' : 'is-invalid' : ''}`}
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Password is required</div>
+                        </div>
+                        <div className="form-group">
+                            <div className="checkbox">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        name="rememberMe"
+                                        checked={rememberMe}
+                                        onChange={this.handleChange}
+                                    /> Remember me
+                            </label>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <SubmitButton submitting={submitting} text="Log in" />
+                            <Link to="/signup" className="btn btn-link">Sign up</Link>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }

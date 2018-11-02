@@ -31,77 +31,79 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
         const { error, submitting, submitted } = this.props;
 
         return (
-            <div className="col-lg-6 offset-lg-3">
-                <h2>Sign up</h2>
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="name">Name</label>
-                        <input
-                            type="text"
-                            className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="name"
-                            name="name"
-                            value={name}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Name is required</div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="text"
-                            className={`form-control ${submitted ? email ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="email"
-                            name="email"
-                            value={email}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Email is required</div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
-                        <input
-                            type="text"
-                            className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="username"
-                            name="username"
-                            autoCorrect="off"
-                            autoCapitalize="none"
-                            value={username}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Username is required</div>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            autoCorrect="off"
-                            autoCapitalize="none"
-                            className={`form-control
+            <div className="row">
+                <div className="col-lg-6 offset-lg-3">
+                    <h2>Sign up</h2>
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="name">Name</label>
+                            <input
+                                type="text"
+                                className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
+                                id="name"
+                                name="name"
+                                value={name}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Name is required</div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="text"
+                                className={`form-control ${submitted ? email ? 'is-valid' : 'is-invalid' : ''}`}
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Email is required</div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="username">Username</label>
+                            <input
+                                type="text"
+                                className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
+                                id="username"
+                                name="username"
+                                autoCorrect="off"
+                                autoCapitalize="none"
+                                value={username}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Username is required</div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                type="password"
+                                autoCorrect="off"
+                                autoCapitalize="none"
+                                className={`form-control
                                 ${submitted ? password && password.length >= 7 ? 'is-valid' : 'is-invalid' : ''}`}
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Password must be at least 7 characters</div>
+                                id="password"
+                                name="password"
+                                value={password}
+                                onChange={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Password must be at least 7 characters</div>
 
-                    </div>
-                    <div className="form-group">
-                        <small>
-                            By clicking <b>Sign up</b> below, you are agreeing to our&#32;
+                        </div>
+                        <div className="form-group">
+                            <small>
+                                By clicking <b>Sign up</b> below, you are agreeing to our&#32;
                             <a href="/docs/TermsOfService" target="_blank">Terms of Service</a>&#32;
-                            and&#32;
+                                and&#32;
                             <a href="/docs/PrivacyPolicy" target="_blank">Privacy Policy</a>.
                         </small>
-                    </div>
-                    <div className="form-group">
-                        <SubmitButton submitting={submitting} text="Sign up" />
-                        <Link to="/login" className="btn btn-link">Cancel</Link>
-                    </div>
-                </form>
+                        </div>
+                        <div className="form-group">
+                            <SubmitButton submitting={submitting} text="Sign up" />
+                            <Link to="/login" className="btn btn-link">Cancel</Link>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
     }
