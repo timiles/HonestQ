@@ -38,7 +38,7 @@ class NewComment extends React.Component<Props, State> {
         const { commentForm, parentCommentId } = this.props;
         const { isModalOpen } = this.state;
         const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
-        const btnClass = parentCommentId ? 'btn btn-outline-secondary' : 'btn btn-lg btn-primary btn-new-post mb-2';
+        const btnClass = parentCommentId ? 'btn btn-outline-secondary' : 'btn btn-lg btn-primary btn-block mb-2';
 
         return (
             <>

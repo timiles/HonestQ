@@ -43,7 +43,7 @@ class NewAnswer extends React.Component<Props, State> {
             <>
                 <ButtonOrLogIn
                     type="button"
-                    className="btn btn-lg btn-primary btn-new-post"
+                    className="btn btn-lg btn-primary btn-block"
                     onClick={this.handleOpen}
                 >
                     {headerText}
