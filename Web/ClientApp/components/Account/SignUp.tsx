@@ -92,11 +92,11 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                         </div>
                         <div className="form-group">
                             <small>
-                                By clicking <b>Sign up</b> below, you are agreeing to our&#32;
-                            <a href="/docs/TermsOfService" target="_blank">Terms of Service</a>&#32;
-                                and&#32;
-                            <a href="/docs/PrivacyPolicy" target="_blank">Privacy Policy</a>.
-                        </small>
+                                By clicking <b>Sign up</b> below, you are agreeing to our {}
+                                <a href="/docs/TermsOfService" target="_blank">Terms of Service</a> {}
+                                and {}
+                                <a href="/docs/PrivacyPolicy" target="_blank">Privacy Policy</a>.
+                            </small>
                         </div>
                         <div className="form-group">
                             <SubmitButton submitting={submitting} text="Sign up" />

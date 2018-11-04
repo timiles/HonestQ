@@ -66,7 +66,7 @@ class NewQuestion extends React.Component<Props, State> {
                                     <p>HonestQ is still in its early stages. We will be adding new questions slowly,
                                     to ensure that we're building a quality system.</p>
                                     <p>
-                                        If you would like to submit your own honest question, please&#32;
+                                        If you would like to submit your own honest question, please {}
                                         <a
                                             href="https://twitter.com/intent/tweet?text=.@HonestQ_com%20%23HonestQ"
                                             target="_blank"

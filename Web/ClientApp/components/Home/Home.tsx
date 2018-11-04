@@ -119,7 +119,7 @@ class Home extends React.Component<HomeProps, {}> {
                             <small>
                                 New question
                                 {activity.topics.length > 0 &&
-                                    <>&#32;in:&#32;
+                                    <>{} in: {}
                                         <ul className="list-inline list-comma-separated">
                                             {activity.topics.map((x: TopicValueModel, i: number) =>
                                                 <li key={i} className="list-inline-item">
@@ -148,7 +148,7 @@ class Home extends React.Component<HomeProps, {}> {
                     <>
                         <div>
                             <small>
-                                New answer to:&#32;
+                                New answer to: {}
                                 <Link to={questionUrl}>
                                     <b>{activity.questionText}</b>
                                 </Link>
@@ -171,11 +171,11 @@ class Home extends React.Component<HomeProps, {}> {
                     <>
                         <div>
                             <small>
-                                New comment on:&#32;
+                                New comment on: {}
                                 <Link to={questionUrl}>
                                     <b>{activity.questionText}</b>
                                 </Link>
-                                &#32;»&#32;
+                                {} » {}
                                 <Link to={answerUrl} className="answer">
                                     <b>{activity.answerText}</b>
                                 </Link>
