@@ -24,8 +24,7 @@ export interface VerifyEmailFormModel {
 }
 
 export interface VerifyEmailResponseModel {
-    success: boolean;
-    error: string;
+    username: string;
 }
 
 export interface ActivityListItemModel {

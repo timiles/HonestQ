@@ -112,22 +112,25 @@ namespace WebApi.Controllers
             var user = _userService.GetById(model.UserId);
             if (user == null)
             {
-                return Ok(new VerifyEmailResponseModel { Error = "Unknown UserId." });
+                return BadRequest("Unknown UserId.");
             }
 
-            if (user.EmailVerificationToken != null)
+            if (user.EmailVerificationToken == null)
             {
-                if (user.EmailVerificationToken != model.EmailVerificationToken)
-                {
-                    // TODO: Log invalid attempts?
-                    return Ok(new VerifyEmailResponseModel { Error = "Invalid email verification token." });
-                }
-
-                user.EmailVerificationToken = null;
-                _userService.Update(user);
+                // Do not return Username here, to guard against enumerating all users.
+                return Ok(new VerifyEmailResponseModel());
             }
 
-            return Ok(new VerifyEmailResponseModel { Success = true });
+            if (user.EmailVerificationToken != model.EmailVerificationToken)
+            {
+                // TODO: Log invalid attempts?
+                return BadRequest("Invalid email verification token.");
+            }
+
+            user.EmailVerificationToken = null;
+            _userService.Update(user);
+
+            return Ok(new VerifyEmailResponseModel { Username = user.Username });
         }
 
         private static string GenerateRandomString()

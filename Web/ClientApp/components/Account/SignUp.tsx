@@ -28,7 +28,7 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
 
     public render() {
         const { name, email, username, password } = this.state;
-        const { error, submitting, submitted } = this.props;
+        const { error, submitting, submitted, success } = this.props;
 
         return (
             <div className="row">
@@ -98,11 +98,17 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                                 <a href="/docs/PrivacyPolicy" target="_blank">Privacy Policy</a>.
                             </small>
                         </div>
-                        <div className="form-group">
+                        {!success && <div className="form-group">
                             <SubmitButton submitting={submitting} text="Sign up" />
                             <Link to="/login" className="btn btn-link">Cancel</Link>
-                        </div>
+                        </div>}
                     </form>
+                    {success &&
+                        <div className="alert alert-success mt-3" role="alert">
+                            <strong>Sign up successful!</strong> We are sending a verification email to <b>{email}</b>.
+                            Please open the link in the email to finish your sign up.
+                        </div>
+                    }
                 </div>
             </div>
         );

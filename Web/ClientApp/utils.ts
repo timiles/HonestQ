@@ -13,14 +13,9 @@ export function postJson<T>(
     url: string,
     model: any,
     loggedInUser: LoggedInUserModel | null | undefined,
-    includeCredentials?: boolean,
-    awaitServerSide?: boolean): Promise<T> {
+    includeCredentials?: boolean): Promise<T> {
 
-    const fetchTask = fetchJson<T>('POST', url, model, loggedInUser, includeCredentials!);
-    if (awaitServerSide) {
-        addTask(fetchTask);
-    }
-    return fetchTask;
+    return fetchJson<T>('POST', url, model, loggedInUser, includeCredentials!);
 }
 
 export function putJson<T>(

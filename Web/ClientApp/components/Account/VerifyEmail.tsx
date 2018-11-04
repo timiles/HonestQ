@@ -11,8 +11,8 @@ type VerifyEmailProps = VerifyEmailStore.VerifyEmailState
 
 class VerifyEmail extends React.Component<VerifyEmailProps> {
 
-    public componentWillMount() {
-        // This will also run on server side render
+    public componentDidMount() {
+        // This will not run on server side render
         const queryStringParams = parseQueryString(this.props.location.search);
         const token = queryStringParams.get('token');
         if (token && !this.props.submitting && !this.props.success && !this.props.error) {
@@ -25,13 +25,12 @@ class VerifyEmail extends React.Component<VerifyEmailProps> {
     }
 
     public render() {
-        const { submitting, success, error } = this.props;
+        const { submitting, success, username, error } = this.props;
 
         if (success) {
-            return <Redirect to="/login" />;
+            return <Redirect to={`/login?verified=1&username=${username || ''}`} />;
         }
 
-        // Due to SSR, probably won't ever see the Submitting view, but just in case.
         return (
             <div className="row">
                 <div className="col-lg-6 offset-lg-3">

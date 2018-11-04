@@ -1,5 +1,4 @@
-﻿import { push } from 'react-router-redux';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { SignUpFormModel } from '../server-models';
 import { postJson } from '../utils';
@@ -10,6 +9,7 @@ import { postJson } from '../utils';
 export interface SignUpState {
     submitting: boolean;
     submitted: boolean;
+    success: boolean;
     error?: string;
 }
 
@@ -17,14 +17,13 @@ export interface SignUpState {
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface ResetRegistrationFormAction { type: 'RESET_SIGNUP'; }
 interface SubmitRegistrationFormAction { type: 'SUBMIT_SIGNUP'; payload: SignUpFormModel; }
 interface RegistrationSuccessAction { type: 'SIGNUP_SUCCESS'; }
 interface RegistrationFailedAction { type: 'SIGNUP_FAILED'; payload: { reason: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = ResetRegistrationFormAction
+type KnownAction =
     | SubmitRegistrationFormAction
     | RegistrationSuccessAction
     | RegistrationFailedAction;
@@ -49,12 +48,6 @@ export const actionCreators = {
             postJson('/api/account/signup', user, null)
                 .then((response) => {
                     dispatch({ type: 'SIGNUP_SUCCESS' });
-
-                    setTimeout(() => {
-                        // REVIEW: `KnownActions | RouterAction` causes other type inference issues. Investigate?
-                        dispatch(push('/login') as any);
-                        dispatch({ type: 'RESET_SIGNUP' });
-                    }, 2000);
                 })
                 .catch((reason) => {
                     dispatch({ type: 'SIGNUP_FAILED', payload: { reason } });
@@ -70,26 +63,32 @@ export const actionCreators = {
 const defaultState: SignUpState = {
     submitting: false,
     submitted: false,
+    success: false,
     error: undefined,
 };
 
 export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownAction) => {
     switch (action.type) {
 
-        case 'RESET_SIGNUP':
-            return defaultState;
         case 'SUBMIT_SIGNUP':
             return {
                 submitting: true,
                 submitted: true,
+                success: false,
                 error: undefined,
             };
         case 'SIGNUP_SUCCESS':
-            return defaultState;
+            return {
+                submitting: false,
+                submitted: true,
+                success: true,
+                error: undefined,
+            };
         case 'SIGNUP_FAILED':
             return {
                 submitting: false,
                 submitted: true,
+                success: false,
                 error: action.payload.reason,
             };
 

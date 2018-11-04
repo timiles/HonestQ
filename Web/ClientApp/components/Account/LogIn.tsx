@@ -4,6 +4,7 @@ import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
+import { parseQueryString } from '../../utils';
 import SubmitButton from '../shared/SubmitButton';
 
 type LogInProps = LoginStore.LoginState
@@ -12,11 +13,18 @@ type LogInProps = LoginStore.LoginState
 
 class LogIn extends React.Component<LogInProps, LogInFormModel> {
 
+    private readonly isVerified: boolean = false;
+
     constructor(props: LogInProps) {
         super(props);
 
+        const queryStringParams = parseQueryString(this.props.location.search);
+        const verified = queryStringParams.get('verified');
+        this.isVerified = (verified === '1');
+        const username = queryStringParams.get('username');
+
         this.state = {
-            username: '',
+            username: username || '',
             password: '',
             rememberMe: true,
         };
@@ -34,6 +42,11 @@ class LogIn extends React.Component<LogInProps, LogInFormModel> {
         return (
             <div className="row">
                 <div className="col-lg-6 offset-lg-3">
+                    {this.isVerified &&
+                        <div className="alert alert-success mt-3" role="alert">
+                            <strong>Account verified!</strong> Log in below to get full access.
+                        </div>
+                    }
                     <h2>Log in</h2>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <form name="form" noValidate={true} onSubmit={this.handleSubmit}>

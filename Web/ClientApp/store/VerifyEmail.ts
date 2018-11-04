@@ -9,6 +9,7 @@ import { postJson } from '../utils';
 export interface VerifyEmailState {
     submitting?: boolean | null;
     success?: boolean | null;
+    username?: string | null;
     error?: string | null;
 }
 
@@ -18,7 +19,7 @@ export interface VerifyEmailState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface StartVerifyEmailAction { type: 'VERIFY_EMAIL_REQUESTED'; }
-interface VerifyEmailSuccessAction { type: 'VERIFY_EMAIL_SUCCESS'; }
+interface VerifyEmailSuccessAction { type: 'VERIFY_EMAIL_SUCCESS'; payload: { username: string; }; }
 interface VerifyEmailFailedAction { type: 'VERIFY_EMAIL_FAILED'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -38,13 +39,9 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'VERIFY_EMAIL_REQUESTED' });
 
-            postJson<VerifyEmailResponseModel>('/api/account/verifyemail', verifyEmailForm, null, false, true)
+            postJson<VerifyEmailResponseModel>('/api/account/verifyemail', verifyEmailForm, null)
                 .then((response: VerifyEmailResponseModel) => {
-                    if (response.success) {
-                        dispatch({ type: 'VERIFY_EMAIL_SUCCESS' });
-                    } else {
-                        dispatch({ type: 'VERIFY_EMAIL_FAILED', payload: { error: response.error } });
-                    }
+                    dispatch({ type: 'VERIFY_EMAIL_SUCCESS', payload: { username: response.username } });
                 })
                 .catch((reason: string) => {
                     dispatch({ type: 'VERIFY_EMAIL_FAILED', payload: { error: reason || 'VerifyEmail failed' } });
@@ -64,7 +61,7 @@ export const reducer: Reducer<VerifyEmailState> = (state: VerifyEmailState, acti
         case 'VERIFY_EMAIL_REQUESTED':
             return { submitting: true };
         case 'VERIFY_EMAIL_SUCCESS':
-            return { success: true };
+            return { success: true, username: action.payload.username };
         case 'VERIFY_EMAIL_FAILED':
             return { success: false, error: action.payload.error };
         default:
