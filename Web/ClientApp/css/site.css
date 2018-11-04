@@ -142,40 +142,10 @@ dl.reaction-definitions dt {
     margin-right: 5px;
 }
 
-.emoji:before {
+.emoji {
     display: inline-block;
     min-width: 23px;
     text-align: center;
-}
-.emoji-Question:before {
-    content: "❓";
-}
-.emoji-Answer:before {
-    content: "🙋";
-}
-.emoji-Agree:before {
-    content: "✔️";
-}
-.emoji-Neutral:before {
-    content: "🤷";
-}
-.emoji-Disagree:before {
-    content: "❌";
-}
-.emoji-GoodPointWellMade:before {
-    content: "💯";
-}
-.emoji-ThisMadeMeThink:before {
-    content: "🤔";
-}
-.emoji-ThisChangedMyView:before {
-    content: "🤯";
-}
-.emoji-NotRelevant:before {
-    content: "⁉";
-}
-.emoji-YouBeTrolling:before {
-    content: "🤡";
 }
 
 .emoji-over-text-area {

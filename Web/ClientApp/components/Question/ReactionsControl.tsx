@@ -38,7 +38,8 @@ export default class ReactionsControl extends React.Component<Props, State> {
             this.reactionDefinitionsHtml =
                 `<dl class="reaction-definitions">
                 ${this.values.map((x: ReactionValue) =>
-                    `<dt><span class="emoji emoji-${x.value}" /></dt><dd>${x.description}</dd>`).join('')}
+                    `<dt><span class="emoji">${Emoji.getEmojiByString(x.value)}</span></dt>
+                    <dd>${x.description}</dd>`).join('')}
                 </dl>`;
         }
 
