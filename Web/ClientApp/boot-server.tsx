@@ -50,7 +50,7 @@ export default createServerRenderer((params) => {
             return;
         }
 
-        const trackingCode = 'UA-17476465-5';
+        const trackingCode = 'UA-128648766-1';
         const gaScript = `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
