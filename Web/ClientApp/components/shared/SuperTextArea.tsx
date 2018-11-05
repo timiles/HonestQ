@@ -46,7 +46,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
                     id={id}
                     name={name}
                     className={className}
-                    style={{ minHeight: `${scrollHeight}px` }}
+                    style={{ minHeight: `${scrollHeight}px`, overflow: 'hidden' }}
                     rows={rowCount}
                     maxLength={maxLength}
                     value={value}
