@@ -71,7 +71,7 @@ namespace Pobs.Tests.Integration.Account
             }
         }
 
-        [Fact]
+        [Fact(Skip = "TODO: Re-enable Email Verification")]
         public async Task UnverifiedEmail_ShouldBeDenied()
         {
             using (var dbContext = TestSetup.CreateDbContext())

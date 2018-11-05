@@ -105,10 +105,16 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                     </form>
                     {success &&
                         <div className="alert alert-success mt-3" role="alert">
+                            <strong>Sign up successful!</strong> Redirecting you to log in...
+                        </div>
+                    }
+                    {/* TODO: Re-enable Email Verification
+                    {success &&
+                        <div className="alert alert-success mt-3" role="alert">
                             <strong>Sign up successful!</strong> We are sending a verification email to <b>{email}</b>.
                             Please open the link in the email to finish your sign up.
                         </div>
-                    }
+                    } */}
                 </div>
             </div>
         );
