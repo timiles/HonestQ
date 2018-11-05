@@ -76,7 +76,7 @@ class LogIn extends React.Component<LogInProps, LogInFormModel> {
                             />
                             <div className="invalid-feedback">Password is required</div>
                         </div>
-                        <div className="form-group">
+                        {/* <div className="form-group">
                             <div className="checkbox">
                                 <label>
                                     <input
@@ -87,7 +87,7 @@ class LogIn extends React.Component<LogInProps, LogInFormModel> {
                                     /> Remember me
                             </label>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="form-group">
                             <SubmitButton submitting={submitting} text="Log in" />
                             <Link to="/signup" className="btn btn-link">Sign up</Link>
