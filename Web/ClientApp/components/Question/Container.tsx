@@ -114,7 +114,7 @@ class Container extends React.Component<ContainerProps, {}> {
         }
 
         let pageTitle = `❓ ${question.model.text}`;
-        let canonicalUrl = `https://honestq.com/questions/${question.questionId}/${question.model.slug}`;
+        let canonicalUrl = `https://www.honestq.com/questions/${question.questionId}/${question.model.slug}`;
 
         const answer = this.getCurrentAnswer();
         if (answer) {

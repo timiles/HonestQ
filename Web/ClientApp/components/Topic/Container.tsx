@@ -71,7 +71,7 @@ class Container extends React.Component<ContainerProps, {}> {
         }
 
         const pageTitle = `Topic: ${topic.model.name}`;
-        const canonicalUrl = `https://honestq.com/topics/${topic.model.slug}`;
+        const canonicalUrl = `https://www.honestq.com/topics/${topic.model.slug}`;
 
         return (
             <Helmet>

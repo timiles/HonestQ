@@ -137,7 +137,7 @@ namespace Pobs.Web
                 // app.UseForwardedHeaders() is for some reason not working;
                 // app.UseHttpsRedirection() would also redirect health check;
                 // so I'm taking a bit more explicit control and just doing it like this instead.
-                const string productionDomain = "pobs.timiles.com";
+                const string productionDomain = "www.honestq.com";
                 app.UseRewriter(new RewriteOptions()
                     .Add(rule =>
                     {
