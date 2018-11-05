@@ -9,17 +9,27 @@ import { LoggedInUserContext } from '../LoggedInUserContext';
 import NewQuestion from '../QuestionForm/NewQuestion';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Loading from '../shared/Loading';
+import Modal from '../shared/Modal';
+import Intro from './Intro';
 
 type HomeProps = HomeStore.HomeState
     & typeof HomeStore.actionCreators
     & RouteComponentProps<{}>
     & { loggedInUser: LoggedInUserModel };
 
-class Home extends React.Component<HomeProps, {}> {
+interface State {
+    isIntroModalOpen: boolean;
+}
+
+class Home extends React.Component<HomeProps, State> {
 
     constructor(props: HomeProps) {
         super(props);
 
+        this.state = { isIntroModalOpen: false };
+
+        this.handleOpenIntro = this.handleOpenIntro.bind(this);
+        this.handleCloseIntro = this.handleCloseIntro.bind(this);
         this.handleScroll = this.handleScroll.bind(this);
     }
 
@@ -53,8 +63,42 @@ class Home extends React.Component<HomeProps, {}> {
     public render() {
         const activityList = this.props.loadingActivityList.loadedModel;
         const topicsModel = this.props.loadingTopicsList.loadedModel;
+        const { isIntroModalOpen } = this.state;
+
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
+                {!this.props.loggedInUser &&
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div className="alert alert-success mt-3" role="alert">
+                                <b>Welcome to HonestQ!</b> If you're new here, we suggest that you start by reading {}
+                                <button
+                                    type="button"
+                                    className="btn btn-link btn-link-inline"
+                                    onClick={this.handleOpenIntro}
+                                >
+                                    a quick intro
+                                </button>.
+                            </div>
+                            <Modal
+                                title="What is HonestQ?"
+                                isOpen={isIntroModalOpen}
+                                onRequestClose={this.handleCloseIntro}
+                            >
+                                <div className="modal-body"><Intro /></div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-success"
+                                        onClick={this.handleCloseIntro}
+                                    >
+                                        Got it!
+                                    </button>
+                                </div>
+                            </Modal>
+                        </div>
+                    </div>
+                }
                 <div className="row">
                     <div className="col-md-12 col-lg-6 offset-lg-3">
                         <h1>Recent activity</h1>
@@ -213,6 +257,14 @@ class Home extends React.Component<HomeProps, {}> {
                 this.props.loadMoreActivityItems(this.props.loadingActivityList.loadedModel!.lastTimestamp);
             }
         }
+    }
+
+    private handleOpenIntro() {
+        this.setState({ isIntroModalOpen: true });
+    }
+
+    private handleCloseIntro() {
+        this.setState({ isIntroModalOpen: false });
     }
 }
 
