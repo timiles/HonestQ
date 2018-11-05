@@ -151,7 +151,7 @@ dl.reaction-definitions dt {
 .emoji-over-text-area {
     position: absolute;
 }
-.emoji-over-text-area .emoji:before {
+.emoji-over-text-area .emoji {
     margin-left: 10px;
     position: relative;
     top: 8px;
