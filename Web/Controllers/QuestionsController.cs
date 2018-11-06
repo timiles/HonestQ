@@ -21,6 +21,13 @@ namespace Pobs.Web.Controllers
             _questionService = questionService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index(int pageSize = 20, long? beforeTimestamp = null)
+        {
+            var questionsList = await _questionService.ListQuestions(pageSize, beforeTimestamp);
+            return Ok(questionsList);
+        }
+
         [HttpPost, Authorize]
         public async Task<IActionResult> AddQuestion([FromBody] QuestionFormModel payload)
         {
@@ -68,13 +75,6 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var questionsList = await _questionService.ListQuestions();
-            return Ok(questionsList);
         }
 
         [HttpGet, Route("{questionId}")]

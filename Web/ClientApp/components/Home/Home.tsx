@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { ActivityListItemModel, LoggedInUserModel, TopicListItemModel, TopicValueModel } from '../../server-models';
+import { LoggedInUserModel, QuestionListItemModel, TopicListItemModel, TopicValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as HomeStore from '../../store/Home';
 import { isUserInRole } from '../../utils';
@@ -34,8 +34,8 @@ class Home extends React.Component<HomeProps, State> {
     }
 
     public componentWillMount() {
-        if (!this.props.loadingActivityList.loadedModel) {
-            this.props.getActivityList();
+        if (!this.props.loadingQuestionList.loadedModel) {
+            this.props.loadMoreQuestionItems();
         }
         if (!this.props.loadingTopicsList.loadedModel) {
             this.props.getTopicsList();
@@ -47,10 +47,10 @@ class Home extends React.Component<HomeProps, State> {
     }
 
     public componentDidUpdate(prevProps: HomeProps) {
-        if (this.props.loadingActivityList.loadedModel &&
-            this.props.loadingActivityList.loadedModel.lastTimestamp === 0 &&
-            prevProps.loadingActivityList.loadedModel &&
-            prevProps.loadingActivityList.loadedModel.lastTimestamp > 0) {
+        if (this.props.loadingQuestionList.loadedModel &&
+            this.props.loadingQuestionList.loadedModel.lastTimestamp === 0 &&
+            prevProps.loadingQuestionList.loadedModel &&
+            prevProps.loadingQuestionList.loadedModel.lastTimestamp > 0) {
             // Reached the end of the list! Eat your heart out Twitter.
             window.removeEventListener('scroll', this.handleScroll);
         }
@@ -61,7 +61,7 @@ class Home extends React.Component<HomeProps, State> {
     }
 
     public render() {
-        const activityList = this.props.loadingActivityList.loadedModel;
+        const questionList = this.props.loadingQuestionList.loadedModel;
         const topicsModel = this.props.loadingTopicsList.loadedModel;
         const { isIntroModalOpen } = this.state;
 
@@ -101,24 +101,24 @@ class Home extends React.Component<HomeProps, State> {
                 }
                 <div className="row">
                     <div className="col-md-12 col-lg-6 offset-lg-3">
-                        <h1>Recent activity</h1>
-                        {activityList &&
+                        <h1>Recent questions</h1>
+                        {questionList &&
                             <ul className="list-unstyled">
                                 <li className="mb-2">
                                     <NewQuestion />
                                 </li>
-                                {activityList.activityItems.map((x: ActivityListItemModel, i: number) =>
+                                {questionList.questions.map((x: QuestionListItemModel, i: number) =>
                                     <li key={i} className="mb-2">
-                                        {this.renderActivityItem(x)}
+                                        {this.renderQuestion(x)}
                                     </li>)}
-                                {activityList.lastTimestamp === 0 && activityList.activityItems.length > 40 &&
+                                {questionList.lastTimestamp === 0 && questionList.questions.length > 40 &&
                                     <li>
                                         That's all, folks!
                                 </li>
                                 }
                             </ul>
                         }
-                        <Loading {...this.props.loadingActivityList} />
+                        <Loading {...this.props.loadingQuestionList} />
                     </div>
                     <div className="col-md-3 d-none d-lg-block">
                         <h2>Topics</h2>
@@ -150,93 +150,39 @@ class Home extends React.Component<HomeProps, State> {
         );
     }
 
-    private renderActivityItem(activity: ActivityListItemModel) {
-        const questionUrl = `/questions/${activity.questionId}/${activity.questionSlug}`;
-        const answerUrl = `${questionUrl}/${activity.answerId}/${activity.answerSlug}`;
-        const commentUrl = answerUrl; // TODO
-
-        switch (activity.type) {
-            case 'Question': {
-                return (
-                    <>
-                        <div>
-                            <small>
-                                New question
-                                {activity.topics.length > 0 &&
-                                    <>{} in: {}
-                                        <ul className="list-inline list-comma-separated">
-                                            {activity.topics.map((x: TopicValueModel, i: number) =>
-                                                <li key={i} className="list-inline-item">
-                                                    <Link to={`/topics/${x.slug}`}>
-                                                        <b>{x.name}</b>
-                                                    </Link>
-                                                </li>)}
-                                        </ul>
-                                    </>
-                                }
-                            </small>
-                        </div>
-                        <Link to={questionUrl} className="btn btn-lg btn-outline-secondary post-list-item">
-                            <Emoji value={EmojiValue.Question} />
-                            <span className="ml-1 question">{activity.questionText}</span>
-                            <small className="ml-1">
-                                <span className="badge badge-info">{activity.childCount}</span>
-                                <span className="sr-only">answers</span>
-                            </small>
-                        </Link>
-                    </>
-                );
-            }
-            case 'Answer': {
-                return (
-                    <>
-                        <div>
-                            <small>
-                                New answer to: {}
-                                <Link to={questionUrl}>
-                                    <b>{activity.questionText}</b>
-                                </Link>
-                            </small>
-                        </div>
-                        <Link to={answerUrl} className="btn btn-lg btn-outline-secondary post-list-item">
-                            <Emoji value={EmojiValue.Answer} />
-                            <span className="ml-1 answer">{activity.answerText}</span>
-                            <small className="ml-1">
-                                <span className="badge badge-info">{activity.childCount}</span>
-                                <span className="sr-only">comments</span>
-                            </small>
-                        </Link>
-                    </>
-                );
-            }
-            case 'Comment': {
-                const emojiValue = EmojiValue[activity.agreementRating as keyof typeof EmojiValue];
-                return (
-                    <>
-                        <div>
-                            <small>
-                                New comment on: {}
-                                <Link to={questionUrl}>
-                                    <b>{activity.questionText}</b>
-                                </Link>
-                                {} » {}
-                                <Link to={answerUrl} className="answer">
-                                    <b>{activity.answerText}</b>
-                                </Link>
-                            </small>
-                        </div>
-                        <Link
-                            to={commentUrl}
-                            className="btn btn-lg btn-outline-secondary post-list-item"
-                        >
-                            {emojiValue && <Emoji value={emojiValue} />}
-                            <span className="ml-1 comment">{activity.commentText}</span>
-                        </Link>
-                    </>
-                );
-            }
-            default: return null;
-        }
+    private renderQuestion(question: QuestionListItemModel) {
+        return (
+            <>
+                <div>
+                    <small>
+                        New question
+                        {question.topics.length > 0 &&
+                            <>{} in: {}
+                                <ul className="list-inline list-comma-separated">
+                                    {question.topics.map((x: TopicValueModel, i: number) =>
+                                        <li key={i} className="list-inline-item">
+                                            <Link to={`/topics/${x.slug}`}>
+                                                <b>{x.name}</b>
+                                            </Link>
+                                        </li>)}
+                                </ul>
+                            </>
+                        }
+                    </small>
+                </div>
+                <Link
+                    to={`/questions/${question.id}/${question.slug}`}
+                    className="btn btn-lg btn-outline-secondary post-list-item"
+                >
+                    <Emoji value={EmojiValue.Question} />
+                    <span className="ml-1 question">{question.text}</span>
+                    <small className="ml-1">
+                        <span className="badge badge-info">{question.answersCount}</span>
+                        <span className="sr-only">answers</span>
+                    </small>
+                </Link>
+            </>
+        );
     }
 
     private handleScroll(event: UIEvent) {
@@ -252,9 +198,9 @@ class Home extends React.Component<HomeProps, State> {
         // Trigger 100px before we hit the bottom - this also helps mobile Chrome, which seems to be ~60px short??
         if (scrollHeight - scrollTop - clientHeight < 100) {
             // Prevent triggering multiple times
-            if (!this.props.loadingActivityList.loading &&
-                this.props.loadingActivityList.loadedModel!.lastTimestamp > 0) {
-                this.props.loadMoreActivityItems(this.props.loadingActivityList.loadedModel!.lastTimestamp);
+            if (!this.props.loadingQuestionList.loading &&
+                this.props.loadingQuestionList.loadedModel!.lastTimestamp > 0) {
+                this.props.loadMoreQuestionItems(this.props.loadingQuestionList.loadedModel!.lastTimestamp);
             }
         }
     }

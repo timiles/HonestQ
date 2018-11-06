@@ -117,6 +117,7 @@ export interface QuestionModel {
 
 export interface QuestionsListModel {
     questions: QuestionListItemModel[];
+    lastTimestamp: number;
 }
 
 export interface ReactionModel {

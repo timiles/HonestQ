@@ -13,9 +13,9 @@ namespace Pobs.Web.Services
 {
     public interface IQuestionService
     {
+        Task<QuestionsListModel> ListQuestions(int pageSize, long? beforeUnixTimeMilliseconds = null);
         Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId);
         Task<QuestionListItemModel> UpdateQuestion(int questionId, QuestionFormModel questionForm);
-        Task<QuestionsListModel> ListQuestions();
         Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId);
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
         Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm);
@@ -33,6 +33,20 @@ namespace Pobs.Web.Services
         public QuestionService(HonestQDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<QuestionsListModel> ListQuestions(int pageSize, long? beforeUnixTimeMilliseconds = null)
+        {
+            var beforeTime = beforeUnixTimeMilliseconds.ToUnixDateTime() ?? DateTime.UtcNow;
+
+            var questions = await _context.Questions
+                .Include(x => x.Answers)
+                .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Where(x => x.PostedAt < beforeTime)
+                .OrderByDescending(x => x.PostedAt)
+                .Take(pageSize)
+                .ToListAsync();
+            return new QuestionsListModel(questions);
         }
 
         public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId)
@@ -105,14 +119,6 @@ namespace Pobs.Web.Services
 
             await _context.SaveChangesAsync();
             return new QuestionListItemModel(question);
-        }
-
-        public async Task<QuestionsListModel> ListQuestions()
-        {
-            var questions = await _context.Questions
-                .Include(x => x.Answers)
-                .ToListAsync();
-            return new QuestionsListModel(questions);
         }
 
         public async Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId)
