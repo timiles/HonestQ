@@ -17,7 +17,6 @@ namespace Pobs.Web.Services
 
     public class ActivityService : IActivityService
     {
-        private static DateTime s_firstOfJanuary1970 = new DateTime(1970, 1, 1);
         private HonestQDbContext _context;
 
         public ActivityService(HonestQDbContext context)
@@ -27,9 +26,7 @@ namespace Pobs.Web.Services
 
         public async Task<ActivityListModel> ListActivity(int pageSize, long? beforeUnixTimeMilliseconds = null)
         {
-            var beforeTime = beforeUnixTimeMilliseconds.HasValue ?
-                s_firstOfJanuary1970.AddMilliseconds(beforeUnixTimeMilliseconds.Value) :
-                DateTime.UtcNow;
+            var beforeTime = beforeUnixTimeMilliseconds.ToUnixDateTime() ?? DateTime.UtcNow;
 
             // TODO: This would be better loaded from a cache
             // NOTE: DbContext is not threadsafe to run multiple queries concurrently. Await each in turn.
