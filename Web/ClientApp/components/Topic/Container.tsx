@@ -73,11 +73,21 @@ class Container extends React.Component<ContainerProps, {}> {
         const pageTitle = `Topic: ${topic.model.name}`;
         const canonicalUrl = `https://www.honestq.com/topics/${topic.model.slug}`;
 
+        const ogTitle = `Questions tagged ${topic.model.name}`;
+        const numberOfQuestions =
+            `${topic.model.questions.length} question${topic.model.questions.length > 1 ? 's' : ''}`;
+        const ogDescription = `View ${numberOfQuestions} about ${topic.model.name}, ask your own, and join the debate.`;
+
         return (
             <Helmet>
                 <title>{pageTitle}</title>
                 <link rel="canonical" href={canonicalUrl} />
                 <meta property="og:url" content={canonicalUrl} />
+                <meta property="og:title" content={ogTitle} />
+                <meta property="og:description" content={ogDescription} />
+                <meta property="og:image" content="https://www.honestq.com/android-chrome-256x256.png" />
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:site" content="@HonestQ_com" />
             </Helmet>
         );
     }

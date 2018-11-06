@@ -116,10 +116,15 @@ class Container extends React.Component<ContainerProps, {}> {
         let pageTitle = `❓ ${question.model.text}`;
         let canonicalUrl = `https://www.honestq.com/questions/${question.questionId}/${question.model.slug}`;
 
+        let ogTitle = 'HonestQ';
+        let ogDescription = pageTitle;
+
         const answer = this.getCurrentAnswer();
         if (answer) {
-            pageTitle += ` » 🙋 \u201C ${answer.text} \u201D`;
+            pageTitle += ` » 🙋 \u201C${answer.text}\u201D`;
             canonicalUrl += `/${answer.id}/${answer.slug}`;
+            ogTitle = pageTitle;
+            ogDescription = `🙋 \u201C${answer.text}\u201D`;
         }
 
         return (
@@ -127,6 +132,11 @@ class Container extends React.Component<ContainerProps, {}> {
                 <title>{pageTitle}</title>
                 <link rel="canonical" href={canonicalUrl} />
                 <meta property="og:url" content={canonicalUrl} />
+                <meta property="og:title" content={ogTitle} />
+                <meta property="og:description" content={ogDescription} />
+                <meta property="og:image" content="https://www.honestq.com/android-chrome-256x256.png" />
+                <meta name="twitter:card" content="summary" />
+                <meta name="twitter:site" content="@HonestQ_com" />
             </Helmet>
         );
     }
