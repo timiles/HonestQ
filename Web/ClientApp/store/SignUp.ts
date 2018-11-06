@@ -1,5 +1,4 @@
-﻿import { push } from 'react-router-redux';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { SignUpFormModel } from '../server-models';
 import { postJson } from '../utils';
@@ -49,11 +48,6 @@ export const actionCreators = {
             postJson('/api/account/signup', user, null)
                 .then((response) => {
                     dispatch({ type: 'SIGNUP_SUCCESS' });
-
-                    setTimeout(() => {
-                        // REVIEW: `KnownActions | RouterAction` causes other type inference issues. Investigate?
-                        dispatch(push(`/login?username=${user.username}`) as any);
-                    }, 2000);
                 })
                 .catch((reason) => {
                     dispatch({ type: 'SIGNUP_FAILED', payload: { reason } });

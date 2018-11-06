@@ -40,11 +40,10 @@ namespace WebApi.Controllers
             {
                 return BadRequest("Username or password is incorrect.");
             }
-            // TODO: Re-enable Email Verification
-            // if (!string.IsNullOrEmpty(user.EmailVerificationToken))
-            // {
-            //     return BadRequest("Please verify your account first.");
-            // }
+            if (!string.IsNullOrEmpty(user.EmailVerificationToken))
+            {
+                return BadRequest("Please verify your account first.");
+            }
 
             var roles = new List<Pobs.Domain.Role>();
             // TODO: proper roles in the database, this is a poor hack for now.
@@ -97,9 +96,7 @@ namespace WebApi.Controllers
                 _userService.Create(user, signUpFormModel.Password);
                 var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
                 var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
-                // TODO: Re-enable Email Verification
-                // _emailSender.SendEmailVerification(signUpFormModel.Email, signUpFormModel.Username, verifyEmailUrl);
-                _emailSender.SendEmailVerification("tim@timiles.com", signUpFormModel.Username, verifyEmailUrl);
+                _emailSender.SendEmailVerification(signUpFormModel.Email, signUpFormModel.Username, verifyEmailUrl);
                 return Ok();
             }
             catch (AppException ex)

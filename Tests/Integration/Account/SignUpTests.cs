@@ -49,10 +49,9 @@ namespace Pobs.Tests.Integration.Account
 
                 Assert.True(AuthUtils.VerifyPasswordHash(payload.Password, user.PasswordHash, user.PasswordSalt));
 
-                // TODO: Re-enable Email Verification
-                // string urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
-                // string expectedVerificationUrl = $"{TestSetup.AppSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
-                // emailSenderMock.Verify(x => x.SendEmailVerification(payload.Email, payload.Username, expectedVerificationUrl));
+                string urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
+                string expectedVerificationUrl = $"{TestSetup.AppSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
+                emailSenderMock.Verify(x => x.SendEmailVerification(payload.Email, payload.Username, expectedVerificationUrl));
             }
         }
 
