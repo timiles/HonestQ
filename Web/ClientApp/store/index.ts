@@ -9,6 +9,7 @@ import * as NewComment from './NewComment';
 import * as NewQuestion from './NewQuestion';
 import * as NewTopic from './NewTopic';
 import * as Question from './Question';
+import * as Questions from './Questions';
 import * as SignUp from './SignUp';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
@@ -27,6 +28,7 @@ export interface ApplicationState {
     newQuestion: NewQuestion.NewQuestionState;
     newTopic: NewTopic.NewTopicState;
     question: Question.ContainerState;
+    questions: Questions.ListState;
     signUp: SignUp.SignUpState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
@@ -48,6 +50,7 @@ export const reducers = {
     newQuestion: NewQuestion.reducer,
     newTopic: NewTopic.reducer,
     question: Question.reducer,
+    questions: Questions.reducer,
     signUp: SignUp.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,

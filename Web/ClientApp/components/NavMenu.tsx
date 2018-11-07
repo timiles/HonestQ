@@ -46,6 +46,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav mr-auto">
                             <AutoCollapseNavLink exact={true} to={'/'}>Home</AutoCollapseNavLink>
+                            <AutoCollapseNavLink exact={true} to={'/questions'}>Questions</AutoCollapseNavLink>
                             {isAdmin && <AutoCollapseNavLink to={'/admin'}>Admin</AutoCollapseNavLink>}
                         </ul>
                         <ul className="navbar-nav ml-auto">
