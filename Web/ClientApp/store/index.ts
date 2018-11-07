@@ -2,7 +2,6 @@ import * as AdminHome from './AdminHome';
 import * as EditAnswer from './EditAnswer';
 import * as EditQuestion from './EditQuestion';
 import * as EditTopic from './EditTopic';
-import * as Home from './Home';
 import * as Login from './Login';
 import * as NewAnswer from './NewAnswer';
 import * as NewComment from './NewComment';
@@ -13,6 +12,7 @@ import * as Questions from './Questions';
 import * as SignUp from './SignUp';
 import * as Topic from './Topic';
 import * as TopicAutocomplete from './TopicAutocomplete';
+import * as Topics from './Topics';
 import * as VerifyEmail from './VerifyEmail';
 
 // The top-level state object
@@ -21,7 +21,6 @@ export interface ApplicationState {
     editAnswer: EditAnswer.EditAnswerState;
     editQuestion: EditQuestion.EditQuestionState;
     editTopic: EditTopic.EditTopicState;
-    home: Home.HomeState;
     login: Login.LoginState;
     newAnswer: NewAnswer.NewAnswerState;
     newComment: NewComment.NewCommentState;
@@ -32,6 +31,7 @@ export interface ApplicationState {
     signUp: SignUp.SignUpState;
     topic: Topic.ContainerState;
     topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
+    topics: Topics.ListState;
     verifyEmail: VerifyEmail.VerifyEmailState;
 }
 
@@ -43,7 +43,6 @@ export const reducers = {
     editAnswer: EditAnswer.reducer,
     editQuestion: EditQuestion.reducer,
     editTopic: EditTopic.reducer,
-    home: Home.reducer,
     login: Login.reducer,
     newAnswer: NewAnswer.reducer,
     newComment: NewComment.reducer,
@@ -54,6 +53,7 @@ export const reducers = {
     signUp: SignUp.reducer,
     topic: Topic.reducer,
     topicAutocomplete: TopicAutocomplete.reducer,
+    topics: Topics.reducer,
     verifyEmail: VerifyEmail.reducer,
 };
 

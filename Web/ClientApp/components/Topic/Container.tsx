@@ -7,6 +7,7 @@ import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import NewQuestion from '../QuestionForm/NewQuestion';
+import TopicsList from '../Topics/List';
 import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
@@ -16,15 +17,13 @@ type ContainerProps = TopicStore.ContainerState
 
 class Container extends React.Component<ContainerProps, {}> {
 
-    constructor(props: ContainerProps) {
-        super(props);
-    }
-
     public componentWillMount() {
         // This will also run on server side render
-        if (this.shouldGetTopic()) {
-            this.props.getTopic(this.props.match.params.topicSlug);
-        }
+        this.setUp(this.props);
+    }
+
+    public componentWillReceiveProps(nextProps: ContainerProps) {
+        this.setUp(nextProps);
     }
 
     public render() {
@@ -42,7 +41,10 @@ class Container extends React.Component<ContainerProps, {}> {
                 {this.renderHelmetTags()}
 
                 <div className="row">
-                    <div className="col-lg-6 offset-lg-3">
+                    <div className="col-lg-3">
+                        <TopicsList />
+                    </div>
+                    <div className="col-lg-6">
                         <div className="row">
                             <div className="col-md-12">
                                 <Topic {...topic} />
@@ -92,11 +94,10 @@ class Container extends React.Component<ContainerProps, {}> {
         );
     }
 
-    private shouldGetTopic(): boolean {
-        if (!this.props.topic) {
-            return true;
+    private setUp(props: ContainerProps): void {
+        if (!props.topic || (props.topic.slug !== props.match.params.topicSlug)) {
+            props.getTopic(props.match.params.topicSlug);
         }
-        return (this.props.topic.slug !== this.props.match.params.topicSlug);
     }
 }
 

@@ -7,7 +7,7 @@ import { getJson } from '../utils';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface HomeState {
+export interface ListState {
     loadingTopicsList: LoadingProps<TopicsListModel>;
 }
 
@@ -56,9 +56,9 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: HomeState = { loadingTopicsList: {} };
+const defaultState: ListState = { loadingTopicsList: {} };
 
-export const reducer: Reducer<HomeState> = (state: HomeState, action: KnownAction) => {
+export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_TOPICS_LIST_REQUESTED':
             return {

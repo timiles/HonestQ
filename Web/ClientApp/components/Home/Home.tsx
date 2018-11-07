@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { LoggedInUserModel, TopicListItemModel } from '../../server-models';
+import { RouteComponentProps } from 'react-router-dom';
+import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
-import * as HomeStore from '../../store/Home';
-import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import Loading from '../shared/Loading';
 import Modal from '../shared/Modal';
+import TopicsList from '../Topics/List';
 import Intro from './Intro';
 
-type HomeProps = HomeStore.HomeState
-    & typeof HomeStore.actionCreators
-    & RouteComponentProps<{}>
+type HomeProps = RouteComponentProps<{}>
     & { loggedInUser: LoggedInUserModel };
 
 interface State {
@@ -30,14 +26,7 @@ class Home extends React.Component<HomeProps, State> {
         this.handleCloseIntro = this.handleCloseIntro.bind(this);
     }
 
-    public componentWillMount() {
-        if (!this.props.loadingTopicsList.loadedModel) {
-            this.props.getTopicsList();
-        }
-    }
-
     public render() {
-        const topicsModel = this.props.loadingTopicsList.loadedModel;
         const { isIntroModalOpen } = this.state;
 
         return (
@@ -76,29 +65,7 @@ class Home extends React.Component<HomeProps, State> {
                 }
                 <div className="row">
                     <div className="col-md-12">
-                        <h2>Topics</h2>
-                        <Loading {...this.props.loadingTopicsList} />
-                        {topicsModel &&
-                            <ul className="list-inline">
-                                {topicsModel.topics.map((x: TopicListItemModel, i: number) =>
-                                    <li key={i} className="mr-1 mb-1 list-inline-item">
-                                        <Link
-                                            to={`/topics/${x.slug}`}
-                                            className="btn btn-sm btn-outline-secondary topic-list-item"
-                                        >
-                                            {x.name}
-                                        </Link>
-                                    </li>)}
-                                <LoggedInUserContext.Consumer>
-                                    {(user) => isUserInRole(user, 'Admin') &&
-                                        <li className="list-inline-item">
-                                            <Link to="/newtopic" className="btn btn-sm btn-primary">
-                                                Suggest a new Topic
-                                        </Link>
-                                        </li>}
-                                </LoggedInUserContext.Consumer>
-                            </ul>
-                        }
+                        <TopicsList />
                     </div>
                 </div>
             </LoggedInUserContext.Provider>
@@ -115,6 +82,6 @@ class Home extends React.Component<HomeProps, State> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any): any => ({ ...state.home, loggedInUser: state.login.loggedInUser }),
-    HomeStore.actionCreators,
+    (state: ApplicationState, ownProps: any): any => ({ loggedInUser: state.login.loggedInUser }),
+    {},
 )(Home);
