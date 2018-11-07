@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AnswerModel, LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
@@ -14,8 +14,7 @@ import Question from './Question';
 type ContainerProps = QuestionStore.ContainerState
     & typeof QuestionStore.actionCreators
     & { loggedInUser: LoggedInUserModel | undefined }
-    // Important: questionId cannot be number as would still be a string in the underlying JavaScript?
-    & RouteComponentProps<{ questionId: string, answerId?: string }>;
+    & RouteComponentProps<{ questionId: string, questionSlug: string, answerId?: string, answerSlug?: string }>;
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -35,6 +34,19 @@ class Container extends React.Component<ContainerProps, {}> {
     public render() {
         const { question } = this.props;
         const answer = this.getCurrentAnswer();
+
+        if (question && question.model &&
+            ((question.model.slug !== this.props.match.params.questionSlug)
+                || (answer && answer.slug !== this.props.match.params.answerSlug))) {
+            // URL isn't canonical. Let's 301 redirect.
+            if (this.props.staticContext) {
+                this.props.staticContext.statusCode = 301;
+            }
+            const canonicalUrl = answer ?
+                `/questions/${question.questionId}/${question.model.slug}/${answer.id}/${answer.slug}` :
+                `/questions/${question.questionId}/${question.model.slug}`;
+            return <Redirect to={canonicalUrl} />;
+        }
 
         const slideDurationMilliseconds = 500;
 

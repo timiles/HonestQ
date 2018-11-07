@@ -45,7 +45,7 @@ export default createServerRenderer((params) => {
         if (routerContext.url) {
             resolve({
                 redirectUrl: routerContext.url,
-                statusCode: routerContext.status,
+                statusCode: routerContext.statusCode,
             });
             return;
         }
@@ -112,6 +112,16 @@ if (!d.getElementById(id)){
         params.domainTasks.then(() => {
             // Final render of the app
             const renderedApp = renderToString(app);
+
+            // Check again for redirects
+            if (routerContext.url) {
+                resolve({
+                    redirectUrl: routerContext.url,
+                    statusCode: routerContext.statusCode,
+                });
+                return;
+            }
+
             // ...and then collect head tags
             const helmetData = Helmet.renderStatic();
             resolve({
