@@ -20,7 +20,5 @@
   "exclude": [
     "bin",
     "node_modules",
-    "ClientApp/setupTests.ts",
-    "**/_tests/**/*",
   ]
 }
