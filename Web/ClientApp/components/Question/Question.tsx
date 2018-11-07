@@ -47,7 +47,7 @@ export default class Question extends React.Component<QuestionProps, {}> {
                                 className="btn btn-lg btn-outline-secondary post-list-item"
                             >
                                 <Emoji value={EmojiValue.Answer} />
-                                <span className="ml-1 answer">{x.text}</span>
+                                <span className="ml-1 quote-marks">{x.text}</span>
                                 {this.isCitationNeeded(x) &&
                                     <small className="ml-1">
                                         <span className="badge badge-info">Citation needed</span>

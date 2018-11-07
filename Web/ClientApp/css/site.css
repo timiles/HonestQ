@@ -83,53 +83,53 @@ ul.list-comma-separated li:not(:last-child):after {
     content: ',\0000a0';
 }
 
-.answer {
+.quote-marks {
     quotes: "“" "”" "‘" "’";
     text-align: left;
 }
-    .answer:hover {
+    .quote-marks:hover {
         text-decoration: none;
     }
-    .answer:before, .answer:after {
+    .quote-marks:before, .quote-marks:after {
         font-family: Georgia, serif;
         line-height: 0;
         position: relative;
     }
-    .answer:before {
+    .quote-marks:before {
         content: open-quote;
         margin-right: 6px;
         top: 32px;
     }
-    .answer:after {
+    .quote-marks:after {
         content: close-quote;
         margin-left: 6px;
         bottom: -32px;
     }
-    a.btn .answer:before, a.btn .answer:after {
+    a.btn .quote-marks:before, a.btn .quote-marks:after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 3.3em;
     }
-    h4 .answer:before, h4 .answer:after {
+    h4 .quote-marks:before, h4 .quote-marks:after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 2.9em;
     }
-    h4 span.answer:before {
+    h4 span.quote-marks:before {
         margin-right: 4px;
         top: 34px;
     }
-    h4 span.answer:after {
+    h4 span.quote-marks:after {
         bottom: -34px;
         margin-left: 4px;
     }
-    small .answer:before, small .answer:after {
+    small .quote-marks:before, small .quote-marks:after {
         font-size: 1.5rem;
         opacity: 0.8;
     }
-    small .answer:before {
+    small .quote-marks:before {
         margin-right: 1px;
         top: 9px;
     }
-    small .answer:after {
+    small .quote-marks:after {
         bottom: -9px;
         margin-left: 1px;
     }

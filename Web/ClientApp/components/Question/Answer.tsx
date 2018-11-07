@@ -37,7 +37,7 @@ export default class Answer extends React.Component<Props, {}> {
                 </LoggedInUserContext.Consumer>
                 <h4>
                     <Emoji value={EmojiValue.Answer} />
-                    <span className="ml-1 post answer">{text}</span>
+                    <span className="ml-1 post quote-marks">{text}</span>
                 </h4>
                 {source && <p><small>Source: {source}</small></p>}
                 <div className="float-right mb-2">
