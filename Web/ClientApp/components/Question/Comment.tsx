@@ -13,16 +13,10 @@ type Props = CommentModel
     & {
     questionId: number,
     answerId: number,
-    onReaction: (reactionType: string, on: boolean, commentId: number) => void,
+    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
 };
 
 export default class Comment extends React.Component<Props, {}> {
-
-    constructor(props: Props) {
-        super(props);
-
-        this.handleCommentReaction = this.handleCommentReaction.bind(this);
-    }
 
     public componentDidMount() {
         $('[data-toggle="tooltip"]').tooltip();
@@ -70,9 +64,11 @@ export default class Comment extends React.Component<Props, {}> {
                                     </blockquote>
                                     <div className="float-right">
                                         <ReactionsControl
+                                            answerId={answerId}
+                                            commentId={id}
                                             reactionCounts={reactionCounts}
                                             myReactions={myReactions}
-                                            onReaction={this.handleCommentReaction}
+                                            onReaction={this.props.onReaction}
                                         />
                                     </div>
                                     <NewComment
@@ -99,9 +95,5 @@ export default class Comment extends React.Component<Props, {}> {
                 }}
             </LoggedInUserContext.Consumer>
         );
-    }
-
-    private handleCommentReaction(reactionType: string, on: boolean): void {
-        this.props.onReaction(reactionType, on, this.props.id);
     }
 }

@@ -81,7 +81,7 @@ export const actionCreators = {
                     });
             })();
         },
-    addReaction: (questionId: number, answerId: number, reactionType: string, commentId?: number):
+    addReaction: (reactionType: string, questionId: number, answerId: number, commentId?: number):
         AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
@@ -103,7 +103,7 @@ export const actionCreators = {
                     });
             })();
         },
-    removeReaction: (questionId: number, answerId: number, reactionType: string, commentId?: number):
+    removeReaction: (reactionType: string, questionId: number, answerId: number, commentId?: number):
         AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {

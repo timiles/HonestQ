@@ -170,13 +170,12 @@ class Container extends React.Component<ContainerProps, {}> {
         return (this.props.question.questionId !== questionIdAsNumber);
     }
 
-    private handleReaction(reactionType: string, on: boolean, commentId?: number): void {
+    private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
         const questionId = Number(this.props.match.params.questionId!);
-        const answerId = Number(this.props.match.params.answerId!);
         if (on) {
-            this.props.addReaction(questionId, answerId, reactionType, commentId);
+            this.props.addReaction(reactionType, questionId, answerId, commentId);
         } else {
-            this.props.removeReaction(questionId, answerId, reactionType, commentId);
+            this.props.removeReaction(reactionType, questionId, answerId, commentId);
         }
     }
 }

@@ -11,7 +11,7 @@ import ReactionsControl from './ReactionsControl';
 type Props = AnswerModel
     & {
     questionId: number,
-    onReaction: (reactionType: string, on: boolean, commentId?: number) => void,
+    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
 };
 
 export default class Answer extends React.Component<Props, {}> {
@@ -19,8 +19,7 @@ export default class Answer extends React.Component<Props, {}> {
     constructor(props: Props) {
         super(props);
 
-        this.handleAnswerReaction = this.handleAnswerReaction.bind(this);
-        this.handleCommentReaction = this.handleCommentReaction.bind(this);
+        this.handleReaction = this.handleReaction.bind(this);
     }
 
     public render() {
@@ -42,9 +41,10 @@ export default class Answer extends React.Component<Props, {}> {
                 {source && <p><small>Source: {source}</small></p>}
                 <div className="float-right mb-2">
                     <ReactionsControl
+                        answerId={id}
                         reactionCounts={reactionCounts}
                         myReactions={myReactions}
-                        onReaction={this.handleAnswerReaction}
+                        onReaction={this.handleReaction}
                         showHelp={true}
                     />
                 </div>
@@ -61,18 +61,14 @@ export default class Answer extends React.Component<Props, {}> {
                                 {...x}
                                 questionId={questionId}
                                 answerId={id}
-                                onReaction={this.handleCommentReaction}
+                                onReaction={this.handleReaction}
                             /></li>)}
                 </ol>
             </div>
         );
     }
 
-    private handleAnswerReaction(reactionType: string, on: boolean): void {
-        this.props.onReaction(reactionType, on);
-    }
-
-    private handleCommentReaction(reactionType: string, on: boolean, commentId: number): void {
-        this.props.onReaction(reactionType, on, commentId);
+    private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
+        this.props.onReaction(reactionType, on, answerId, commentId);
     }
 }

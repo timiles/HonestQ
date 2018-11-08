@@ -4,9 +4,11 @@ import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
 interface Props {
+    answerId: number;
+    commentId?: number;
     reactionCounts: { [key: string]: number };
     myReactions: string[];
-    onReaction: (reactionType: string, on: boolean) => void;
+    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void;
     showHelp?: boolean;
 }
 
@@ -90,8 +92,9 @@ export default class ReactionsControl extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
+        const { answerId, commentId } = this.props;
         const { myReactions } = this.state;
         const { value } = event.currentTarget;
-        this.props.onReaction(value, myReactions.indexOf(value) < 0);
+        this.props.onReaction(value, myReactions.indexOf(value) < 0, answerId, commentId);
     }
 }
