@@ -51,8 +51,7 @@ export default class ButtonOrLogIn extends React.Component<Props, State> {
                         </button>
                         <Modal title="Log in" isOpen={isModalOpen} onRequestClose={this.closeLogInModal}>
                             <div className="modal-body">
-                                <h3>Hi there! Thanks for using HonestQ.</h3>
-                                <p>You'll need to log in to be able to continue.</p>
+                                <p>Please log in or sign up to continue.</p>
                                 <p>Setting up an account is free. Your voice deserves to be heard!</p>
                             </div>
                             <div className="modal-footer">
