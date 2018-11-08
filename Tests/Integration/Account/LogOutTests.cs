@@ -20,7 +20,6 @@ namespace Pobs.Tests.Integration.Account
             _password = "Password1";
             _user = new User
             {
-                Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
             };

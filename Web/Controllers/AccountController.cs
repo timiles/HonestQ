@@ -85,7 +85,7 @@ namespace WebApi.Controllers
                 return BadRequest("Password must be at least 7 characters.");
             }
 
-            var user = new User(signUpFormModel.Name, validEmail.Address, signUpFormModel.Username, DateTimeOffset.UtcNow)
+            var user = new User(validEmail.Address, signUpFormModel.Username, DateTimeOffset.UtcNow)
             {
                 EmailVerificationToken = GenerateRandomString()
             };

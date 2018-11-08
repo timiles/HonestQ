@@ -16,7 +16,6 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
         super(props);
 
         this.state = {
-            name: '',
             email: '',
             password: '',
             username: '',
@@ -27,7 +26,7 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
     }
 
     public render() {
-        const { name, email, username, password } = this.state;
+        const { email, username, password } = this.state;
         const { error, submitting, submitted, success } = this.props;
 
         return (
@@ -37,18 +36,6 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                         <div className="form-group">
-                            <label htmlFor="name">Name</label>
-                            <input
-                                type="text"
-                                className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
-                                id="name"
-                                name="name"
-                                value={name}
-                                onChange={this.handleChange}
-                            />
-                            <div className="invalid-feedback">Name is required</div>
-                        </div>
-                        <div className="form-group">
                             <label htmlFor="email">Email</label>
                             <input
                                 type="text"
@@ -57,7 +44,11 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                                 name="email"
                                 value={email}
                                 onChange={this.handleChange}
+                                aria-describedby="emailHelpBlock"
                             />
+                            <small id="emailHelpBlock" className="form-text text-muted">
+                                We will require you to verify your email address before you can log in.
+                            </small>
                             <div className="invalid-feedback">Email is required</div>
                         </div>
                         <div className="form-group">
@@ -71,7 +62,11 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                                 autoCapitalize="none"
                                 value={username}
                                 onChange={this.handleChange}
+                                aria-describedby="usernameHelpBlock"
                             />
+                            <small id="usernameHelpBlock" className="form-text text-muted">
+                                Your username will be displayed next to any Questions, Answers or Comments you post.
+                            </small>
                             <div className="invalid-feedback">Username is required</div>
                         </div>
                         <div className="form-group">
@@ -86,9 +81,11 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
                                 name="password"
                                 value={password}
                                 onChange={this.handleChange}
+                                aria-describedby="passwordHelpBlock"
                             />
-                            <div className="invalid-feedback">Password must be at least 7 characters</div>
-
+                            <small id="passwordHelpBlock" className="form-text text-muted">
+                                Your password must be at least 7 characters long.
+                            </small>
                         </div>
                         <div className="form-group">
                             <small>

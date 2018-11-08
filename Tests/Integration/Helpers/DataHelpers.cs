@@ -13,7 +13,6 @@ namespace Pobs.Tests.Integration.Helpers
         {
             var user = new User
             {
-                Name = "Bobby Tables",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = Utils.GenerateRandomString(10),
                 PasswordSalt = new byte[0],

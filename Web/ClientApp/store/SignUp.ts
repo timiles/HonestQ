@@ -39,7 +39,7 @@ export const actionCreators = {
             dispatch({ type: 'SUBMIT_SIGNUP', payload: form });
 
             const user = form;
-            if (!user.name || !user.email || !user.username || !user.password || user.password.length < 7) {
+            if (!user.email || !user.username || !user.password || user.password.length < 7) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'SIGNUP_FAILED', payload: { reason: '' } });
                 return;

@@ -54,7 +54,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                                 <>
                                     <li className="d-none d-lg-block">
                                         <span className="navbar-text">
-                                            Hi, {loggedInUser.name} ({loggedInUser.username})!
+                                            Hi, {loggedInUser.username}!
                                         </span>
                                     </li>
                                     <AutoCollapseNavLink to={'/logout'}>Log out</AutoCollapseNavLink>

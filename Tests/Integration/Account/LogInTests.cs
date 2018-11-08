@@ -23,7 +23,6 @@ namespace Pobs.Tests.Integration.Account
             _password = "Password1";
             _user = new User
             {
-                Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
             };
@@ -55,7 +54,6 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
-                Assert.Equal(_user.Name, responseModel.Name);
                 Assert.Equal(_user.Username, responseModel.Username);
 
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);

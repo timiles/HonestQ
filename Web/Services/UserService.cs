@@ -92,7 +92,6 @@ namespace Pobs.Web.Services
             }
 
             // Update user properties
-            existingUser.Name = user.Name;
             existingUser.Email = user.Email;
             existingUser.Username = user.Username;
 

@@ -1,5 +1,4 @@
 export interface LoggedInUserModel {
-    name: string;
     username: string;
     token: string;
     timeZoneOffsetHours: number;
@@ -12,7 +11,6 @@ export interface LogInFormModel {
 }
 
 export interface SignUpFormModel {
-    name: string;
     email: string;
     username: string;
     password: string;

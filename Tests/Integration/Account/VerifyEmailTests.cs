@@ -21,7 +21,6 @@ namespace Pobs.Tests.Integration.Account
         {
             _user = new User
             {
-                Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
                 EmailVerificationToken = "TestVerificationToken123",

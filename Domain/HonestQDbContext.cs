@@ -55,7 +55,6 @@ namespace Pobs.Domain
             });
             modelBuilder.Entity<User>(x =>
             {
-                x.Property(p => p.Name).HasCharSetForEmoji();
                 x.Property(p => p.Email).HasCharSetForEmoji();
                 x.Property(p => p.Username).HasCharSetForEmoji();
             });

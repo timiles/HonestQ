@@ -22,7 +22,6 @@ namespace Pobs.Tests.Integration.Account
         {
             var payload = new SignUpFormModel
             {
-                Name = "Mary Coffeemug 💩",
                 Email = Utils.GenerateRandomString(10) + "💩@example.com",
                 Username = _username,
                 Password = "Password1",
@@ -41,7 +40,6 @@ namespace Pobs.Tests.Integration.Account
                 var user = dbContext.Users.FirstOrDefault(x => x.Username == payload.Username);
                 Assert.NotNull(user);
 
-                Assert.Equal(payload.Name, user.Name);
                 Assert.Equal(payload.Email, user.Email);
                 Assert.Equal(payload.Username, user.Username);
                 Assert.True(user.CreatedAt > DateTime.UtcNow.AddMinutes(-1));
@@ -60,7 +58,6 @@ namespace Pobs.Tests.Integration.Account
         {
             var payload = new SignUpFormModel
             {
-                Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = _username,
                 Password = "Password1",
@@ -77,7 +74,6 @@ namespace Pobs.Tests.Integration.Account
 
                 var payload2 = new SignUpFormModel
                 {
-                    Name = "Mary Coffeemug 2",
                     // Also test case-sensitivity, white space
                     Email = " \t\r\n" + payload.Email.ToUpper() + " \t\r\n",
                     Username = "mary_coffeemug_" + Utils.GenerateRandomString(10),
@@ -101,7 +97,6 @@ namespace Pobs.Tests.Integration.Account
         {
             var payload = new SignUpFormModel
             {
-                Name = "Mary Coffeemug",
                 Email = email,
                 Username = _username,
                 Password = "Password1",
@@ -126,7 +121,6 @@ namespace Pobs.Tests.Integration.Account
         {
             var payload = new SignUpFormModel
             {
-                Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = _username,
                 Password = "Password1",
@@ -156,7 +150,6 @@ namespace Pobs.Tests.Integration.Account
         {
             var payload = new SignUpFormModel
             {
-                Name = "Mary Coffeemug",
                 Email = Utils.GenerateRandomString(10) + "@example.com",
                 Username = _username,
                 Password = "123456",

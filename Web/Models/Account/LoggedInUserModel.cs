@@ -8,7 +8,6 @@ namespace Pobs.Web.Models.Account
         public LoggedInUserModel() { }
         public LoggedInUserModel(User user, string token)
         {
-            this.Name = user.Name;
             this.Username = user.Username;
             this.Token = token;
 
@@ -17,9 +16,6 @@ namespace Pobs.Web.Models.Account
             // this.TimeZoneOffsetHours = timeZoneInfo.GetUtcOffset(DateTime.UtcNow).TotalHours;
             this.TimeZoneOffsetHours = 0; // Hard code to GMT for now
         }
-
-        [Required]
-        public string Name { get; set; }
 
         [Required]
         public string Username { get; set; }
