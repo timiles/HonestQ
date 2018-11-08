@@ -76,7 +76,7 @@ export interface CommentFormModel {
 
 export interface CommentModel {
     id: number;
-    text?: string;
+    text: string;
     source?: string;
     agreementRating: string;
     postedAt: string;

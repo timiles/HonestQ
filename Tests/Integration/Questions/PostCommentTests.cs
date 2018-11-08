@@ -121,43 +121,6 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task SourceOnly_ShouldPersist()
-        {
-            var answer = _question.Answers.First();
-            var payload = new CommentFormModel
-            {
-                Source = "https://example.com/",
-                AgreementRating = AgreementRating.Neutral.ToString()
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(_question.Id, answer.Id);
-                var response = await client.PostAsync(url, payload.ToJsonContent());
-                response.EnsureSuccessStatusCode();
-
-                using (var dbContext = TestSetup.CreateDbContext())
-                {
-                    var reloadedQuestion = dbContext.Questions
-                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
-                        .First(x => x.Id == _question.Id);
-                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
-
-                    var comment = reloadedAnswer.Comments.Single();
-                    Assert.Null(comment.Text);
-                    Assert.Equal(payload.Source, comment.Source);
-
-                    var responseContent = await response.Content.ReadAsStringAsync();
-                    var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
-                    Assert.Equal(comment.Text, responseModel.Text);
-                    Assert.Equal(comment.Source, responseModel.Source);
-                }
-            }
-        }
-
-        [Fact]
         public async Task ParentCommentId_ShouldPersist()
         {
             var answer = _question.Answers.First();
@@ -211,13 +174,13 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task NoTextAndNoSource_ShouldGetBadRequest()
+        public async Task NoText_ShouldGetBadRequest()
         {
             var answer = _question.Answers.First();
             var payload = new CommentFormModel
             {
                 Text = " ",
-                Source = " ",
+                Source = "https://www.example.com",
                 AgreementRating = AgreementRating.Neutral.ToString(),
             };
             using (var server = new IntegrationTestingServer())
@@ -230,7 +193,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Comment Text or Source is required.", responseContent);
+                Assert.Equal("Comment Text is required.", responseContent);
             }
         }
 

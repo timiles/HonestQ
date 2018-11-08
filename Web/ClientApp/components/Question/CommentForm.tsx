@@ -52,26 +52,24 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             id="commentText"
                             name="text"
                             className={`form-control
-                                ${submitted ? text ? 'is-valid' : !source ? 'is-invalid' : '' : ''}`}
+                                ${submitted ? text ? 'is-valid' : 'is-invalid' : ''}`}
                             value={text}
                             maxLength={280}
                             onChange={this.handleChange}
                         />
-                        <div className="invalid-feedback">Comment Text or Source is required</div>
+                        <div className="invalid-feedback">Comment is required</div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="commentSource">Source</label>
+                        <label htmlFor="commentSource">Source (optional)</label>
                         <input
                             type="text"
-                            className={`form-control
-                                ${submitted ? source ? 'is-valid' : !text ? 'is-invalid' : '' : ''}`}
+                            className="form-control"
                             id="commentSource"
                             name="source"
                             value={source}
                             maxLength={2000}
                             onChange={this.handleChange}
                         />
-                        <div className="invalid-feedback">Comment Text or Source is required</div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="agreementRating">Agreement rating</label>

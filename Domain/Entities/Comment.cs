@@ -28,7 +28,7 @@ namespace Pobs.Domain.Entities
         public long Id { get; set; }
 
 
-        [MaxLength(280)]
+        [Required, MaxLength(280)]
         public string Text { get; set; }
 
         [MaxLength(2000)]

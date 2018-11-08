@@ -38,6 +38,7 @@ namespace Pobs.Web.Models.Questions
         }
 
         public long Id { get; set; }
+        [Required]
         public string Text { get; set; }
         public string Source { get; set; }
         [Required]

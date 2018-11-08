@@ -188,9 +188,9 @@ namespace Pobs.Web.Controllers
         [HttpPost, Route("{questionId}/answers/{answerId}/comments"), Authorize]
         public async Task<IActionResult> AddComment(int questionId, int answerId, [FromBody] CommentFormModel payload)
         {
-            if (string.IsNullOrWhiteSpace(payload.Text) && string.IsNullOrWhiteSpace(payload.Source))
+            if (string.IsNullOrWhiteSpace(payload.Text))
             {
-                return BadRequest($"Comment {nameof(payload.Text)} or {nameof(payload.Source)} is required.");
+                return BadRequest($"Comment {nameof(payload.Text)} is required.");
             }
             if (string.IsNullOrEmpty(payload.AgreementRating) ||
                 !Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
