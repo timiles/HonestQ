@@ -7,6 +7,7 @@ import { AnswerModel, LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionStore from '../../store/Question';
 import { LoggedInUserContext } from '../LoggedInUserContext';
+import TopicsList from '../Topics/List';
 import Answer from './Answer';
 import BackToQuestionButton from './BackToQuestionButton';
 import Question from './Question';
@@ -56,7 +57,12 @@ class Container extends React.Component<ContainerProps, {}> {
 
                 {question &&
                     <div className="row">
-                        <div className="col-lg-6 offset-lg-3">
+                        <div className="col-lg-3 d-none d-lg-block">
+                            {question.model &&
+                                <TopicsList selectedTopicSlugs={question.model.topics.map((x) => x.slug)} />
+                            }
+                        </div>
+                        <div className="col-lg-6">
                             <div className="row">
                                 {(question.loading || question.error) &&
                                     <div className="col-md-12">
@@ -74,7 +80,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                                 classNames="slide"
                                             >
                                                 <div className="col-md-12 slide slide-left">
-                                                    <Question {...question} />
+                                                    <Question {...question} onReaction={this.handleReaction} />
                                                 </div>
                                             </CSSTransition>
                                         }
@@ -125,17 +131,17 @@ class Container extends React.Component<ContainerProps, {}> {
             );
         }
 
-        let pageTitle = `❓ ${question.model.text}`;
+        let pageTitle = `\u201C${question.model.text}\u201D`;
         let canonicalUrl = `https://www.honestq.com/questions/${question.questionId}/${question.model.slug}`;
 
         let ogTitle = 'HonestQ';
-        let ogDescription = pageTitle;
+        let ogDescription = `😇 ${pageTitle}`;
 
         const answer = this.getCurrentAnswer();
         if (answer) {
             pageTitle += ` » 🙋 \u201C${answer.text}\u201D`;
             canonicalUrl += `/${answer.id}/${answer.slug}`;
-            ogTitle = pageTitle;
+            ogTitle = ogDescription;
             ogDescription = `🙋 \u201C${answer.text}\u201D`;
         }
 

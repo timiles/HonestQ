@@ -47,11 +47,11 @@ class NewQuestion extends React.Component<Props, State> {
                     className="btn btn-lg btn-primary btn-block"
                     onClick={this.handleOpen}
                 >
-                    Ask a question
+                    Add a question
                 </button>
-                <Modal title="Ask a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
-                    <LoggedInUserContext.Consumer>
-                        {(user) => isUserInRole(user, 'Admin') &&
+                <LoggedInUserContext.Consumer>
+                    {(user) => isUserInRole(user, 'Admin') &&
+                        <Modal title="Add a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                             <QuestionForm
                                 {...questionForm}
                                 initialTopicValues={initialTopicValues}
@@ -59,37 +59,37 @@ class NewQuestion extends React.Component<Props, State> {
                                 onCloseModalRequested={this.handleClose}
                                 submit={this.handleSubmit}
                             />
-                            ||
-                            <>
-                                <div className="modal-body">
-                                    <h3>Coming soon...</h3>
-                                    <p>HonestQ is still in its early stages. We will be adding new questions slowly,
+                        </Modal>
+                        ||
+                        <Modal title="Coming soon..." isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                            <div className="modal-body">
+                                <h3>We're not quite ready to accept new questions yet.</h3>
+                                <p>HonestQ is still in its early stages. We will be adding new questions slowly,
                                     to ensure that we're building a quality system.</p>
-                                    <p>
-                                        If you would like to submit your own honest question, please {}
-                                        <a
-                                            href="https://twitter.com/intent/tweet?text=.@HonestQ_com%20%23HonestQ"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >
-                                            tweet @HonestQ_com
-                                        </a>, or email <b>ask@HonestQ.com</b>.
-                                    </p>
-                                    <p>Thanks!</p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={this.handleClose}
+                                <p>
+                                    If you would like to submit your own honest question, please {}
+                                    <a
+                                        href="https://twitter.com/intent/tweet?text=.@HonestQ_com%20%23HonestQ"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                     >
-                                        You're welcome
-                                    </button>
-                                </div>
-                            </>
-                        }
-                    </LoggedInUserContext.Consumer>
-                </Modal>
+                                        tweet @HonestQ_com
+                                    </a>, or email <b>ask@HonestQ.com</b>.
+                                    </p>
+                                <p>Thanks!</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={this.handleClose}
+                                >
+                                    You're welcome
+                                </button>
+                            </div>
+                        </Modal>
+                    }
+                </LoggedInUserContext.Consumer>
             </>
         );
     }

@@ -37,7 +37,6 @@ class NewAnswer extends React.Component<Props, State> {
     public render() {
         const { answerForm } = this.props;
         const { isModalOpen } = this.state;
-        const headerText = 'Add an answer';
 
         return (
             <>
@@ -46,9 +45,9 @@ class NewAnswer extends React.Component<Props, State> {
                     className="btn btn-lg btn-primary btn-block"
                     onClick={this.handleOpen}
                 >
-                    {headerText}
+                    Got an answer?
                 </ButtonOrLogIn>
-                <Modal title={headerText} isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                <Modal title="Add your answer" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <AnswerForm
                         {...answerForm}
                         isModal={true}

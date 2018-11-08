@@ -102,7 +102,7 @@ class QuestionList extends React.Component<Props> {
                     className="btn btn-lg btn-outline-secondary post-list-item"
                 >
                     <Emoji value={EmojiValue.Question} />
-                    <span className="ml-1 question">{question.text}</span>
+                    <span className="ml-1 question quote-marks">{question.text}</span>
                     <small className="ml-1">
                         <span className="badge badge-info">{question.answersCount}</span>
                         <span className="sr-only">answers</span>

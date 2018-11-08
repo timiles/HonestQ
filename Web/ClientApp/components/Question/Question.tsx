@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { AnswerModel, QuestionModel } from '../../server-models';
+import { AnswerModel, CommentModel, QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
-import AgreementRatingBarChart from '../QuestionForm/AgreementRatingBarChart';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import NewAnswer from './NewAnswer';
-import TopicsList from './TopicsList';
+import ReactionsControl from './ReactionsControl';
 
 export interface QuestionProps {
     loading?: boolean;
@@ -15,7 +14,43 @@ export interface QuestionProps {
     model?: QuestionModel;
 }
 
-export default class Question extends React.Component<QuestionProps, {}> {
+type Props = QuestionProps
+    & {
+    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+};
+
+export default class Question extends React.Component<Props, {}> {
+
+    private static getAnswersHeader(answersCount: number): string {
+        switch (answersCount) {
+            case 0: {
+                return 'No answers yet';
+            }
+            case 1: {
+                return '1 answer';
+            }
+            default: {
+                return `${answersCount} answers`;
+            }
+        }
+    }
+
+    private static getTotalCommentsCount(comments: CommentModel[]): number {
+        let total = comments.length;
+        for (const comment of comments) {
+            // Also add any child comments
+            if (comment.comments.length > 0) {
+                total += Question.getTotalCommentsCount(comment.comments);
+            }
+        }
+        return total;
+    }
+
+    constructor(props: Props) {
+        super(props);
+
+        this.handleReaction = this.handleReaction.bind(this);
+    }
 
     public render() {
         const { questionId, model } = this.props;
@@ -24,61 +59,70 @@ export default class Question extends React.Component<QuestionProps, {}> {
             return null;
         }
 
+        const answersHeader = Question.getAnswersHeader(model.answers.length);
+
         return (
             <div>
-                <LoggedInUserContext.Consumer>
-                    {(user) => isUserInRole(user, 'Admin') &&
-                        <Link to={`/admin/edit/questions/${questionId}`} className="float-right">
-                            Edit
-                                </Link>
-                    }
-                </LoggedInUserContext.Consumer>
-                <h4>
-                    <Emoji value={EmojiValue.Question} />
-                    <span className="ml-1 post">{model.text}</span>
-                </h4>
-                {model.source && <p><small>Source: {model.source}</small></p>}
-                <TopicsList topics={model.topics} />
+                <div className="card card-body bg-light">
+                    <blockquote className="blockquote mb-0">
+                        <p>
+                            <LoggedInUserContext.Consumer>
+                                {(user) => isUserInRole(user, 'Admin') &&
+                                    <Link to={`/admin/edit/questions/${questionId}`} className="float-right">
+                                        Edit
+                                    </Link>
+                                }
+                            </LoggedInUserContext.Consumer>
+                            <Emoji value={EmojiValue.Question} /> HonestQ:
+                        </p>
+                        <h4><span className="quote-marks">{model.text}</span></h4>
+                        {model.source && <p className="small"><small>Source: {model.source}</small></p>}
+                        <footer className="blockquote-footer">
+                            {model.postedBy}
+                        </footer>
+                    </blockquote>
+                </div>
+                <hr />
+                <h5>{answersHeader}</h5>
+                <div className="mb-3">
+                    <NewAnswer questionId={questionId} />
+                </div>
                 <ul className="list-unstyled mt-3 mb-3">
                     {model.answers.map((x: AnswerModel, i: number) =>
                         <li key={i} className="mb-2">
-                            <Link
-                                to={`/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
-                                className="btn btn-lg btn-outline-secondary post-list-item"
-                            >
-                                <Emoji value={EmojiValue.Answer} />
-                                <span className="ml-1 quote-marks">{x.text}</span>
-                                {this.isCitationNeeded(x) &&
-                                    <small className="ml-1">
-                                        <span className="badge badge-info">Citation needed</span>
-                                    </small>
-                                }
-                                <span className="ml-1">{this.renderAgreementRating(x)}</span>
-                            </Link>
+                            <div className="card">
+                                <div className="card-body">
+                                    <blockquote className="blockquote mb-0">
+                                        <Emoji value={EmojiValue.Answer} />
+                                        <span className="quote-marks">{x.text}</span>
+                                        {x.source && <p className="small"><small>Source: {x.source}</small></p>}
+                                    </blockquote>
+                                    <div className="mt-2 float-right">
+                                        <ReactionsControl
+                                            answerId={x.id}
+                                            linkToCommentsUrl={
+                                                `/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
+                                            commentsCount={Question.getTotalCommentsCount(x.comments)}
+                                            reactionCounts={x.reactionCounts}
+                                            myReactions={x.myReactions}
+                                            onReaction={this.handleReaction}
+                                            showHelp={i === 0}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </li>)}
                 </ul>
-                <div>
-                    <NewAnswer questionId={questionId} />
-                </div>
+                {model.answers.length >= 10 &&
+                    <div>
+                        <NewAnswer questionId={questionId} />
+                    </div>
+                }
             </div>
         );
     }
 
-    private isCitationNeeded(answer: AnswerModel): boolean {
-        return !answer.source && (answer.comments.filter((x) => x.source).length === 0);
-    }
-
-    private renderAgreementRating(answer: AnswerModel): any {
-        const agreementRatings: { [key: string]: number } = {};
-        if (answer.comments && answer.comments.length > 0) {
-            answer.comments.forEach((x) => {
-                if (!agreementRatings[x.agreementRating]) {
-                    agreementRatings[x.agreementRating] = 1;
-                } else {
-                    agreementRatings[x.agreementRating]++;
-                }
-            });
-        }
-        return <AgreementRatingBarChart {...agreementRatings} />;
+    private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
+        this.props.onReaction(reactionType, on, answerId, commentId);
     }
 }

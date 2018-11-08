@@ -97,29 +97,21 @@ ul.list-comma-separated li:not(:last-child):after {
     }
     .quote-marks:before {
         content: open-quote;
-        margin-right: 6px;
-        top: 32px;
     }
     .quote-marks:after {
         content: close-quote;
+    }
+    .btn-lg .quote-marks:before {
+        margin-right: 6px;
+        top: 32px;
+    }
+    .btn-lg .quote-marks:after {
         margin-left: 6px;
         bottom: -32px;
     }
     a.btn .quote-marks:before, a.btn .quote-marks:after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 3.3em;
-    }
-    h4 .quote-marks:before, h4 .quote-marks:after {
-        color: rgba(0, 0, 0, 0.2);
-        font-size: 2.9em;
-    }
-    h4 span.quote-marks:before {
-        margin-right: 4px;
-        top: 34px;
-    }
-    h4 span.quote-marks:after {
-        bottom: -34px;
-        margin-left: 4px;
     }
     small .quote-marks:before, small .quote-marks:after {
         font-size: 1.5rem;
@@ -133,6 +125,31 @@ ul.list-comma-separated li:not(:last-child):after {
         bottom: -9px;
         margin-left: 1px;
     }
+    .card-body h4 .quote-marks:before, .card-body h4 .quote-marks:after {
+        color: rgba(0, 0, 0, 0.2);
+        font-size: 2.9em;
+        opacity: 0.9;
+    }
+    .card-body h4 .quote-marks:before {
+        margin-right: 4px;
+        top: 34px;
+    }
+    .card-body h4 .quote-marks:after {
+        bottom: -34px;
+        margin-left: 4px;
+    }
+    .card-body .quote-marks:before, .card-body .quote-marks:after {
+        font-size: 3rem;
+        opacity: 0.3;
+    }
+    .card-body .quote-marks:before {
+        margin-right: 3px;
+        top: 22px;
+    }
+    .card-body .quote-marks:after {
+        margin-left: 3px;
+        bottom: -22px;
+    }
 
 dl.reaction-definitions {
     min-width: 165px;
@@ -144,7 +161,6 @@ dl.reaction-definitions dt {
 
 .emoji {
     display: inline-block;
-    min-width: 23px;
     text-align: center;
 }
 
@@ -153,6 +169,7 @@ dl.reaction-definitions dt {
 }
 .emoji-over-text-area .emoji {
     margin-left: 10px;
+    max-width: 23px;
     position: relative;
     top: 8px;
 }

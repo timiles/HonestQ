@@ -18,22 +18,20 @@ export default class QuestionList extends React.Component<Props, {}> {
         }
 
         return (
-            <>
-                <ul className="list-unstyled">
-                    {questions.map((x: QuestionListItemModel, i: number) =>
-                        <li key={i} className="mb-2">
-                            <Link
-                                to={`/questions/${x.id}/${x.slug}`}
-                                className="btn btn-lg btn-outline-secondary post-list-item"
-                            >
-                                <Emoji value={EmojiValue.Question} />
-                                <span className="ml-1">{x.text}</span>
-                            </Link>
-                        </li>)}
-                    <li>
-                        <NewQuestion topicValue={topicValue} />
-                    </li>
-                </ul>
-            </>);
+            <ul className="list-unstyled">
+                {questions.map((x: QuestionListItemModel, i: number) =>
+                    <li key={i} className="mb-2">
+                        <Link
+                            to={`/questions/${x.id}/${x.slug}`}
+                            className="btn btn-lg btn-outline-secondary post-list-item"
+                        >
+                            <Emoji value={EmojiValue.Question} />
+                            <span className="ml-1 quote-marks">{x.text}</span>
+                        </Link>
+                    </li>)}
+                <li>
+                    <NewQuestion topicValue={topicValue} />
+                </li>
+            </ul>);
     }
 }
