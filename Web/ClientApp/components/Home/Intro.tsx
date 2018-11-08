@@ -5,7 +5,7 @@ export default class Intro extends React.Component {
         return (
             <>
                 <p>
-                    HonestQ is a Q&amp;A / debate site for questions which may not have a simple answer.
+                    HonestQ is a <b>Q&amp;A site</b> for questions which may not have a simple answer.
                 </p>
                 <p>
                     This might be because the question is philosophical or subjective in nature;
@@ -13,17 +13,18 @@ export default class Intro extends React.Component {
                     or perhaps the answers are hotly contested &ndash; they can't all be right... right?
                 </p>
                 <p>
-                    HonestQ strongly encourages linking to sources, and using science, statistics,
+                    HonestQ strongly encourages linking to <b>sources</b>,
+                    and using <b>science</b>, <b>statistics</b>,
                     and an understanding of the human condition to challenge received wisdom.
                 </p>
                 <p>
-                    We believe it can be healthy to embrace conflict, to step outside of your comfort zone,
-                    and to listen to diverse opinions outside of your echo chamber &ndash;
+                    We believe it can be healthy to embrace conflict, to step out of your comfort zone,
+                    and to <b>listen to diverse opinions outside of your echo chamber</b> &ndash;
                     even if it's just so that you can argue against them more effectively.
                     Or who knows, you may even end up with a new point of view yourself.
                 </p>
                 <p>
-                    Happy debating! <img src="/favicon-32x32.png" />
+                    Happy debating!
                 </p>
             </>
         );

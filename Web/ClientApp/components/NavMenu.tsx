@@ -27,7 +27,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
         const { loggedInUser } = this.props;
         const isAdmin = isUserInRole(loggedInUser, 'Admin');
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
+            <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
                 <div className="container">
                     <Link className="navbar-brand" to={'/'}>
                         HonestQ <small><sup className="badge badge-info">BETA</sup></small>
@@ -62,7 +62,7 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                                 ||
                                 <>
                                     <AutoCollapseNavLink to={'/login'}>Log in</AutoCollapseNavLink>
-                                    <AutoCollapseNavLink to={'/signup'}>Sign up</AutoCollapseNavLink>
+                                    <AutoCollapseNavLink to={'/signup'}><b>Sign up</b></AutoCollapseNavLink>
                                 </>}
                         </ul>
                     </div>
