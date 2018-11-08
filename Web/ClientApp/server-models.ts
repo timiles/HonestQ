@@ -59,6 +59,7 @@ export interface AnswerModel {
     slug: string;
     source?: string;
     postedAt: string;
+    postedBy: string;
     postedByUserPseudoId: number;
     isPostedByLoggedInUser: boolean;
     comments: CommentModel[];
@@ -80,7 +81,7 @@ export interface CommentModel {
     source?: string;
     agreementRating: string;
     postedAt: string;
-    postedBy?: string;
+    postedBy: string;
     status: string;
     parentCommentId?: number;
     comments: CommentModel[];
@@ -110,6 +111,7 @@ export interface QuestionModel {
     slug: string;
     text: string;
     source?: string;
+    postedBy: string;
     isPostedByLoggedInUser: boolean;
     topics: TopicValueModel[];
     answers: AnswerModel[];

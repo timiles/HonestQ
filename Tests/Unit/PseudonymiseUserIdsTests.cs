@@ -39,6 +39,7 @@ namespace Pobs.Tests.Unit
             var answer = new Answer();
             answer.PostedAt = DateTime.UtcNow.AddHours(-40);
             answer.PostedByUserId = 1;
+            answer.PostedByUser = new User { Id = 1, Username = "poi" };
 
             var comment1 = AddComment(answer, 234, -30);
             AddComment(answer, 1, -20, comment1);

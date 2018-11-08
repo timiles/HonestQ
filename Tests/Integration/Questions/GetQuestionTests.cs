@@ -61,6 +61,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Source, responseModel.Source);
+                Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
                 Assert.False(responseModel.IsPostedByLoggedInUser);
 
                 Assert.Single(responseModel.Topics);
@@ -84,6 +85,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(answer.Text, responseAnswer.Text);
                     Assert.Equal(answer.Slug, responseAnswer.Slug);
                     Assert.Equal(answer.Source, responseAnswer.Source);
+                    Assert.Equal(answer.PostedByUser.Username, responseAnswer.PostedBy);
                     Assert.Equal(2, responseAnswer.Comments.Length);
                 }
             }
@@ -134,6 +136,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Source, responseModel.Source);
+                Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
                 Assert.True(responseModel.IsPostedByLoggedInUser);
 
                 Assert.Single(responseModel.Topics);

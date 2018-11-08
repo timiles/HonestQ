@@ -124,7 +124,9 @@ namespace Pobs.Web.Services
         public async Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId)
         {
             var question = await _context.Questions
+                .Include(x => x.PostedByUser)
                 .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Reactions)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
@@ -162,7 +164,7 @@ namespace Pobs.Web.Services
         public async Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm)
         {
             var question = await _context.Questions
-                .Include(x => x.Answers)
+                .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             var answer = question?.Answers?.FirstOrDefault(x => x.Id == answerId);
             if (answer == null)

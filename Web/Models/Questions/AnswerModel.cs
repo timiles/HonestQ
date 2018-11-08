@@ -37,6 +37,8 @@ namespace Pobs.Web.Models.Questions
             this.Source = answer.Source;
             this.PostedAt = answer.PostedAt.UtcDateTime;
 
+            this.PostedBy = answer.PostedByUser.Username;
+
             var userPseudoIds = PseudonymiseUserIds(answer);
             this.PostedByUserPseudoId = userPseudoIds?[answer.PostedByUserId] ?? 0;
             this.IsPostedByLoggedInUser = answer.PostedByUserId == loggedInUserId;
@@ -56,9 +58,14 @@ namespace Pobs.Web.Models.Questions
         public string Slug { get; set; }
 
         public string Source { get; set; }
+
         public DateTime PostedAt { get; set; }
+
+        [Required]
+        public string PostedBy { get; set; }
         public int PostedByUserPseudoId { get; set; }
         public bool IsPostedByLoggedInUser { get; set; }
+
         public CommentModel[] Comments { get; set; }
         public Dictionary<string, int> ReactionCounts { get; set; }
         public string[] MyReactions { get; set; }

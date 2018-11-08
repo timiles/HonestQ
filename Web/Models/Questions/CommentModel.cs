@@ -44,6 +44,7 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
+        [Required]
         public string PostedBy { get; set; }
         [Required]
         public string Status { get; set; }
