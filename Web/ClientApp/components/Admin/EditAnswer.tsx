@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { AnswerFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as EditAnswerStore from '../../store/EditAnswer';
+import { buildQuestionUrl } from '../../utils';
 import AnswerForm from '../Question/AnswerForm';
 import Loading from '../shared/Loading';
 
@@ -28,7 +29,7 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
     public render() {
         const { savedSuccessfully } = this.props;
         const { initialState } = this.props.editAnswerForm;
-        const successUrl = (savedSuccessfully) ? `/questions/${this.props.match.params.questionId}/todo` : null;
+        const successUrl = (savedSuccessfully) ? buildQuestionUrl(this.props.match.params.questionId, 'todo') : null;
 
         return (
             <div className="row">

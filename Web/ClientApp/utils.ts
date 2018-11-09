@@ -147,3 +147,16 @@ export function parseQueryString(queryString: string): Map<string, string> {
 export function generateRandomHtmlId(prefix?: string): string {
     return `${prefix || 'id'}_${Math.random().toString(36).substring(2)}`;
 }
+
+export function buildQuestionUrl(
+    id: number | string,
+    slug: string): string {
+    return `/questions/${id}/${slug}`;
+}
+export function buildAnswerUrl(
+    questionId: number | string,
+    questionSlug: string,
+    answerId: number | string,
+    answerSlug: string): string {
+    return `/questions/${questionId}/${questionSlug}/${answerId}/${answerSlug}`;
+}

@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { FormProps } from '../components/shared/FormProps';
 import { QuestionFormModel, QuestionListItemModel } from '../server-models';
-import { postJson } from '../utils';
+import { buildQuestionUrl, postJson } from '../utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -60,7 +60,7 @@ export const actionCreators = {
                         });
                         setTimeout(() => {
                             // Wait a bit for modal to have closed, then go to new Question
-                            dispatch(push(`/questions/${responseModel.id}/${responseModel.slug}`) as any);
+                            dispatch(push(buildQuestionUrl(responseModel.id, responseModel.slug)) as any);
                         }, 700);
                     })
                     .catch((reason: string) => {

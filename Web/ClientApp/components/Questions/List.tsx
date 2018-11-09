@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { LoggedInUserModel, QuestionListItemModel, TopicValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionsStore from '../../store/Questions';
+import { buildQuestionUrl } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import NewQuestion from '../QuestionForm/NewQuestion';
 import Emoji, { EmojiValue } from '../shared/Emoji';
@@ -98,7 +99,7 @@ class QuestionList extends React.Component<Props> {
                     </small>
                 </div>
                 <Link
-                    to={`/questions/${question.id}/${question.slug}`}
+                    to={buildQuestionUrl(question.id, question.slug)}
                     className="btn btn-lg btn-outline-secondary post-list-item"
                 >
                     <Emoji value={EmojiValue.Question} />

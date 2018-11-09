@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { QuestionFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as EditQuestionStore from '../../store/EditQuestion';
+import { buildQuestionUrl } from '../../utils';
 import QuestionForm from '../QuestionForm/QuestionForm';
 import Loading from '../shared/Loading';
 
@@ -28,7 +29,7 @@ class EditQuestion extends React.Component<EditQuestionProps, {}> {
     public render() {
         const { savedSlug } = this.props;
         const { initialState } = this.props.editQuestionForm;
-        const successUrl = (savedSlug) ? `/questions/${this.props.match.params.questionId}/${savedSlug}` : null;
+        const successUrl = (savedSlug) ? buildQuestionUrl(this.props.match.params.questionId, savedSlug) : null;
 
         return (
             <div className="row">

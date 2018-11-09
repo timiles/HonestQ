@@ -6,6 +6,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AnswerModel, LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionStore from '../../store/Question';
+import { buildAnswerUrl, buildQuestionUrl } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import TopicsList from '../Topics/List';
 import Answer from './Answer';
@@ -36,7 +37,7 @@ class Container extends React.Component<ContainerProps, {}> {
         const { question } = this.props;
         const answer = this.getCurrentAnswer();
 
-        if (question && question.model &&
+        if (question && question.questionId && question.model &&
             ((question.model.slug !== this.props.match.params.questionSlug)
                 || (answer && answer.slug !== this.props.match.params.answerSlug))) {
             // URL isn't canonical. Let's 301 redirect.
@@ -44,8 +45,8 @@ class Container extends React.Component<ContainerProps, {}> {
                 this.props.staticContext.statusCode = 301;
             }
             const canonicalUrl = answer ?
-                `/questions/${question.questionId}/${question.model.slug}/${answer.id}/${answer.slug}` :
-                `/questions/${question.questionId}/${question.model.slug}`;
+                buildAnswerUrl(question.questionId, question.model.slug, answer.id, answer.slug) :
+                buildQuestionUrl(question.questionId, question.model.slug);
             return <Redirect to={canonicalUrl} />;
         }
 

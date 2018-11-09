@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { AnswerModel, CommentModel, QuestionModel } from '../../server-models';
-import { isUserInRole } from '../../utils';
+import { buildAnswerUrl, isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
@@ -101,8 +101,7 @@ export default class Question extends React.Component<Props, {}> {
                                     <div className="mt-2 float-right">
                                         <ReactionsControl
                                             answerId={x.id}
-                                            linkToCommentsUrl={
-                                                `/questions/${questionId}/${model.slug}/${x.id}/${x.slug}`}
+                                            linkToCommentsUrl={buildAnswerUrl(questionId, model.slug, x.id, x.slug)}
                                             commentsCount={Question.getTotalCommentsCount(x.comments)}
                                             reactionCounts={x.reactionCounts}
                                             myReactions={x.myReactions}
