@@ -5,6 +5,7 @@ import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
+import Source from '../shared/Source';
 import Comment from './Comment';
 import NewComment from './NewComment';
 import ReactionsControl from './ReactionsControl';
@@ -44,7 +45,7 @@ export default class Answer extends React.Component<Props, {}> {
                             <Emoji value={EmojiValue.Answer} />
                             <span className="post quote-marks">{text}</span>
                         </h4>
-                        {source && <p className="small"><small>Source: {source}</small></p>}
+                        <Source value={source} />
                         <footer className="blockquote-footer">
                             {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                         </footer>

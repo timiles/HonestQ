@@ -4,6 +4,7 @@ import { extractUrlFromText } from '../../utils';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
+import Source from '../shared/Source';
 import NewComment from './NewComment';
 import ReactionsControl from './ReactionsControl';
 
@@ -33,7 +34,7 @@ export default class Comment extends React.Component<Props, {}> {
                                 {agreementRating.toSentenceCase()}
                             </span>
                             {text && <p>{text}</p>}
-                            {source && <p><small>Source: {source}</small></p>}
+                            <Source value={source} />
                             <footer className="blockquote-footer">
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                             </footer>

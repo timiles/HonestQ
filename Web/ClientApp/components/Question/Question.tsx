@@ -4,6 +4,7 @@ import { AnswerModel, CommentModel, QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
+import Source from '../shared/Source';
 import NewAnswer from './NewAnswer';
 import ReactionsControl from './ReactionsControl';
 
@@ -76,7 +77,7 @@ export default class Question extends React.Component<Props, {}> {
                             <Emoji value={EmojiValue.Question} /> HonestQ:
                         </p>
                         <h4><span className="quote-marks">{model.text}</span></h4>
-                        {model.source && <p className="small"><small>Source: {model.source}</small></p>}
+                        <Source value={model.source} />
                         <footer className="blockquote-footer">
                             {model.postedBy}
                         </footer>
@@ -95,7 +96,7 @@ export default class Question extends React.Component<Props, {}> {
                                     <blockquote className="blockquote mb-0">
                                         <Emoji value={EmojiValue.Answer} />
                                         <span className="quote-marks">{x.text}</span>
-                                        {x.source && <p className="small"><small>Source: {x.source}</small></p>}
+                                        <Source value={x.source} />
                                     </blockquote>
                                     <div className="mt-2 float-right">
                                         <ReactionsControl
