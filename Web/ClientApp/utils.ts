@@ -112,6 +112,15 @@ export function extractUrlFromText(text: string): string | null {
     return null;
 }
 
+const domainFromUrlRegExp = new RegExp(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im);
+export function extractDomainFromUrl(url: string): string | null {
+    const match = domainFromUrlRegExp.exec(url);
+    if (match) {
+        return match[1];
+    }
+    return null;
+}
+
 export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number) {
     // If date from server ends with 'Z', javascript automatically applies the local time zone
     if (dateString && dateString[dateString.length - 1] === 'Z') {
