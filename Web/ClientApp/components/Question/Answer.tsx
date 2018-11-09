@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
+import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Comment from './Comment';
 import NewComment from './NewComment';
@@ -23,31 +24,44 @@ export default class Answer extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, id, text, source, comments, reactionCounts, myReactions } = this.props;
+        const { questionId, id, text, source, postedBy, postedAt, comments, reactionCounts, myReactions } = this.props;
 
         return (
             <div>
-                <LoggedInUserContext.Consumer>
-                    {(user) => isUserInRole(user, 'Admin') &&
-                        <Link to={`/admin/edit/questions/${questionId}/answers/${id}`} className="float-right">
-                            Edit
-                        </Link>
-                    }
-                </LoggedInUserContext.Consumer>
-                <h4>
-                    <Emoji value={EmojiValue.Answer} />
-                    <span className="ml-1 post quote-marks">{text}</span>
-                </h4>
-                {source && <p><small>Source: {source}</small></p>}
-                <div className="float-right mb-2">
-                    <ReactionsControl
-                        answerId={id}
-                        reactionCounts={reactionCounts}
-                        myReactions={myReactions}
-                        onReaction={this.handleReaction}
-                        showHelp={true}
-                    />
+                <div className="card card-body bg-light">
+                    <blockquote className="blockquote">
+                        <LoggedInUserContext.Consumer>
+                            {(user) => isUserInRole(user, 'Admin') &&
+                                <Link
+                                    to={`/admin/edit/questions/${questionId}/answers/${id}`}
+                                    className="float-right"
+                                >
+                                    Edit
+                                </Link>
+                            }
+                        </LoggedInUserContext.Consumer>
+                        <h4>
+                            <Emoji value={EmojiValue.Answer} />
+                            <span className="post quote-marks">{text}</span>
+                        </h4>
+                        {source && <p className="small"><small>Source: {source}</small></p>}
+                        <footer className="blockquote-footer">
+                            {postedBy}, <DateTimeTooltip dateTime={postedAt} />
+                        </footer>
+                    </blockquote>
+                    <div>
+                        <div className="float-right">
+                            <ReactionsControl
+                                answerId={id}
+                                reactionCounts={reactionCounts}
+                                myReactions={myReactions}
+                                onReaction={this.handleReaction}
+                                showHelp={true}
+                            />
+                        </div>
+                    </div>
                 </div>
+                <hr />
                 <div>
                     <NewComment
                         questionId={questionId}

@@ -64,7 +64,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
 
         return (
             <>
-                <div className="btn-group">
+                <div className="reactions-control btn-group">
                     {this.values.map((x: ReactionValue, i: number) =>
                         <ButtonOrLogIn
                             key={i}

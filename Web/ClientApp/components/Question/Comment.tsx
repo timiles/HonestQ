@@ -27,7 +27,7 @@ export default class Comment extends React.Component<Props, {}> {
             <>
                 <div className="card">
                     <div className="card-body">
-                        <blockquote className="blockquote mb-0">
+                        <blockquote className="blockquote">
                             {emojiValue && <Emoji value={emojiValue} />}
                             <span className="badge badge-secondary">
                                 {agreementRating.toSentenceCase()}

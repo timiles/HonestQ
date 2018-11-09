@@ -194,22 +194,13 @@ dl.reaction-definitions dt {
     vertical-align: unset;
 }
 
-.btn-back-to-question {
-    margin-top: 20px;
-    text-align: left;
-    white-space: normal;
-    width: 100%;
-}
-    .btn-back-to-question .question-text {
-        font-weight: bold;
-    }
-
-
 .list-comments-nested {
     margin-left: 10px;
 }
 
-
+.reactions-control .btn-outline-secondary:not(:hover) {
+    background-color: #fff;
+}
 
 /* Slide animation */
 .slide {

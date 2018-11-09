@@ -93,7 +93,6 @@ class Container extends React.Component<ContainerProps, {}> {
                                                     <BackToQuestionButton
                                                         id={question.questionId!}
                                                         slug={question.model.slug}
-                                                        text={question.model.text}
                                                     />
                                                     <Answer
                                                         {...answer}
