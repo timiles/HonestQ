@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import * as moment from 'moment';
 import * as React from 'react';
-import { parseDateWithTimeZoneOffset } from '../../utils';
+import { generateRandomHtmlId, parseDateWithTimeZoneOffset } from '../../utils';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 
 interface Props {
@@ -15,7 +15,7 @@ export default class DateTimeTooltip extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
 
-        this.tooltipId = `tooltip_${Math.random().toString(36).substring(2)}`;
+        this.tooltipId = generateRandomHtmlId('tooltip');
     }
 
     public componentDidMount() {
