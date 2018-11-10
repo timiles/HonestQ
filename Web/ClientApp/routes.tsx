@@ -8,10 +8,10 @@ import AdminHome from './components/Admin/AdminHome';
 import EditAnswer from './components/Admin/EditAnswer';
 import EditQuestion from './components/Admin/EditQuestion';
 import EditTopic from './components/Admin/EditTopic';
-import Home from './components/Home/Home';
 import { Layout } from './components/Layout';
 import Topic from './components/Topic/Container';
 import NewTopic from './components/Topic/NewTopic';
+import Home from './screens/Home';
 import QuestionsList from './screens/Questions';
 import Question from './screens/Questions/Item';
 
