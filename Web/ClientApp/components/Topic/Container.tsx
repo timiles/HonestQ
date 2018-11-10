@@ -1,19 +1,15 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicStore from '../../store/Topic';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 import NewQuestion from '../QuestionForm/NewQuestion';
 import TopicsList from '../Topics/List';
 import Topic from './Topic';
 
 type ContainerProps = TopicStore.ContainerState
     & typeof TopicStore.actionCreators
-    & { loggedInUser: LoggedInUserModel | undefined }
-    & RouteComponentProps<{ topicSlug: string }>;
+    & { topicSlug: string };
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -37,7 +33,7 @@ class Container extends React.Component<ContainerProps, {}> {
         const numberOfQuestionsInTopic = topic.model ? topic.model!.questions.length : 0;
 
         return (
-            <LoggedInUserContext.Provider value={this.props.loggedInUser}>
+            <>
                 {this.renderHelmetTags()}
 
                 <div className="row">
@@ -57,7 +53,7 @@ class Container extends React.Component<ContainerProps, {}> {
                         </div>
                     </div>
                 </div>
-            </LoggedInUserContext.Provider>
+            </>
         );
     }
 
@@ -95,13 +91,13 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private setUp(props: ContainerProps): void {
-        if (!props.topic || (props.topic.slug !== props.match.params.topicSlug)) {
-            props.getTopic(props.match.params.topicSlug);
+        if (!props.topic || (props.topic.slug !== props.topicSlug)) {
+            props.getTopic(props.topicSlug);
         }
     }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => ({ ...state.topic, loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any) => (state.topic),
     TopicStore.actionCreators,
 )(Container);
