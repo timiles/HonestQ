@@ -11,9 +11,9 @@ import EditTopic from './components/Admin/EditTopic';
 import Home from './components/Home/Home';
 import { Layout } from './components/Layout';
 import Question from './components/Question/Container';
-import QuestionsList from './components/Questions/List';
 import Topic from './components/Topic/Container';
 import NewTopic from './components/Topic/NewTopic';
+import QuestionsList from './screens/Questions';
 
 export const routes = (
     <Layout>
