@@ -3,11 +3,10 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import { AnswerModel, LoggedInUserModel } from '../../server-models';
+import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionStore from '../../store/Question';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 import TopicsList from '../Topics/List';
 import Answer from './Answer';
 import BackToQuestionButton from './BackToQuestionButton';
@@ -15,10 +14,10 @@ import Question from './Question';
 
 type ContainerProps = QuestionStore.ContainerState
     & typeof QuestionStore.actionCreators
-    & { loggedInUser: LoggedInUserModel | undefined }
-    & RouteComponentProps<{ questionId: string, questionSlug: string, answerId?: string, answerSlug?: string }>;
+    & { questionId: number, questionSlug: string, answerId?: number, answerSlug?: string }
+    & RouteComponentProps<{}>;
 
-class Container extends React.Component<ContainerProps, {}> {
+class Container extends React.Component<ContainerProps> {
 
     constructor(props: ContainerProps) {
         super(props);
@@ -29,17 +28,16 @@ class Container extends React.Component<ContainerProps, {}> {
     public componentWillMount() {
         // This will also run on server side render
         if (this.shouldGetQuestion()) {
-            this.props.getQuestion(Number(this.props.match.params.questionId));
+            this.props.getQuestion(this.props.questionId);
         }
     }
 
     public render() {
-        const { question } = this.props;
+        const { question, questionSlug, answerId, answerSlug } = this.props;
         const answer = this.getCurrentAnswer();
 
         if (question && question.questionId && question.model &&
-            ((question.model.slug !== this.props.match.params.questionSlug)
-                || (answer && answer.slug !== this.props.match.params.answerSlug))) {
+            ((question.model.slug !== questionSlug) || (answer && answer.slug !== answerSlug))) {
             // URL isn't canonical. Let's 301 redirect.
             if (this.props.staticContext) {
                 this.props.staticContext.statusCode = 301;
@@ -53,7 +51,7 @@ class Container extends React.Component<ContainerProps, {}> {
         const slideDurationMilliseconds = 500;
 
         return (
-            <LoggedInUserContext.Provider value={this.props.loggedInUser}>
+            <>
                 {this.renderHelmetTags()}
 
                 {question &&
@@ -75,7 +73,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                 }
                                 {question.model &&
                                     <TransitionGroup component={undefined}>
-                                        {!this.props.match.params.answerId &&
+                                        {!answerId &&
                                             <CSSTransition
                                                 timeout={slideDurationMilliseconds}
                                                 classNames="slide"
@@ -109,14 +107,14 @@ class Container extends React.Component<ContainerProps, {}> {
                         </div>
                     </div>
                 }
-            </LoggedInUserContext.Provider>
+            </>
         );
     }
 
     private getCurrentAnswer(): AnswerModel | undefined {
-        const answerId = Number(this.props.match.params.answerId);
-        if (this.props.question.model && answerId > 0) {
-            return this.props.question.model.answers.filter((x) => x.id === answerId)[0];
+        const { question, answerId } = this.props;
+        if (question.model && answerId && answerId > 0) {
+            return question.model.answers.filter((x) => x.id === answerId)[0];
         }
     }
 
@@ -160,24 +158,21 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private shouldGetQuestion(): boolean {
-        if (!this.props.match.params.questionId) {
+        const { questionId, question } = this.props;
+        if (!questionId) {
             return false;
         }
-        const questionIdAsNumber = Number(this.props.match.params.questionId);
-        if (isNaN(questionIdAsNumber)) {
-            return false;
-        }
-        if (!this.props.question) {
+        if (!question) {
             return true;
         }
-        if (this.props.question.loading) {
+        if (question.loading) {
             return false;
         }
-        return (this.props.question.questionId !== questionIdAsNumber);
+        return (question.questionId !== questionId);
     }
 
     private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
-        const questionId = Number(this.props.match.params.questionId!);
+        const { questionId } = this.props;
         if (on) {
             this.props.addReaction(reactionType, questionId, answerId, commentId);
         } else {
@@ -187,6 +182,6 @@ class Container extends React.Component<ContainerProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => ({ ...state.question, loggedInUser: state.login.loggedInUser }),
+    (state: ApplicationState, ownProps: any) => (state.question),
     QuestionStore.actionCreators,
 )(Container);
