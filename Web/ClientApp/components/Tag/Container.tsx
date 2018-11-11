@@ -68,13 +68,11 @@ class Container extends React.Component<ContainerProps, {}> {
             );
         }
 
-        const pageTitle = `Tag: ${tag.model.name}`;
+        const pageTitle = `HonestQ: ${tag.model.name}`;
         const canonicalUrl = `https://www.honestq.com/tags/${tag.model.slug}`;
 
-        const ogTitle = `Questions tagged ${tag.model.name}`;
-        const numberOfQuestions =
-            `${tag.model.questions.length} question${tag.model.questions.length > 1 ? 's' : ''}`;
-        const ogDescription = `View ${numberOfQuestions} about ${tag.model.name}, ask your own, and join the debate.`;
+        const ogTitle = `Questions about ${tag.model.name}`;
+        const ogDescription = `View questions about ${tag.model.name}, ask your own, and join the debate.`;
 
         return (
             <Helmet>

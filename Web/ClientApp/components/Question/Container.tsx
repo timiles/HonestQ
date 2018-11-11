@@ -129,7 +129,7 @@ class Container extends React.Component<ContainerProps> {
             );
         }
 
-        let pageTitle = `\u201C${question.model.text}\u201D`;
+        let pageTitle = `HonestQ: \u201C${question.model.text}\u201D`;
         let canonicalUrl = `https://www.honestq.com/questions/${question.questionId}/${question.model.slug}`;
 
         let ogTitle = 'HonestQ';
