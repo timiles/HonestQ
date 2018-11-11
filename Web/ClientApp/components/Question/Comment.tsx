@@ -52,6 +52,7 @@ export default class Comment extends React.Component<Props, {}> {
                         <NewComment
                             questionId={questionId}
                             answerId={answerId}
+                            replyingToText={text}
                             parentCommentId={id}
                         />
                     </div>
