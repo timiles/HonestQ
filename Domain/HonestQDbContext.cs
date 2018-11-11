@@ -12,7 +12,7 @@ namespace Pobs.Domain
 
         public DbSet<Question> Questions { get; set; }
 
-        public DbSet<Topic> Topics { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         public DbSet<User> Users { get; set; }
 
@@ -25,18 +25,18 @@ namespace Pobs.Domain
             }
 
             // Unique contraints
-            modelBuilder.Entity<Topic>().HasIndex(x => x.Slug).IsUnique();
+            modelBuilder.Entity<Tag>().HasIndex(x => x.Slug).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             modelBuilder.Entity<Reaction>().HasIndex(x => new { x.AnswerId, x.PostedByUserId, x.Type }).IsUnique();
             modelBuilder.Entity<Reaction>().HasIndex(x => new { x.CommentId, x.PostedByUserId, x.Type }).IsUnique();
-            // NOTE: Question Slug could also be unique by TopicId, but don't worry for now, we need far more clever de-duplication anyway
+            // NOTE: Question Slug could also be unique by TagId, but don't worry for now, we need far more clever de-duplication anyway
 
             // Emoji-enabled columns. TODO: can this be done by an Attribute? Also probably needs Database and Tables altered before Columns...
-            modelBuilder.Entity<Topic>(x =>
+            modelBuilder.Entity<Tag>(x =>
             {
                 x.Property(p => p.Name).HasCharSetForEmoji();
-                x.Property(p => p.Summary).HasCharSetForEmoji();
+                x.Property(p => p.Description).HasCharSetForEmoji();
             });
             modelBuilder.Entity<Question>(x =>
             {
@@ -68,9 +68,9 @@ namespace Pobs.Domain
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             // Many-to-many relationships
-            modelBuilder.Entity<QuestionTopic>().HasKey(x => new { x.QuestionId, x.TopicId });
-            modelBuilder.Entity<QuestionTopic>().HasOne(x => x.Question).WithMany(x => x.QuestionTopics);
-            modelBuilder.Entity<QuestionTopic>().HasOne(x => x.Topic).WithMany(x => x.QuestionTopics);
+            modelBuilder.Entity<QuestionTag>().HasKey(x => new { x.QuestionId, x.TagId });
+            modelBuilder.Entity<QuestionTag>().HasOne(x => x.Question).WithMany(x => x.QuestionTags);
+            modelBuilder.Entity<QuestionTag>().HasOne(x => x.Tag).WithMany(x => x.QuestionTags);
         }
     }
 }

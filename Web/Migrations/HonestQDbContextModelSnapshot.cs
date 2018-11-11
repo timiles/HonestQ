@@ -118,17 +118,17 @@ namespace Pobs.Web.Migrations
                     b.ToTable("Question");
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.QuestionTopic", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.QuestionTag", b =>
                 {
                     b.Property<int>("QuestionId");
 
-                    b.Property<int>("TopicId");
+                    b.Property<int>("TagId");
 
-                    b.HasKey("QuestionId", "TopicId");
+                    b.HasKey("QuestionId", "TagId");
 
-                    b.HasIndex("TopicId");
+                    b.HasIndex("TagId");
 
-                    b.ToTable("QuestionTopic");
+                    b.ToTable("QuestionTag");
                 });
 
             modelBuilder.Entity("Pobs.Domain.Entities.Reaction", b =>
@@ -159,10 +159,14 @@ namespace Pobs.Web.Migrations
                     b.ToTable("Reaction");
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.Topic", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Description")
+                        .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+                        .HasMaxLength(280);
 
                     b.Property<bool>("IsApproved");
 
@@ -182,10 +186,6 @@ namespace Pobs.Web.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
-                    b.Property<string>("Summary")
-                        .HasColumnType("VARCHAR(280) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
-                        .HasMaxLength(280);
-
                     b.HasKey("Id");
 
                     b.HasIndex("PostedByUserId");
@@ -193,7 +193,7 @@ namespace Pobs.Web.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("Topic");
+                    b.ToTable("Tag");
                 });
 
             modelBuilder.Entity("Pobs.Domain.Entities.User", b =>
@@ -274,16 +274,16 @@ namespace Pobs.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.QuestionTopic", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.QuestionTag", b =>
                 {
                     b.HasOne("Pobs.Domain.Entities.Question", "Question")
-                        .WithMany("QuestionTopics")
+                        .WithMany("QuestionTags")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Pobs.Domain.Entities.Topic", "Topic")
-                        .WithMany("QuestionTopics")
-                        .HasForeignKey("TopicId")
+                    b.HasOne("Pobs.Domain.Entities.Tag", "Tag")
+                        .WithMany("QuestionTags")
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -303,10 +303,10 @@ namespace Pobs.Web.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Pobs.Domain.Entities.Topic", b =>
+            modelBuilder.Entity("Pobs.Domain.Entities.Tag", b =>
                 {
                     b.HasOne("Pobs.Domain.Entities.User", "PostedByUser")
-                        .WithMany("Topics")
+                        .WithMany("Tags")
                         .HasForeignKey("PostedByUserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

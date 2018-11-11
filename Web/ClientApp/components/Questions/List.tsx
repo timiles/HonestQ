@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { QuestionListItemModel, TopicValueModel } from '../../server-models';
+import { QuestionListItemModel, TagValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionsStore from '../../store/Questions';
 import { buildQuestionUrl } from '../../utils/route-utils';
@@ -77,12 +77,12 @@ class QuestionList extends React.Component<Props> {
                 <div>
                     <small>
                         New question
-                        {question.topics.length > 0 &&
+                        {question.tags.length > 0 &&
                             <>{} in: {}
                                 <ul className="list-inline list-comma-separated">
-                                    {question.topics.map((x: TopicValueModel, i: number) =>
+                                    {question.tags.map((x: TagValueModel, i: number) =>
                                         <li key={i} className="list-inline-item">
-                                            <Link to={`/topics/${x.slug}`}>
+                                            <Link to={`/tags/${x.slug}`}>
                                                 <b>{x.name}</b>
                                             </Link>
                                         </li>)}

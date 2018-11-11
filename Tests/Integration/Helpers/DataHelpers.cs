@@ -28,14 +28,14 @@ namespace Pobs.Tests.Integration.Helpers
             return user;
         }
 
-        public static Topic CreateTopic(User user, bool isApproved = true, string topicNamePrefix = null, params Question[] questions)
+        public static Tag CreateTag(User user, bool isApproved = true, string tagNamePrefix = null, params Question[] questions)
         {
             // Guarantee slug has both upper & lower case characters
-            topicNamePrefix = topicNamePrefix ?? "ABCabc";
-            var name = topicNamePrefix + Utils.GenerateRandomString(10);
-            var topic = new Topic(name, name, user, DateTime.UtcNow)
+            tagNamePrefix = tagNamePrefix ?? "ABCabc";
+            var name = tagNamePrefix + Utils.GenerateRandomString(10);
+            var tag = new Tag(name, name, user, DateTime.UtcNow)
             {
-                Summary = Utils.GenerateRandomString(50),
+                Description = Utils.GenerateRandomString(50),
                 MoreInfoUrl = Utils.GenerateRandomString(50),
                 IsApproved = isApproved
             };
@@ -46,13 +46,13 @@ namespace Pobs.Tests.Integration.Helpers
                 foreach (var question in questions)
                 {
                     dbContext.Attach(question);
-                    topic.Questions.Add(question);
+                    tag.Questions.Add(question);
                 }
-                dbContext.Topics.Add(topic);
+                dbContext.Tags.Add(tag);
                 dbContext.SaveChanges();
             }
 
-            return topic;
+            return tag;
         }
 
         public static IEnumerable<Question> CreateQuestions(

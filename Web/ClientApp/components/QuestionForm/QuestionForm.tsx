@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { QuestionFormModel, TopicValueModel } from '../../server-models';
+import { QuestionFormModel, TagValueModel } from '../../server-models';
 import { onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import TopicAutocomplete from '../Topic/TopicAutocomplete';
+import TagAutocomplete from '../Tag/TagAutocomplete';
 
 type Props = FormProps<QuestionFormModel>
     & {
-    initialTopicValues?: TopicValueModel[],
+    initialTagValues?: TagValueModel[],
     isModal?: boolean,
     onCloseModalRequested?: () => void,
 };
@@ -23,12 +23,12 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
             {
                 text: props.initialState.text,
                 source: props.initialState.source,
-                topics: props.initialState.topics,
+                tags: props.initialState.tags,
             } :
-            { text: '', source: '', topics: props.initialTopicValues || [] };
+            { text: '', source: '', tags: props.initialTagValues || [] };
 
         this.handleChange = this.handleChange.bind(this);
-        this.handleTopicsChange = this.handleTopicsChange.bind(this);
+        this.handleTagsChange = this.handleTagsChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -39,13 +39,13 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
     public componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a Question has been successfully submitted
         if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', topics: [] });
+            this.setState({ text: '', source: '', tags: [] });
         }
     }
 
     public render() {
         const { isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
-        const { text, source, topics } = this.state;
+        const { text, source, tags } = this.state;
 
         return (
             <form className="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
@@ -80,12 +80,12 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                         />
                     </div>
                     <div className="form-group">
-                        <label>Topics (optional)</label>
+                        <label>Tags (optional)</label>
                         <div>
-                            <TopicAutocomplete
-                                name="topicSlugs"
-                                selectedTopics={topics}
-                                onChange={this.handleTopicsChange}
+                            <TagAutocomplete
+                                name="tagSlugs"
+                                selectedTags={tags}
+                                onChange={this.handleTagsChange}
                             />
                         </div>
                     </div>
@@ -110,8 +110,8 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
         this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
 
-    private handleTopicsChange(selectedTopics: TopicValueModel[]): void {
-        this.setState({ topics: selectedTopics });
+    private handleTagsChange(selectedTags: TagValueModel[]): void {
+        this.setState({ tags: selectedTags });
     }
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

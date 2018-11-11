@@ -93,7 +93,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
             };
         case 'NEW_QUESTION_FORM_RECEIVED': {
             if (!state.loadingQuestionList.loadedModel) {
-                // We could be posting a question from the topics page
+                // We could be posting a question from the tags page
                 return state;
             }
             const questionListModel = state.loadingQuestionList.loadedModel;
@@ -104,7 +104,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                 slug: action.payload.questionListItem.slug,
                 text: action.payload.questionListItem.text,
                 answersCount: action.payload.questionListItem.answersCount,
-                topics: action.payload.questionListItem.topics,
+                tags: action.payload.questionListItem.tags,
             };
             questionItemsNext.unshift(newQuestionItem);
             const questionListNext = { ...questionListModel, questions: questionItemsNext };

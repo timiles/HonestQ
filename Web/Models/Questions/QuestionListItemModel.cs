@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 
 namespace Pobs.Web.Models.Questions
 {
@@ -15,7 +15,7 @@ namespace Pobs.Web.Models.Questions
             this.Id = question.Id;
             this.Slug = question.Slug;
             this.Text = question.Text;
-            this.Topics = question.Topics.Select(x => new TopicValueModel(x)).ToArray();
+            this.Tags = question.Tags.Select(x => new TagValueModel(x)).ToArray();
             this.AnswersCount = question.Answers.Count();
         }
 
@@ -27,7 +27,7 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string Text { get; set; }
 
-        public TopicValueModel[] Topics { get; set; }
+        public TagValueModel[] Tags { get; set; }
 
         public int AnswersCount { get; set; }
     }

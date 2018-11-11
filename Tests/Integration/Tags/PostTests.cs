@@ -1,0 +1,179 @@
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Pobs.Domain;
+using Pobs.Domain.Entities;
+using Pobs.Tests.Integration.Helpers;
+using Pobs.Web.Models.Tags;
+using Xunit;
+
+namespace Pobs.Tests.Integration.Tags
+{
+    public class PostTests : IDisposable
+    {
+        private const string Url = "/api/tags";
+        private readonly User _user;
+
+        public PostTests()
+        {
+            _user = DataHelpers.CreateUser();
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsAdmin_ShouldCreateUnapprovedTag()
+        {
+            var payload = new TagFormModel
+            {
+                Name = "Tag (1982)",
+                Description = "This is a quick blurb about the tag",
+                MoreInfoUrl = "https://www.example.com/Tag_(1982)"
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id, Role.Admin);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                dbContext.Entry(user).Collection(b => b.Tags).Load();
+
+                var tag = user.Tags.Single();
+                Assert.NotNull(tag.Slug);
+                Assert.Equal(payload.Name, tag.Name);
+                Assert.Equal(payload.Description, tag.Description);
+                Assert.Equal(payload.MoreInfoUrl, tag.MoreInfoUrl);
+                Assert.Equal(_user.Id, tag.PostedByUser.Id);
+                Assert.True(tag.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                Assert.False(tag.IsApproved);
+            }
+        }
+
+        [Fact]
+        public async Task Emoji_ShouldPersist()
+        {
+            var payload = new TagFormModel
+            {
+                Name = "💩",
+                Description = "This tag is all about 💩💩💩"
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id, Role.Admin);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                dbContext.Entry(user).Collection(b => b.Tags).Load();
+
+                var tag = user.Tags.Single();
+                Assert.Equal(payload.Name, tag.Name);
+                Assert.Equal(payload.Description, tag.Description);
+            }
+        }
+
+        [Fact]
+        public async Task TagSlugAlreadyExistsUnapproved_ShouldBeOK()
+        {
+            var tag = DataHelpers.CreateTag(_user, isApproved: false);
+
+            var payload = new TagFormModel
+            {
+                Name = tag.Name
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id, Role.Admin);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+        }
+
+        [Fact]
+        public async Task TagSlugAlreadyExistsApproved_ShouldGetBadRequest()
+        {
+            var tag = DataHelpers.CreateTag(_user, isApproved: true);
+
+            var payload = new TagFormModel
+            {
+                Name = tag.Name
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id, Role.Admin);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal($"A tag already exists at /{tag.Slug}.", responseContent);
+            }
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
+        {
+            var payload = new TagFormModel
+            {
+                Name = "Tag (1982)"
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                dbContext.Entry(user).Collection(b => b.Tags).Load();
+
+                Assert.Empty(user.Tags);
+            }
+        }
+
+        [Fact]
+        public async Task NotAuthenticated_ShouldBeDenied()
+        {
+            var payload = new TagFormModel
+            {
+                Name = "Tag (1982)"
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.Find(_user.Id);
+                dbContext.Entry(user).Collection(b => b.Tags).Load();
+
+                Assert.Empty(user.Tags);
+            }
+        }
+
+        public void Dispose()
+        {
+            DataHelpers.DeleteUser(_user.Id);
+        }
+    }
+}

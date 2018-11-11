@@ -21,7 +21,7 @@ namespace Pobs.Tests.Integration.Activity
                 + (beforeTimestamp.HasValue ? $"beforeTimestamp={beforeTimestamp}" : "");
         private readonly int _questionUserId;
         private readonly int _answerUserId;
-        private readonly Topic _topic;
+        private readonly Tag _tag;
 
         public IndexActivityTests()
         {
@@ -35,7 +35,7 @@ namespace Pobs.Tests.Integration.Activity
             DataHelpers.CreateComments(answer, answerUser, 4);
             DataHelpers.CreateComments(answer, answerUser, 1, CommentStatus.AwaitingApproval);
             DataHelpers.CreateChildComments(answer.Comments.First(), answer.PostedByUser, 1, CommentStatus.AwaitingApproval);
-            _topic = DataHelpers.CreateTopic(questionUser, isApproved: true, questions: questions.ToArray());
+            _tag = DataHelpers.CreateTag(questionUser, isApproved: true, questions: questions.ToArray());
         }
 
         [Fact]
@@ -52,8 +52,8 @@ namespace Pobs.Tests.Integration.Activity
                 // Not really sure how better to test the timestamp?
                 Assert.True(responseModel.LastTimestamp > 0);
 
-                // Check that all of this Topic is in the most recent activity
-                foreach (var question in _topic.Questions)
+                // Check that all of this Tag is in the most recent activity
+                foreach (var question in _tag.Questions)
                 {
                     Assert.NotNull(responseModel.ActivityItems.SingleOrDefault(x =>
                         x.Type == "Question" &&
@@ -85,24 +85,24 @@ namespace Pobs.Tests.Integration.Activity
                     {
                         case "Question":
                             {
-                                // In case this particular response comes from a different Topic, eg a concurrent test
-                                var question = _topic.Questions.FirstOrDefault(x => x.Id == responseActivity.QuestionId);
+                                // In case this particular response comes from a different Tag, eg a concurrent test
+                                var question = _tag.Questions.FirstOrDefault(x => x.Id == responseActivity.QuestionId);
                                 if (question != null)
                                 {
                                     Assert.Equal(question.Slug, responseActivity.QuestionSlug);
                                     Assert.Equal(question.Text, responseActivity.QuestionText);
                                     AssertHelpers.Equal(question.PostedAt, responseActivity.PostedAt, 10);
                                     Assert.Equal(question.Answers.Count(), responseActivity.ChildCount);
-                                    var topic = responseActivity.Topics.SingleOrDefault();
-                                    Assert.NotNull(topic);
-                                    Assert.Equal(_topic.Name, topic.Name);
-                                    Assert.Equal(_topic.Slug, topic.Slug);
+                                    var tag = responseActivity.Tags.SingleOrDefault();
+                                    Assert.NotNull(tag);
+                                    Assert.Equal(_tag.Name, tag.Name);
+                                    Assert.Equal(_tag.Slug, tag.Slug);
                                 }
                                 break;
                             }
                         case "Answer":
                             {
-                                var question = _topic.Questions.FirstOrDefault(x => x.Id == responseActivity.QuestionId);
+                                var question = _tag.Questions.FirstOrDefault(x => x.Id == responseActivity.QuestionId);
                                 if (question != null)
                                 {
                                     var answer = question.Answers.Single(x => x.Id == responseActivity.AnswerId);
@@ -117,7 +117,7 @@ namespace Pobs.Tests.Integration.Activity
                             }
                         case "Comment":
                             {
-                                var question = _topic.Questions.FirstOrDefault(x => x.Id == responseActivity.QuestionId);
+                                var question = _tag.Questions.FirstOrDefault(x => x.Id == responseActivity.QuestionId);
                                 if (question != null)
                                 {
                                     var answer = question.Answers.Single(x => x.Id == responseActivity.AnswerId);
@@ -176,8 +176,8 @@ namespace Pobs.Tests.Integration.Activity
         [Fact]
         public async Task ShouldGetAllActivityBeforeTimestamp()
         {
-            var minPostedAtTime = _topic.Questions.Min(x => x.PostedAt).ToUnixTimeMilliseconds();
-            var maxPostedAtTime = _topic.Questions.Max(x => x.PostedAt).ToUnixTimeMilliseconds();
+            var minPostedAtTime = _tag.Questions.Min(x => x.PostedAt).ToUnixTimeMilliseconds();
+            var maxPostedAtTime = _tag.Questions.Max(x => x.PostedAt).ToUnixTimeMilliseconds();
             var beforeTimestamp = (minPostedAtTime + maxPostedAtTime) / 2;
 
             using (var server = new IntegrationTestingServer())
@@ -190,7 +190,7 @@ namespace Pobs.Tests.Integration.Activity
                 var responseModel = JsonConvert.DeserializeObject<ActivityListModel>(responseContent);
 
                 // Check that only Activity items before the cutoff time were returned
-                foreach (var question in _topic.Questions)
+                foreach (var question in _tag.Questions)
                 {
                     var responseQuestion = responseModel.ActivityItems.SingleOrDefault(x =>
                             x.Type == "Question" &&
@@ -239,7 +239,7 @@ namespace Pobs.Tests.Integration.Activity
 
         public void Dispose()
         {
-            foreach (var question in _topic.Questions)
+            foreach (var question in _tag.Questions)
             {
                 DataHelpers.DeleteAllComments(question.Id);
             }

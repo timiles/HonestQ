@@ -34,6 +34,6 @@ namespace Pobs.Domain.Entities
         [MaxLength(32)]
         public string EmailVerificationToken { get; set; }
 
-        public virtual ICollection<Topic> Topics { get; set; }
+        public virtual ICollection<Tag> Tags { get; set; }
     }
 }

@@ -98,7 +98,7 @@ namespace Pobs.Web
             services.AddScoped(provider => provider.GetService<DbContextPool<HonestQDbContext>>().Rent());
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<IQuestionService, QuestionService>();
-            services.AddScoped<ITopicService, TopicService>();
+            services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
 
 

@@ -38,7 +38,7 @@ export interface ActivityListItemModel {
     postedAt: string;
     childCount?: number;
     agreementRating?: string;
-    topics: TopicValueModel[];
+    tags: TagValueModel[];
 }
 
 export interface ActivityListModel {
@@ -87,21 +87,21 @@ export interface CommentModel {
     myReactions: string[];
 }
 
-export interface TopicValueFormModel {
+export interface TagValueFormModel {
     slug: string;
 }
 
 export interface QuestionFormModel {
     text: string;
     source?: string;
-    topics: TopicValueFormModel[];
+    tags: TagValueFormModel[];
 }
 
 export interface QuestionListItemModel {
     id: number;
     slug: string;
     text: string;
-    topics: TopicValueModel[];
+    tags: TagValueModel[];
     answersCount: number;
 }
 
@@ -111,7 +111,7 @@ export interface QuestionModel {
     source?: string;
     postedBy: string;
     isPostedByLoggedInUser: boolean;
-    topics: TopicValueModel[];
+    tags: TagValueModel[];
     answers: AnswerModel[];
 }
 
@@ -129,51 +129,51 @@ export interface ReactionModel {
     isMyReaction: boolean;
 }
 
-export interface AdminTopicModel {
+export interface AdminTagModel {
     isApproved: boolean;
     slug: string;
     name: string;
-    summary?: string;
+    description?: string;
     moreInfoUrl?: string;
     questions: QuestionListItemModel[];
 }
 
-export interface EditTopicFormModel {
+export interface EditTagFormModel {
     slug: string;
     name: string;
-    summary?: string;
+    description?: string;
     moreInfoUrl?: string;
     isApproved: boolean;
 }
 
-export interface TopicAutocompleteResultsModel {
-    values: TopicValueModel[];
+export interface TagAutocompleteResultsModel {
+    values: TagValueModel[];
 }
 
-export interface TopicFormModel {
+export interface TagFormModel {
     name: string;
-    summary: string;
+    description: string;
     moreInfoUrl?: string;
 }
 
-export interface TopicModel {
+export interface TagModel {
     slug: string;
     name: string;
-    summary?: string;
+    description?: string;
     moreInfoUrl?: string;
     questions: QuestionListItemModel[];
 }
 
-export interface TopicListItemModel {
+export interface TagListItemModel {
     slug: string;
     name: string;
 }
 
-export interface TopicsListModel {
-    topics: TopicListItemModel[];
+export interface TagsListModel {
+    tags: TagListItemModel[];
 }
 
-export interface TopicValueModel {
+export interface TagValueModel {
     name: string;
     slug: string;
 }

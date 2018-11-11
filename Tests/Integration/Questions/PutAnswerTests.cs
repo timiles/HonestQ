@@ -9,7 +9,7 @@ using Pobs.Domain.Entities;
 using Pobs.Domain.Utils;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Questions

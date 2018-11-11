@@ -10,7 +10,7 @@ import Loading from '../shared/Loading';
 
 type EditAnswerProps = EditAnswerStore.EditAnswerState
     & typeof EditAnswerStore.actionCreators
-    & RouteComponentProps<{ topicSlug: string, questionId: string, answerId: string }>;
+    & RouteComponentProps<{ tagSlug: string, questionId: string, answerId: string }>;
 
 class EditAnswer extends React.Component<EditAnswerProps, {}> {
 

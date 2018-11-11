@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
-import { QuestionFormModel, TopicValueModel } from '../../server-models';
+import { QuestionFormModel, TagValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewQuestionStore from '../../store/NewQuestion';
 import { isUserInRole } from '../../utils/auth-utils';
@@ -10,7 +10,7 @@ import QuestionForm from './QuestionForm';
 
 type Props = NewQuestionStore.NewQuestionState
     & typeof NewQuestionStore.actionCreators
-    & { topicValue: TopicValueModel };
+    & { tagValue: TagValueModel };
 
 interface State {
     isModalOpen: boolean;
@@ -36,9 +36,9 @@ class NewQuestion extends React.Component<Props, State> {
     }
 
     public render() {
-        const { questionForm, topicValue } = this.props;
+        const { questionForm, tagValue } = this.props;
         const { isModalOpen } = this.state;
-        const initialTopicValues = !topicValue ? [] : [{ ...topicValue }];
+        const initialTagValues = !tagValue ? [] : [{ ...tagValue }];
 
         return (
             <>
@@ -54,7 +54,7 @@ class NewQuestion extends React.Component<Props, State> {
                         <Modal title="Add a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                             <QuestionForm
                                 {...questionForm}
-                                initialTopicValues={initialTopicValues}
+                                initialTagValues={initialTagValues}
                                 isModal={true}
                                 onCloseModalRequested={this.handleClose}
                                 submit={this.handleSubmit}

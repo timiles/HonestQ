@@ -32,7 +32,7 @@ namespace Pobs.Web.Services
             // NOTE: DbContext is not threadsafe to run multiple queries concurrently. Await each in turn.
             var questions = await _context.Questions
                 .Include(x => x.Answers)
-                .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Where(x => x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)

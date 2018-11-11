@@ -10,7 +10,7 @@ import Loading from '../shared/Loading';
 
 type EditQuestionProps = EditQuestionStore.EditQuestionState
     & typeof EditQuestionStore.actionCreators
-    & RouteComponentProps<{ topicSlug: string, questionId: string }>;
+    & RouteComponentProps<{ tagSlug: string, questionId: string }>;
 
 class EditQuestion extends React.Component<EditQuestionProps, {}> {
 

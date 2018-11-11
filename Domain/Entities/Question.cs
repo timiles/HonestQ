@@ -12,7 +12,7 @@ namespace Pobs.Domain.Entities
     {
         public Question()
         {
-            this.Topics = new JoinCollectionFacade<Topic, Question, QuestionTopic>(this, this.QuestionTopics);
+            this.Tags = new JoinCollectionFacade<Tag, Question, QuestionTag>(this, this.QuestionTags);
             this.Answers = new Collection<Answer>();
         }
         public Question(string text, User postedByUser, DateTime postedAt) : this()
@@ -43,17 +43,17 @@ namespace Pobs.Domain.Entities
 
         public virtual ICollection<Answer> Answers { get; set; }
 
-        public ICollection<QuestionTopic> QuestionTopics { get; } = new List<QuestionTopic>();
+        public ICollection<QuestionTag> QuestionTags { get; } = new List<QuestionTag>();
 
-        public void AddTopic(Topic topic)
+        public void AddTag(Tag tag)
         {
-            var questionTopic = new QuestionTopic();
-            ((IJoinEntity<Topic>)questionTopic).Navigation = topic;
-            ((IJoinEntity<Question>)questionTopic).Navigation = this;
-            this.QuestionTopics.Add(questionTopic);
+            var questionTag = new QuestionTag();
+            ((IJoinEntity<Tag>)questionTag).Navigation = tag;
+            ((IJoinEntity<Question>)questionTag).Navigation = this;
+            this.QuestionTags.Add(questionTag);
         }
 
         [NotMapped]
-        public ICollection<Topic> Topics { get; }
+        public ICollection<Tag> Tags { get; }
     }
 }

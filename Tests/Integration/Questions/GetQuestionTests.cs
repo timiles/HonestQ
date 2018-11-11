@@ -7,7 +7,7 @@ using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Questions
@@ -17,7 +17,7 @@ namespace Pobs.Tests.Integration.Questions
         private string _generateUrl(int questionId) => $"/api/questions/{questionId}";
         private readonly int _questionUserId;
         private readonly int _answerUserId;
-        private readonly Topic _topic;
+        private readonly Tag _tag;
 
         public GetQuestionTests()
         {
@@ -27,13 +27,13 @@ namespace Pobs.Tests.Integration.Questions
             _answerUserId = answerUser.Id;
             // Create 3 questions so we can be sure we get the one we request
             var questions = DataHelpers.CreateQuestions(questionUser, 3, answerUser, 3);
-            _topic = DataHelpers.CreateTopic(questionUser, isApproved: true, questions: questions.ToArray());
+            _tag = DataHelpers.CreateTag(questionUser, isApproved: true, questions: questions.ToArray());
         }
 
         [Fact]
         public async Task NotAuthenticated_ShouldGetQuestion()
         {
-            var question = _topic.Questions.Skip(1).First();
+            var question = _tag.Questions.Skip(1).First();
 
             // Add 2 Comments to each Answer
             foreach (var answer in question.Answers.ToArray())
@@ -64,10 +64,10 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
                 Assert.False(responseModel.IsPostedByLoggedInUser);
 
-                Assert.Single(responseModel.Topics);
-                var responseTopic = responseModel.Topics.Single();
-                Assert.Equal(_topic.Name, responseTopic.Name);
-                Assert.Equal(_topic.Slug, responseTopic.Slug);
+                Assert.Single(responseModel.Tags);
+                var responseTag = responseModel.Tags.Single();
+                Assert.Equal(_tag.Name, responseTag.Name);
+                Assert.Equal(_tag.Slug, responseTag.Slug);
 
                 Assert.Equal(3, question.Answers.Count);
                 Assert.Equal(question.Answers.Count, responseModel.Answers.Length);
@@ -94,7 +94,7 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task Authenticated_ShouldGetQuestionWithMyReactions()
         {
-            var question = _topic.Questions.Skip(1).First();
+            var question = _tag.Questions.Skip(1).First();
 
             // Add 2 Comments to each Answer
             foreach (var answer in question.Answers.ToArray())
@@ -139,7 +139,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
                 Assert.True(responseModel.IsPostedByLoggedInUser);
 
-                Assert.Single(responseModel.Topics);
+                Assert.Single(responseModel.Tags);
                 Assert.Equal(3, question.Answers.Count);
 
                 var responseAnswerWithReaction = responseModel.Answers.Single(x => x.Id == answerWithReaction.Id);
@@ -172,7 +172,7 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            foreach (var question in _topic.Questions)
+            foreach (var question in _tag.Questions)
             {
                 DataHelpers.DeleteAllComments(question.Id);
             }

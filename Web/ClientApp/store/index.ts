@@ -1,18 +1,18 @@
 import * as AdminHome from './AdminHome';
 import * as EditAnswer from './EditAnswer';
 import * as EditQuestion from './EditQuestion';
-import * as EditTopic from './EditTopic';
+import * as EditTag from './EditTag';
 import * as Login from './Login';
 import * as NewAnswer from './NewAnswer';
 import * as NewComment from './NewComment';
 import * as NewQuestion from './NewQuestion';
-import * as NewTopic from './NewTopic';
+import * as NewTag from './NewTag';
 import * as Question from './Question';
 import * as Questions from './Questions';
 import * as SignUp from './SignUp';
-import * as Topic from './Topic';
-import * as TopicAutocomplete from './TopicAutocomplete';
-import * as Topics from './Topics';
+import * as Tag from './Tag';
+import * as TagAutocomplete from './TagAutocomplete';
+import * as Tags from './Tags';
 import * as VerifyEmail from './VerifyEmail';
 
 // The top-level state object
@@ -20,18 +20,18 @@ export interface ApplicationState {
     adminHome: AdminHome.AdminHomeState;
     editAnswer: EditAnswer.EditAnswerState;
     editQuestion: EditQuestion.EditQuestionState;
-    editTopic: EditTopic.EditTopicState;
+    editTag: EditTag.EditTagState;
     login: Login.LoginState;
     newAnswer: NewAnswer.NewAnswerState;
     newComment: NewComment.NewCommentState;
     newQuestion: NewQuestion.NewQuestionState;
-    newTopic: NewTopic.NewTopicState;
+    newTag: NewTag.NewTagState;
     question: Question.ContainerState;
     questions: Questions.ListState;
     signUp: SignUp.SignUpState;
-    topic: Topic.ContainerState;
-    topicAutocomplete: TopicAutocomplete.TopicAutocompleteState;
-    topics: Topics.ListState;
+    tag: Tag.ContainerState;
+    tagAutocomplete: TagAutocomplete.TagAutocompleteState;
+    tags: Tags.ListState;
     verifyEmail: VerifyEmail.VerifyEmailState;
 }
 
@@ -42,18 +42,18 @@ export const reducers = {
     adminHome: AdminHome.reducer,
     editAnswer: EditAnswer.reducer,
     editQuestion: EditQuestion.reducer,
-    editTopic: EditTopic.reducer,
+    editTag: EditTag.reducer,
     login: Login.reducer,
     newAnswer: NewAnswer.reducer,
     newComment: NewComment.reducer,
     newQuestion: NewQuestion.reducer,
-    newTopic: NewTopic.reducer,
+    newTag: NewTag.reducer,
     question: Question.reducer,
     questions: Questions.reducer,
     signUp: SignUp.reducer,
-    topic: Topic.reducer,
-    topicAutocomplete: TopicAutocomplete.reducer,
-    topics: Topics.reducer,
+    tag: Tag.reducer,
+    tagAutocomplete: TagAutocomplete.reducer,
+    tags: Tags.reducer,
     verifyEmail: VerifyEmail.reducer,
 };
 

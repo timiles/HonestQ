@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
-import { LoggedInUserModel, TopicListItemModel } from '../../server-models';
+import { LoggedInUserModel, TagListItemModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as AdminHomeStore from '../../store/AdminHome';
 import { isUserInRole } from '../../utils/auth-utils';
@@ -18,8 +18,8 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return;
         }
-        if (!this.props.unapprovedTopicsList.loadedModel) {
-            this.props.getUnapprovedTopicsList();
+        if (!this.props.unapprovedTagsList.loadedModel) {
+            this.props.getUnapprovedTagsList();
         }
     }
 
@@ -27,21 +27,21 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return <Redirect to="/" />;
         }
-        const { loadedModel } = this.props.unapprovedTopicsList;
+        const { loadedModel } = this.props.unapprovedTagsList;
         return (
             <div className="row">
                 <div className="col-lg-6 offset-lg-3">
                     <h1>Admin</h1>
-                    <h2>Topics awaiting Approval:</h2>
-                    <Loading {...this.props.unapprovedTopicsList} />
-                    {loadedModel && (loadedModel.topics.length === 0 ?
+                    <h2>Tags awaiting Approval:</h2>
+                    <Loading {...this.props.unapprovedTagsList} />
+                    {loadedModel && (loadedModel.tags.length === 0 ?
                         <p>All done!</p>
                         :
                         <ul className="list-inline">
-                            {loadedModel.topics.map((x: TopicListItemModel, i: number) =>
+                            {loadedModel.tags.map((x: TagListItemModel, i: number) =>
                                 <li key={i} className="mr-2 mb-2 list-inline-item">
                                     <Link
-                                        to={`/admin/edit/topics/${x.slug}`}
+                                        to={`/admin/edit/tags/${x.slug}`}
                                         className="btn btn-lg btn-outline-secondary"
                                     >
                                         {x.name}

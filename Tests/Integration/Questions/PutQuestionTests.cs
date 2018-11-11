@@ -10,7 +10,7 @@ using Pobs.Domain.Entities;
 using Pobs.Domain.Utils;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Questions
@@ -20,16 +20,16 @@ namespace Pobs.Tests.Integration.Questions
         private string _generateUrl(int questionId) => $"/api/questions/{questionId}";
         private readonly int _userId;
         private readonly Question _question;
-        private readonly Topic _topic;
-        private readonly Topic _differentTopic;
+        private readonly Tag _tag;
+        private readonly Tag _differentTag;
 
         public PutQuestionTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
             _question = DataHelpers.CreateQuestions(user).Single();
-            _topic = DataHelpers.CreateTopic(user, questions: _question);
-            _differentTopic = DataHelpers.CreateTopic(user);
+            _tag = DataHelpers.CreateTag(user, questions: _question);
+            _differentTag = DataHelpers.CreateTag(user);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = Utils.GenerateRandomString(10),
                 Source = Utils.GenerateRandomString(10),
-                Topics = new[] { new QuestionFormModel.TopicValueFormModel { Slug = _differentTopic.Slug } },
+                Tags = new[] { new QuestionFormModel.TagValueFormModel { Slug = _differentTag.Slug } },
             };
             var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())
@@ -55,22 +55,22 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(payload.Text, responseModel.Text);
                 Assert.Equal(slug, responseModel.Slug);
 
-                Assert.Single(responseModel.Topics);
-                var responseTopic = responseModel.Topics.Single();
-                Assert.Equal(_differentTopic.Name, responseTopic.Name);
-                Assert.Equal(_differentTopic.Slug, responseTopic.Slug);
+                Assert.Single(responseModel.Tags);
+                var responseTag = responseModel.Tags.Single();
+                Assert.Equal(_differentTag.Name, responseTag.Name);
+                Assert.Equal(_differentTag.Slug, responseTag.Slug);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var question = dbContext.Questions
-                    .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                    .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                     .First(x => x.Id == _question.Id);
                 Assert.Equal(payload.Text, question.Text);
                 Assert.Equal(slug, question.Slug);
                 Assert.Equal(payload.Source, question.Source);
-                Assert.Single(question.Topics);
-                Assert.Equal(_differentTopic.Id, question.Topics.Single().Id);
+                Assert.Single(question.Tags);
+                Assert.Equal(_differentTag.Id, question.Tags.Single().Id);
             }
         }
 

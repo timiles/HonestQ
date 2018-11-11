@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain.Entities;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 
 namespace Pobs.Web.Models.Questions
 {
@@ -13,7 +13,7 @@ namespace Pobs.Web.Models.Questions
             this.Slug = question.Slug;
             this.Text = question.Text;
             this.Source = question.Source;
-            this.Topics = question.Topics.Select(x => new TopicValueModel(x)).ToArray();
+            this.Tags = question.Tags.Select(x => new TagValueModel(x)).ToArray();
 
             this.PostedBy = question.PostedByUser.Username;
             this.IsPostedByLoggedInUser = question.PostedByUserId == loggedInUserId;
@@ -34,7 +34,7 @@ namespace Pobs.Web.Models.Questions
 
         public bool IsPostedByLoggedInUser { get; set; }
 
-        public TopicValueModel[] Topics { get; set; }
+        public TagValueModel[] Tags { get; set; }
 
         public AnswerModel[] Answers { get; set; }
     }

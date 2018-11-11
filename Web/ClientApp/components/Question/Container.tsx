@@ -7,7 +7,7 @@ import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionStore from '../../store/Question';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
-import TopicsList from '../Topics/List';
+import TagsList from '../Tags/List';
 import Answer from './Answer';
 import BackToQuestionButton from './BackToQuestionButton';
 import Question from './Question';
@@ -58,7 +58,7 @@ class Container extends React.Component<ContainerProps> {
                     <div className="row">
                         <div className="col-lg-3 d-none d-lg-block">
                             {question.model &&
-                                <TopicsList selectedTopicSlugs={question.model.topics.map((x) => x.slug)} />
+                                <TagsList selectedTagSlugs={question.model.tags.map((x) => x.slug)} />
                             }
                         </div>
                         <div className="col-lg-6">

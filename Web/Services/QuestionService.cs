@@ -41,7 +41,7 @@ namespace Pobs.Web.Services
 
             var questions = await _context.Questions
                 .Include(x => x.Answers)
-                .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Where(x => x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
@@ -51,12 +51,12 @@ namespace Pobs.Web.Services
 
         public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId)
         {
-            var topicTasks = new List<Task<Topic>>();
-            if (questionForm.Topics != null)
+            var tagTasks = new List<Task<Tag>>();
+            if (questionForm.Tags != null)
             {
-                foreach (var topic in questionForm.Topics)
+                foreach (var tag in questionForm.Tags)
                 {
-                    topicTasks.Add(_context.Topics.FirstOrDefaultAsync(x => x.Slug == topic.Slug));
+                    tagTasks.Add(_context.Tags.FirstOrDefaultAsync(x => x.Slug == tag.Slug));
                 }
             }
 
@@ -67,13 +67,13 @@ namespace Pobs.Web.Services
                 Source = questionForm.Source,
             };
 
-            await Task.WhenAll(topicTasks);
-            foreach (var topicTask in topicTasks)
+            await Task.WhenAll(tagTasks);
+            foreach (var tagTask in tagTasks)
             {
-                var topic = topicTask.Result;
-                if (topic != null)
+                var tag = tagTask.Result;
+                if (tag != null)
                 {
-                    question.Topics.Add(topic);
+                    question.Tags.Add(tag);
                 }
             }
 
@@ -85,17 +85,17 @@ namespace Pobs.Web.Services
 
         public async Task<QuestionListItemModel> UpdateQuestion(int questionId, QuestionFormModel questionForm)
         {
-            var topicTasks = new List<Task<Topic>>();
-            if (questionForm.Topics != null)
+            var tagTasks = new List<Task<Tag>>();
+            if (questionForm.Tags != null)
             {
-                foreach (var topic in questionForm.Topics)
+                foreach (var tag in questionForm.Tags)
                 {
-                    topicTasks.Add(_context.Topics.FirstOrDefaultAsync(x => x.Slug == topic.Slug));
+                    tagTasks.Add(_context.Tags.FirstOrDefaultAsync(x => x.Slug == tag.Slug));
                 }
             }
 
             var question = await _context.Questions
-                .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             if (question == null)
             {
@@ -105,15 +105,15 @@ namespace Pobs.Web.Services
             question.Text = questionForm.Text;
             question.Slug = questionForm.Text.ToSlug();
             question.Source = questionForm.Source;
-            question.Topics.Clear();
+            question.Tags.Clear();
 
-            await Task.WhenAll(topicTasks);
-            foreach (var topicTask in topicTasks)
+            await Task.WhenAll(tagTasks);
+            foreach (var tagTask in tagTasks)
             {
-                var topic = topicTask.Result;
-                if (topic != null)
+                var tag = tagTask.Result;
+                if (tag != null)
                 {
-                    question.Topics.Add(topic);
+                    question.Tags.Add(tag);
                 }
             }
 
@@ -125,7 +125,7 @@ namespace Pobs.Web.Services
         {
             var question = await _context.Questions
                 .Include(x => x.PostedByUser)
-                .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Reactions)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)

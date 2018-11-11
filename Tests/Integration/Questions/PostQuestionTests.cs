@@ -8,7 +8,7 @@ using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Questions
@@ -17,13 +17,13 @@ namespace Pobs.Tests.Integration.Questions
     {
         private readonly string _url = $"/api/questions";
         private readonly int _userId;
-        private readonly Topic _topic;
+        private readonly Tag _tag;
 
         public PostQuestionTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
-            _topic = DataHelpers.CreateTopic(user);
+            _tag = DataHelpers.CreateTag(user);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Pobs.Tests.Integration.Questions
                 // Include emoji in the Text
                 Text = "Here's a poop emoji: 💩",
                 Source = "https://example.com/💩",
-                Topics = new[] { new QuestionFormModel.TopicValueFormModel { Slug = _topic.Slug } }
+                Tags = new[] { new QuestionFormModel.TagValueFormModel { Slug = _tag.Slug } }
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -78,23 +78,23 @@ namespace Pobs.Tests.Integration.Questions
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
                     var question = dbContext.Questions
-                        .Include(x => x.QuestionTopics).ThenInclude(x => x.Topic)
+                        .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                         .Single(x => x.PostedByUser.Id == _userId);
                     Assert.Equal(payload.Text, question.Text);
                     Assert.Equal(payload.Source, question.Source);
                     Assert.Equal("heres_a_poop_emoji", question.Slug);
-                    Assert.Equal(1, question.Topics.Count);
-                    Assert.Equal(_topic.Id, question.Topics.Single().Id);
+                    Assert.Equal(1, question.Tags.Count);
+                    Assert.Equal(_tag.Id, question.Tags.Single().Id);
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<QuestionListItemModel>(responseContent);
                     Assert.Equal(question.Text, responseModel.Text);
                     Assert.Equal("heres_a_poop_emoji", responseModel.Slug);
 
-                    Assert.Single(responseModel.Topics);
-                    var responseTopic = responseModel.Topics.Single();
-                    Assert.Equal(_topic.Name, responseTopic.Name);
-                    Assert.Equal(_topic.Slug, responseTopic.Slug);
+                    Assert.Single(responseModel.Tags);
+                    var responseTag = responseModel.Tags.Single();
+                    Assert.Equal(_tag.Name, responseTag.Name);
+                    Assert.Equal(_tag.Slug, responseTag.Slug);
                 }
             }
         }

@@ -69,7 +69,7 @@ export const actionCreators = {
                 .catch((reason) => {
                     dispatch({
                         type: 'GET_QUESTION_FAILED',
-                        payload: { questionId, error: reason || 'Get topic failed' },
+                        payload: { questionId, error: reason || 'Get tag failed' },
                     });
                 });
         })();

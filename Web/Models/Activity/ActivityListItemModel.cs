@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Pobs.Domain.Entities;
-using Pobs.Web.Models.Topics;
+using Pobs.Web.Models.Tags;
 
 namespace Pobs.Web.Models.Activity
 {
@@ -18,7 +18,7 @@ namespace Pobs.Web.Models.Activity
             this.QuestionText = x.Text;
             this.PostedAt = x.PostedAt.UtcDateTime;
             this.ChildCount = x.Answers.Count;
-            this.Topics = x.Topics?.Select(y => new TopicValueModel(y)).ToArray();
+            this.Tags = x.Tags?.Select(y => new TagValueModel(y)).ToArray();
         }
 
         public ActivityListItemModel(Answer x) : this(x.Question)
@@ -69,6 +69,6 @@ namespace Pobs.Web.Models.Activity
         public int? ChildCount { get; set; }
         public string AgreementRating { get; set; }
 
-        public TopicValueModel[] Topics { get; set; }
+        public TagValueModel[] Tags { get; set; }
     }
 }
