@@ -86,7 +86,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                             />
                         </div>
                     </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <div className="checkbox">
                             <label>
                                 <input
@@ -97,7 +97,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                                 /> Post anonymously (may take 48 hours to approve)
                             </label>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className={isModal ? 'modal-footer' : 'form-group'}>
                     {isModal && onCloseModalRequested &&
