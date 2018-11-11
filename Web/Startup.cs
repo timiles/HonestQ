@@ -23,6 +23,7 @@ using Pobs.Web.Middleware;
 using Pobs.Web.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System.Linq;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Pobs.Web
 {
@@ -159,7 +160,12 @@ namespace Pobs.Web
                     }));
             }
 
-            app.UseStaticFiles();
+            var contentTypeProvider = new FileExtensionContentTypeProvider();
+            contentTypeProvider.Mappings[".webmanifest"] = "application/manifest+json";
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = contentTypeProvider
+            });
 
             // global cors policy
             app.UseCors(x => x
