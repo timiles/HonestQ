@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { LoggedInUserContext } from '../../components/LoggedInUserContext';
 import QuestionList from '../../components/Questions/List';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 

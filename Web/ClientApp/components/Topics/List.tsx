@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { TopicListItemModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as TopicsStore from '../../store/Topics';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 import Loading from '../shared/Loading';
 
 type TopicsListProps = TopicsStore.ListState

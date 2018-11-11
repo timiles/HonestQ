@@ -1,8 +1,8 @@
 import * as $ from 'jquery';
 import * as moment from 'moment';
 import * as React from 'react';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { generateRandomHtmlId, parseDateWithTimeZoneOffset } from '../../utils';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 
 interface Props {
     dateTime: string;

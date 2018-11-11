@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { TopicModel } from '../../server-models';
 import { isUserInRole } from '../../utils';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 import ShortLink from '../shared/ShortLink';
 import QuestionList from './QuestionList';
 

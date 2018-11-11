@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel, QuestionModel } from '../../server-models';
 import { buildAnswerUrl, isUserInRole } from '../../utils';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import NewAnswer from './NewAnswer';

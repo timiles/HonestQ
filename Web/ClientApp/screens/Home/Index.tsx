@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import WelcomeMessage from '../../components/Home/WelcomeMessage';
-import { LoggedInUserContext } from '../../components/LoggedInUserContext';
 import TopicsList from '../../components/Topics/List';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { QuestionFormModel, TopicValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewQuestionStore from '../../store/NewQuestion';
 import { isUserInRole } from '../../utils';
-import { LoggedInUserContext } from '../LoggedInUserContext';
 import Modal from '../shared/Modal';
 import QuestionForm from './QuestionForm';
 

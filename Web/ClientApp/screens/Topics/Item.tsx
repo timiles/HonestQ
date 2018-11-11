@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import { LoggedInUserContext } from '../../components/LoggedInUserContext';
 import Container from '../../components/Topic/Container';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 
