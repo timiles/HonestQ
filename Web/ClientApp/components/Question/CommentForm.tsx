@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { CommentFormModel } from '../../server-models';
+import { onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -29,6 +30,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    public componentDidMount() {
+        onCtrlEnter('form', () => this.submit());
     }
 
     public componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
@@ -121,6 +126,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
+        this.submit();
+    }
+
+    private submit(): void {
         this.props.submit!(this.state);
     }
 }

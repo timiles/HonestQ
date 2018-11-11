@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { TopicFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewTopicStore from '../../store/NewTopic';
+import { onCtrlEnter } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 
@@ -24,6 +25,10 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    public componentDidMount() {
+        onCtrlEnter('form', () => this.submit());
     }
 
     public componentWillReceiveProps(nextProps: NewTopicProps) {
@@ -104,6 +109,10 @@ class NewTopic extends React.Component<NewTopicProps, TopicFormModel> {
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
+        this.submit();
+    }
+
+    private submit(): void {
         this.props.submit(this.state);
     }
 }

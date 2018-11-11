@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { QuestionFormModel, TopicValueModel } from '../../server-models';
+import { onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
@@ -29,6 +30,10 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
         this.handleChange = this.handleChange.bind(this);
         this.handleTopicsChange = this.handleTopicsChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    public componentDidMount() {
+        onCtrlEnter('form', () => this.submit());
     }
 
     public componentWillReceiveProps(nextProps: Props) {
@@ -111,6 +116,10 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
+        this.submit();
+    }
+
+    private submit(): void {
         this.props.submit!(this.state);
     }
 }
