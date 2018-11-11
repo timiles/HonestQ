@@ -8,3 +8,7 @@ export function onCtrlEnter(selector: string, callback: (e: JQuery.Event<HTMLEle
         }
     });
 }
+
+export function generateRandomHtmlId(prefix?: string): string {
+    return `${prefix || 'id'}_${Math.random().toString(36).substring(2)}`;
+}

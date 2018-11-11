@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { TopicProps } from '../components/Topic/Topic';
 import { TopicModel } from '../server-models';
-import { getJson } from '../utils';
+import { getJson } from '../utils/http-utils';
 import { NewQuestionFormReceivedAction } from './NewQuestion';
 
 // -----------------

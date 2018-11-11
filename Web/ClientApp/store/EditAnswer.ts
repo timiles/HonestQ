@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { EditFormProps } from '../components/shared/EditFormProps';
 import { AnswerFormModel, AnswerModel, QuestionModel } from '../server-models';
-import { getJson, putJson } from '../utils';
+import { getJson, putJson } from '../utils/http-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.

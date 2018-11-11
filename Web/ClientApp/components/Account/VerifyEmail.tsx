@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { ApplicationState } from '../../store';
 import * as VerifyEmailStore from '../../store/VerifyEmail';
-import { parseQueryString } from '../../utils';
+import { parseQueryString } from '../../utils/route-utils';
 
 type VerifyEmailProps = VerifyEmailStore.VerifyEmailState
     & typeof VerifyEmailStore.actionCreators

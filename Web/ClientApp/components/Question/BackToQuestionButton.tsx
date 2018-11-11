@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { buildQuestionUrl } from '../../utils';
+import { buildQuestionUrl } from '../../utils/route-utils';
 
 interface BackToQuestionButtonProps {
     id: number;

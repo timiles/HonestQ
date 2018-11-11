@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import * as React from 'react';
-import { extractDomainFromUrl, extractUrlFromText, generateRandomHtmlId } from '../../utils';
+import { generateRandomHtmlId } from '../../utils/html-utils';
+import { extractDomainFromUrl, extractUrlFromText } from '../../utils/string-utils';
 
 interface Props {
     to: string;

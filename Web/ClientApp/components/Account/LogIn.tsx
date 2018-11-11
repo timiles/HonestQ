@@ -4,7 +4,7 @@ import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
-import { parseQueryString } from '../../utils';
+import { parseQueryString } from '../../utils/route-utils';
 import SubmitButton from '../shared/SubmitButton';
 
 type LogInProps = LoginStore.LoginState

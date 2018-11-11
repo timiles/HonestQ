@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { AnswerFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as EditAnswerStore from '../../store/EditAnswer';
-import { buildQuestionUrl } from '../../utils';
+import { buildQuestionUrl } from '../../utils/route-utils';
 import AnswerForm from '../Question/AnswerForm';
 import Loading from '../shared/Loading';
 

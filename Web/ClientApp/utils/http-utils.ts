@@ -1,6 +1,5 @@
 import { addTask, fetch } from 'domain-task';
-import * as jwt_decode from 'jwt-decode';
-import { LoggedInUserModel } from './server-models';
+import { LoggedInUserModel } from '../server-models';
 
 export function getJson<T>(url: string, loggedInUser: LoggedInUserModel | null | undefined): Promise<T> {
     const fetchTask = fetchJson<T>('GET', url, null, loggedInUser, false);
@@ -90,73 +89,4 @@ function fetchJson<T>(
                 reject(reason.toString());
             });
     });
-}
-
-export function isUserInRole(loggedInUser: LoggedInUserModel | undefined, role: string): boolean {
-    if (!loggedInUser || !loggedInUser.token) {
-        return false;
-    }
-    const decodedToken = jwt_decode(loggedInUser.token) as any;
-    // If jwt has a single value, it's a string, or if multiple values it's an array
-    return typeof (decodedToken.role) === 'string' && decodedToken.role === role ||
-        typeof (decodedToken.role) === 'object' && decodedToken.role.indexOf(role) >= 0;
-}
-
-// tslint:disable-next-line:max-line-length
-const urlMatchingRegExp = new RegExp(/(?:(?:https?):\/\/|www\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/im);
-export function extractUrlFromText(text: string): string | null {
-    const match = urlMatchingRegExp.exec(text);
-    if (match) {
-        return match[0];
-    }
-    return null;
-}
-
-const domainFromUrlRegExp = new RegExp(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im);
-export function extractDomainFromUrl(url: string): string | null {
-    const match = domainFromUrlRegExp.exec(url);
-    if (match) {
-        return match[1];
-    }
-    return null;
-}
-
-export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number) {
-    // If date from server ends with 'Z', javascript automatically applies the local time zone
-    if (dateString && dateString[dateString.length - 1] === 'Z') {
-        dateString = dateString.substring(0, dateString.length - 1);
-    }
-    const date = new Date(dateString);
-    if (hoursOffset !== 0) {
-        date.setTime(date.getTime() + (hoursOffset * 60 * 60 * 1000));
-    }
-    return date;
-}
-
-export function parseQueryString(queryString: string): Map<string, string> {
-    const values = new Map<string, string>();
-    const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
-    for (const pair of pairs) {
-        const split = pair.split('=');
-        // WARNING: This will overwrite in the case of a repeated value. Not an issue yet.
-        values.set(decodeURIComponent(split[0]), decodeURIComponent(split[1] || ''));
-    }
-    return values;
-}
-
-export function generateRandomHtmlId(prefix?: string): string {
-    return `${prefix || 'id'}_${Math.random().toString(36).substring(2)}`;
-}
-
-export function buildQuestionUrl(
-    id: number | string,
-    slug: string): string {
-    return `/questions/${id}/${slug}`;
-}
-export function buildAnswerUrl(
-    questionId: number | string,
-    questionSlug: string,
-    answerId: number | string,
-    answerSlug: string): string {
-    return `/questions/${questionId}/${questionSlug}/${answerId}/${answerSlug}`;
 }

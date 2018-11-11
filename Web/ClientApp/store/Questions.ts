@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
 import { QuestionListItemModel, QuestionsListModel } from '../server-models';
-import { getJson } from '../utils';
+import { getJson } from '../utils/http-utils';
 import { NewQuestionFormReceivedAction } from './NewQuestion';
 
 // -----------------

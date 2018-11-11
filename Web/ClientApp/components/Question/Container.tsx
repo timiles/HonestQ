@@ -6,7 +6,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as QuestionStore from '../../store/Question';
-import { buildAnswerUrl, buildQuestionUrl } from '../../utils';
+import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
 import TopicsList from '../Topics/List';
 import Answer from './Answer';
 import BackToQuestionButton from './BackToQuestionButton';

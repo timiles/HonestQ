@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { QuestionProps } from '../components/Question/Question';
 import { CommentModel, QuestionModel } from '../server-models';
-import { deleteJson, getJson, postJson } from '../utils';
+import { deleteJson, getJson, postJson } from '../utils/http-utils';
 import { ReactionModel } from './../server-models';
 import { NewAnswerFormReceivedAction } from './NewAnswer';
 import { NewCommentFormReceivedAction } from './NewComment';

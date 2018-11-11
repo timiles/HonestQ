@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link, NavLink, NavLinkProps } from 'react-router-dom';
 import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
-import { isUserInRole } from '../utils';
+import { isUserInRole } from '../utils/auth-utils';
 
 interface NavMenuProps {
     loggedInUser: LoggedInUserModel;

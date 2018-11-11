@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
 import { TopicsListModel } from '../server-models';
-import { getJson } from '../utils';
+import { getJson } from '../utils/http-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.

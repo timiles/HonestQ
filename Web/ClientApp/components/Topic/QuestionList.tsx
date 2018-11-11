@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { QuestionListItemModel, TopicValueModel } from '../../server-models';
-import { buildQuestionUrl } from '../../utils';
+import { buildQuestionUrl } from '../../utils/route-utils';
 import NewQuestion from '../QuestionForm/NewQuestion';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 

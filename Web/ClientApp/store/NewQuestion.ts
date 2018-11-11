@@ -3,7 +3,8 @@ import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { FormProps } from '../components/shared/FormProps';
 import { QuestionFormModel, QuestionListItemModel } from '../server-models';
-import { buildQuestionUrl, postJson } from '../utils';
+import { postJson } from '../utils/http-utils';
+import { buildQuestionUrl } from '../utils/route-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel } from '../../server-models';
-import { isUserInRole } from '../../utils';
+import { isUserInRole } from '../../utils/auth-utils';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';

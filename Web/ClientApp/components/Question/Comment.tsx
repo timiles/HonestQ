@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CommentModel } from '../../server-models';
-import { extractUrlFromText } from '../../utils';
+import { extractUrlFromText } from '../../utils/string-utils';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
