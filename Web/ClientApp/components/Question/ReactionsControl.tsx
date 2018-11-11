@@ -1,6 +1,7 @@
 import * as $ from 'jquery';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { generateRandomHtmlId } from '../../utils/html-utils';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
@@ -28,6 +29,7 @@ interface ReactionValue {
 export default class ReactionsControl extends React.Component<Props, State> {
 
     private readonly values = new Array<ReactionValue>();
+    private readonly reactionDefinitionsPopoverId: string = '';
     private readonly reactionDefinitionsHtml: string = '';
 
     constructor(props: Props) {
@@ -40,8 +42,9 @@ export default class ReactionsControl extends React.Component<Props, State> {
         this.values.push({ value: 'ThisChangedMyView', description: 'This changed my view' });
 
         if (this.props.showHelp) {
+            this.reactionDefinitionsPopoverId = generateRandomHtmlId('reactionDefinitions');
             this.reactionDefinitionsHtml =
-                `<dl class="reaction-definitions">
+                `<dl class="button-definitions">
                 ${this.values.map((x: ReactionValue) =>
                     `<dt><span class="emoji">${Emoji.getEmojiByString(x.value)}</span></dt>
                     <dd>${x.description}</dd>`).join('')}
@@ -55,7 +58,9 @@ export default class ReactionsControl extends React.Component<Props, State> {
     }
 
     public componentDidMount() {
-        $('[data-toggle="popover"]').popover();
+        if (this.reactionDefinitionsPopoverId) {
+            $(`#${this.reactionDefinitionsPopoverId}`).popover();
+        }
     }
 
     public render() {
@@ -89,10 +94,11 @@ export default class ReactionsControl extends React.Component<Props, State> {
                 </div>
                 {showHelp &&
                     <button
+                        id={this.reactionDefinitionsPopoverId}
                         tabIndex={0}
                         className="btn badge badge-pill badge-info ml-1"
                         role="button"
-                        data-toggle="popover"
+                        type="button"
                         data-trigger="focus"
                         title="Reaction buttons"
                         data-content={this.reactionDefinitionsHtml}

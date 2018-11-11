@@ -151,10 +151,10 @@ ul.list-comma-separated li:not(:last-child):after {
         bottom: -22px;
     }
 
-dl.reaction-definitions {
+dl.button-definitions {
     min-width: 165px;
 }
-dl.reaction-definitions dt {
+dl.button-definitions dt {
     float: left;
     margin-right: 5px;
 }
