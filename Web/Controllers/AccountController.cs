@@ -13,6 +13,7 @@ using Pobs.Comms;
 using System.Security.Cryptography;
 using System.Net;
 using System.Net.Mail;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly IEmailSender _emailSender;
         private readonly AppSettings _appSettings;
+        private readonly int[] _adminUserIds = new[] { 1, 2, 7, 8, 9, 10 };
 
         public AccountController(IUserService userService, IEmailSender emailSender, IOptions<AppSettings> appSettings)
         {
@@ -47,7 +49,7 @@ namespace WebApi.Controllers
 
             var roles = new List<Pobs.Domain.Role>();
             // TODO: proper roles in the database, this is a poor hack for now.
-            if (user.Id == 1)
+            if (_adminUserIds.Contains(user.Id))
             {
                 roles.Add(Pobs.Domain.Role.Admin);
             }
