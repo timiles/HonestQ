@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { SignUpFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as SignUpStore from '../../store/SignUp';
+import { focusFirstTextInput } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 
 type SignUpProps = SignUpStore.SignUpState
@@ -23,6 +24,10 @@ class SignUp extends React.Component<SignUpProps, SignUpFormModel> {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    public componentDidMount() {
+        focusFirstTextInput('form');
     }
 
     public render() {

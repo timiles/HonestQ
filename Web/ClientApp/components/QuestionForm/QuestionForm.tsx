@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { QuestionFormModel, TagValueModel } from '../../server-models';
-import { onCtrlEnter } from '../../utils/html-utils';
+import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
@@ -33,6 +33,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
     }
 
     public componentDidMount() {
+        focusFirstTextInput('form');
         onCtrlEnter('form', () => this.submit());
     }
 

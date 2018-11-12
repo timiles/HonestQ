@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CommentFormModel } from '../../server-models';
-import { onCtrlEnter } from '../../utils/html-utils';
+import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -34,6 +34,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public componentDidMount() {
+        focusFirstTextInput('form');
         onCtrlEnter('form', () => this.submit());
     }
 

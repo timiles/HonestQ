@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { TagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewTagStore from '../../store/NewTag';
-import { onCtrlEnter } from '../../utils/html-utils';
+import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 
@@ -28,6 +28,7 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
     }
 
     public componentDidMount() {
+        focusFirstTextInput('form');
         onCtrlEnter('form', () => this.submit());
     }
 

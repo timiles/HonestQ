@@ -4,6 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { EditTagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as EditTagStore from '../../store/EditTag';
+import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
 import Loading from '../shared/Loading';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -46,6 +47,8 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                 isApproved: loadedModel.isApproved,
             });
         }
+        focusFirstTextInput('form');
+        onCtrlEnter('form', () => this.submit());
     }
 
     public render() {
@@ -163,6 +166,10 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
 
     private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
         event.preventDefault();
+        this.submit();
+    }
+
+    private submit(): void {
         this.props.submit(this.props.tagModel.id!, this.state);
     }
 }

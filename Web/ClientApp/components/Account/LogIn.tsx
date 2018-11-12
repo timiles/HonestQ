@@ -4,6 +4,7 @@ import { Link, Redirect, RouteComponentProps } from 'react-router-dom';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
+import { focusFirstTextInput } from '../../utils/html-utils';
 import { parseQueryString } from '../../utils/route-utils';
 import SubmitButton from '../shared/SubmitButton';
 
@@ -31,6 +32,10 @@ class LogIn extends React.Component<LogInProps, LogInFormModel> {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    public componentDidMount() {
+        focusFirstTextInput('form');
     }
 
     public render() {
