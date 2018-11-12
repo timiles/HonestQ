@@ -77,7 +77,7 @@ export default class Question extends React.Component<Props, {}> {
                             </LoggedInUserContext.Consumer>
                             <Emoji value={EmojiValue.Question} /> HonestQ:
                         </p>
-                        <h4><span className="quote-marks">{model.text}</span></h4>
+                        <h4><span className="post quote-marks">{model.text}</span></h4>
                         <Source value={model.source} />
                         <footer className="blockquote-footer">
                             {model.postedBy}
@@ -96,7 +96,7 @@ export default class Question extends React.Component<Props, {}> {
                                 <div className="card-body">
                                     <blockquote className="blockquote mb-0">
                                         <Emoji value={EmojiValue.Answer} />
-                                        <span className="quote-marks">{x.text}</span>
+                                        <span className="post quote-marks">{x.text}</span>
                                         <Source value={x.source} />
                                     </blockquote>
                                     <div className="mt-2 float-right">
