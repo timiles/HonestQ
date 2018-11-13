@@ -114,7 +114,7 @@ export default class Question extends React.Component<Props, {}> {
                             </div>
                         </li>)}
                 </ul>
-                {model.answers.length >= 10 &&
+                {model.answers.length >= 5 &&
                     <div>
                         <NewAnswer questionId={questionId} />
                     </div>
