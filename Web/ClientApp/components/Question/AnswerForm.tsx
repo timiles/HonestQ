@@ -58,13 +58,13 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
                         <SuperTextArea
                             id="answerText"
                             name="text"
-                            className={`form-control emoji-text-area
-                                ${submitted ? text ? 'is-valid' : 'is-invalid' : ''}`}
-                            value={text}
+                            className="form-control emoji-text-area"
                             maxLength={280}
+                            required={true}
+                            submitted={submitted}
+                            value={text}
                             onChange={this.handleChange}
                         />
-                        <div className="invalid-feedback">Text is required</div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="answerSource">Source (optional)</label>

@@ -72,13 +72,13 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                         <SuperTextArea
                             id="commentText"
                             name="text"
-                            className={`form-control
-                                ${submitted ? text ? 'is-valid' : 'is-invalid' : ''}`}
-                            value={text}
+                            className="form-control"
                             maxLength={280}
+                            required={true}
+                            submitted={submitted}
+                            value={text}
                             onChange={this.handleChange}
                         />
-                        <div className="invalid-feedback">Comment is required</div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="commentSource">Source (optional)</label>

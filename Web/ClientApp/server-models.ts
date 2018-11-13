@@ -152,7 +152,7 @@ export interface TagAutocompleteResultsModel {
 
 export interface TagFormModel {
     name: string;
-    description: string;
+    description?: string;
     moreInfoUrl?: string;
 }
 

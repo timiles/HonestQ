@@ -78,6 +78,7 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
                                 id="description"
                                 name="description"
                                 maxLength={280}
+                                submitted={submitted}
                                 value={description}
                                 onChange={this.handleChange}
                             />

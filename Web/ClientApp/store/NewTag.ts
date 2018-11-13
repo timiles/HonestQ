@@ -37,7 +37,7 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'TOPIC_FORM_SUBMITTED' });
 
-            if (!tagForm.name) {
+            if (!tagForm.name || (tagForm.description && tagForm.description.length > 280)) {
                 // Don't set an error message, the validation properties will display instead
                 dispatch({ type: 'TOPIC_FORM_FAILED', payload: { error: null } });
                 return;

@@ -7,7 +7,6 @@ namespace Pobs.Web.Models.Tags
         [Required]
         public string Name { get; set; }
 
-        [Required]
         public string Description { get; set; }
 
         public string MoreInfoUrl { get; set; }

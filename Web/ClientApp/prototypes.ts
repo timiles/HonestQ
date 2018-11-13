@@ -5,9 +5,13 @@ interface JQuery {
 }
 
 interface String {
-    toSentenceCase(): string;
+    toSentenceCase(capitaliseFirstLetter?: boolean): string;
 }
 
-String.prototype.toSentenceCase = function () {
-    return this.replace(/([A-Z])/g, ' $1');
+String.prototype.toSentenceCase = function (capitaliseFirstLetter?: boolean) {
+    const sentenceCase = this.replace(/([A-Z])/g, ' $1');
+    if (capitaliseFirstLetter) {
+        return sentenceCase[0].toUpperCase() + sentenceCase.substring(1);
+    }
+    return sentenceCase;
 };

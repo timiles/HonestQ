@@ -2,8 +2,10 @@ import * as React from 'react';
 
 interface Props {
     id?: string;
-    name?: string;
+    name: string;
     className?: string;
+    required?: boolean;
+    submitted?: boolean;
     value?: string;
     maxLength: number;
     onChange: (event: React.FormEvent<HTMLTextAreaElement>) => void;
@@ -35,9 +37,21 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     public render() {
-        const { id, name, className, maxLength } = this.props;
+        const { id, name, className, maxLength, required, submitted } = this.props;
         const { value, scrollHeight, focused } = this.state;
         const remainingCharacterCount = maxLength - (value ? value.length : 0);
+
+        // Always show exceeded character count error even if not submitted.
+        let invalidClass = '';
+        let remainingCharacterCountClass = '';
+        if (remainingCharacterCount < 0) {
+            invalidClass = 'is-invalid';
+            remainingCharacterCountClass = 'text-danger';
+        } else if (submitted) {
+            invalidClass = (required && !value) ? 'is-invalid' : 'is-valid';
+            remainingCharacterCountClass = value ? 'text-success' : '';
+        }
+
         // Use rows to specify a minimum, then the min-height CSS will override it as the text grows
         const rowCount = (value || focused) ? 3 : 1;
         return (
@@ -45,16 +59,20 @@ export default class SuperTextArea extends React.Component<Props, State> {
                 <textarea
                     id={id}
                     name={name}
-                    className={className}
+                    className={`${className} ${invalidClass}`}
                     style={{ minHeight: `${scrollHeight}px`, overflow: 'hidden' }}
                     rows={rowCount}
-                    maxLength={maxLength}
                     value={value}
                     onChange={this.handleChange}
                     onFocus={this.handleFocus}
                     onBlur={this.handleBlur}
                 />
-                <div className="float-right">{remainingCharacterCount} characters remaining</div>
+                <div className={`float-right ${remainingCharacterCountClass}`}>
+                    {remainingCharacterCount} characters remaining
+                </div>
+                {required && !value &&
+                    <div className="invalid-feedback">{name.toSentenceCase(true)} is required</div>
+                }
                 <br className="clear" />
             </>
         );

@@ -102,12 +102,13 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                                     <div className="invalid-feedback">Slug is required</div>
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="description">Description</label>
+                                    <label htmlFor="description">Description (optional)</label>
                                     <SuperTextArea
                                         className="form-control"
                                         id="description"
                                         name="description"
                                         maxLength={280}
+                                        submitted={submitted}
                                         value={description}
                                         onChange={this.handleChange}
                                     />
