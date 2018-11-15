@@ -43,7 +43,7 @@ export default class Answer extends React.Component<Props, {}> {
                         </LoggedInUserContext.Consumer>
                         <h4>
                             <Emoji value={EmojiValue.Answer} />
-                            <span className="post quote-marks">{text}</span>
+                            <span className="ml-1 post">{text}</span>
                         </h4>
                         <Source value={source} />
                         <footer className="blockquote-footer">

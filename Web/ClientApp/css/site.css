@@ -138,18 +138,6 @@ ul.list-comma-separated li:not(:last-child):after {
         bottom: -34px;
         margin-left: 4px;
     }
-    .card-body .quote-marks:before, .card-body .quote-marks:after {
-        font-size: 3rem;
-        opacity: 0.3;
-    }
-    .card-body .quote-marks:before {
-        margin-right: 3px;
-        top: 22px;
-    }
-    .card-body .quote-marks:after {
-        margin-left: 3px;
-        bottom: -22px;
-    }
 
 dl.button-definitions {
     min-width: 165px;

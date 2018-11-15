@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
+using Pobs.Domain.Utils;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
 using Pobs.Web.Models.Tags;
@@ -32,8 +33,8 @@ namespace Pobs.Tests.Integration.Questions
             var question = _question;
             var payload = new AnswerFormModel
             {
-                // Include emoji in the Text, and quote marks around it
-                Text = "\"Here's a poop emoji: 💩\"",
+                // Include emoji in the Text, and white space around it
+                Text = "\nHere's a poop emoji: 💩\r\t\r",
                 Source = "https://example.com/💩",
             };
             using (var server = new IntegrationTestingServer())
@@ -51,7 +52,7 @@ namespace Pobs.Tests.Integration.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
                         .First(x => x.Id == question.Id);
                     var answer = reloadedQuestion.Answers.Single();
-                    Assert.Equal(payload.Text.Trim('"'), answer.Text);
+                    Assert.Equal(payload.Text.CleanText(), answer.Text);
                     Assert.Equal(payload.Source, answer.Source);
                     Assert.Equal(_user.Id, answer.PostedByUser.Id);
                     Assert.True(answer.PostedAt > DateTime.UtcNow.AddMinutes(-1));

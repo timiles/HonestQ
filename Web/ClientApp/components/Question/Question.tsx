@@ -96,7 +96,7 @@ export default class Question extends React.Component<Props, {}> {
                                 <div className="card-body">
                                     <blockquote className="blockquote mb-0">
                                         <Emoji value={EmojiValue.Answer} />
-                                        <span className="post quote-marks">{x.text}</span>
+                                        <span className="ml-2 post">{x.text}</span>
                                         <Source value={x.source} />
                                     </blockquote>
                                     <div className="mt-2 float-right">
