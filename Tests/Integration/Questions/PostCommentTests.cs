@@ -58,7 +58,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.False(comment.IsAnonymous);
-                    Assert.Equal(CommentStatus.OK, comment.Status);
+                    Assert.Equal(PostStatus.OK, comment.Status);
 
 
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -105,7 +105,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.True(comment.IsAnonymous);
-                    Assert.Equal(CommentStatus.AwaitingApproval, comment.Status);
+                    Assert.Equal(PostStatus.AwaitingApproval, comment.Status);
 
 
                     var responseContent = await response.Content.ReadAsStringAsync();

@@ -1,7 +1,7 @@
 
 namespace Pobs.Domain
 {
-    public enum CommentStatus
+    public enum PostStatus
     {
         OK = 0,
         AwaitingApproval = 1,

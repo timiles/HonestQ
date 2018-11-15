@@ -51,7 +51,7 @@ namespace Pobs.Web.Services
                 .SelectMany(x => x.Answers)
                 .SelectMany(x => x.Comments)
                 .Include(x => x.Answer).ThenInclude(x => x.Question)
-                .Where(x => x.Status == CommentStatus.OK && x.PostedAt < beforeTime)
+                .Where(x => x.Status == PostStatus.OK && x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();

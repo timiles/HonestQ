@@ -244,7 +244,7 @@ namespace Pobs.Web.Services
             {
                 Source = commentForm.Source,
                 IsAnonymous = commentForm.IsAnonymous,
-                Status = commentForm.IsAnonymous ? CommentStatus.AwaitingApproval : CommentStatus.OK,
+                Status = commentForm.IsAnonymous ? PostStatus.AwaitingApproval : PostStatus.OK,
             };
 
             answer.Comments.Add(comment);

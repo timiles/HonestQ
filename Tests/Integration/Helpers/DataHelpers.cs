@@ -99,7 +99,7 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static IEnumerable<Comment> CreateComments(
-            Answer answer, User commentUser, int numberOfComments, CommentStatus commentStatus = CommentStatus.OK)
+            Answer answer, User commentUser, int numberOfComments, PostStatus commentStatus = PostStatus.OK)
         {
             var newComments = new List<Comment>();
             for (var i = 0; i < numberOfComments; i++)
@@ -127,7 +127,7 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static IEnumerable<Comment> CreateChildComments(
-            Comment comment, User commentUser, int numberOfComments, CommentStatus commentStatus = CommentStatus.OK)
+            Comment comment, User commentUser, int numberOfComments, PostStatus commentStatus = PostStatus.OK)
         {
             var newChildComments = new List<Comment>();
             for (var i = 0; i < numberOfComments; i++)

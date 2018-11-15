@@ -33,8 +33,8 @@ namespace Pobs.Tests.Integration.Activity
             var questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
             var answer = questions.First().Answers.First();
             DataHelpers.CreateComments(answer, answerUser, 4);
-            DataHelpers.CreateComments(answer, answerUser, 1, CommentStatus.AwaitingApproval);
-            DataHelpers.CreateChildComments(answer.Comments.First(), answer.PostedByUser, 1, CommentStatus.AwaitingApproval);
+            DataHelpers.CreateComments(answer, answerUser, 1, PostStatus.AwaitingApproval);
+            DataHelpers.CreateChildComments(answer.Comments.First(), answer.PostedByUser, 1, PostStatus.AwaitingApproval);
             _tag = DataHelpers.CreateTag(questionUser, isApproved: true, questions: questions.ToArray());
         }
 
@@ -74,7 +74,7 @@ namespace Pobs.Tests.Integration.Activity
                                 x.AnswerId == answer.Id &&
                                 x.CommentId == comment.Id);
                             // Ensure only approved Comments are returned.
-                            Assert.Equal(comment.Status == CommentStatus.OK, commentModel != null);
+                            Assert.Equal(comment.Status == PostStatus.OK, commentModel != null);
                         }
                     }
                 }
@@ -205,7 +205,7 @@ namespace Pobs.Tests.Integration.Activity
                             x.AnswerId == answer.Id);
                         Assert.Equal(answer.PostedAt.ToUnixTimeMilliseconds() < beforeTimestamp, responseAnswer != null);
 
-                        foreach (var comment in answer.Comments.Where(x => x.Status == CommentStatus.OK))
+                        foreach (var comment in answer.Comments.Where(x => x.Status == PostStatus.OK))
                         {
                             var responseComment = responseModel.ActivityItems.SingleOrDefault(x =>
                                 x.Type == "Comment" &&

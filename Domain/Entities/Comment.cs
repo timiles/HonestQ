@@ -43,7 +43,7 @@ namespace Pobs.Domain.Entities
         public DateTimeOffset PostedAt { get; set; }
 
         public bool IsAnonymous { get; set; }
-        public CommentStatus Status { get; set; }
+        public PostStatus Status { get; set; }
 
         [Required]
         public virtual Answer Answer { get; set; }
