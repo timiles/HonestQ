@@ -79,7 +79,12 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
-        this.setState({ value: event.currentTarget.value, scrollHeight: event.currentTarget.scrollHeight });
+        const { value, scrollHeight } = event.currentTarget;
+        this.setState((prevState) => ({
+            ...prevState,
+            value,
+            scrollHeight: Math.max(prevState.scrollHeight, scrollHeight),
+        }));
         this.props.onChange(event);
     }
 
