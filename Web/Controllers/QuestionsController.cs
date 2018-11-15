@@ -22,35 +22,36 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int pageSize = 20, long? beforeTimestamp = null)
+        public async Task<IActionResult> Index(PostStatus status = PostStatus.OK, int pageSize = 20, long? beforeTimestamp = null)
         {
-            var questionsList = await _questionService.ListQuestions(pageSize, beforeTimestamp);
+            if (status == PostStatus.AwaitingApproval && !User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
+            var questionsList = await _questionService.ListQuestions(status, pageSize, beforeTimestamp);
             return Ok(questionsList);
         }
 
         [HttpPost, Authorize]
         public async Task<IActionResult> AddQuestion([FromBody] QuestionFormModel payload)
         {
-            if (!User.IsInRole(Role.Admin))
-            {
-                return Forbid();
-            }
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
             }
 
-            var questionModel = await _questionService.SaveQuestion(payload, User.Identity.ParseUserId());
+            var isAdmin = User.IsInRole(Role.Admin);
+            var questionModel = await _questionService.SaveQuestion(payload, User.Identity.ParseUserId(), isAdmin);
             if (questionModel != null)
             {
-                return Ok(questionModel);
+                return Ok((isAdmin) ? questionModel : null);
             }
             return NotFound();
         }
 
         [Authorize, HttpPut, Route("{questionId}")]
-        public async Task<IActionResult> UpdateQuestion(int questionId, [FromBody] QuestionFormModel payload)
+        public async Task<IActionResult> UpdateQuestion(int questionId, [FromBody] AdminQuestionFormModel payload)
         {
             if (!User.IsInRole(Role.Admin))
             {
@@ -81,7 +82,8 @@ namespace Pobs.Web.Controllers
         public async Task<IActionResult> GetQuestion(int questionId)
         {
             var questionModel = await _questionService.GetQuestion(questionId,
-                User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?);
+                User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?,
+                User.IsInRole(Role.Admin));
             if (questionModel != null)
             {
                 return Ok(questionModel);

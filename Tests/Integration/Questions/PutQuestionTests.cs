@@ -27,7 +27,7 @@ namespace Pobs.Tests.Integration.Questions
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
-            _question = DataHelpers.CreateQuestions(user).Single();
+            _question = DataHelpers.CreateQuestions(user, questionStatus: PostStatus.AwaitingApproval).Single();
             _tag = DataHelpers.CreateTag(user, questions: _question);
             _differentTag = DataHelpers.CreateTag(user);
         }
@@ -35,11 +35,12 @@ namespace Pobs.Tests.Integration.Questions
         [Fact]
         public async Task AuthenticatedAsAdmin_ShouldUpdateQuestion()
         {
-            var payload = new QuestionFormModel
+            var payload = new AdminQuestionFormModel
             {
                 Text = Utils.GenerateRandomString(10),
                 Source = Utils.GenerateRandomString(10),
                 Tags = new[] { new QuestionFormModel.TagValueFormModel { Slug = _differentTag.Slug } },
+                IsApproved = true,
             };
             var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())
@@ -69,6 +70,8 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(payload.Text, question.Text);
                 Assert.Equal(slug, question.Slug);
                 Assert.Equal(payload.Source, question.Source);
+                Assert.Equal(PostStatus.OK, question.Status);
+
                 Assert.Single(question.Tags);
                 Assert.Equal(_differentTag.Id, question.Tags.Single().Id);
             }

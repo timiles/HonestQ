@@ -40,6 +40,8 @@ namespace Pobs.Domain.Entities
 
         public DateTimeOffset PostedAt { get; set; }
 
+        public PostStatus Status { get; set; }
+
 
         public virtual ICollection<Answer> Answers { get; set; }
 

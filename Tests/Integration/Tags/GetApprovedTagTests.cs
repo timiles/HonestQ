@@ -15,12 +15,15 @@ namespace Pobs.Tests.Integration.Tags
     {
         private string _generateTagUrl(string tagSlug) => $"/api/tags/{tagSlug}";
         private readonly User _user;
+        private readonly Question _unapprovedQuestion;
         private readonly Tag _tag;
 
         public GetApprovedTagTests()
         {
             _user = DataHelpers.CreateUser();
-            var questions = DataHelpers.CreateQuestions(_user, 3);
+            var questions = DataHelpers.CreateQuestions(_user, 3).ToList();
+            _unapprovedQuestion = DataHelpers.CreateQuestions(_user, questionStatus: PostStatus.AwaitingApproval).Single();
+            questions.Add(_unapprovedQuestion);
             _tag = DataHelpers.CreateTag(_user, isApproved: true, questions: questions.ToArray());
         }
 
@@ -44,10 +47,13 @@ namespace Pobs.Tests.Integration.Tags
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
                 Assert.Null(dynamicResponseModel.isApproved);
 
-                Assert.Equal(3, _tag.Questions.Count());
-                Assert.Equal(_tag.Questions.Count(), responseModel.Questions.Length);
+                Assert.Equal(4, _tag.Questions.Count());
+                var approvedQuestions = _tag.Questions.Where(x => x.Status == PostStatus.OK);
+                Assert.Equal(approvedQuestions.Count(), responseModel.Questions.Length);
 
-                foreach (var question in _tag.Questions)
+                Assert.DoesNotContain(_unapprovedQuestion.Id, responseModel.Questions.Select(x => x.Id));
+
+                foreach (var question in approvedQuestions)
                 {
                     var responseQuestion = responseModel.Questions.Single(x => x.Id == question.Id);
                     Assert.Equal(question.Slug, responseQuestion.Slug);

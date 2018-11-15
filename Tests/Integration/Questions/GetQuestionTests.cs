@@ -159,6 +159,25 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
+        public async Task AuthenticatedAsAdmin_ShouldGetIsApprovedProperty()
+        {
+            var question = _tag.Questions.First();
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_questionUserId, Role.Admin);
+
+                var url = _generateUrl(question.Id);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<AdminQuestionModel>(responseContent);
+                Assert.True(responseModel.IsApproved);
+            }
+        }
+
+        [Fact]
         public async Task UnknownQuestionId_ShouldReturnNotFound()
         {
             using (var server = new IntegrationTestingServer())

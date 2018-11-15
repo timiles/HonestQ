@@ -53,6 +53,8 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(question.Id, responseModel.Id);
                     Assert.Equal(question.Slug, responseModel.Slug);
                     Assert.Equal(question.Text, responseModel.Text);
+
+                    Assert.Equal(PostStatus.OK, question.Status);
                 }
             }
         }
@@ -100,7 +102,7 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
+        public async Task AuthenticatedAsNonAdmin_ShouldBeAwaitingApproval()
         {
             var payload = new QuestionFormModel
             {
@@ -112,7 +114,18 @@ namespace Pobs.Tests.Integration.Questions
                 client.AuthenticateAs(_userId);
 
                 var response = await client.PostAsync(_url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var question = dbContext.Questions.Single(x => x.PostedByUser.Id == _userId);
+                    Assert.Equal(payload.Text, question.Text);
+                    Assert.True(question.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.Equal(PostStatus.AwaitingApproval, question.Status);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    Assert.Empty(responseContent);
+                }
             }
         }
 

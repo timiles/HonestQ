@@ -14,12 +14,15 @@ namespace Pobs.Tests.Integration.Questions
 {
     public class IndexQuestionsTests : IDisposable
     {
-        private string _buildUrl(int? pageSize = null, long? beforeTimestamp = null) => "/api/questions?" +
+        private string _buildUrl(int? pageSize = null, long? beforeTimestamp = null, PostStatus? status = null) =>
+            "/api/questions?" +
             (pageSize.HasValue ? $"pageSize={pageSize}&" : "") +
-            (beforeTimestamp.HasValue ? $"beforeTimestamp={beforeTimestamp}" : "");
+            (beforeTimestamp.HasValue ? $"beforeTimestamp={beforeTimestamp}&" : "") +
+            (status.HasValue ? $"status={status}" : "");
         private readonly int _questionUserId;
         private readonly int _answerUserId;
         private readonly IEnumerable<Question> _questions;
+        private readonly Question _unapprovedQuestion;
 
         public IndexQuestionsTests()
         {
@@ -29,10 +32,11 @@ namespace Pobs.Tests.Integration.Questions
             _answerUserId = answerUser.Id;
             // Create multiple Questions and Answers
             _questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
+            _unapprovedQuestion = DataHelpers.CreateQuestions(questionUser, 1, questionStatus: PostStatus.AwaitingApproval).Single();
         }
 
         [Fact]
-        public async Task ShouldGetAllQuestions()
+        public async Task ShouldGetAllApprovedQuestions()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -53,6 +57,8 @@ namespace Pobs.Tests.Integration.Questions
                         Assert.Equal(3, responseQuestion.AnswersCount);
                     }
                 }
+
+                Assert.DoesNotContain(_unapprovedQuestion.Id, responseModel.Questions.Select(x => x.Id));
 
                 // Not really sure how better to test the timestamp?
                 Assert.True(responseModel.LastTimestamp > 0);
@@ -93,6 +99,37 @@ namespace Pobs.Tests.Integration.Questions
 
                 // Can't be sure what came back except must not include this Question at least.
                 Assert.DoesNotContain(mostRecentQuestion.Id, responseModel.Questions.Select(x => x.Id));
+            }
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsAdmin_StatusAwaitingApproval_ShouldGetQuestions()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_questionUserId, Role.Admin);
+
+                var response = await client.GetAsync(_buildUrl(status: PostStatus.AwaitingApproval));
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<QuestionsListModel>(responseContent);
+
+                Assert.Contains(_unapprovedQuestion.Id, responseModel.Questions.Select(x => x.Id));
+            }
+        }
+
+        [Fact]
+        public async Task AuthenticatedAsNonAdmin_StatusAwaitingApproval_ShouldBeDenied()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_questionUserId);
+
+                var response = await client.GetAsync(_buildUrl(status: PostStatus.AwaitingApproval));
+                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
             }
         }
 

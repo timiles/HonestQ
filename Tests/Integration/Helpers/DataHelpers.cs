@@ -57,7 +57,8 @@ namespace Pobs.Tests.Integration.Helpers
 
         public static IEnumerable<Question> CreateQuestions(
             User questionUser, int numberOfQuestions = 1,
-            User answerUser = null, int numberOfAnswersPerQuestion = 0)
+            User answerUser = null, int numberOfAnswersPerQuestion = 0,
+            PostStatus questionStatus = PostStatus.OK)
         {
             var questions = new List<Question>();
             for (int questionIndex = 0; questionIndex < numberOfQuestions; questionIndex++)
@@ -67,6 +68,7 @@ namespace Pobs.Tests.Integration.Helpers
                 var question = new Question(Utils.GenerateRandomString(10), questionUser, questionPostedAt)
                 {
                     Source = Utils.GenerateRandomString(10),
+                    Status = questionStatus,
                 };
                 if (answerUser != null)
                 {

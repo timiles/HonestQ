@@ -13,10 +13,10 @@ namespace Pobs.Web.Services
 {
     public interface IQuestionService
     {
-        Task<QuestionsListModel> ListQuestions(int pageSize, long? beforeUnixTimeMilliseconds = null);
-        Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId);
-        Task<QuestionListItemModel> UpdateQuestion(int questionId, QuestionFormModel questionForm);
-        Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId);
+        Task<QuestionsListModel> ListQuestions(PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null);
+        Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin);
+        Task<QuestionListItemModel> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm);
+        Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin);
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
         Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm);
         Task<ReactionModel> SaveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
@@ -35,21 +35,21 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<QuestionsListModel> ListQuestions(int pageSize, long? beforeUnixTimeMilliseconds = null)
+        public async Task<QuestionsListModel> ListQuestions(PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null)
         {
             var beforeTime = beforeUnixTimeMilliseconds.ToUnixDateTime() ?? DateTime.UtcNow;
 
             var questions = await _context.Questions
                 .Include(x => x.Answers)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
-                .Where(x => x.PostedAt < beforeTime)
+                .Where(x => x.Status == status && x.PostedAt < beforeTime)
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();
             return new QuestionsListModel(questions);
         }
 
-        public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId)
+        public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin)
         {
             var tagTasks = new List<Task<Tag>>();
             if (questionForm.Tags != null)
@@ -65,6 +65,7 @@ namespace Pobs.Web.Services
             var question = new Question(questionForm.Text, await postedByUserTask, DateTime.UtcNow)
             {
                 Source = questionForm.Source,
+                Status = isAdmin ? PostStatus.OK : PostStatus.AwaitingApproval,
             };
 
             await Task.WhenAll(tagTasks);
@@ -83,7 +84,7 @@ namespace Pobs.Web.Services
             return new QuestionListItemModel(question);
         }
 
-        public async Task<QuestionListItemModel> UpdateQuestion(int questionId, QuestionFormModel questionForm)
+        public async Task<QuestionListItemModel> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm)
         {
             var tagTasks = new List<Task<Tag>>();
             if (questionForm.Tags != null)
@@ -105,6 +106,7 @@ namespace Pobs.Web.Services
             question.Text = questionForm.Text;
             question.Slug = questionForm.Text.ToSlug();
             question.Source = questionForm.Source;
+            question.Status = questionForm.IsApproved ? PostStatus.OK : PostStatus.AwaitingApproval;
             question.Tags.Clear();
 
             await Task.WhenAll(tagTasks);
@@ -121,7 +123,7 @@ namespace Pobs.Web.Services
             return new QuestionListItemModel(question);
         }
 
-        public async Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId)
+        public async Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin)
         {
             var question = await _context.Questions
                 .Include(x => x.PostedByUser)
@@ -131,11 +133,11 @@ namespace Pobs.Web.Services
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
-            if (question == null)
+            if (question == null || (question.Status == PostStatus.AwaitingApproval && !isAdmin))
             {
                 return null;
             }
-            return new QuestionModel(question, loggedInUserId);
+            return (isAdmin) ? new AdminQuestionModel(question) : new QuestionModel(question, loggedInUserId);
         }
 
         public async Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId)

@@ -146,6 +146,9 @@ dl.button-definitions dt {
     float: left;
     margin-right: 5px;
 }
+dl.button-definitions dd {
+    white-space: nowrap;
+}
 
 .emoji {
     display: inline-block;
