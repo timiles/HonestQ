@@ -11,6 +11,7 @@ import { buildQuestionUrl } from '../utils/route-utils';
 
 export interface NewQuestionState {
     questionForm?: FormProps<QuestionFormModel>;
+    awaitingApproval?: boolean;
 }
 
 // -----------------
@@ -25,6 +26,12 @@ export interface NewQuestionFormReceivedAction {
     type: 'NEW_QUESTION_FORM_RECEIVED';
     payload: { questionListItem: QuestionListItemModel; };
 }
+interface NewQuestionFormAwaitingApprovalAction {
+    type: 'NEW_QUESTION_FORM_AWAITING_APPROVAL';
+}
+interface NewQuestionFormResetAction {
+    type: 'NEW_QUESTION_FORM_RESET';
+}
 interface NewQuestionFormFailedAction {
     type: 'NEW_QUESTION_FORM_FAILED';
     payload: { error: string | null; };
@@ -32,9 +39,13 @@ interface NewQuestionFormFailedAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = NewQuestionFormSubmittedAction
+type KnownAction =
+    | NewQuestionFormSubmittedAction
     | NewQuestionFormReceivedAction
-    | NewQuestionFormFailedAction;
+    | NewQuestionFormAwaitingApprovalAction
+    | NewQuestionFormResetAction
+    | NewQuestionFormFailedAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -55,14 +66,20 @@ export const actionCreators = {
                 postJson<QuestionListItemModel>(
                     `/api/questions`, questionForm, getState().login.loggedInUser!)
                     .then((responseModel: QuestionListItemModel) => {
-                        dispatch({
-                            type: 'NEW_QUESTION_FORM_RECEIVED',
-                            payload: { questionListItem: responseModel },
-                        });
-                        setTimeout(() => {
-                            // Wait a bit for modal to have closed, then go to new Question
-                            dispatch(push(buildQuestionUrl(responseModel.id, responseModel.slug)) as any);
-                        }, 700);
+                        if (responseModel) {
+                            dispatch({
+                                type: 'NEW_QUESTION_FORM_RECEIVED',
+                                payload: { questionListItem: responseModel },
+                            });
+                            setTimeout(() => {
+                                // Wait a bit for modal to have closed, then go to new Question
+                                dispatch(push(buildQuestionUrl(responseModel.id, responseModel.slug)) as any);
+                            }, 700);
+                        } else {
+                            dispatch({
+                                type: 'NEW_QUESTION_FORM_AWAITING_APPROVAL',
+                            });
+                        }
                     })
                     .catch((reason: string) => {
                         dispatch({
@@ -70,6 +87,15 @@ export const actionCreators = {
                             payload: { error: reason || 'Posting Question failed' },
                         });
                     });
+            })();
+        },
+    reset: ():
+        AppThunkAction<KnownAction> => (dispatch, getState) => {
+            return (async () => {
+                setTimeout(() => {
+                    // Wait a bit for modal to have closed, then reset form
+                    dispatch({ type: 'NEW_QUESTION_FORM_RESET' });
+                }, 200);
             })();
         },
 };
@@ -90,6 +116,13 @@ export const reducer: Reducer<NewQuestionState> = (state: NewQuestionState, acti
                 },
             };
         case 'NEW_QUESTION_FORM_RECEIVED':
+            return defaultState;
+        case 'NEW_QUESTION_FORM_AWAITING_APPROVAL':
+            return {
+                questionForm: {},
+                awaitingApproval: true,
+            };
+        case 'NEW_QUESTION_FORM_RESET':
             return defaultState;
         case 'NEW_QUESTION_FORM_FAILED':
             return {

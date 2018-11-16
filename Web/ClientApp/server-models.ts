@@ -46,6 +46,24 @@ export interface ActivityListModel {
     lastTimestamp: number;
 }
 
+export interface AdminQuestionFormModel {
+    isApproved: boolean;
+    text: string;
+    source?: string;
+    tags: TagValueFormModel[];
+}
+
+export interface AdminQuestionModel {
+    isApproved: boolean;
+    slug: string;
+    text: string;
+    source?: string;
+    postedBy: string;
+    isPostedByLoggedInUser: boolean;
+    tags: TagValueModel[];
+    answers: AnswerModel[];
+}
+
 export interface AnswerFormModel {
     text: string;
     source?: string;

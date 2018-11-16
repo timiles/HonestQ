@@ -1,7 +1,7 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
-import { TagsListModel } from '../server-models';
+import { QuestionsListModel, TagsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 
 // -----------------
@@ -9,6 +9,7 @@ import { getJson } from '../utils/http-utils';
 
 export interface AdminHomeState {
     unapprovedTagsList: LoadingProps<TagsListModel>;
+    unapprovedQuestionsList: LoadingProps<QuestionsListModel>;
 }
 
 // -----------------
@@ -27,12 +28,28 @@ interface GetUnapprovedTagsListFailedAction {
     type: 'GET_UNAPPROVED_TOPICS_LIST_FAILED';
     payload: { error: string; };
 }
+interface GetUnapprovedQuestionsListRequestedAction {
+    type: 'GET_UNAPPROVED_QUESTIONS_LIST_REQUESTED';
+}
+interface GetUnapprovedQuestionsListSuccessAction {
+    type: 'GET_UNAPPROVED_QUESTIONS_LIST_SUCCESS';
+    payload: QuestionsListModel;
+}
+interface GetUnapprovedQuestionsListFailedAction {
+    type: 'GET_UNAPPROVED_QUESTIONS_LIST_FAILED';
+    payload: { error: string; };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetUnapprovedTagsListRequestedAction
+type KnownAction =
+    | GetUnapprovedTagsListRequestedAction
     | GetUnapprovedTagsListSuccessAction
-    | GetUnapprovedTagsListFailedAction;
+    | GetUnapprovedTagsListFailedAction
+    | GetUnapprovedQuestionsListRequestedAction
+    | GetUnapprovedQuestionsListSuccessAction
+    | GetUnapprovedQuestionsListFailedAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -57,22 +74,64 @@ export const actionCreators = {
                 });
         })();
     },
+    getUnapprovedQuestionsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            dispatch({ type: 'GET_UNAPPROVED_QUESTIONS_LIST_REQUESTED' });
+
+            getJson<QuestionsListModel>('/api/questions?status=AwaitingApproval', getState().login.loggedInUser)
+                .then((response) => {
+                    dispatch({ type: 'GET_UNAPPROVED_QUESTIONS_LIST_SUCCESS', payload: response });
+                })
+                .catch((reason) => {
+                    dispatch({
+                        type: 'GET_UNAPPROVED_QUESTIONS_LIST_FAILED',
+                        payload: {
+                            error: reason || 'Get questions list failed',
+                        },
+                    });
+                });
+        })();
+    },
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: AdminHomeState = { unapprovedTagsList: {} };
+const defaultState: AdminHomeState = { unapprovedTagsList: {}, unapprovedQuestionsList: {} };
 
 export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_UNAPPROVED_TOPICS_LIST_REQUESTED':
-            return { unapprovedTagsList: { loading: true } };
+            return {
+                unapprovedTagsList: { loading: true },
+                unapprovedQuestionsList: state.unapprovedQuestionsList,
+            };
         case 'GET_UNAPPROVED_TOPICS_LIST_SUCCESS':
-            return { unapprovedTagsList: { loadedModel: action.payload } };
+            return {
+                unapprovedTagsList: { loadedModel: action.payload },
+                unapprovedQuestionsList: state.unapprovedQuestionsList,
+            };
         case 'GET_UNAPPROVED_TOPICS_LIST_FAILED':
-            return { unapprovedTagsList: { error: action.payload.error } };
+            return {
+                unapprovedTagsList: { error: action.payload.error },
+                unapprovedQuestionsList: state.unapprovedQuestionsList,
+            };
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_REQUESTED':
+            return {
+                unapprovedTagsList: state.unapprovedTagsList,
+                unapprovedQuestionsList: { loading: true },
+            };
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_SUCCESS':
+            return {
+                unapprovedTagsList: state.unapprovedTagsList,
+                unapprovedQuestionsList: { loadedModel: action.payload },
+            };
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_FAILED':
+            return {
+                unapprovedTagsList: state.unapprovedTagsList,
+                unapprovedQuestionsList: { error: action.payload.error },
+            };
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

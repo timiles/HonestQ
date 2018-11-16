@@ -1,14 +1,14 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { EditFormProps } from '../components/shared/EditFormProps';
-import { QuestionFormModel, QuestionModel } from '../server-models';
+import { AdminQuestionFormModel, AdminQuestionModel } from '../server-models';
 import { getJson, putJson } from '../utils/http-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface EditQuestionState {
-    editQuestionForm: EditFormProps<QuestionFormModel>;
+    editQuestionForm: EditFormProps<AdminQuestionModel>;
     savedSlug?: string;
 }
 
@@ -23,7 +23,7 @@ interface GetQuestionRequestedAction {
 }
 interface GetQuestionSuccessAction {
     type: 'GET_QUESTION_SUCCESS';
-    payload: { question: QuestionModel; questionId: number; };
+    payload: { question: AdminQuestionModel; questionId: number; };
 }
 interface GetQuestionFailedAction {
     type: 'GET_QUESTION_FAILED';
@@ -34,7 +34,7 @@ interface EditQuestionFormSubmittedAction {
 }
 interface EditQuestionFormReceivedAction {
     type: 'EDIT_QUESTION_FORM_RECEIVED';
-    payload: { questionId: number; question: QuestionModel; };
+    payload: { questionId: number; question: AdminQuestionModel; };
 }
 interface EditQuestionFormFailedAction {
     type: 'EDIT_QUESTION_FORM_FAILED';
@@ -59,8 +59,8 @@ export const actionCreators = {
         return (async () => {
             dispatch({ type: 'GET_QUESTION_REQUESTED', payload: { questionId } });
 
-            getJson<QuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
-                .then((questionResponse: QuestionModel) => {
+            getJson<AdminQuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
+                .then((questionResponse) => {
                     dispatch({
                         type: 'GET_QUESTION_SUCCESS',
                         payload: { question: questionResponse, questionId },
@@ -74,7 +74,7 @@ export const actionCreators = {
                 });
         })();
     },
-    submit: (questionId: number, questionForm: QuestionFormModel):
+    submit: (questionId: number, questionForm: AdminQuestionFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
                 dispatch({ type: 'EDIT_QUESTION_FORM_SUBMITTED' });
@@ -85,9 +85,9 @@ export const actionCreators = {
                     return;
                 }
 
-                putJson<QuestionModel>(
+                putJson<AdminQuestionModel>(
                     `/api/questions/${questionId}`, questionForm, getState().login.loggedInUser!)
-                    .then((questionResponse: QuestionModel) => {
+                    .then((questionResponse) => {
                         dispatch({
                             type: 'EDIT_QUESTION_FORM_RECEIVED',
                             payload: { questionId, question: questionResponse },

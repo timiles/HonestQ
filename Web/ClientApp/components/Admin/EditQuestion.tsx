@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { QuestionFormModel } from '../../server-models';
+import { AdminQuestionFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as EditQuestionStore from '../../store/EditQuestion';
 import { buildQuestionUrl } from '../../utils/route-utils';
-import QuestionForm from '../QuestionForm/QuestionForm';
+import AdminQuestionForm from '../QuestionForm/AdminQuestionForm';
 import Loading from '../shared/Loading';
 
 type EditQuestionProps = EditQuestionStore.EditQuestionState
@@ -42,7 +42,7 @@ class EditQuestion extends React.Component<EditQuestionProps, {}> {
                     )}
                     <Loading {...this.props.editQuestionForm} />
                     {initialState && (
-                        <QuestionForm
+                        <AdminQuestionForm
                             initialState={initialState}
                             submit={this.handleSubmit}
                         />
@@ -56,7 +56,7 @@ class EditQuestion extends React.Component<EditQuestionProps, {}> {
         return (!this.props.editQuestionForm.initialState);
     }
 
-    private handleSubmit(form: QuestionFormModel): void {
+    private handleSubmit(form: AdminQuestionFormModel): void {
         this.props.submit(Number(this.props.match.params.questionId), form);
     }
 }

@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { QuestionFormModel, TagValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewQuestionStore from '../../store/NewQuestion';
-import { isUserInRole } from '../../utils/auth-utils';
 import Modal from '../shared/Modal';
 import QuestionForm from './QuestionForm';
 
@@ -30,13 +28,13 @@ class NewQuestion extends React.Component<Props, State> {
 
     public componentWillReceiveProps(nextProps: Props) {
         // This will close the modal when a Question has been successfully submitted
-        if (!nextProps.questionForm!.submitted) {
+        if (!nextProps.awaitingApproval && !nextProps.questionForm!.submitted) {
             this.setState({ isModalOpen: false });
         }
     }
 
     public render() {
-        const { questionForm, tagValue } = this.props;
+        const { questionForm, awaitingApproval, tagValue } = this.props;
         const { isModalOpen } = this.state;
         const initialTagValues = !tagValue ? [] : [{ ...tagValue }];
 
@@ -49,34 +47,42 @@ class NewQuestion extends React.Component<Props, State> {
                 >
                     Add a question
                 </button>
-                <LoggedInUserContext.Consumer>
-                    {(user) => isUserInRole(user, 'Admin') &&
-                        <Modal title="Add a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
-                            <QuestionForm
-                                {...questionForm}
-                                initialTagValues={initialTagValues}
-                                isModal={true}
-                                onCloseModalRequested={this.handleClose}
-                                submit={this.handleSubmit}
-                            />
-                        </Modal>
+                <Modal title="Add a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                    {!awaitingApproval &&
+                        <QuestionForm
+                            {...questionForm}
+                            initialTagValues={initialTagValues}
+                            isModal={true}
+                            onCloseModalRequested={this.handleClose}
+                            submit={this.handleSubmit}
+                        />
                         ||
-                        <Modal title="Coming soon..." isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                        <>
                             <div className="modal-body">
-                                <h3>We're not quite ready to accept new questions yet.</h3>
-                                <p>HonestQ is still in its early stages. We will be adding new questions slowly,
-                                    to ensure that we're building a quality system.</p>
-                                <p>
-                                    If you would like to submit your own honest question, please {}
-                                    <a
-                                        href="https://twitter.com/intent/tweet?text=.@HonestQ_com%20%23HonestQ"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        tweet @HonestQ_com
-                                    </a>, or email <b>ask@HonestQ.com</b>.
-                                    </p>
-                                <p>Thanks!</p>
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <h3>Thank you for your question!</h3>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-9">
+                                        <p>
+                                            HonestQ is still in its early stages.
+                                            We will be adding new questions slowly,
+                                            to ensure that we're building a quality system.
+                                        </p>
+                                        <p>
+                                            We will notify you by email when your question gets approved.
+                                        </p>
+                                    </div>
+                                    <div className="col-md-3 text-center">
+                                        <img
+                                            className="img-fluid"
+                                            src="/android-chrome-256x256.png"
+                                            alt="The HonestQ logo: a smiley face emoji with a halo shaped like a Q."
+                                        />
+                                    </div>
+                                </div>
                             </div>
                             <div className="modal-footer">
                                 <button
@@ -87,9 +93,9 @@ class NewQuestion extends React.Component<Props, State> {
                                     You're welcome
                                 </button>
                             </div>
-                        </Modal>
+                        </>
                     }
-                </LoggedInUserContext.Consumer>
+                </Modal>
             </>
         );
     }
@@ -99,7 +105,12 @@ class NewQuestion extends React.Component<Props, State> {
     }
 
     private handleClose() {
-        this.setState({ isModalOpen: false });
+        this.setState({ isModalOpen: false },
+            () => {
+                if (this.props.awaitingApproval) {
+                    this.props.reset();
+                }
+            });
     }
 
     private handleSubmit(form: QuestionFormModel): void {
