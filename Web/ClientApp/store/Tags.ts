@@ -16,9 +16,9 @@ export interface ListState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetTagsListRequestedAction { type: 'GET_TOPICS_LIST_REQUESTED'; }
-interface GetTagsListSuccessAction { type: 'GET_TOPICS_LIST_SUCCESS'; payload: TagsListModel; }
-interface GetTagsListFailedAction { type: 'GET_TOPICS_LIST_FAILED'; payload: { error: string; }; }
+interface GetTagsListRequestedAction { type: 'GET_TAGS_LIST_REQUESTED'; }
+interface GetTagsListSuccessAction { type: 'GET_TAGS_LIST_SUCCESS'; payload: TagsListModel; }
+interface GetTagsListFailedAction { type: 'GET_TAGS_LIST_FAILED'; payload: { error: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -34,15 +34,15 @@ type KnownAction =
 export const actionCreators = {
     getTagsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_TOPICS_LIST_REQUESTED' });
+            dispatch({ type: 'GET_TAGS_LIST_REQUESTED' });
 
             getJson<TagsListModel>('/api/tags', getState().login.loggedInUser)
                 .then((tagsListResponse: TagsListModel) => {
-                    dispatch({ type: 'GET_TOPICS_LIST_SUCCESS', payload: tagsListResponse });
+                    dispatch({ type: 'GET_TAGS_LIST_SUCCESS', payload: tagsListResponse });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_TOPICS_LIST_FAILED',
+                        type: 'GET_TAGS_LIST_FAILED',
                         payload: {
                             error: reason || 'Get tags list failed',
                         },
@@ -60,15 +60,15 @@ const defaultState: ListState = { loadingTagsList: {} };
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_TOPICS_LIST_REQUESTED':
+        case 'GET_TAGS_LIST_REQUESTED':
             return {
                 loadingTagsList: { loading: true },
             };
-        case 'GET_TOPICS_LIST_SUCCESS':
+        case 'GET_TAGS_LIST_SUCCESS':
             return {
                 loadingTagsList: { loadedModel: action.payload },
             };
-        case 'GET_TOPICS_LIST_FAILED':
+        case 'GET_TAGS_LIST_FAILED':
             return {
                 loadingTagsList: { error: action.payload.error },
             };

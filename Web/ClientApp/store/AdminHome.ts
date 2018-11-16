@@ -18,14 +18,14 @@ export interface AdminHomeState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface GetUnapprovedTagsListRequestedAction {
-    type: 'GET_UNAPPROVED_TOPICS_LIST_REQUESTED';
+    type: 'GET_UNAPPROVED_TAGS_LIST_REQUESTED';
 }
 interface GetUnapprovedTagsListSuccessAction {
-    type: 'GET_UNAPPROVED_TOPICS_LIST_SUCCESS';
+    type: 'GET_UNAPPROVED_TAGS_LIST_SUCCESS';
     payload: TagsListModel;
 }
 interface GetUnapprovedTagsListFailedAction {
-    type: 'GET_UNAPPROVED_TOPICS_LIST_FAILED';
+    type: 'GET_UNAPPROVED_TAGS_LIST_FAILED';
     payload: { error: string; };
 }
 interface GetUnapprovedQuestionsListRequestedAction {
@@ -58,15 +58,15 @@ type KnownAction =
 export const actionCreators = {
     getUnapprovedTagsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_UNAPPROVED_TOPICS_LIST_REQUESTED' });
+            dispatch({ type: 'GET_UNAPPROVED_TAGS_LIST_REQUESTED' });
 
             getJson<TagsListModel>('/api/tags?isApproved=false', getState().login.loggedInUser)
                 .then((tagsListResponse: TagsListModel) => {
-                    dispatch({ type: 'GET_UNAPPROVED_TOPICS_LIST_SUCCESS', payload: tagsListResponse });
+                    dispatch({ type: 'GET_UNAPPROVED_TAGS_LIST_SUCCESS', payload: tagsListResponse });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_UNAPPROVED_TOPICS_LIST_FAILED',
+                        type: 'GET_UNAPPROVED_TAGS_LIST_FAILED',
                         payload: {
                             error: reason || 'Get tags list failed',
                         },
@@ -102,17 +102,17 @@ const defaultState: AdminHomeState = { unapprovedTagsList: {}, unapprovedQuestio
 
 export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_UNAPPROVED_TOPICS_LIST_REQUESTED':
+        case 'GET_UNAPPROVED_TAGS_LIST_REQUESTED':
             return {
                 unapprovedTagsList: { loading: true },
                 unapprovedQuestionsList: state.unapprovedQuestionsList,
             };
-        case 'GET_UNAPPROVED_TOPICS_LIST_SUCCESS':
+        case 'GET_UNAPPROVED_TAGS_LIST_SUCCESS':
             return {
                 unapprovedTagsList: { loadedModel: action.payload },
                 unapprovedQuestionsList: state.unapprovedQuestionsList,
             };
-        case 'GET_UNAPPROVED_TOPICS_LIST_FAILED':
+        case 'GET_UNAPPROVED_TAGS_LIST_FAILED':
             return {
                 unapprovedTagsList: { error: action.payload.error },
                 unapprovedQuestionsList: state.unapprovedQuestionsList,

@@ -19,15 +19,15 @@ export interface EditTagState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetAdminTagRequestedAction { type: 'GET_ADMIN_TOPIC_REQUESTED'; payload: { tagSlug: string; }; }
+interface GetAdminTagRequestedAction { type: 'GET_ADMIN_TAG_REQUESTED'; payload: { tagSlug: string; }; }
 interface GetAdminTagSuccessAction {
-    type: 'GET_ADMIN_TOPIC_SUCCESS';
+    type: 'GET_ADMIN_TAG_SUCCESS';
     payload: { tag: AdminTagModel; tagSlug: string; };
 }
-interface GetAdminTagFailedAction { type: 'GET_ADMIN_TOPIC_FAILED'; payload: { tagSlug: string; error: string; }; }
-interface EditTagFormSubmittedAction { type: 'EDIT_TOPIC_FORM_SUBMITTED'; }
-interface EditTagFormReceivedAction { type: 'EDIT_TOPIC_FORM_RECEIVED'; payload: { tag: AdminTagModel; }; }
-interface EditTagFormFailedAction { type: 'EDIT_TOPIC_FORM_FAILED'; payload: { error: string | null; }; }
+interface GetAdminTagFailedAction { type: 'GET_ADMIN_TAG_FAILED'; payload: { tagSlug: string; error: string; }; }
+interface EditTagFormSubmittedAction { type: 'EDIT_TAG_FORM_SUBMITTED'; }
+interface EditTagFormReceivedAction { type: 'EDIT_TAG_FORM_RECEIVED'; payload: { tag: AdminTagModel; }; }
+interface EditTagFormFailedAction { type: 'EDIT_TAG_FORM_FAILED'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -45,18 +45,18 @@ type KnownAction = GetAdminTagRequestedAction
 export const actionCreators = {
     getTag: (tagSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_ADMIN_TOPIC_REQUESTED', payload: { tagSlug } });
+            dispatch({ type: 'GET_ADMIN_TAG_REQUESTED', payload: { tagSlug } });
 
             getJson<AdminTagModel>(`/api/tags/${tagSlug}`, getState().login.loggedInUser)
                 .then((tagResponse: AdminTagModel) => {
                     dispatch({
-                        type: 'GET_ADMIN_TOPIC_SUCCESS',
+                        type: 'GET_ADMIN_TAG_SUCCESS',
                         payload: { tag: tagResponse, tagSlug },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_ADMIN_TOPIC_FAILED', payload: {
+                        type: 'GET_ADMIN_TAG_FAILED', payload: {
                             tagSlug,
                             error: reason || 'Get tag failed',
                         },
@@ -66,20 +66,20 @@ export const actionCreators = {
     },
     submit: (slug: string, tagForm: EditTagFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'EDIT_TOPIC_FORM_SUBMITTED' });
+            dispatch({ type: 'EDIT_TAG_FORM_SUBMITTED' });
 
             if (!tagForm.name || !tagForm.slug || (tagForm.description && tagForm.description.length > 280)) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'EDIT_TOPIC_FORM_FAILED', payload: { error: null } });
+                dispatch({ type: 'EDIT_TAG_FORM_FAILED', payload: { error: null } });
                 return;
             }
 
             putJson<AdminTagModel>(`/api/tags/${slug}`, tagForm, getState().login.loggedInUser!)
                 .then((tagResponse: AdminTagModel) => {
-                    dispatch({ type: 'EDIT_TOPIC_FORM_RECEIVED', payload: { tag: tagResponse } });
+                    dispatch({ type: 'EDIT_TAG_FORM_RECEIVED', payload: { tag: tagResponse } });
                 })
                 .catch((reason: string) => {
-                    dispatch({ type: 'EDIT_TOPIC_FORM_FAILED', payload: { error: reason } });
+                    dispatch({ type: 'EDIT_TAG_FORM_FAILED', payload: { error: reason } });
                 });
         })();
     },
@@ -93,7 +93,7 @@ const defaultState: EditTagState = { tagModel: {}, editTagForm: {} };
 
 export const reducer: Reducer<EditTagState> = (state: EditTagState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_ADMIN_TOPIC_REQUESTED':
+        case 'GET_ADMIN_TAG_REQUESTED':
             return {
                 tagModel: {
                     id: action.payload.tagSlug,
@@ -101,7 +101,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 },
                 editTagForm: {},
             };
-        case 'GET_ADMIN_TOPIC_SUCCESS':
+        case 'GET_ADMIN_TAG_SUCCESS':
             return {
                 tagModel: {
                     id: action.payload.tagSlug,
@@ -109,7 +109,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 },
                 editTagForm: state.editTagForm,
             };
-        case 'GET_ADMIN_TOPIC_FAILED':
+        case 'GET_ADMIN_TAG_FAILED':
             return {
                 tagModel: {
                     id: action.payload.tagSlug,
@@ -117,7 +117,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 },
                 editTagForm: state.editTagForm,
             };
-        case 'EDIT_TOPIC_FORM_SUBMITTED':
+        case 'EDIT_TAG_FORM_SUBMITTED':
             return {
                 tagModel: state.tagModel,
                 editTagForm: {
@@ -125,7 +125,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                     submitted: true,
                 },
             };
-        case 'EDIT_TOPIC_FORM_RECEIVED':
+        case 'EDIT_TAG_FORM_RECEIVED':
             return {
                 tagModel: {
                     id: action.payload.tag.slug,
@@ -138,7 +138,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 successfullySaved: true,
                 // TODO: if Tag was Approved, update pending list on AdminHome
             };
-        case 'EDIT_TOPIC_FORM_FAILED':
+        case 'EDIT_TAG_FORM_FAILED':
             return {
                 tagModel: state.tagModel,
                 editTagForm: {

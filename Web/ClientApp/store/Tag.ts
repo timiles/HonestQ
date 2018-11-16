@@ -18,15 +18,15 @@ export interface ContainerState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface GetTagRequestedAction {
-    type: 'GET_TOPIC_REQUESTED';
+    type: 'GET_TAG_REQUESTED';
     payload: { tagSlug: string; };
 }
 interface GetTagSuccessAction {
-    type: 'GET_TOPIC_SUCCESS';
+    type: 'GET_TAG_SUCCESS';
     payload: { tag: TagModel; tagSlug: string; };
 }
 interface GetTagFailedAction {
-    type: 'GET_TOPIC_FAILED';
+    type: 'GET_TAG_FAILED';
     payload: { tagSlug: string; error: string; };
 }
 
@@ -44,18 +44,18 @@ type KnownAction = GetTagRequestedAction
 export const actionCreators = {
     getTag: (tagSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_TOPIC_REQUESTED', payload: { tagSlug } });
+            dispatch({ type: 'GET_TAG_REQUESTED', payload: { tagSlug } });
 
             getJson<TagModel>(`/api/tags/${tagSlug}`, getState().login.loggedInUser)
                 .then((tagResponse: TagModel) => {
                     dispatch({
-                        type: 'GET_TOPIC_SUCCESS',
+                        type: 'GET_TAG_SUCCESS',
                         payload: { tag: tagResponse, tagSlug },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_TOPIC_FAILED',
+                        type: 'GET_TAG_FAILED',
                         payload: {
                             tagSlug,
                             error: reason || 'Get tag failed',
@@ -76,7 +76,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
     const action = anyAction as KnownAction;
     switch (action.type) {
-        case 'GET_TOPIC_REQUESTED':
+        case 'GET_TAG_REQUESTED':
             return {
                 ...state,
                 tag: {
@@ -84,16 +84,16 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                     slug: action.payload.tagSlug,
                 },
             };
-        case 'GET_TOPIC_SUCCESS':
+        case 'GET_TAG_SUCCESS':
             return {
-                // NOTE: Question is possibly already set if GET_QUESTION_REQUEST returned before GET_TOPIC_REQUEST
+                // NOTE: Question is possibly already set if GET_QUESTION_REQUEST returned before GET_TAG_REQUEST
                 ...state,
                 tag: {
                     slug: action.payload.tagSlug,
                     model: action.payload.tag,
                 },
             };
-        case 'GET_TOPIC_FAILED':
+        case 'GET_TAG_FAILED':
             return {
                 ...state,
                 tag: {

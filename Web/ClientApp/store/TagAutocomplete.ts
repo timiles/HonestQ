@@ -19,18 +19,18 @@ export interface TagAutocompleteState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface AutocompleteTagsClearAction {
-    type: 'AUTOCOMPLETE_TOPICS_CLEAR';
+    type: 'AUTOCOMPLETE_TAGS_CLEAR';
 }
 interface AutocompleteTagsRequestedAction {
-    type: 'AUTOCOMPLETE_TOPICS_REQUESTED';
+    type: 'AUTOCOMPLETE_TAGS_REQUESTED';
     payload: { query: string; };
 }
 interface AutocompleteTagsSuccessAction {
-    type: 'AUTOCOMPLETE_TOPICS_SUCCESS';
+    type: 'AUTOCOMPLETE_TAGS_SUCCESS';
     payload: { tags: TagValueModel[]; query: string; };
 }
 interface AutocompleteTagsFailedAction {
-    type: 'AUTOCOMPLETE_TOPICS_FAILED';
+    type: 'AUTOCOMPLETE_TAGS_FAILED';
     payload: { query: string; error: string; };
 }
 
@@ -49,22 +49,22 @@ export const actionCreators = {
     autocompleteTags: (query: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             if (!query) {
-                dispatch({ type: 'AUTOCOMPLETE_TOPICS_CLEAR' });
+                dispatch({ type: 'AUTOCOMPLETE_TAGS_CLEAR' });
                 return;
             }
-            dispatch({ type: 'AUTOCOMPLETE_TOPICS_REQUESTED', payload: { query } });
+            dispatch({ type: 'AUTOCOMPLETE_TAGS_REQUESTED', payload: { query } });
 
             const queryUrl = `/api/tags/autocomplete?q=${encodeURIComponent(query)}`;
             getJson<TagAutocompleteResultsModel>(queryUrl, getState().login.loggedInUser)
                 .then((response: TagAutocompleteResultsModel) => {
                     dispatch({
-                        type: 'AUTOCOMPLETE_TOPICS_SUCCESS',
+                        type: 'AUTOCOMPLETE_TAGS_SUCCESS',
                         payload: { tags: response.values, query },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'AUTOCOMPLETE_TOPICS_FAILED',
+                        type: 'AUTOCOMPLETE_TAGS_FAILED',
                         payload: {
                             query,
                             error: reason || 'Autocomplete tags failed',
@@ -85,28 +85,28 @@ export const reducer: Reducer<TagAutocompleteState> = (state: TagAutocompleteSta
     // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
     const action = anyAction as KnownAction;
     switch (action.type) {
-        case 'AUTOCOMPLETE_TOPICS_CLEAR':
+        case 'AUTOCOMPLETE_TAGS_CLEAR':
             return {
                 loading: false,
                 query: '',
                 suggestions: null,
                 error: null,
             };
-        case 'AUTOCOMPLETE_TOPICS_REQUESTED':
+        case 'AUTOCOMPLETE_TAGS_REQUESTED':
             return {
                 loading: true,
                 query: action.payload.query,
                 suggestions: state.suggestions,
                 error: null,
             };
-        case 'AUTOCOMPLETE_TOPICS_SUCCESS':
+        case 'AUTOCOMPLETE_TAGS_SUCCESS':
             return {
                 loading: false,
                 query: action.payload.query,
                 suggestions: action.payload.tags,
                 error: null,
             };
-        case 'AUTOCOMPLETE_TOPICS_FAILED':
+        case 'AUTOCOMPLETE_TAGS_FAILED':
             return {
                 loading: false,
                 query: action.payload.query,
