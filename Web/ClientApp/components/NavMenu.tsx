@@ -25,7 +25,13 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
         };
 
         const { loggedInUser } = this.props;
+        const greeting = loggedInUser ? (
+            <span className="navbar-text">
+                Hi, {loggedInUser.username}!
+            </span>
+        ) : null;
         const isAdmin = isUserInRole(loggedInUser, 'Admin');
+
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
                 <div className="container">
@@ -45,17 +51,20 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav mr-auto">
+                            {greeting &&
+                                <li className="d-block d-lg-none">
+                                    {greeting}
+                                </li>
+                            }
                             <AutoCollapseNavLink exact={true} to={'/'}>Home</AutoCollapseNavLink>
                             <AutoCollapseNavLink exact={true} to={'/questions'}>Questions</AutoCollapseNavLink>
                             {isAdmin && <AutoCollapseNavLink to={'/admin'}>Admin</AutoCollapseNavLink>}
                         </ul>
                         <ul className="navbar-nav ml-auto">
-                            {loggedInUser &&
+                            {greeting &&
                                 <>
                                     <li className="d-none d-lg-block">
-                                        <span className="navbar-text">
-                                            Hi, {loggedInUser.username}!
-                                        </span>
+                                        {greeting}
                                     </li>
                                     <AutoCollapseNavLink to={'/logout'}>Log out</AutoCollapseNavLink>
                                 </>
