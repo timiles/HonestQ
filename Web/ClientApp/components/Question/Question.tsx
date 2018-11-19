@@ -4,6 +4,7 @@ import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel, QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import { buildAnswerUrl } from '../../utils/route-utils';
+import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import NewAnswer from './NewAnswer';
@@ -79,6 +80,7 @@ export default class Question extends React.Component<Props, {}> {
                         </p>
                         <h4><span className="post quote-marks">{model.text}</span></h4>
                         <Source value={model.source} />
+                        {model.source && <EmbeddedContentCard url={model.source} />}
                         <footer className="blockquote-footer">
                             {model.postedBy}
                         </footer>

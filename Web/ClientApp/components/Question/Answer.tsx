@@ -4,6 +4,7 @@ import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
+import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import Comment from './Comment';
@@ -46,6 +47,7 @@ export default class Answer extends React.Component<Props, {}> {
                             <span className="ml-1 post">{text}</span>
                         </h4>
                         <Source value={source} />
+                        {source && <EmbeddedContentCard url={source} />}
                         <footer className="blockquote-footer">
                             {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                         </footer>
