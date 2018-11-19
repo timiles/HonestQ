@@ -10,7 +10,7 @@ namespace Pobs.Web.Models.Questions
     public class CommentModel
     {
         public CommentModel() { }
-        public CommentModel(Comment comment, int? loggedInUserId = null, IDictionary<int, int> userPseudoIds = null)
+        public CommentModel(Comment comment, int? loggedInUserId, IDictionary<int, int> userPseudoIds = null)
         {
             this.Id = comment.Id;
             this.Text = comment.Text;
@@ -34,7 +34,10 @@ namespace Pobs.Web.Models.Questions
             this.Comments = comment.ChildComments.Where(x => x.Status == PostStatus.OK)
                 .Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
             this.ReactionCounts = comment.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
-            this.MyReactions = comment.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
+            if (loggedInUserId.HasValue)
+            {
+                this.MyReactions = comment.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
+            }
         }
 
         public long Id { get; set; }

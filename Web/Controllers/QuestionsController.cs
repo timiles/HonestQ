@@ -129,7 +129,7 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                var answerModel = await _questionService.UpdateAnswer(questionId, answerId, payload);
+                var answerModel = await _questionService.UpdateAnswer(questionId, answerId, payload, User.Identity.ParseUserId());
                 if (answerModel != null)
                 {
                     return Ok(answerModel);

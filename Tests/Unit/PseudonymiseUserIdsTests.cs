@@ -51,7 +51,7 @@ namespace Pobs.Tests.Unit
             AddComment(answer, 234, -13, comment3);
 
             // Pseudo Ids should be 0 for the original poster of the Answer, then incrementing in order of time of first Comment
-            var answerModel = new AnswerModel(answer);
+            var answerModel = new AnswerModel(answer, null);
             Assert.Equal("Thread user #1", answerModel.Comments[0].PostedBy);
             Assert.Equal("Thread user #0", answerModel.Comments[0].Comments[0].PostedBy);
             Assert.Equal("Thread user #0", answerModel.Comments[1].PostedBy);

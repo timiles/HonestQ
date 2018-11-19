@@ -29,7 +29,7 @@ namespace Pobs.Web.Models.Questions
         }
 
         public AnswerModel() { }
-        public AnswerModel(Answer answer, int? loggedInUserId = null)
+        public AnswerModel(Answer answer, int? loggedInUserId)
         {
             this.Id = answer.Id;
             this.Text = answer.Text;
@@ -46,7 +46,10 @@ namespace Pobs.Web.Models.Questions
             this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
 
             this.ReactionCounts = answer.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
-            this.MyReactions = answer.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
+            if (loggedInUserId.HasValue)
+            {
+                this.MyReactions = answer.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
+            }
         }
 
         public int Id { get; set; }

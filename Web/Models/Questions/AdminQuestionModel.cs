@@ -7,7 +7,7 @@ namespace Pobs.Web.Models.Questions
     public class AdminQuestionModel : QuestionModel
     {
         public AdminQuestionModel() : base() { }
-        public AdminQuestionModel(Question question) : base(question)
+        public AdminQuestionModel(Question question, int? loggedInUserId) : base(question, loggedInUserId)
         {
             this.IsApproved = (question.Status == PostStatus.OK);
         }

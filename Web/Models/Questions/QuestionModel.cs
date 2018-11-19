@@ -8,7 +8,7 @@ namespace Pobs.Web.Models.Questions
     public class QuestionModel
     {
         public QuestionModel() { }
-        public QuestionModel(Question question, int? loggedInUserId = null)
+        public QuestionModel(Question question, int? loggedInUserId)
         {
             this.Slug = question.Slug;
             this.Text = question.Text;

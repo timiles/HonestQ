@@ -18,7 +18,7 @@ namespace Pobs.Web.Services
         Task<QuestionListItemModel> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm);
         Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin);
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
-        Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm);
+        Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm, int? loggedInUserId);
         Task<ReactionModel> SaveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
         Task<ReactionModel> RemoveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
         Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId);
@@ -137,7 +137,7 @@ namespace Pobs.Web.Services
             {
                 return null;
             }
-            return (isAdmin) ? new AdminQuestionModel(question) : new QuestionModel(question, loggedInUserId);
+            return (isAdmin) ? new AdminQuestionModel(question, loggedInUserId) : new QuestionModel(question, loggedInUserId);
         }
 
         public async Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId)
@@ -163,7 +163,7 @@ namespace Pobs.Web.Services
             return new AnswerModel(answer, postedByUserId);
         }
 
-        public async Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm)
+        public async Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm, int? loggedInUserId)
         {
             var question = await _context.Questions
                 .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
@@ -179,7 +179,7 @@ namespace Pobs.Web.Services
             answer.Source = answerForm.Source;
 
             await _context.SaveChangesAsync();
-            return new AnswerModel(answer);
+            return new AnswerModel(answer, loggedInUserId);
         }
 
         public async Task<ReactionModel> SaveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId)
