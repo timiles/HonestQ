@@ -157,6 +157,48 @@ namespace Pobs.Tests.Integration.Helpers
             return newChildComments;
         }
 
+        public static IEnumerable<Notification> CreateNotifications(User notificationOwnerUser, User postingUser,
+            Question question, Answer answer, Comment comment, Comment childComment)
+        {
+            var notifications = new[]
+            {
+                new Notification
+                {
+                    OwnerUser = notificationOwnerUser,
+                    Question = question,
+                },
+                new Notification
+                {
+                    OwnerUser = notificationOwnerUser,
+                    Answer = answer,
+                },
+                new Notification
+                {
+                    OwnerUser = notificationOwnerUser,
+                    Comment = comment,
+                },
+                new Notification
+                {
+                    OwnerUser = notificationOwnerUser,
+                    Comment = childComment,
+                },
+            };
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(notificationOwnerUser);
+                dbContext.Attach(question);
+                dbContext.Attach(answer);
+                dbContext.Attach(comment);
+                dbContext.Attach(childComment);
+
+                dbContext.Notifications.AddRange(notifications);
+                dbContext.SaveChanges();
+            }
+
+            return notifications;
+        }
+
         /// <summary>Delete comments before cascading other deletes so as to not upset foreign key constraints.</summary>
         public static void DeleteAllComments(int questionId)
         {
@@ -210,6 +252,19 @@ namespace Pobs.Tests.Integration.Helpers
                 }
             }
             return false;
+        }
+
+        public static void DeleteNotifications(int notificationOwnerUserId)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var notifications = dbContext.Notifications.Where(x => x.OwnerUser.Id == notificationOwnerUserId);
+                foreach (var notification in notifications.ToArray())
+                {
+                    dbContext.Notifications.Remove(notification);
+                }
+                dbContext.SaveChanges();
+            }
         }
     }
 }

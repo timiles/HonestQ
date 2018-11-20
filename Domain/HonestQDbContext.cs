@@ -10,6 +10,8 @@ namespace Pobs.Domain
         {
         }
 
+        public DbSet<Notification> Notifications { get; set; }
+
         public DbSet<Question> Questions { get; set; }
 
         public DbSet<Tag> Tags { get; set; }

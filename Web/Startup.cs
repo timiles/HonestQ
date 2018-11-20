@@ -97,6 +97,7 @@ namespace Pobs.Web
             // Configure DI for application services
             services.AddScoped(provider => provider.GetService<DbContextPool<HonestQDbContext>>().Rent());
             services.AddScoped<IActivityService, ActivityService>();
+            services.AddScoped<INotificationsService, NotificationsService>();
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
