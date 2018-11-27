@@ -47,7 +47,12 @@ namespace Pobs.Web.Controllers
             var questionModel = await _questionService.SaveQuestion(payload, User.Identity.ParseUserId(), isAdmin);
             if (questionModel != null)
             {
-                return Ok((isAdmin) ? questionModel : null);
+                if (isAdmin)
+                {
+                    await _notificationsService.CreateNotificationsForQuestion(questionModel.Id);
+                    return Ok(questionModel);
+                }
+                return Ok();
             }
             return NotFound();
         }
@@ -67,10 +72,15 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                var questionModel = await _questionService.UpdateQuestion(questionId, payload);
+                var (questionModel, isApproved) = await _questionService.UpdateQuestion(questionId, payload);
                 if (questionModel != null)
                 {
-                    return Ok(questionModel);
+                    if (isApproved)
+                    {
+                        await _notificationsService.CreateNotificationsForQuestion(questionModel.Id);
+                        return Ok(questionModel);
+                    }
+                    return Ok();
                 }
                 return NotFound();
             }
@@ -146,6 +156,7 @@ namespace Pobs.Web.Controllers
                 var answerModel = await _questionService.SaveAnswer(questionId, payload, User.Identity.ParseUserId());
                 if (answerModel != null)
                 {
+                    await _notificationsService.CreateNotificationsForAnswer(answerModel.Id);
                     return Ok(answerModel);
                 }
                 return NotFound();
@@ -287,6 +298,7 @@ namespace Pobs.Web.Controllers
                 var commentModel = await _questionService.SaveComment(questionId, answerId, payload, User.Identity.ParseUserId());
                 if (commentModel != null)
                 {
+                    await _notificationsService.CreateNotificationsForComment(commentModel.Id);
                     return Ok(commentModel);
                 }
                 return NotFound();

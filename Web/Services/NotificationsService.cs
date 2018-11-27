@@ -21,6 +21,9 @@ namespace Pobs.Web.Services
         Task<WatchResponseModel> RemoveWatchFromAnswer(int loggedInUserId, int questionId, int answerId);
         Task<WatchResponseModel> AddWatchToComment(int loggedInUserId, int questionId, int answerId, long commentId);
         Task<WatchResponseModel> RemoveWatchFromComment(int loggedInUserId, int questionId, int answerId, long commentId);
+        Task CreateNotificationsForQuestion(int questionId);
+        Task CreateNotificationsForAnswer(int answerId);
+        Task CreateNotificationsForComment(long commentId);
     }
 
     public class NotificationsService : INotificationsService
@@ -225,17 +228,17 @@ namespace Pobs.Web.Services
             return new WatchResponseModel(comment, loggedInUserId);
         }
 
-        public async Task CreateNotifications(Question question)
+        public async Task CreateNotificationsForQuestion(int questionId)
         {
-            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForQuestion(@p0)", question.Id);
+            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForQuestion(@p0)", questionId);
         }
-        public async Task CreateNotifications(Answer answer)
+        public async Task CreateNotificationsForAnswer(int answerId)
         {
-            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForAnswer(@p0)", answer.Id);
+            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForAnswer(@p0)", answerId);
         }
-        public async Task CreateNotifications(Comment comment)
+        public async Task CreateNotificationsForComment(long commentId)
         {
-            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForComment(@p0)", comment.Id);
+            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForComment(@p0)", commentId);
         }
     }
 }

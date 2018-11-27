@@ -15,7 +15,7 @@ namespace Pobs.Web.Services
     {
         Task<QuestionsListModel> ListQuestions(PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null);
         Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin);
-        Task<QuestionListItemModel> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm);
+        Task<(QuestionListItemModel, bool)> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm);
         Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin);
         Task<AnswerModel> SaveAnswer(int questionId, AnswerFormModel answerForm, int postedByUserId);
         Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm, int? loggedInUserId);
@@ -84,7 +84,7 @@ namespace Pobs.Web.Services
             return new QuestionListItemModel(question);
         }
 
-        public async Task<QuestionListItemModel> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm)
+        public async Task<(QuestionListItemModel, bool)> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm)
         {
             var tagTasks = new List<Task<Tag>>();
             if (questionForm.Tags != null)
@@ -100,8 +100,10 @@ namespace Pobs.Web.Services
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             if (question == null)
             {
-                return null;
+                return (null, false);
             }
+
+            var originalStatus = question.Status;
 
             question.Text = questionForm.Text;
             question.Slug = questionForm.Text.ToSlug();
@@ -120,7 +122,7 @@ namespace Pobs.Web.Services
             }
 
             await _context.SaveChangesAsync();
-            return new QuestionListItemModel(question);
+            return (new QuestionListItemModel(question), originalStatus == PostStatus.AwaitingApproval && questionForm.IsApproved);
         }
 
         public async Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin)

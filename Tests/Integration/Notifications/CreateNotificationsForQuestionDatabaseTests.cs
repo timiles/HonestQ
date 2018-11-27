@@ -30,7 +30,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(question);
+                await notificationsService.CreateNotificationsForQuestion(question.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -52,7 +52,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(question);
+                await notificationsService.CreateNotificationsForQuestion(question.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -73,7 +73,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(question);
+                await notificationsService.CreateNotificationsForQuestion(question.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -95,7 +95,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(question);
+                await notificationsService.CreateNotificationsForQuestion(question.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())

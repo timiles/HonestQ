@@ -33,7 +33,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -54,7 +54,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -75,7 +75,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -98,7 +98,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -120,7 +120,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(childComment);
+                await notificationsService.CreateNotificationsForComment(childComment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -143,7 +143,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -165,7 +165,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -189,7 +189,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -213,7 +213,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 var notificationsService = new NotificationsService(dbContext);
-                await notificationsService.CreateNotifications(comment);
+                await notificationsService.CreateNotificationsForComment(comment.Id);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
