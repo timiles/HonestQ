@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pobs.Domain.Entities
 {
-    public class Comment
+    public class Comment : IHasWatches
     {
         public Comment()
         {
