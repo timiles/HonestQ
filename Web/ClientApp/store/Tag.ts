@@ -1,8 +1,8 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { TagProps } from '../components/Tag/Tag';
-import { TagModel } from '../server-models';
-import { getJson } from '../utils/http-utils';
+import { TagModel, WatchResponseModel } from '../server-models';
+import { fetchJson, getJson } from '../utils/http-utils';
 import { NewQuestionFormReceivedAction } from './NewQuestion';
 
 // -----------------
@@ -29,13 +29,23 @@ interface GetTagFailedAction {
     type: 'GET_TAG_FAILED';
     payload: { tagSlug: string; error: string; };
 }
+interface UpdateWatchTagSuccessAction {
+    type: 'UPDATE_WATCH_TAG_SUCCESS';
+    payload: {
+        tagSlug: string;
+        response: WatchResponseModel;
+    };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetTagRequestedAction
+type KnownAction =
+    | GetTagRequestedAction
     | GetTagSuccessAction
     | GetTagFailedAction
-    | NewQuestionFormReceivedAction;
+    | NewQuestionFormReceivedAction
+    | UpdateWatchTagSuccessAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -64,6 +74,26 @@ export const actionCreators = {
                 });
         })();
     },
+    updateWatch: (on: boolean, tagSlug: string):
+        AppThunkAction<KnownAction> =>
+        (dispatch, getState) => {
+            return (async () => {
+
+                const url = `/api/tags/${tagSlug}/watch`;
+
+                const method = on ? 'POST' : 'DELETE';
+                fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
+                    .then((watchResponse) => {
+                        dispatch({
+                            type: 'UPDATE_WATCH_TAG_SUCCESS',
+                            payload: { tagSlug, response: watchResponse },
+                        });
+                    })
+                    .catch((reason) => {
+                        // TODO: Toast?
+                    });
+            })();
+        },
 };
 
 // ----------------
@@ -111,6 +141,21 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             const questionsNext = tagModel.questions.slice();
             questionsNext.push(action.payload.questionListItem);
             const tagNext = { ...tagModel, questions: questionsNext };
+            return {
+                ...state,
+                tag: {
+                    slug: state.tag.slug,
+                    model: tagNext,
+                },
+            };
+        }
+        case 'UPDATE_WATCH_TAG_SUCCESS': {
+            const { response } = action.payload;
+            const tagNext = {
+                ...state.tag.model!,
+                watchCount: response.newCount,
+                isWatchedByLoggedInUser: response.isWatchedByLoggedInUser,
+            };
             return {
                 ...state,
                 tag: {

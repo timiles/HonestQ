@@ -4,6 +4,7 @@ import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { TagModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import ShortLink from '../shared/ShortLink';
+import WatchControl from '../shared/WatchControl';
 import QuestionList from './QuestionList';
 
 export interface TagProps {
@@ -13,7 +14,17 @@ export interface TagProps {
     model?: TagModel;
 }
 
-export default class Tag extends React.Component<TagProps, {}> {
+type Props = TagProps & {
+    onWatch: (on: boolean) => void;
+};
+
+export default class Tag extends React.Component<Props, {}> {
+
+    constructor(props: Props) {
+        super(props);
+
+        this.handleWatch = this.handleWatch.bind(this);
+    }
 
     public render() {
         const { loading, error, slug, model } = this.props;
@@ -27,16 +38,27 @@ export default class Tag extends React.Component<TagProps, {}> {
     }
 
     private renderModel(slug: string, model: TagModel) {
-        const { name, description, moreInfoUrl, questions } = model;
+        const { name, description, moreInfoUrl, questions, watchCount, isWatchedByLoggedInUser } = model;
         const tagValue = { name, slug };
         return (
             <>
-                <LoggedInUserContext.Consumer>
-                    {(user) => isUserInRole(user, 'Admin') &&
-                        <Link to={`/admin/edit/tags/${slug}`} className="float-right">Edit</Link>
-                    }
-                </LoggedInUserContext.Consumer>
-                <h1>{name}</h1>
+                <div className="card bg-light">
+                    <div className="card-body">
+                        <div className="float-right">
+                            <WatchControl
+                                onWatch={this.handleWatch}
+                                count={watchCount}
+                                isWatchedByLoggedInUser={isWatchedByLoggedInUser}
+                            />
+                            <LoggedInUserContext.Consumer>
+                                {(user) => isUserInRole(user, 'Admin') &&
+                                    <div><Link to={`/admin/edit/tags/${slug}`} className="float-right">Edit</Link></div>
+                                }
+                            </LoggedInUserContext.Consumer>
+                        </div>
+                        <h1>{name}</h1>
+                    </div>
+                </div>
                 {(description || moreInfoUrl) &&
                     <div className="bs-callout bs-callout-info">
                         {description &&
@@ -56,5 +78,9 @@ export default class Tag extends React.Component<TagProps, {}> {
                 <QuestionList questions={questions} tagValue={tagValue} />
             </>
         );
+    }
+
+    private handleWatch(on: boolean): void {
+        this.props.onWatch(on);
     }
 }

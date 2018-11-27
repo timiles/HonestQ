@@ -13,6 +13,12 @@ type ContainerProps = TagStore.ContainerState
 
 class Container extends React.Component<ContainerProps, {}> {
 
+    constructor(props: ContainerProps) {
+        super(props);
+
+        this.handleWatch = this.handleWatch.bind(this);
+    }
+
     public componentWillMount() {
         // This will also run on server side render
         this.setUp(this.props);
@@ -43,7 +49,7 @@ class Container extends React.Component<ContainerProps, {}> {
                     <div className="col-lg-6">
                         <div className="row">
                             <div className="col-md-12">
-                                <Tag {...tag} />
+                                <Tag {...tag} onWatch={this.handleWatch} />
                                 {tag.model && numberOfQuestionsInTag === 0 &&
                                     <>
                                         <h2>Start the conversation</h2>
@@ -92,6 +98,10 @@ class Container extends React.Component<ContainerProps, {}> {
         if (!props.tag || (props.tag.slug !== props.tagSlug)) {
             props.getTag(props.tagSlug);
         }
+    }
+
+    private handleWatch(on: boolean): void {
+        this.props.updateWatch(on, this.props.tagSlug);
     }
 }
 
