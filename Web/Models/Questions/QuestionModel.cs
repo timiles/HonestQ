@@ -18,6 +18,9 @@ namespace Pobs.Web.Models.Questions
             this.PostedBy = question.PostedByUser.Username;
             this.IsPostedByLoggedInUser = question.PostedByUserId == loggedInUserId;
 
+            this.WatchCount = question.Watches.Count();
+            this.IsWatchedByLoggedInUser = question.Watches.Any(x => x.UserId == loggedInUserId);
+
             this.Answers = question.Answers.Select(x => new AnswerModel(x, loggedInUserId)).ToArray();
         }
 
@@ -33,6 +36,9 @@ namespace Pobs.Web.Models.Questions
         public string PostedBy { get; set; }
 
         public bool IsPostedByLoggedInUser { get; set; }
+
+        public int WatchCount { get; set; }
+        public bool IsWatchedByLoggedInUser { get; set; }
 
         public TagValueModel[] Tags { get; set; }
 

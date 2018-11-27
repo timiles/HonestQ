@@ -128,10 +128,13 @@ namespace Pobs.Web.Services
             var question = await _context.Questions
                 .Include(x => x.PostedByUser)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
+                .Include(x => x.Watches)
                 .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Reactions)
+                .Include(x => x.Answers).ThenInclude(x => x.Watches)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
+                .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Watches)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             if (question == null || (question.Status == PostStatus.AwaitingApproval && !isAdmin))
             {

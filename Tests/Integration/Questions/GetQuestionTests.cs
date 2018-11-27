@@ -159,6 +159,51 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
+        public async Task Authenticated_ShouldGetQuestionWithWatchingCounts()
+        {
+            var watchedQuestion = _tag.Questions.Skip(1).First();
+            DataHelpers.CreateWatch(_questionUserId, watchedQuestion);
+
+            // Add 2 Comments to each Answer
+            foreach (var answer in watchedQuestion.Answers.ToArray())
+            {
+                DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
+            }
+
+            // Watch an Answer
+            var watchedAnswer = watchedQuestion.Answers.First();
+            DataHelpers.CreateWatch(_questionUserId, watchedAnswer);
+
+            // Watch a Comment
+            var watchedComment = watchedQuestion.Answers.First().Comments.First();
+            DataHelpers.CreateWatch(_questionUserId, watchedComment);
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_questionUserId);
+
+                var url = _generateUrl(watchedQuestion.Id);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
+                Assert.Equal(watchedQuestion.Slug, responseModel.Slug);
+                Assert.Equal(1, responseModel.WatchCount);
+                Assert.True(responseModel.IsWatchedByLoggedInUser);
+
+                var responseWatchedAnswer = responseModel.Answers.Single(x => x.Id == watchedAnswer.Id);
+                Assert.Equal(1, responseWatchedAnswer.WatchCount);
+                Assert.True(responseWatchedAnswer.IsWatchedByLoggedInUser);
+
+                var responseWatchedComment = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == watchedComment.Id);
+                Assert.Equal(1, responseWatchedComment.WatchCount);
+                Assert.True(responseWatchedComment.IsWatchedByLoggedInUser);
+            }
+        }
+
+        [Fact]
         public async Task AuthenticatedAsAdmin_ShouldGetIsApprovedProperty()
         {
             var question = _tag.Questions.First();

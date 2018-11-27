@@ -50,6 +50,9 @@ namespace Pobs.Web.Models.Questions
             {
                 this.MyReactions = answer.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
             }
+
+            this.WatchCount = answer.Watches.Count();
+            this.IsWatchedByLoggedInUser = answer.Watches.Any(x => x.UserId == loggedInUserId);
         }
 
         public int Id { get; set; }
@@ -72,5 +75,8 @@ namespace Pobs.Web.Models.Questions
         public CommentModel[] Comments { get; set; }
         public Dictionary<string, int> ReactionCounts { get; set; }
         public string[] MyReactions { get; set; }
+
+        public int WatchCount { get; set; }
+        public bool IsWatchedByLoggedInUser { get; set; }
     }
 }
