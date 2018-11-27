@@ -12,7 +12,7 @@ namespace Pobs.Tests.Integration.Notifications
 {
     public class PostWatchQuestionTests : IDisposable
     {
-        private readonly string _url = "/api/notifications/watch";
+        private string _buildUrl(int questionId) => $"/api/questions/{questionId}/watch";
         private readonly User _user;
         private readonly Question _question;
         private readonly Answer _answer;
@@ -27,25 +27,17 @@ namespace Pobs.Tests.Integration.Notifications
         [Fact]
         public async Task Add_ShouldAddWatch()
         {
-            var payload = new WatchFormModel
-            {
-                Method = "Add",
-                Type = WatchType.Question.ToString(),
-                Id = _question.Id,
-            };
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                var url = _buildUrl(_question.Id);
+                var response = await client.PostAsync(url, null);
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
-                Assert.Equal(WatchType.Question.ToString(), watchModel.Type);
-                Assert.Equal(_question.Id.ToString(), watchModel.Identifier);
                 Assert.Equal(1, watchModel.NewCount);
                 Assert.True(watchModel.IsWatchedByLoggedInUser);
 
@@ -57,7 +49,7 @@ namespace Pobs.Tests.Integration.Notifications
         }
 
         [Fact]
-        public async Task Add_AlreadyWatching_ShouldReturnBadRequest()
+        public async Task Add_AlreadyWatching_ShouldReturnConflict()
         {
             using (var dbContext = TestSetup.CreateDbContext())
             {
@@ -65,20 +57,14 @@ namespace Pobs.Tests.Integration.Notifications
                 dbContext.SaveChanges();
             }
 
-            var payload = new WatchFormModel
-            {
-                Method = "Add",
-                Type = WatchType.Question.ToString(),
-                Id = _question.Id,
-            };
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+                var url = _buildUrl(_question.Id);
+                var response = await client.PostAsync(url, null);
+                Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal("Watch already exists.", responseContent);
@@ -99,25 +85,17 @@ namespace Pobs.Tests.Integration.Notifications
                 dbContext.SaveChanges();
             }
 
-            var payload = new WatchFormModel
-            {
-                Method = "Remove",
-                Type = WatchType.Question.ToString(),
-                Id = _question.Id,
-            };
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                var url = _buildUrl(_question.Id);
+                var response = await client.DeleteAsync(url);
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
-                Assert.Equal(WatchType.Question.ToString(), watchModel.Type);
-                Assert.Equal(_question.Id.ToString(), watchModel.Identifier);
                 Assert.Equal(0, watchModel.NewCount);
                 Assert.False(watchModel.IsWatchedByLoggedInUser);
 
@@ -131,19 +109,13 @@ namespace Pobs.Tests.Integration.Notifications
         [Fact]
         public async Task Remove_NotWatching_ShouldReturnBadRequest()
         {
-            var payload = new WatchFormModel
-            {
-                Method = "Remove",
-                Type = WatchType.Question.ToString(),
-                Id = _question.Id,
-            };
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                var url = _buildUrl(_question.Id);
+                var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
@@ -157,82 +129,54 @@ namespace Pobs.Tests.Integration.Notifications
         }
 
         [Fact]
-        public async Task NotAuthenticated_ShouldBeDenied()
+        public async Task Add_NotAuthenticated_ShouldBeDenied()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var response = await client.PostAsync(_url, null);
+                var url = _buildUrl(_question.Id);
+                var response = await client.PostAsync(url, null);
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task Remove_NotAuthenticated_ShouldBeDenied()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var url = _buildUrl(_question.Id);
+                var response = await client.DeleteAsync(url);
+                Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+            }
+        }
+
+        [Fact]
+        public async Task Add_UnknownQuestionId_ShouldReturnNotFound()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _buildUrl(0);
+                var response = await client.PostAsync(url, null);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 
         [Fact]
         public async Task Add_UnknownQuestionId_ShouldReturnBadRequest()
         {
-            var payload = new WatchFormModel
-            {
-                Method = "Add",
-                Type = WatchType.Question.ToString(),
-                Id = 0,
-            };
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Watchable entity not found.", responseContent);
-            }
-        }
-
-        [Fact]
-        public async Task InvalidMethod_ShouldGetBadRequest()
-        {
-            var payload = new WatchFormModel
-            {
-                Method = "Blah",
-                Type = WatchType.Question.ToString(),
-                Id = _question.Id,
-            };
-
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"Invalid Method: {payload.Method}.", responseContent);
-            }
-        }
-
-        [Fact]
-        public async Task InvalidType_ShouldGetBadRequest()
-        {
-            var payload = new WatchFormModel
-            {
-                Method = "Add",
-                Type = "Foo",
-                Id = _question.Id,
-            };
-
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var response = await client.PostAsync(_url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"Invalid Type: {payload.Type}.", responseContent);
+                var url = _buildUrl(0);
+                var response = await client.DeleteAsync(url);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 

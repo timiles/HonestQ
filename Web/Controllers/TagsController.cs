@@ -12,10 +12,12 @@ namespace Pobs.Web.Controllers
     public class TagsController : Controller
     {
         private readonly ITagService _tagService;
+        private readonly INotificationsService _notificationsService;
 
-        public TagsController(ITagService tagService)
+        public TagsController(ITagService tagService, INotificationsService notificationsService)
         {
             _tagService = tagService;
+            _notificationsService = notificationsService;
         }
 
         [HttpGet]
@@ -93,6 +95,46 @@ namespace Pobs.Web.Controllers
                 return Ok(tagModel);
             }
             return NotFound();
+        }
+
+        [Authorize, HttpPost, Route("{tagSlug}/watch")]
+        public async Task<IActionResult> AddWatch(string tagSlug)
+        {
+            try
+            {
+                var response = await _notificationsService.AddWatchToTag(User.Identity.ParseUserId(), tagSlug);
+                if (response == null)
+                {
+                    return NotFound();
+                }
+                return Ok(response);
+            }
+            catch (AppException e)
+            {
+                if (e.Message == "Watch already exists.")
+                {
+                    return Conflict(e.Message);
+                }
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Authorize, HttpDelete, Route("{tagSlug}/watch")]
+        public async Task<IActionResult> RemoveWatch(string tagSlug)
+        {
+            try
+            {
+                var response = await _notificationsService.RemoveWatchFromTag(User.Identity.ParseUserId(), tagSlug);
+                if (response == null)
+                {
+                    return NotFound();
+                }
+                return Ok(response);
+            }
+            catch (AppException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
