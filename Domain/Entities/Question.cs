@@ -8,7 +8,7 @@ using Pobs.Domain.Utils;
 
 namespace Pobs.Domain.Entities
 {
-    public class Question
+    public class Question : IHasWatches
     {
         public Question()
         {

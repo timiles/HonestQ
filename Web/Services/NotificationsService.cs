@@ -132,5 +132,9 @@ namespace Pobs.Web.Services
         {
             await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForQuestion(@p0)", question.Id);
         }
+        public async Task CreateNotifications(Answer answer)
+        {
+            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForAnswer(@p0)", answer.Id);
+        }
     }
 }
