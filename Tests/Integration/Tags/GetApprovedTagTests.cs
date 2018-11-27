@@ -25,6 +25,7 @@ namespace Pobs.Tests.Integration.Tags
             _unapprovedQuestion = DataHelpers.CreateQuestions(_user, questionStatus: PostStatus.AwaitingApproval).Single();
             questions.Add(_unapprovedQuestion);
             _tag = DataHelpers.CreateTag(_user, isApproved: true, questions: questions.ToArray());
+            DataHelpers.CreateWatch(_user.Id, _tag);
         }
 
         [Fact]
@@ -43,6 +44,8 @@ namespace Pobs.Tests.Integration.Tags
                 Assert.Equal(_tag.Name, responseModel.Name);
                 Assert.Equal(_tag.Description, responseModel.Description);
                 Assert.Equal(_tag.MoreInfoUrl, responseModel.MoreInfoUrl);
+                Assert.Equal(1, responseModel.WatchCount);
+                Assert.False(responseModel.IsWatchedByLoggedInUser);
 
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
                 Assert.Null(dynamicResponseModel.isApproved);
@@ -63,6 +66,26 @@ namespace Pobs.Tests.Integration.Tags
                     Assert.Equal(_tag.Id, question.Tags.Single().Id);
                     Assert.Equal(_tag.Name, question.Tags.Single().Name);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task Authenticated_ShouldGetIsWatchedByLoggedInUser()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateTagUrl(_tag.Slug);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TagModel>(responseContent);
+                Assert.Equal(_tag.Slug, responseModel.Slug);
+                Assert.Equal(1, responseModel.WatchCount);
+                Assert.True(responseModel.IsWatchedByLoggedInUser);
             }
         }
 

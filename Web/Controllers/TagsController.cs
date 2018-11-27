@@ -85,7 +85,9 @@ namespace Pobs.Web.Controllers
         [Route("{tagSlug}")]
         public async Task<IActionResult> Get(string tagSlug)
         {
-            var tagModel = await _tagService.GetTag(tagSlug, User.IsInRole(Role.Admin));
+            var tagModel = await _tagService.GetTag(tagSlug,
+                User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?,
+                User.IsInRole(Role.Admin));
             if (tagModel != null)
             {
                 return Ok(tagModel);

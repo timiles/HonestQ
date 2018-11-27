@@ -15,7 +15,7 @@ namespace Pobs.Web.Services
         Task<TagsListModel> GetAllTags(bool isApproved);
         Task SaveTag(string name, string description, string moreInfoUrl, int postedByUserId);
         Task<AdminTagModel> UpdateTag(string tagSlug, string newSlug, string name, string description, string moreInfoUrl, bool isApproved);
-        Task<TagModel> GetTag(string tagSlug, bool isAdmin);
+        Task<TagModel> GetTag(string tagSlug, int? loggedInUserId, bool isAdmin);
         Task<TagAutocompleteResultsModel> Query(string q);
     }
 
@@ -88,22 +88,23 @@ namespace Pobs.Web.Services
             tag.MoreInfoUrl = moreInfoUrl;
             tag.IsApproved = isApproved;
             await _context.SaveChangesAsync();
-            return new AdminTagModel(tag);
+            return new AdminTagModel(tag, null);
         }
 
-        public async Task<TagModel> GetTag(string tagSlug, bool isAdmin)
+        public async Task<TagModel> GetTag(string tagSlug, int? loggedInUserId, bool isAdmin)
         {
             var tag = await _context.Tags
-                    // TODO: This could be more efficient if we aggregated Answer counts in SQL
-                    .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.Answers)
-                    .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTags)
-                    .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTags).ThenInclude(x => x.Tag)
+                .Include(x => x.Watches)
+                // TODO: This could be more efficient if we aggregated Answer counts in SQL
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.Answers)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTags)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .FirstOrDefaultAsync(x => x.Slug == tagSlug);
             if (tag == null || (!tag.IsApproved && !isAdmin))
             {
                 return null;
             }
-            var model = (isAdmin) ? new AdminTagModel(tag) : new TagModel(tag);
+            var model = (isAdmin) ? new AdminTagModel(tag, loggedInUserId) : new TagModel(tag, loggedInUserId);
             return model;
         }
 

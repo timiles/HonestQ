@@ -9,13 +9,16 @@ namespace Pobs.Web.Models.Tags
     public class TagModel
     {
         public TagModel() { }
-        public TagModel(Tag tag)
+        public TagModel(Tag tag, int? loggedInUserId)
         {
             this.Slug = tag.Slug;
             this.Name = tag.Name;
             this.Description = tag.Description;
             this.MoreInfoUrl = tag.MoreInfoUrl;
             this.Questions = tag.Questions.Where(x => x.Status == PostStatus.OK).Select(x => new QuestionListItemModel(x)).ToArray();
+
+            this.WatchCount = tag.Watches.Count();
+            this.IsWatchedByLoggedInUser = tag.Watches.Any(x => x.UserId == loggedInUserId);
         }
 
         [Required]
@@ -27,6 +30,10 @@ namespace Pobs.Web.Models.Tags
         public string Description { get; set; }
 
         public string MoreInfoUrl { get; set; }
+
+        public int WatchCount { get; set; }
+
+        public bool IsWatchedByLoggedInUser { get; set; }
 
         public QuestionListItemModel[] Questions { get; set; }
     }
