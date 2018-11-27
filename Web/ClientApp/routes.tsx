@@ -11,6 +11,7 @@ import EditTag from './components/Admin/EditTag';
 import { Layout } from './components/Layout';
 import NewTag from './components/Tag/NewTag';
 import Home from './screens/Home';
+import NotificationsList from './screens/Notifications';
 import QuestionsList from './screens/Questions';
 import Question from './screens/Questions/Item';
 import Tag from './screens/Tags/Item';
@@ -23,6 +24,7 @@ export const routes = (
             <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
             <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
             <Route exact={true} path="/admin/edit/tags/:tagSlug" component={EditTag} />
+            <Route exact={true} path="/notifications" component={NotificationsList} />
             <Route exact={true} path="/questions" component={QuestionsList} />
             <Route path="/login" component={LogIn} />
             <Route path="/account/verifyemail" component={VerifyEmail} />

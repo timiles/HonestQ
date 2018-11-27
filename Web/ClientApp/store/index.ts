@@ -7,6 +7,7 @@ import * as NewAnswer from './NewAnswer';
 import * as NewComment from './NewComment';
 import * as NewQuestion from './NewQuestion';
 import * as NewTag from './NewTag';
+import * as Notifications from './Notifications';
 import * as Question from './Question';
 import * as Questions from './Questions';
 import * as SignUp from './SignUp';
@@ -26,6 +27,7 @@ export interface ApplicationState {
     newComment: NewComment.NewCommentState;
     newQuestion: NewQuestion.NewQuestionState;
     newTag: NewTag.NewTagState;
+    notifications: Notifications.ListState;
     question: Question.ContainerState;
     questions: Questions.ListState;
     signUp: SignUp.SignUpState;
@@ -48,6 +50,7 @@ export const reducers = {
     newComment: NewComment.reducer,
     newQuestion: NewQuestion.reducer,
     newTag: NewTag.reducer,
+    notifications: Notifications.reducer,
     question: Question.reducer,
     questions: Questions.reducer,
     signUp: SignUp.reducer,
