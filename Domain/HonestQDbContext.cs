@@ -18,6 +18,8 @@ namespace Pobs.Domain
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Watch> Watches { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -32,6 +34,10 @@ namespace Pobs.Domain
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             modelBuilder.Entity<Reaction>().HasIndex(x => new { x.AnswerId, x.PostedByUserId, x.Type }).IsUnique();
             modelBuilder.Entity<Reaction>().HasIndex(x => new { x.CommentId, x.PostedByUserId, x.Type }).IsUnique();
+            modelBuilder.Entity<Watch>().HasIndex(x => new { x.UserId, x.TagId }).IsUnique();
+            modelBuilder.Entity<Watch>().HasIndex(x => new { x.UserId, x.QuestionId }).IsUnique();
+            modelBuilder.Entity<Watch>().HasIndex(x => new { x.UserId, x.AnswerId }).IsUnique();
+            modelBuilder.Entity<Watch>().HasIndex(x => new { x.UserId, x.CommentId }).IsUnique();
             // NOTE: Question Slug could also be unique by TagId, but don't worry for now, we need far more clever de-duplication anyway
 
             // Emoji-enabled columns. TODO: can this be done by an Attribute? Also probably needs Database and Tables altered before Columns...
@@ -67,6 +73,8 @@ namespace Pobs.Domain
             modelBuilder.Entity<Comment>().HasOne(x => x.Answer).WithMany(x => x.Comments)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
             modelBuilder.Entity<Comment>().HasOne(x => x.ParentComment).WithMany(x => x.ChildComments)
+                .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+            modelBuilder.Entity<Watch>().HasOne(x => x.User).WithMany(x => x.Watches)
                 .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
 
             // Many-to-many relationships

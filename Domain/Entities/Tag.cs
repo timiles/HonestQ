@@ -11,6 +11,7 @@ namespace Pobs.Domain.Entities
     {
         public Tag()
         {
+            this.Watches = new Collection<Watch>();
             this.Questions = new JoinCollectionFacade<Question, Tag, QuestionTag>(this, this.QuestionTags);
         }
         public Tag(string slug, string name, User postedByUser, DateTime postedAt) : this()
@@ -43,6 +44,7 @@ namespace Pobs.Domain.Entities
 
         public bool IsApproved { get; set; }
 
+        public virtual ICollection<Watch> Watches { get; set; }
 
         public ICollection<QuestionTag> QuestionTags { get; } = new List<QuestionTag>();
 

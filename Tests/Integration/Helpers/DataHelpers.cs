@@ -254,6 +254,19 @@ namespace Pobs.Tests.Integration.Helpers
             return false;
         }
 
+        public static void DeleteWatches(int userId)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var watches = dbContext.Watches.Where(x => x.User.Id == userId);
+                foreach (var watch in watches.ToArray())
+                {
+                    dbContext.Watches.Remove(watch);
+                }
+                dbContext.SaveChanges();
+            }
+        }
+
         public static void DeleteNotifications(int notificationOwnerUserId)
         {
             using (var dbContext = TestSetup.CreateDbContext())
