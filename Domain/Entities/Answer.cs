@@ -44,6 +44,7 @@ namespace Pobs.Domain.Entities
         public virtual Question Question { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Reaction> Reactions { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Watch> Watches { get; set; }
     }
 }

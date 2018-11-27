@@ -45,6 +45,7 @@ namespace Pobs.Domain.Entities
 
 
         public virtual ICollection<Answer> Answers { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Watch> Watches { get; set; }
 
         public ICollection<QuestionTag> QuestionTags { get; } = new List<QuestionTag>();

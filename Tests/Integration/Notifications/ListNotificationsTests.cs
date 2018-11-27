@@ -254,10 +254,7 @@ namespace Pobs.Tests.Integration.Notifications
 
         public void Dispose()
         {
-            DataHelpers.DeleteNotifications(_notificationOwnerUserId);
             DataHelpers.DeleteUser(_notificationOwnerUserId);
-
-            DataHelpers.DeleteAllComments(_question.Id);
             DataHelpers.DeleteUser(_postingUser.Id);
         }
     }

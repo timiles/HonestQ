@@ -223,8 +223,6 @@ namespace Pobs.Tests.Integration.Notifications
 
         public void Dispose()
         {
-            DataHelpers.DeleteWatches(_user.Id);
-            DataHelpers.DeleteAllComments(_question.Id);
             DataHelpers.DeleteUser(_user.Id);
         }
     }

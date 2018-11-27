@@ -191,10 +191,6 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            foreach (var question in _tag.Questions)
-            {
-                DataHelpers.DeleteAllComments(question.Id);
-            }
             DataHelpers.DeleteUser(_answerUserId);
             DataHelpers.DeleteUser(_questionUserId);
         }

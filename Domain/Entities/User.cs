@@ -35,8 +35,5 @@ namespace Pobs.Domain.Entities
         public string EmailVerificationToken { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; }
-
-        // This is only here to enable restricting cascade deletes from Watch to User
-        public virtual ICollection<Watch> Watches { get; set; }
     }
 }

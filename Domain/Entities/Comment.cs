@@ -52,6 +52,7 @@ namespace Pobs.Domain.Entities
         public virtual Comment ParentComment { get; set; }
         public virtual ICollection<Comment> ChildComments { get; set; }
         public virtual ICollection<Reaction> Reactions { get; set; }
+        public virtual ICollection<Notification> Notifications { get; set; }
         public virtual ICollection<Watch> Watches { get; set; }
     }
 }

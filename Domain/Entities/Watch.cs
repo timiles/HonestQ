@@ -16,9 +16,16 @@ namespace Pobs.Domain.Entities
         public virtual User User { get; set; }
         public int UserId { get; set; }
 
+        public virtual Tag Tag { get; set; }
         public int? TagId { get; set; }
+
+        public virtual Question Question { get; set; }
         public int? QuestionId { get; set; }
+
+        public virtual Answer Answer { get; set; }
         public int? AnswerId { get; set; }
+
+        public virtual Comment Comment { get; set; }
         public long? CommentId { get; set; }
     }
 }

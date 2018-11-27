@@ -199,46 +199,6 @@ namespace Pobs.Tests.Integration.Helpers
             return notifications;
         }
 
-        /// <summary>Delete comments before cascading other deletes so as to not upset foreign key constraints.</summary>
-        public static void DeleteAllComments(int questionId)
-        {
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                var question = dbContext.Questions
-                    .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
-                    .Include(x => x.Answers).ThenInclude(x => x.Reactions)
-                    .First(x => x.Id == questionId);
-
-                // Delete child comments first
-                foreach (var answer in question.Answers)
-                {
-                    foreach (var comment in answer.Comments.Where(x => x.ParentComment != null))
-                    {
-                        foreach (var reaction in comment.Reactions.ToArray())
-                        {
-                            dbContext.Remove(reaction);
-                        }
-                        comment.ParentComment.ChildComments.Remove(comment);
-                    }
-                }
-                dbContext.SaveChanges();
-
-                // Delete rest of the Comments
-                foreach (var answer in question.Answers)
-                {
-                    foreach (var comment in answer.Comments.ToArray())
-                    {
-                        dbContext.Remove(comment);
-                    }
-                    foreach (var reaction in answer.Reactions.ToArray())
-                    {
-                        dbContext.Remove(reaction);
-                    }
-                }
-                dbContext.SaveChanges();
-            }
-        }
-
         public static bool DeleteUser(int id)
         {
             using (var dbContext = TestSetup.CreateDbContext())
@@ -252,32 +212,6 @@ namespace Pobs.Tests.Integration.Helpers
                 }
             }
             return false;
-        }
-
-        public static void DeleteWatches(int userId)
-        {
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                var watches = dbContext.Watches.Where(x => x.User.Id == userId);
-                foreach (var watch in watches.ToArray())
-                {
-                    dbContext.Watches.Remove(watch);
-                }
-                dbContext.SaveChanges();
-            }
-        }
-
-        public static void DeleteNotifications(int notificationOwnerUserId)
-        {
-            using (var dbContext = TestSetup.CreateDbContext())
-            {
-                var notifications = dbContext.Notifications.Where(x => x.OwnerUser.Id == notificationOwnerUserId);
-                foreach (var notification in notifications.ToArray())
-                {
-                    dbContext.Notifications.Remove(notification);
-                }
-                dbContext.SaveChanges();
-            }
         }
     }
 }

@@ -56,7 +56,6 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            DataHelpers.DeleteAllComments(_question.Id);
             DataHelpers.DeleteUser(_user.Id);
         }
     }
