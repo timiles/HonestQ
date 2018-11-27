@@ -40,13 +40,13 @@ namespace Pobs.Web.Controllers
                 {
                     case "Add":
                         {
-                            await _notificationsService.AddWatch(User.Identity.ParseUserId(), type, model.Id);
-                            return Ok();
+                            var response = await _notificationsService.AddWatch(User.Identity.ParseUserId(), type, model.Id);
+                            return Ok(response);
                         }
                     case "Remove":
                         {
-                            await _notificationsService.RemoveWatch(User.Identity.ParseUserId(), type, model.Id);
-                            return Ok();
+                            var response = await _notificationsService.RemoveWatch(User.Identity.ParseUserId(), type, model.Id);
+                            return Ok(response);
                         }
                     default:
                         return BadRequest($"Invalid Method: {model.Method}.");

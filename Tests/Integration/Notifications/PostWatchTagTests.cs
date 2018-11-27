@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Notifications;
@@ -38,6 +39,13 @@ namespace Pobs.Tests.Integration.Notifications
 
                 var response = await client.PostAsync(_url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
+                Assert.Equal(WatchType.Tag.ToString(), watchModel.Type);
+                Assert.Equal(_tag.Slug, watchModel.Identifier);
+                Assert.Equal(1, watchModel.NewCount);
+                Assert.True(watchModel.IsWatchedByLoggedInUser);
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
@@ -103,6 +111,13 @@ namespace Pobs.Tests.Integration.Notifications
 
                 var response = await client.PostAsync(_url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
+                Assert.Equal(WatchType.Tag.ToString(), watchModel.Type);
+                Assert.Equal(_tag.Slug, watchModel.Identifier);
+                Assert.Equal(0, watchModel.NewCount);
+                Assert.False(watchModel.IsWatchedByLoggedInUser);
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {

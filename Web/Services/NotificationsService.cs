@@ -13,8 +13,8 @@ namespace Pobs.Web.Services
     public interface INotificationsService
     {
         Task<NotificationsListModel> ListNotifications(int loggedInUserId, int pageSize, long? beforeNotificationId);
-        Task AddWatch(int loggedInUserId, WatchType type, long id);
-        Task RemoveWatch(int loggedInUserId, WatchType type, long id);
+        Task<WatchResponseModel> AddWatch(int loggedInUserId, WatchType type, long id);
+        Task<WatchResponseModel> RemoveWatch(int loggedInUserId, WatchType type, long id);
     }
 
     public class NotificationsService : INotificationsService
@@ -43,38 +43,56 @@ namespace Pobs.Web.Services
             return new NotificationsListModel(notifications.ToArray());
         }
 
-        public async Task AddWatch(int loggedInUserId, WatchType type, long id)
+        private async Task<IHasWatches> GetWatchable(WatchType type, long id)
         {
-            var watch = new Watch(loggedInUserId);
             switch (type)
             {
                 case WatchType.Answer:
-                    {
-                        watch.AnswerId = (int)id;
-                        break;
-                    }
+                    return await _context.Questions.SelectMany(x => x.Answers)
+                        .Include(x => x.Question)
+                        .Include(x => x.Watches)
+                        .FirstOrDefaultAsync(x => x.Id == (int)id);
                 case WatchType.Comment:
-                    {
-                        watch.CommentId = id;
-                        break;
-                    }
+                    return await _context.Questions.SelectMany(x => x.Answers).SelectMany(x => x.Comments)
+                        .Include(x => x.Answer).ThenInclude(x => x.Question)
+                        .Include(x => x.Watches)
+                        .FirstOrDefaultAsync(x => x.Id == id);
                 case WatchType.Question:
-                    {
-                        watch.QuestionId = (int)id;
-                        break;
-                    }
+                    return await _context.Questions.Include(x => x.Watches).FirstOrDefaultAsync(x => x.Id == (int)id);
                 case WatchType.Tag:
-                    {
-                        watch.TagId = (int)id;
-                        break;
-                    }
+                    return await _context.Tags.Include(x => x.Watches).FirstOrDefaultAsync(x => x.Id == (int)id);
                 default: throw new ArgumentOutOfRangeException($"Unknown WatchType: {type}.");
             }
+        }
 
-            _context.Watches.Add(watch);
+        private static WatchResponseModel BuildWatchResponseModel(WatchType type, IHasWatches watchable, int loggedInUserId)
+        {
+            switch (type)
+            {
+                case WatchType.Answer:
+                    return new WatchResponseModel((Answer)watchable, loggedInUserId);
+                case WatchType.Comment:
+                    return new WatchResponseModel((Comment)watchable, loggedInUserId);
+                case WatchType.Question:
+                    return new WatchResponseModel((Question)watchable, loggedInUserId);
+                case WatchType.Tag:
+                    return new WatchResponseModel((Tag)watchable, loggedInUserId);
+                default: throw new ArgumentOutOfRangeException($"Unknown WatchType: {type}.");
+            }
+        }
+
+        public async Task<WatchResponseModel> AddWatch(int loggedInUserId, WatchType type, long id)
+        {
+            var watchable = await GetWatchable(type, id);
+            if (watchable == null)
+            {
+                throw new AppException("Watchable entity not found.");
+            }
+            watchable.Watches.Add(new Watch(loggedInUserId));
             try
             {
                 await _context.SaveChangesAsync();
+                return BuildWatchResponseModel(type, watchable, loggedInUserId);
             }
             catch (DbUpdateException e)
             {
@@ -90,35 +108,14 @@ namespace Pobs.Web.Services
             }
         }
 
-        public async Task RemoveWatch(int loggedInUserId, WatchType type, long id)
+        public async Task<WatchResponseModel> RemoveWatch(int loggedInUserId, WatchType type, long id)
         {
-            Watch watch;
-
-            switch (type)
+            var watchable = await GetWatchable(type, id);
+            if (watchable == null)
             {
-                case WatchType.Answer:
-                    {
-                        watch = await _context.Watches.FirstOrDefaultAsync(x => x.UserId == loggedInUserId && x.AnswerId == id);
-                        break;
-                    }
-                case WatchType.Comment:
-                    {
-                        watch = await _context.Watches.FirstOrDefaultAsync(x => x.UserId == loggedInUserId && x.CommentId == id);
-                        break;
-                    }
-                case WatchType.Question:
-                    {
-                        watch = await _context.Watches.FirstOrDefaultAsync(x => x.UserId == loggedInUserId && x.QuestionId == id);
-                        break;
-                    }
-                case WatchType.Tag:
-                    {
-                        watch = await _context.Watches.FirstOrDefaultAsync(x => x.UserId == loggedInUserId && x.TagId == id);
-                        break;
-                    }
-                default: throw new ArgumentOutOfRangeException($"Unknown WatchType: {type}.");
+                throw new AppException("Watchable entity not found.");
             }
-
+            var watch = watchable.Watches.FirstOrDefault(x => x.UserId == loggedInUserId);
             if (watch == null)
             {
                 throw new AppException("Watch does not exist.");
@@ -126,6 +123,7 @@ namespace Pobs.Web.Services
 
             _context.Watches.Remove(watch);
             await _context.SaveChangesAsync();
+            return BuildWatchResponseModel(type, watchable, loggedInUserId);
         }
 
         public async Task CreateNotifications(Question question)
