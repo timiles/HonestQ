@@ -3,10 +3,11 @@ using Xunit;
 
 namespace Pobs.Tests.Integration.Health
 {
-    public class GetTests
+    public class GetHealthTests
     {
         private const string Url = "/api/health";
 
+        // This is also a good test to run to migrate the tests database
         [Fact]
         public async Task ShouldBeOK()
         {
