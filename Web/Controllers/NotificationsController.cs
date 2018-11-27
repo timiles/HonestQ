@@ -22,5 +22,12 @@ namespace Pobs.Web.Controllers
             var notificationsList = await _notificationsService.ListNotifications(User.Identity.ParseUserId(), pageSize, beforeId);
             return Ok(notificationsList);
         }
+
+        [HttpGet, Route("count")]
+        public async Task<IActionResult> Count()
+        {
+            var notificationsCount = await _notificationsService.CountNotifications(User.Identity.ParseUserId());
+            return Ok(notificationsCount);
+        }
     }
 }

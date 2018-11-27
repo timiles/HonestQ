@@ -13,6 +13,7 @@ namespace Pobs.Web.Services
     public interface INotificationsService
     {
         Task<NotificationsListModel> ListNotifications(int loggedInUserId, int pageSize, long? beforeNotificationId);
+        Task<NotificationsCountModel> CountNotifications(int loggedInUserId);
         Task<WatchResponseModel> AddWatchToTag(int loggedInUserId, string tagSlug);
         Task<WatchResponseModel> RemoveWatchFromTag(int loggedInUserId, string tagSlug);
         Task<WatchResponseModel> AddWatchToQuestion(int loggedInUserId, int questionId);
@@ -50,6 +51,13 @@ namespace Pobs.Web.Services
                 .ToListAsync();
 
             return new NotificationsListModel(notifications.ToArray());
+        }
+
+        public async Task<NotificationsCountModel> CountNotifications(int loggedInUserId)
+        {
+            var count = await _context.Notifications
+                .CountAsync(x => x.OwnerUser.Id == loggedInUserId && x.Seen == false);
+            return new NotificationsCountModel(count);
         }
 
         public async Task<WatchResponseModel> AddWatchToTag(int loggedInUserId, string tagSlug)

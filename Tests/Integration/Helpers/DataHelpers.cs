@@ -167,7 +167,7 @@ namespace Pobs.Tests.Integration.Helpers
             }
         }
 
-        public static IEnumerable<Notification> CreateNotifications(User notificationOwnerUser, User postingUser,
+        public static IEnumerable<Notification> CreateNotifications(User notificationOwnerUser,
             Question question, Answer answer, Comment comment, Comment childComment)
         {
             var notifications = new[]

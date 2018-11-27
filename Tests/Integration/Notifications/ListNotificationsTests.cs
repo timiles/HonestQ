@@ -41,7 +41,7 @@ namespace Pobs.Tests.Integration.Notifications
 
             _tag = DataHelpers.CreateTag(_postingUser, questions: _question);
             _notifications = DataHelpers.CreateNotifications(notificationOwnerUser,
-                _postingUser, _question, _answer, _comment, _childComment);
+                _question, _answer, _comment, _childComment);
         }
 
         [Fact]
