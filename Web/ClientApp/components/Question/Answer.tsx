@@ -7,6 +7,7 @@ import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
+import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
 import NewComment from './NewComment';
 import ReactionsControl from './ReactionsControl';
@@ -15,6 +16,7 @@ type Props = AnswerModel
     & {
     questionId: number,
     onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+    onWatch: (on: boolean, answerId: number, commentId?: number) => void,
 };
 
 export default class Answer extends React.Component<Props, {}> {
@@ -23,10 +25,12 @@ export default class Answer extends React.Component<Props, {}> {
         super(props);
 
         this.handleReaction = this.handleReaction.bind(this);
+        this.handleWatch = this.handleWatch.bind(this);
     }
 
     public render() {
         const { questionId, id, text, source, postedBy, postedAt, comments, reactionCounts, myReactions } = this.props;
+        const { watchCount, isWatchedByLoggedInUser } = this.props;
 
         return (
             <div>
@@ -54,6 +58,11 @@ export default class Answer extends React.Component<Props, {}> {
                     </blockquote>
                     <div>
                         <div className="float-right">
+                            <WatchControl
+                                onWatch={this.handleWatch}
+                                count={watchCount}
+                                isWatchedByLoggedInUser={isWatchedByLoggedInUser}
+                            />
                             <ReactionsControl
                                 answerId={id}
                                 reactionCounts={reactionCounts}
@@ -80,7 +89,9 @@ export default class Answer extends React.Component<Props, {}> {
                                 questionId={questionId}
                                 answerId={id}
                                 onReaction={this.handleReaction}
-                            /></li>)}
+                                onWatch={this.handleWatch}
+                            />
+                        </li>)}
                 </ol>
             </div>
         );
@@ -88,5 +99,9 @@ export default class Answer extends React.Component<Props, {}> {
 
     private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
         this.props.onReaction(reactionType, on, answerId, commentId);
+    }
+
+    private handleWatch(on: boolean, identifier?: number): void {
+        this.props.onWatch(on, this.props.id, identifier);
     }
 }

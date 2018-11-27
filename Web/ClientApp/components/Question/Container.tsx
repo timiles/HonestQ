@@ -23,6 +23,7 @@ class Container extends React.Component<ContainerProps> {
         super(props);
 
         this.handleReaction = this.handleReaction.bind(this);
+        this.handleWatch = this.handleWatch.bind(this);
     }
 
     public componentWillMount() {
@@ -79,7 +80,11 @@ class Container extends React.Component<ContainerProps> {
                                                 classNames="slide"
                                             >
                                                 <div className="col-md-12 slide slide-left">
-                                                    <Question {...question} onReaction={this.handleReaction} />
+                                                    <Question
+                                                        {...question}
+                                                        onReaction={this.handleReaction}
+                                                        onWatch={this.handleWatch}
+                                                    />
                                                 </div>
                                             </CSSTransition>
                                         }
@@ -97,6 +102,7 @@ class Container extends React.Component<ContainerProps> {
                                                         {...answer}
                                                         questionId={question.questionId!}
                                                         onReaction={this.handleReaction}
+                                                        onWatch={this.handleWatch}
                                                     />
                                                 </div>
                                             </CSSTransition>
@@ -178,6 +184,10 @@ class Container extends React.Component<ContainerProps> {
         } else {
             this.props.removeReaction(reactionType, questionId, answerId, commentId);
         }
+    }
+
+    private handleWatch(on: boolean, answerId?: number, commentId?: number): void {
+        this.props.updateWatch(on, this.props.questionId, answerId, commentId);
     }
 }
 

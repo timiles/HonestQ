@@ -5,6 +5,7 @@ import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
+import WatchControl from '../shared/WatchControl';
 import NewComment from './NewComment';
 import ReactionsControl from './ReactionsControl';
 
@@ -13,13 +14,21 @@ type Props = CommentModel
     questionId: number,
     answerId: number,
     onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+    onWatch: (on: boolean, commentId: number) => void,
 };
 
 export default class Comment extends React.Component<Props, {}> {
 
+    constructor(props: Props) {
+        super(props);
+
+        this.handleWatch = this.handleWatch.bind(this);
+    }
+
     public render(): any {
         const { questionId, answerId } = this.props;
         const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
+        const { watchCount, isWatchedByLoggedInUser } = this.props;
         const { postedAt, postedBy } = this.props;
         const extractedUrl = (source ? extractUrlFromText(source) : null) || (text ? extractUrlFromText(text) : null);
         const emojiValue = EmojiValue[agreementRating as keyof typeof EmojiValue];
@@ -41,6 +50,12 @@ export default class Comment extends React.Component<Props, {}> {
                             {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
                         </blockquote>
                         <div className="float-right">
+                            <WatchControl
+                                identifier={id}
+                                onWatch={this.handleWatch}
+                                count={watchCount}
+                                isWatchedByLoggedInUser={isWatchedByLoggedInUser}
+                            />
                             <ReactionsControl
                                 answerId={answerId}
                                 commentId={id}
@@ -66,10 +81,15 @@ export default class Comment extends React.Component<Props, {}> {
                                     questionId={questionId}
                                     answerId={answerId}
                                     onReaction={this.props.onReaction}
+                                    onWatch={this.props.onWatch}
                                 />
                             </li>)}
                     </ol>}
             </>
         );
+    }
+
+    private handleWatch(on: boolean, identifier: number): void {
+        this.props.onWatch(on, identifier);
     }
 }

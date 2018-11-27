@@ -2,8 +2,8 @@
 import { AppThunkAction } from '.';
 import { QuestionProps } from '../components/Question/Question';
 import { CommentModel, QuestionModel } from '../server-models';
-import { deleteJson, getJson, postJson } from '../utils/http-utils';
-import { ReactionModel } from './../server-models';
+import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
+import { ReactionModel, WatchResponseModel } from './../server-models';
 import { NewAnswerFormReceivedAction } from './NewAnswer';
 import { NewCommentFormReceivedAction } from './NewComment';
 
@@ -39,6 +39,14 @@ interface RemoveReactionSuccessAction {
     type: 'REMOVE_REACTION_SUCCESS';
     payload: { reaction: ReactionModel; };
 }
+interface UpdateWatchSuccessAction {
+    type: 'UPDATE_WATCH_SUCCESS';
+    payload: {
+        answerId?: number;
+        commentId?: number;
+        response: WatchResponseModel;
+    };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -50,6 +58,7 @@ type KnownAction =
     | NewCommentFormReceivedAction
     | AddReactionSuccessAction
     | RemoveReactionSuccessAction
+    | UpdateWatchSuccessAction
     ;
 
 // ----------------
@@ -117,6 +126,29 @@ export const actionCreators = {
                         dispatch({
                             type: 'REMOVE_REACTION_SUCCESS',
                             payload: { reaction: reactionResponse },
+                        });
+                    })
+                    .catch((reason) => {
+                        // TODO: Toast?
+                    });
+            })();
+        },
+    updateWatch: (on: boolean, questionId: number, answerId?: number, commentId?: number):
+        AppThunkAction<KnownAction> =>
+        (dispatch, getState) => {
+            return (async () => {
+
+                const url =
+                    commentId ? `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/watch` :
+                        answerId ? `/api/questions/${questionId}/answers/${answerId}/watch` :
+                            `/api/questions/${questionId}/watch`;
+
+                const method = on ? 'POST' : 'DELETE';
+                fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
+                    .then((watchResponse) => {
+                        dispatch({
+                            type: 'UPDATE_WATCH_SUCCESS',
+                            payload: { answerId, commentId, response: watchResponse },
                         });
                     })
                     .catch((reason) => {
@@ -247,6 +279,35 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                 if (indexOfReactionToRemove >= 0) {
                     answerModel.myReactions.splice(indexOfReactionToRemove, 1);
                 }
+            }
+
+            const questionNext = { ...questionModel, answers: answersNext };
+            return {
+                question: {
+                    questionId: state.question!.questionId,
+                    model: questionNext,
+                },
+            };
+        }
+        case 'UPDATE_WATCH_SUCCESS': {
+            const { answerId, commentId, response } = action.payload;
+            const questionModel = state.question!.model!;
+            // Slice for immutability
+            const answersNext = questionModel.answers;
+            const answerModel = answersNext.filter((x) => x.id === answerId)[0];
+
+            if (commentId) {
+                const comment = findComment(answerModel.comments, commentId);
+                if (comment) {
+                    comment.watchCount = response.newCount;
+                    comment.isWatchedByLoggedInUser = response.isWatchedByLoggedInUser;
+                }
+            } else if (answerId) {
+                answerModel.watchCount = response.newCount;
+                answerModel.isWatchedByLoggedInUser = response.isWatchedByLoggedInUser;
+            } else {
+                questionModel.watchCount = response.newCount;
+                questionModel.isWatchedByLoggedInUser = response.isWatchedByLoggedInUser;
             }
 
             const questionNext = { ...questionModel, answers: answersNext };

@@ -7,6 +7,7 @@ import { buildAnswerUrl } from '../../utils/route-utils';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
+import WatchControl from '../shared/WatchControl';
 import NewAnswer from './NewAnswer';
 import ReactionsControl from './ReactionsControl';
 
@@ -20,6 +21,7 @@ export interface QuestionProps {
 type Props = QuestionProps
     & {
     onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+    onWatch: (on: boolean, answerId?: number) => void,
 };
 
 export default class Question extends React.Component<Props, {}> {
@@ -53,6 +55,7 @@ export default class Question extends React.Component<Props, {}> {
         super(props);
 
         this.handleReaction = this.handleReaction.bind(this);
+        this.handleWatch = this.handleWatch.bind(this);
     }
 
     public render() {
@@ -85,6 +88,15 @@ export default class Question extends React.Component<Props, {}> {
                             {model.postedBy}
                         </footer>
                     </blockquote>
+                    <div>
+                        <div className="float-right">
+                            <WatchControl
+                                onWatch={this.handleWatch}
+                                count={model.watchCount}
+                                isWatchedByLoggedInUser={model.isWatchedByLoggedInUser}
+                            />
+                        </div>
+                    </div>
                 </div>
                 <hr />
                 <h5>{answersHeader}</h5>
@@ -102,6 +114,12 @@ export default class Question extends React.Component<Props, {}> {
                                         <Source value={x.source} />
                                     </blockquote>
                                     <div className="mt-2 float-right">
+                                        <WatchControl
+                                            identifier={x.id}
+                                            onWatch={this.handleWatch}
+                                            count={x.watchCount}
+                                            isWatchedByLoggedInUser={x.isWatchedByLoggedInUser}
+                                        />
                                         <ReactionsControl
                                             answerId={x.id}
                                             linkToCommentsUrl={buildAnswerUrl(questionId, model.slug, x.id, x.slug)}
@@ -127,5 +145,9 @@ export default class Question extends React.Component<Props, {}> {
 
     private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
         this.props.onReaction(reactionType, on, answerId, commentId);
+    }
+
+    private handleWatch(on: boolean, identifier?: number): void {
+        this.props.onWatch(on, identifier);
     }
 }

@@ -16,6 +16,7 @@ export enum EmojiValue {
     NotRelevant,
     YouBeTrolling,
     Discuss,
+    Watch,
 }
 
 export default class Emoji extends React.Component<Props, {}> {
@@ -37,6 +38,7 @@ export default class Emoji extends React.Component<Props, {}> {
             case EmojiValue.NotRelevant: return '⁉';
             case EmojiValue.YouBeTrolling: return '🤡';
             case EmojiValue.Discuss: return '💬';
+            case EmojiValue.Watch: return '👁';
             default: return '';
         }
     }

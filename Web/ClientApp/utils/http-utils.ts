@@ -32,12 +32,12 @@ export function deleteJson<T>(
     return fetchJson<T>('DELETE', url, null, loggedInUser, false);
 }
 
-function fetchJson<T>(
+export function fetchJson<T>(
     method: string,
     url: string,
     model: any,
     loggedInUser: LoggedInUserModel | null | undefined,
-    includeCredentials: boolean): Promise<T> {
+    includeCredentials: boolean = false): Promise<T> {
 
     return new Promise((resolve, reject) => {
         const requestOptions: RequestInit = {

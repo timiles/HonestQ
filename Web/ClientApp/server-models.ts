@@ -46,6 +46,31 @@ export interface ActivityListModel {
     lastTimestamp: number;
 }
 
+export interface NotificationModel {
+    type: string;
+    questionId: number;
+    questionSlug: string;
+    questionText: string;
+    answerId?: number;
+    answerSlug?: string;
+    answerText?: string;
+    commentId?: number;
+    commentText?: string;
+    postedAt: string;
+    agreementRating?: string;
+    tags: TagValueModel[];
+}
+
+export interface NotificationsListModel {
+    notifications: NotificationModel[];
+    lastId: number;
+}
+
+export interface WatchResponseModel {
+    newCount: number;
+    isWatchedByLoggedInUser: boolean;
+}
+
 export interface AdminQuestionFormModel {
     isApproved: boolean;
     text: string;
@@ -60,6 +85,8 @@ export interface AdminQuestionModel {
     source?: string;
     postedBy: string;
     isPostedByLoggedInUser: boolean;
+    watchCount: number;
+    isWatchedByLoggedInUser: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
 }
@@ -81,6 +108,8 @@ export interface AnswerModel {
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };
     myReactions: string[];
+    watchCount: number;
+    isWatchedByLoggedInUser: boolean;
 }
 
 export interface CommentFormModel {
@@ -103,6 +132,8 @@ export interface CommentModel {
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };
     myReactions: string[];
+    watchCount: number;
+    isWatchedByLoggedInUser: boolean;
 }
 
 export interface TagValueFormModel {
@@ -129,6 +160,8 @@ export interface QuestionModel {
     source?: string;
     postedBy: string;
     isPostedByLoggedInUser: boolean;
+    watchCount: number;
+    isWatchedByLoggedInUser: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
 }
@@ -153,6 +186,8 @@ export interface AdminTagModel {
     name: string;
     description?: string;
     moreInfoUrl?: string;
+    watchCount: number;
+    isWatchedByLoggedInUser: boolean;
     questions: QuestionListItemModel[];
 }
 
@@ -179,6 +214,8 @@ export interface TagModel {
     name: string;
     description?: string;
     moreInfoUrl?: string;
+    watchCount: number;
+    isWatchedByLoggedInUser: boolean;
     questions: QuestionListItemModel[];
 }
 
