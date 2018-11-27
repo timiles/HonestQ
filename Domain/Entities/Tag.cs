@@ -7,7 +7,7 @@ using Pobs.Domain.Entities.Helpers;
 
 namespace Pobs.Domain.Entities
 {
-    public class Tag
+    public class Tag : IHasWatches
     {
         public Tag()
         {

@@ -157,6 +157,16 @@ namespace Pobs.Tests.Integration.Helpers
             return newChildComments;
         }
 
+        public static void CreateWatch(int userId, IHasWatches hasWatches)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(hasWatches);
+                hasWatches.Watches.Add(new Watch(userId));
+                dbContext.SaveChanges();
+            }
+        }
+
         public static IEnumerable<Notification> CreateNotifications(User notificationOwnerUser, User postingUser,
             Question question, Answer answer, Comment comment, Comment childComment)
         {

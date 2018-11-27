@@ -127,5 +127,10 @@ namespace Pobs.Web.Services
             _context.Watches.Remove(watch);
             await _context.SaveChangesAsync();
         }
+
+        public async Task CreateNotifications(Question question)
+        {
+            await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForQuestion(@p0)", question.Id);
+        }
     }
 }
