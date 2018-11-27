@@ -74,7 +74,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
                         <ButtonOrLogIn
                             key={i}
                             type="button"
-                            className={`btn btn-outline-secondary
+                            className={`btn btn-outline-secondary background-white
                                 ${myReactions && myReactions.indexOf(x.value) >= 0 ? 'active' : ''}`}
                             value={x.value}
                             onClick={this.handleChange}
@@ -85,7 +85,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
                     }
                     {linkToCommentsUrl &&
                         <Link
-                            className="btn btn-outline-secondary"
+                            className="btn btn-outline-secondary background-white"
                             to={linkToCommentsUrl}
                         >
                             <Emoji value={EmojiValue.Discuss} />

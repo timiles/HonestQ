@@ -190,7 +190,7 @@ dl.button-definitions dd {
     margin-left: 10px;
 }
 
-.reactions-control .btn-outline-secondary:not(:hover) {
+.btn-outline-secondary:not(:hover).background-white {
     background-color: #fff;
 }
 
