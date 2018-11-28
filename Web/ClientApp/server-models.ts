@@ -47,6 +47,8 @@ export interface ActivityListModel {
 }
 
 export interface NotificationModel {
+    id: number;
+    seen: boolean;
     type: string;
     questionId: number;
     questionSlug: string;

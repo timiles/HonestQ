@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
 import { NotificationsListModel } from '../server-models';
-import { getJson } from '../utils/http-utils';
+import { getJson, postJson } from '../utils/http-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -20,12 +20,18 @@ interface GetNotificationListRequestedAction { type: 'GET_NOTIFICATION_LIST_REQU
 interface GetNotificationListSuccessAction { type: 'GET_NOTIFICATION_LIST_SUCCESS'; payload: NotificationsListModel; }
 interface GetNotificationListFailedAction { type: 'GET_NOTIFICATION_LIST_FAILED'; payload: { error: string; }; }
 
+export interface MarkNotificationAsSeenSuccessAction {
+    type: 'MARK_NOTIFICATION_AS_SEEN_SUCCESS';
+    payload: { id: number };
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
     | GetNotificationListRequestedAction
     | GetNotificationListSuccessAction
     | GetNotificationListFailedAction
+    | MarkNotificationAsSeenSuccessAction
     ;
 
 // ----------------
@@ -33,7 +39,7 @@ type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    loadMoreNotificationItems: (beforeId?: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    loadMoreNotifications: (beforeId?: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
             if (beforeId && beforeId <= 0) {
                 return;
@@ -55,6 +61,21 @@ export const actionCreators = {
                 });
         })();
     },
+    markAsSeen: (notificationId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            const url = `/api/notifications/${notificationId}/seen`;
+            postJson(url, null, getState().login.loggedInUser)
+                .then(() => {
+                    dispatch({
+                        type: 'MARK_NOTIFICATION_AS_SEEN_SUCCESS',
+                        payload: { id: notificationId },
+                    });
+                })
+                .catch((reason) => {
+                    // TODO: Toast?
+                });
+        })();
+    },
 };
 
 // ----------------
@@ -70,25 +91,45 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                 loadingNotificationList: { ...state.loadingNotificationList, loading: true },
             };
         case 'GET_NOTIFICATION_LIST_SUCCESS':
-            if (state.loadingNotificationList.loadedModel) {
-                // Slice for immutability
-                const notificationsNext = state.loadingNotificationList.loadedModel.notifications.slice();
-                for (const notification of action.payload.notifications) {
-                    notificationsNext.push(notification);
+            {
+                if (state.loadingNotificationList.loadedModel) {
+                    // Slice for immutability
+                    const notificationsNext = state.loadingNotificationList.loadedModel.notifications.slice();
+                    for (const notification of action.payload.notifications) {
+                        notificationsNext.push(notification);
+                    }
+                    return {
+                        loadingNotificationList: {
+                            loadedModel: { ...action.payload, notifications: notificationsNext },
+                        },
+                    };
                 }
                 return {
-                    loadingNotificationList: {
-                        loadedModel: { ...action.payload, notifications: notificationsNext },
-                    },
+                    loadingNotificationList: { loadedModel: action.payload },
                 };
             }
-            return {
-                loadingNotificationList: { loadedModel: action.payload },
-            };
         case 'GET_NOTIFICATION_LIST_FAILED':
             return {
                 loadingNotificationList: { ...state.loadingNotificationList, error: action.payload.error },
             };
+        case 'MARK_NOTIFICATION_AS_SEEN_SUCCESS':
+            {
+                if (!state.loadingNotificationList.loadedModel) {
+                    // Shouldn't be possible?
+                    return state;
+                }
+                // Slice for immutability
+                const notificationsNext = state.loadingNotificationList.loadedModel.notifications.slice();
+                const notification = notificationsNext.filter((x) => (x.id === action.payload.id))[0];
+                if (notification) {
+                    notification.seen = true;
+                }
+                return {
+                    loadingNotificationList: {
+                        loadedModel: { ...state.loadingNotificationList.loadedModel, notifications: notificationsNext },
+                    },
+                };
+            }
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

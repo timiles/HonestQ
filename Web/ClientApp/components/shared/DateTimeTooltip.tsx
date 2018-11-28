@@ -36,15 +36,14 @@ export default class DateTimeTooltip extends React.Component<Props> {
                     const fullTime = dateTimeMoment.format('LLLL');
 
                     return (
-                        <a
+                        <span
                             id={this.tooltipId}
-                            href="javascript:void(0);"
                             data-toggle="tooltip"
                             data-placement="top"
                             title={fullTime}
                         >
                             {friendlyTime}
-                        </a>
+                        </span>
                     );
                 }}
             </LoggedInUserContext.Consumer>

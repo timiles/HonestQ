@@ -4,6 +4,7 @@ import { LoadingProps } from '../components/shared/Loading';
 import { NotificationsCountModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 import { LogOutSuccessAction } from './Login';
+import { MarkNotificationAsSeenSuccessAction } from './Notifications';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -35,6 +36,7 @@ type KnownAction =
     | GetNotificationsCountRequestedAction
     | GetNotificationsCountSuccessAction
     | GetNotificationsCountFailedAction
+    | MarkNotificationAsSeenSuccessAction
     | LogOutSuccessAction
     ;
 
@@ -83,6 +85,17 @@ export const reducer: Reducer<NotificationsCountState> = (state: NotificationsCo
             return {
                 notificationsCount: { error: action.payload.error },
             };
+        case 'MARK_NOTIFICATION_AS_SEEN_SUCCESS':
+            {
+                if (!state.notificationsCount.loadedModel) {
+                    return state;
+                }
+                // Just in case of getting out of sync, let's never go below zero.
+                const newCount = Math.max(state.notificationsCount.loadedModel.count - 1, 0);
+                return {
+                    notificationsCount: { loadedModel: { count: newCount } },
+                };
+            }
         case 'LOGOUT_SUCCESS':
             return defaultState;
 

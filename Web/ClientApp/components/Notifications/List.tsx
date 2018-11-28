@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { NotificationModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NotificationsStore from '../../store/Notifications';
+import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Loading from '../shared/Loading';
 
@@ -21,14 +22,16 @@ class NotificationList extends React.Component<Props> {
             // Prevent triggering multiple times
             if (!this.props.loadingNotificationList.loading &&
                 this.props.loadingNotificationList.loadedModel!.lastId > 0) {
-                this.props.loadMoreNotificationItems(this.props.loadingNotificationList.loadedModel!.lastId);
+                this.props.loadMoreNotifications(this.props.loadingNotificationList.loadedModel!.lastId);
             }
         });
+
+        this.handleClick = this.handleClick.bind(this);
     }
 
     public componentWillMount() {
         if (!this.props.loadingNotificationList.loadedModel) {
-            this.props.loadMoreNotificationItems();
+            this.props.loadMoreNotifications();
         }
     }
 
@@ -69,6 +72,7 @@ class NotificationList extends React.Component<Props> {
     private renderNotification(notification: NotificationModel) {
         const questionUrl = `/questions/${notification.questionId}/${notification.questionSlug}`;
         const answerUrl = `${questionUrl}/${notification.answerId}/${notification.answerSlug}`;
+        const seenClassName = notification.seen ? 'btn-outline-secondary' : 'btn-success';
 
         switch (notification.type) {
             case 'Question': {
@@ -82,16 +86,22 @@ class NotificationList extends React.Component<Props> {
                                         <ul className="list-inline list-comma-separated">
                                             {notification.tags.map((x, i) =>
                                                 <li key={i} className="list-inline-item">
-                                                    <Link to={`/topics/${x.slug}`}>
+                                                    <Link to={`/tags/${x.slug}`}>
                                                         <b>{x.name}</b>
                                                     </Link>
                                                 </li>)}
                                         </ul>
                                     </>
                                 }
+                                , <DateTimeTooltip dateTime={notification.postedAt} />
                             </small>
                         </div>
-                        <Link to={questionUrl} className="btn btn-lg btn-outline-secondary post-list-item">
+                        <Link
+                            to={questionUrl}
+                            className={`btn btn-lg post-list-item ${seenClassName}`}
+                            data-id={notification.id}
+                            onClick={this.handleClick}
+                        >
                             <Emoji value={EmojiValue.Question} />
                             <span className="ml-1 question">{notification.questionText}</span>
                         </Link>
@@ -107,9 +117,15 @@ class NotificationList extends React.Component<Props> {
                                 <Link to={questionUrl}>
                                     <b>{notification.questionText}</b>
                                 </Link>
+                                , <DateTimeTooltip dateTime={notification.postedAt} />
                             </small>
                         </div>
-                        <Link to={answerUrl} className="btn btn-lg btn-outline-secondary post-list-item">
+                        <Link
+                            to={answerUrl}
+                            className={`btn btn-lg post-list-item ${seenClassName}`}
+                            data-id={notification.id}
+                            onClick={this.handleClick}
+                        >
                             <Emoji value={EmojiValue.Answer} />
                             <span className="ml-1 answer">{notification.answerText}</span>
                         </Link>
@@ -130,11 +146,14 @@ class NotificationList extends React.Component<Props> {
                                 <Link to={answerUrl} className="answer">
                                     <b>{notification.answerText}</b>
                                 </Link>
+                                , <DateTimeTooltip dateTime={notification.postedAt} />
                             </small>
                         </div>
                         <Link
                             to={answerUrl}
-                            className="btn btn-lg btn-outline-secondary post-list-item"
+                            className={`btn btn-lg post-list-item ${seenClassName}`}
+                            data-id={notification.id}
+                            onClick={this.handleClick}
                         >
                             {emojiValue && <Emoji value={emojiValue} />}
                             <span className="ml-1 comment">{notification.commentText}</span>
@@ -143,6 +162,15 @@ class NotificationList extends React.Component<Props> {
                 );
             }
             default: return null;
+        }
+    }
+
+    private handleClick(event: React.MouseEvent<HTMLAnchorElement>): void {
+        const notificationId = Number(event.currentTarget.dataset.id);
+        if (notificationId) {
+            this.props.markAsSeen(notificationId);
+        } else {
+            // TODO: log?
         }
     }
 }
