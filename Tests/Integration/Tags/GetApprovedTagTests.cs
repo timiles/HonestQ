@@ -44,7 +44,6 @@ namespace Pobs.Tests.Integration.Tags
                 Assert.Equal(_tag.Name, responseModel.Name);
                 Assert.Equal(_tag.Description, responseModel.Description);
                 Assert.Equal(_tag.MoreInfoUrl, responseModel.MoreInfoUrl);
-                Assert.Equal(1, responseModel.WatchCount);
                 Assert.False(responseModel.IsWatchedByLoggedInUser);
 
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
@@ -84,7 +83,6 @@ namespace Pobs.Tests.Integration.Tags
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<TagModel>(responseContent);
                 Assert.Equal(_tag.Slug, responseModel.Slug);
-                Assert.Equal(1, responseModel.WatchCount);
                 Assert.True(responseModel.IsWatchedByLoggedInUser);
             }
         }

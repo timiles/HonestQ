@@ -38,7 +38,6 @@ namespace Pobs.Tests.Integration.Notifications
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
-                Assert.Equal(1, watchModel.NewCount);
                 Assert.True(watchModel.IsWatchedByLoggedInUser);
 
                 using (var dbContext = TestSetup.CreateDbContext())
@@ -96,7 +95,6 @@ namespace Pobs.Tests.Integration.Notifications
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
-                Assert.Equal(0, watchModel.NewCount);
                 Assert.False(watchModel.IsWatchedByLoggedInUser);
 
                 using (var dbContext = TestSetup.CreateDbContext())

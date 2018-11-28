@@ -190,15 +190,12 @@ namespace Pobs.Tests.Integration.Questions
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
                 Assert.Equal(watchedQuestion.Slug, responseModel.Slug);
-                Assert.Equal(1, responseModel.WatchCount);
                 Assert.True(responseModel.IsWatchedByLoggedInUser);
 
                 var responseWatchedAnswer = responseModel.Answers.Single(x => x.Id == watchedAnswer.Id);
-                Assert.Equal(1, responseWatchedAnswer.WatchCount);
                 Assert.True(responseWatchedAnswer.IsWatchedByLoggedInUser);
 
                 var responseWatchedComment = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == watchedComment.Id);
-                Assert.Equal(1, responseWatchedComment.WatchCount);
                 Assert.True(responseWatchedComment.IsWatchedByLoggedInUser);
             }
         }

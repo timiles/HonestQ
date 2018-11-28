@@ -92,7 +92,6 @@ export default class Question extends React.Component<Props, {}> {
                         <div className="float-right">
                             <WatchControl
                                 onWatch={this.handleWatch}
-                                count={model.watchCount}
                                 isWatchedByLoggedInUser={model.isWatchedByLoggedInUser}
                             />
                         </div>
@@ -117,7 +116,6 @@ export default class Question extends React.Component<Props, {}> {
                                         <WatchControl
                                             identifier={x.id}
                                             onWatch={this.handleWatch}
-                                            count={x.watchCount}
                                             isWatchedByLoggedInUser={x.isWatchedByLoggedInUser}
                                         />
                                         <ReactionsControl

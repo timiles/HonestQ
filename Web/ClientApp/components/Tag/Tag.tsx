@@ -38,7 +38,7 @@ export default class Tag extends React.Component<Props, {}> {
     }
 
     private renderModel(slug: string, model: TagModel) {
-        const { name, description, moreInfoUrl, questions, watchCount, isWatchedByLoggedInUser } = model;
+        const { name, description, moreInfoUrl, questions, isWatchedByLoggedInUser } = model;
         const tagValue = { name, slug };
         return (
             <>
@@ -47,7 +47,6 @@ export default class Tag extends React.Component<Props, {}> {
                         <div className="float-right">
                             <WatchControl
                                 onWatch={this.handleWatch}
-                                count={watchCount}
                                 isWatchedByLoggedInUser={isWatchedByLoggedInUser}
                             />
                             <LoggedInUserContext.Consumer>

@@ -73,7 +73,6 @@ export interface NotificationsListModel {
 }
 
 export interface WatchResponseModel {
-    newCount: number;
     isWatchedByLoggedInUser: boolean;
 }
 
@@ -91,7 +90,6 @@ export interface AdminQuestionModel {
     source?: string;
     postedBy: string;
     isPostedByLoggedInUser: boolean;
-    watchCount: number;
     isWatchedByLoggedInUser: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
@@ -114,7 +112,6 @@ export interface AnswerModel {
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };
     myReactions: string[];
-    watchCount: number;
     isWatchedByLoggedInUser: boolean;
 }
 
@@ -138,7 +135,6 @@ export interface CommentModel {
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };
     myReactions: string[];
-    watchCount: number;
     isWatchedByLoggedInUser: boolean;
 }
 
@@ -166,7 +162,6 @@ export interface QuestionModel {
     source?: string;
     postedBy: string;
     isPostedByLoggedInUser: boolean;
-    watchCount: number;
     isWatchedByLoggedInUser: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
@@ -192,7 +187,6 @@ export interface AdminTagModel {
     name: string;
     description?: string;
     moreInfoUrl?: string;
-    watchCount: number;
     isWatchedByLoggedInUser: boolean;
     questions: QuestionListItemModel[];
 }
@@ -220,7 +214,6 @@ export interface TagModel {
     name: string;
     description?: string;
     moreInfoUrl?: string;
-    watchCount: number;
     isWatchedByLoggedInUser: boolean;
     questions: QuestionListItemModel[];
 }

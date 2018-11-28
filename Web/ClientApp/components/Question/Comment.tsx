@@ -28,7 +28,7 @@ export default class Comment extends React.Component<Props, {}> {
     public render(): any {
         const { questionId, answerId } = this.props;
         const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
-        const { watchCount, isWatchedByLoggedInUser } = this.props;
+        const { isWatchedByLoggedInUser } = this.props;
         const { postedAt, postedBy } = this.props;
         const extractedUrl = (source ? extractUrlFromText(source) : null) || (text ? extractUrlFromText(text) : null);
         const emojiValue = EmojiValue[agreementRating as keyof typeof EmojiValue];
@@ -53,7 +53,6 @@ export default class Comment extends React.Component<Props, {}> {
                             <WatchControl
                                 identifier={id}
                                 onWatch={this.handleWatch}
-                                count={watchCount}
                                 isWatchedByLoggedInUser={isWatchedByLoggedInUser}
                             />
                             <ReactionsControl
