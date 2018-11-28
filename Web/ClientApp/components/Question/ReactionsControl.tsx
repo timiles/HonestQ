@@ -1,6 +1,5 @@
 import * as $ from 'jquery';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { generateRandomHtmlId } from '../../utils/html-utils';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Emoji, { EmojiValue } from '../shared/Emoji';
@@ -8,8 +7,6 @@ import Emoji, { EmojiValue } from '../shared/Emoji';
 interface Props {
     answerId: number;
     commentId?: number;
-    linkToCommentsUrl?: string;
-    commentsCount?: number;
     reactionCounts: { [key: string]: number };
     myReactions: string[];
     onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void;
@@ -48,9 +45,6 @@ export default class ReactionsControl extends React.Component<Props, State> {
                 ${this.values.map((x: ReactionValue) =>
                     `<dt><span class="emoji">${Emoji.getEmojiByString(x.value)}</span></dt>
                     <dd>${x.description}</dd>`).join('')}
-                ${this.props.linkToCommentsUrl ?
-                    `<dt><span class="emoji">${Emoji.getEmoji(EmojiValue.Discuss)}</span></dt>
-                    <dd>Discuss further</dd>` : ''}
                 </dl>`;
         }
 
@@ -64,7 +58,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
     }
 
     public render() {
-        const { showHelp, linkToCommentsUrl, commentsCount } = this.props;
+        const { showHelp } = this.props;
         const { reactionCounts, myReactions } = this.state;
 
         return (
@@ -82,15 +76,6 @@ export default class ReactionsControl extends React.Component<Props, State> {
                             <Emoji value={EmojiValue[x.value as keyof typeof EmojiValue]} />
                             {reactionCounts[x.value] || 0}
                         </ButtonOrLogIn>)
-                    }
-                    {linkToCommentsUrl &&
-                        <Link
-                            className="btn btn-outline-secondary background-white"
-                            to={linkToCommentsUrl}
-                        >
-                            <Emoji value={EmojiValue.Discuss} />
-                            {commentsCount || 0}
-                        </Link>
                     }
                 </div>
                 {showHelp &&

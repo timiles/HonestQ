@@ -8,8 +8,8 @@ import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
+import DiscussButton from './DiscussButton';
 import NewAnswer from './NewAnswer';
-import ReactionsControl from './ReactionsControl';
 
 export interface QuestionProps {
     loading?: boolean;
@@ -21,7 +21,7 @@ export interface QuestionProps {
 type Props = QuestionProps
     & {
     onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-    onWatch: (on: boolean, answerId?: number) => void,
+    onWatch: (on: boolean) => void,
 };
 
 export default class Question extends React.Component<Props, {}> {
@@ -54,7 +54,6 @@ export default class Question extends React.Component<Props, {}> {
     constructor(props: Props) {
         super(props);
 
-        this.handleReaction = this.handleReaction.bind(this);
         this.handleWatch = this.handleWatch.bind(this);
     }
 
@@ -113,19 +112,9 @@ export default class Question extends React.Component<Props, {}> {
                                         <Source value={x.source} />
                                     </blockquote>
                                     <div className="mt-2 float-right">
-                                        <WatchControl
-                                            identifier={x.id}
-                                            onWatch={this.handleWatch}
-                                            isWatchedByLoggedInUser={x.isWatchedByLoggedInUser}
-                                        />
-                                        <ReactionsControl
-                                            answerId={x.id}
+                                        <DiscussButton
                                             linkToCommentsUrl={buildAnswerUrl(questionId, model.slug, x.id, x.slug)}
                                             commentsCount={Question.getTotalCommentsCount(x.comments)}
-                                            reactionCounts={x.reactionCounts}
-                                            myReactions={x.myReactions}
-                                            onReaction={this.handleReaction}
-                                            showHelp={i === 0}
                                         />
                                     </div>
                                 </div>
@@ -141,11 +130,7 @@ export default class Question extends React.Component<Props, {}> {
         );
     }
 
-    private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
-        this.props.onReaction(reactionType, on, answerId, commentId);
-    }
-
-    private handleWatch(on: boolean, identifier?: number): void {
-        this.props.onWatch(on, identifier);
+    private handleWatch(on: boolean): void {
+        this.props.onWatch(on);
     }
 }
