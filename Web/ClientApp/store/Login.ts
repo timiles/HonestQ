@@ -22,7 +22,7 @@ interface StartLogInAction { type: 'START_LOGIN'; }
 interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
 interface LogInFailedAction { type: 'LOGIN_FAILED'; payload: { error: string | null; }; }
 interface StartLogOutAction { type: 'START_LOGOUT'; }
-interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
+export interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
 interface LogOutFailedAction { type: 'LOGOUT_FAILED'; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the

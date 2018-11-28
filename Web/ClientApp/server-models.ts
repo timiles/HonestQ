@@ -61,6 +61,10 @@ export interface NotificationModel {
     tags: TagValueModel[];
 }
 
+export interface NotificationsCountModel {
+    count: number;
+}
+
 export interface NotificationsListModel {
     notifications: NotificationModel[];
     lastId: number;

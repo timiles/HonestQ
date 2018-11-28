@@ -4,6 +4,7 @@ import { Link, NavLink, NavLinkProps } from 'react-router-dom';
 import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils/auth-utils';
+import NotificationsCount from './Notifications/NotificationsCount';
 
 interface NavMenuProps {
     loggedInUser: LoggedInUserModel;
@@ -58,6 +59,11 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                             }
                             <AutoCollapseNavLink exact={true} to={'/'}>Home</AutoCollapseNavLink>
                             <AutoCollapseNavLink exact={true} to={'/questions'}>Questions</AutoCollapseNavLink>
+                            {loggedInUser &&
+                                <AutoCollapseNavLink exact={true} to={'/notifications'}>
+                                    Notifications <NotificationsCount />
+                                </AutoCollapseNavLink>
+                            }
                             {isAdmin && <AutoCollapseNavLink to={'/admin'}>Admin</AutoCollapseNavLink>}
                         </ul>
                         <ul className="navbar-nav ml-auto">
