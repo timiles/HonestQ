@@ -1,6 +1,7 @@
 import { EventEmitter } from 'events';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import NotificationList from '../../components/Notifications/List';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { LoggedInUserModel } from '../../server-models';
@@ -27,6 +28,10 @@ class Index extends React.Component<Props> {
     }
 
     public render() {
+        if (!this.props.loggedInUser) {
+            return <Redirect to="/login" />;
+        }
+
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 <div className="row">
