@@ -29,5 +29,18 @@ namespace Pobs.Web.Controllers
             var notificationsCount = await _notificationsService.CountNotifications(User.Identity.ParseUserId());
             return Ok(notificationsCount);
         }
+
+        [HttpPost, Route("{notificationId}/seen")]
+        public async Task<IActionResult> MarkAsSeen(long notificationId)
+        {
+            if (await _notificationsService.MarkAsSeen(User.Identity.ParseUserId(), notificationId))
+            {
+                return Ok();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

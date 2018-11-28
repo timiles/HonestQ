@@ -6,6 +6,7 @@ namespace Pobs.Domain.Entities
     {
         public long Id { get; set; }
 
+        public int OwnerUserId { get; set; }
         [Required]
         public User OwnerUser { get; set; }
 

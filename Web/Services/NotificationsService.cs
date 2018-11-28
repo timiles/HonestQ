@@ -25,6 +25,7 @@ namespace Pobs.Web.Services
         Task CreateNotificationsForQuestion(int questionId);
         Task CreateNotificationsForAnswer(int answerId);
         Task CreateNotificationsForComment(long commentId);
+        Task<bool> MarkAsSeen(int loggedInUserId, long notificationId);
     }
 
     public class NotificationsService : INotificationsService
@@ -247,6 +248,18 @@ namespace Pobs.Web.Services
         public async Task CreateNotificationsForComment(long commentId)
         {
             await _context.Database.ExecuteSqlCommandAsync("CALL CreateNotificationsForComment(@p0)", commentId);
+        }
+
+        public async Task<bool> MarkAsSeen(int loggedInUserId, long notificationId)
+        {
+            var notification = await _context.Notifications.FindAsync(notificationId);
+            if (notification == null || notification.OwnerUserId != loggedInUserId)
+            {
+                return false;
+            }
+            notification.Seen = true;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

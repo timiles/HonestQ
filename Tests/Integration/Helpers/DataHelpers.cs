@@ -168,39 +168,49 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static IEnumerable<Notification> CreateNotifications(User notificationOwnerUser,
-            Question question, Answer answer, Comment comment, Comment childComment)
+            Question question = null, Answer answer = null, Comment comment = null, Comment childComment = null)
         {
-            var notifications = new[]
-            {
-                new Notification
-                {
-                    OwnerUser = notificationOwnerUser,
-                    Question = question,
-                },
-                new Notification
-                {
-                    OwnerUser = notificationOwnerUser,
-                    Answer = answer,
-                },
-                new Notification
-                {
-                    OwnerUser = notificationOwnerUser,
-                    Comment = comment,
-                },
-                new Notification
-                {
-                    OwnerUser = notificationOwnerUser,
-                    Comment = childComment,
-                },
-            };
+            var notifications = new List<Notification>();
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(notificationOwnerUser);
-                dbContext.Attach(question);
-                dbContext.Attach(answer);
-                dbContext.Attach(comment);
-                dbContext.Attach(childComment);
+                if (question != null)
+                {
+                    dbContext.Attach(question);
+                    notifications.Add(new Notification
+                    {
+                        OwnerUser = notificationOwnerUser,
+                        Question = question,
+                    });
+                }
+                if (answer != null)
+                {
+                    dbContext.Attach(answer);
+                    notifications.Add(new Notification
+                    {
+                        OwnerUser = notificationOwnerUser,
+                        Answer = answer,
+                    });
+                }
+                if (comment != null)
+                {
+                    dbContext.Attach(comment);
+                    notifications.Add(new Notification
+                    {
+                        OwnerUser = notificationOwnerUser,
+                        Comment = comment,
+                    });
+                }
+                if (childComment != null)
+                {
+                    dbContext.Attach(childComment);
+                    notifications.Add(new Notification
+                    {
+                        OwnerUser = notificationOwnerUser,
+                        Comment = childComment,
+                    });
+                }
 
                 dbContext.Notifications.AddRange(notifications);
                 dbContext.SaveChanges();
