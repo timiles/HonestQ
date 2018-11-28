@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Notifications;
@@ -72,26 +71,10 @@ namespace Pobs.Tests.Integration.Notifications
                 Assert.True(responseModel.LastId > 0);
 
                 // Check that all of the Questions in this Tag are in the most recent notifications
-                Assert.NotNull(responseModel.Notifications.SingleOrDefault(x =>
-                    x.Type == "Question" &&
-                    x.QuestionId == _question.Id));
-
-                Assert.NotNull(responseModel.Notifications.SingleOrDefault(x =>
-                    x.Type == "Answer" &&
-                    x.QuestionId == _question.Id &&
-                    x.AnswerId == _answer.Id));
-
-                Assert.NotNull(responseModel.Notifications.SingleOrDefault(x =>
-                    x.Type == "Comment" &&
-                    x.QuestionId == _question.Id &&
-                    x.AnswerId == _answer.Id &&
-                    x.CommentId == _comment.Id));
-
-                Assert.NotNull(responseModel.Notifications.SingleOrDefault(x =>
-                    x.Type == "Comment" &&
-                    x.QuestionId == _question.Id &&
-                    x.AnswerId == _answer.Id &&
-                    x.CommentId == _childComment.Id));
+                foreach (var notification in _notifications)
+                {
+                    Assert.Contains(notification.Id, responseModel.Notifications.Select(x => x.Id));
+                }
 
                 foreach (var responseNotification in responseModel.Notifications)
                 {
@@ -136,6 +119,42 @@ namespace Pobs.Tests.Integration.Notifications
                                 Assert.True(false, $"Unexpected Type '{responseNotification.Type}'.");
                                 break;
                             }
+                    }
+                }
+            }
+        }
+
+        [Fact]
+        public async Task ShouldGetSeenStatus()
+        {
+            var seenNotification = _notifications.First();
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(seenNotification);
+                seenNotification.Seen = true;
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_notificationOwnerUserId);
+
+                var response = await client.GetAsync(_buildUrl(1000));
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<NotificationsListModel>(responseContent);
+
+                foreach (var notification in responseModel.Notifications)
+                {
+                    if (notification.Id == seenNotification.Id)
+                    {
+                        Assert.True(notification.Seen);
+                    }
+                    else
+                    {
+                        Assert.False(notification.Seen);
                     }
                 }
             }
@@ -193,42 +212,16 @@ namespace Pobs.Tests.Integration.Notifications
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<NotificationsListModel>(responseContent);
 
-                var responseQuestions = responseModel.Notifications.Where(x => x.Type == "Question").ToArray();
-                var responseAnswers = responseModel.Notifications.Where(x => x.Type == "Answer").ToArray();
-                var responseComments = responseModel.Notifications.Where(x => x.Type == "Comment").ToArray();
-
                 // Check that only Notification items before the cutoff id were returned
                 foreach (var notification in _notifications)
                 {
                     if (notification.Id < beforeId)
                     {
-                        if (notification.Question != null)
-                        {
-                            Assert.Contains(notification.Question.Id, responseQuestions.Select(x => x.QuestionId));
-                        }
-                        if (notification.Answer != null)
-                        {
-                            Assert.Contains(notification.Answer.Id, responseAnswers.Select(x => x.AnswerId));
-                        }
-                        if (notification.Comment != null)
-                        {
-                            Assert.Contains(notification.Comment.Id, responseComments.Select(x => x.CommentId));
-                        }
+                        Assert.Contains(notification.Id, responseModel.Notifications.Select(x => x.Id));
                     }
                     else
                     {
-                        if (notification.Question != null)
-                        {
-                            Assert.DoesNotContain(notification.Question.Id, responseQuestions.Select(x => x.QuestionId));
-                        }
-                        if (notification.Answer != null)
-                        {
-                            Assert.DoesNotContain(notification.Answer.Id, responseAnswers.Select(x => x.AnswerId));
-                        }
-                        if (notification.Comment != null)
-                        {
-                            Assert.DoesNotContain(notification.Comment.Id, responseComments.Select(x => x.CommentId));
-                        }
+                        Assert.DoesNotContain(notification.Id, responseModel.Notifications.Select(x => x.Id));
                     }
                 }
             }

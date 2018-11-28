@@ -9,39 +9,61 @@ namespace Pobs.Web.Models.Notifications
     public class NotificationModel
     {
         public NotificationModel() { }
-        public NotificationModel(Question x)
+
+        public NotificationModel(Notification notification)
         {
-            this.Type = "Question";
-            this.QuestionId = x.Id;
-            this.QuestionSlug = x.Slug;
-            this.QuestionText = x.Text;
-            this.PostedAt = x.PostedAt.UtcDateTime;
-            this.Tags = x.Tags?.Select(y => new TagValueModel(y)).ToArray();
+            this.Id = notification.Id;
+            this.Seen = notification.Seen;
+            this.Type = GetNotificationType(notification);
+
+            var question = notification.Question ?? notification.Answer?.Question ?? notification.Comment.Answer.Question;
+            this.QuestionId = question.Id;
+            this.QuestionSlug = question.Slug;
+            this.QuestionText = question.Text;
+            this.PostedAt = question.PostedAt.UtcDateTime;
+            this.Tags = question.Tags?.Select(y => new TagValueModel(y)).ToArray();
+
+            var answer = notification.Answer ?? notification.Comment?.Answer;
+            if (answer != null)
+            {
+                this.AnswerId = answer.Id;
+                this.AnswerSlug = answer.Slug;
+                this.AnswerText = answer.Text;
+                this.PostedAt = answer.PostedAt.UtcDateTime;
+            }
+
+            if (notification.Comment != null)
+            {
+                this.CommentId = notification.Comment.Id;
+                this.CommentText = notification.Comment.Text;
+                this.PostedAt = notification.Comment.PostedAt.UtcDateTime;
+                this.AgreementRating = notification.Comment.AgreementRating.ToString();
+            }
         }
 
-        public NotificationModel(Answer x) : this(x.Question)
+        private static string GetNotificationType(Notification notification)
         {
-            this.Type = "Answer";
-            this.QuestionId = x.Question.Id;
-            this.QuestionSlug = x.Question.Slug;
-            this.AnswerId = x.Id;
-            this.AnswerSlug = x.Slug;
-            this.AnswerText = x.Text;
-            this.PostedAt = x.PostedAt.UtcDateTime;
+            if (notification.Question != null)
+            {
+                return "Question";
+            }
+            else if (notification.Answer != null)
+            {
+                return "Answer";
+            }
+            else if (notification.Comment != null)
+            {
+                return "Comment";
+            }
+            else
+            {
+                throw new NotImplementedException("No notification object: Id = " + notification.Id);
+            }
         }
 
-        public NotificationModel(Comment x) : this(x.Answer)
-        {
-            this.Type = "Comment";
-            this.QuestionId = x.Answer.Question.Id;
-            this.QuestionSlug = x.Answer.Question.Slug;
-            this.AnswerId = x.Answer.Id;
-            this.AnswerSlug = x.Answer.Slug;
-            this.CommentId = x.Id;
-            this.CommentText = x.Text;
-            this.PostedAt = x.PostedAt.UtcDateTime;
-            this.AgreementRating = x.AgreementRating.ToString();
-        }
+        public long Id { get; set; }
+
+        public bool Seen { get; set; }
 
         [Required]
         public string Type { get; set; }
