@@ -46,9 +46,10 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                 moreInfoUrl: loadedModel.moreInfoUrl || '',
                 isApproved: loadedModel.isApproved,
             });
+
+            focusFirstTextInput('form');
+            onCtrlEnter('form', () => this.submit());
         }
-        focusFirstTextInput('form');
-        onCtrlEnter('form', () => this.submit());
     }
 
     public render() {
