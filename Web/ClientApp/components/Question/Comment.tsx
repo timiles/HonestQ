@@ -7,7 +7,7 @@ import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import NewComment from './NewComment';
-import ReactionsControl from './ReactionsControl';
+import UpvoteButton from './UpvoteButton';
 
 type Props = CommentModel
     & {
@@ -49,18 +49,20 @@ export default class Comment extends React.Component<Props, {}> {
                             </footer>
                             {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
                         </blockquote>
-                        <div className="float-right">
+                        <div className="float-right btn-container">
                             <WatchControl
                                 identifier={id}
                                 onWatch={this.handleWatch}
                                 isWatchedByLoggedInUser={isWatchedByLoggedInUser}
+                                hideLabelOnMobile={true}
                             />
-                            <ReactionsControl
+                            <UpvoteButton
                                 answerId={answerId}
                                 commentId={id}
-                                reactionCounts={reactionCounts}
-                                myReactions={myReactions}
+                                count={reactionCounts[UpvoteButton.ReactionType]}
+                                isUpvotedByLoggedInUser={myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
                                 onReaction={this.props.onReaction}
+                                hideLabelOnMobile={true}
                             />
                         </div>
                         <NewComment

@@ -34,7 +34,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
 
         this.state = { reactionCounts: this.props.reactionCounts, myReactions: this.props.myReactions };
 
-        this.values.push({ value: 'GoodPointWellMade', description: 'Good point!' });
+        this.values.push({ value: 'Upvote', description: 'Upvote' });
         this.values.push({ value: 'ThisMadeMeThink', description: 'This made me think' });
         this.values.push({ value: 'ThisChangedMyView', description: 'This changed my view' });
 

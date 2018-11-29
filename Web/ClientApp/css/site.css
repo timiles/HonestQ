@@ -186,6 +186,13 @@ dl.button-definitions dd {
     vertical-align: unset;
 }
 
+.btn-container > .btn:first-child {
+    margin-left: 0 !important;
+}
+.btn-container .btn {
+    margin-left: 1rem !important;
+}
+
 .list-comments-nested {
     margin-left: 10px;
 }

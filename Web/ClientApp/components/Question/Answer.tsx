@@ -10,7 +10,7 @@ import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
 import NewComment from './NewComment';
-import ReactionsControl from './ReactionsControl';
+import UpvoteButton from './UpvoteButton';
 
 type Props = AnswerModel
     & {
@@ -57,17 +57,16 @@ export default class Answer extends React.Component<Props, {}> {
                         </footer>
                     </blockquote>
                     <div>
-                        <div className="float-right">
+                        <div className="float-right btn-container">
                             <WatchControl
                                 onWatch={this.handleWatch}
                                 isWatchedByLoggedInUser={isWatchedByLoggedInUser}
                             />
-                            <ReactionsControl
+                            <UpvoteButton
                                 answerId={id}
-                                reactionCounts={reactionCounts}
-                                myReactions={myReactions}
+                                count={reactionCounts[UpvoteButton.ReactionType]}
+                                isUpvotedByLoggedInUser={myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
                                 onReaction={this.handleReaction}
-                                showHelp={true}
                             />
                         </div>
                     </div>

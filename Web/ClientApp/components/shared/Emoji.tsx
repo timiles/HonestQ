@@ -10,7 +10,7 @@ export enum EmojiValue {
     Agree,
     Neutral,
     Disagree,
-    GoodPointWellMade,
+    Upvote,
     ThisMadeMeThink,
     ThisChangedMyView,
     NotRelevant,
@@ -32,7 +32,7 @@ export default class Emoji extends React.Component<Props, {}> {
             case EmojiValue.Agree: return '✔️';
             case EmojiValue.Neutral: return '🤷';
             case EmojiValue.Disagree: return '❌';
-            case EmojiValue.GoodPointWellMade: return '💯';
+            case EmojiValue.Upvote: return '👍';
             case EmojiValue.ThisMadeMeThink: return '🤔';
             case EmojiValue.ThisChangedMyView: return '🤯';
             case EmojiValue.NotRelevant: return '⁉';
