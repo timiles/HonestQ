@@ -30,6 +30,7 @@ export default class ShortLink extends React.Component<Props, {}> {
             return to;
         }
 
+        const isPdf = (url.toLowerCase().indexOf('.pdf') >= 0);
         const domain = extractDomainFromUrl(url);
         return (
             <span>
@@ -43,7 +44,7 @@ export default class ShortLink extends React.Component<Props, {}> {
                     data-placement="top"
                     title={url}
                 >
-                    🌐 {domain}
+                    🌐 {domain} {isPdf ? '(PDF)' : ''}
                 </a>
             </span>
         );
