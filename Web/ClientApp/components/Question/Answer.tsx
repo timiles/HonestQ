@@ -65,7 +65,8 @@ export default class Answer extends React.Component<Props, {}> {
                             <UpvoteButton
                                 answerId={id}
                                 count={reactionCounts[UpvoteButton.ReactionType]}
-                                isUpvotedByLoggedInUser={myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
+                                isUpvotedByLoggedInUser={myReactions &&
+                                    myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
                                 onReaction={this.handleReaction}
                             />
                         </div>

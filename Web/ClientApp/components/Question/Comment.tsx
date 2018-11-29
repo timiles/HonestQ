@@ -60,7 +60,8 @@ export default class Comment extends React.Component<Props, {}> {
                                 answerId={answerId}
                                 commentId={id}
                                 count={reactionCounts[UpvoteButton.ReactionType]}
-                                isUpvotedByLoggedInUser={myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
+                                isUpvotedByLoggedInUser={myReactions &&
+                                    myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
                                 onReaction={this.props.onReaction}
                                 hideLabelOnMobile={true}
                             />
