@@ -8,6 +8,11 @@ export function extractUrlFromText(text: string): string | null {
     return null;
 }
 
+export function isUrl(text: string): boolean {
+    const url = extractUrlFromText(text);
+    return url === text;
+}
+
 const domainFromUrlRegExp = new RegExp(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im);
 export function extractDomainFromUrl(url: string): string | null {
     const match = domainFromUrlRegExp.exec(url);
