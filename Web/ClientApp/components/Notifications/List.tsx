@@ -8,6 +8,7 @@ import * as NotificationsStore from '../../store/Notifications';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Loading from '../shared/Loading';
+import WatchControlDemo from '../shared/WatchControlDemo';
 
 type Props = NotificationsStore.ListState
     & typeof NotificationsStore.actionCreators
@@ -51,7 +52,7 @@ class NotificationList extends React.Component<Props> {
         return (
             <>
                 <h1>Recent notifications</h1>
-                {notificationList &&
+                {notificationList && notificationList.notifications.length > 0 ?
                     <ul className="list-unstyled">
                         {notificationList.notifications.map((x: NotificationModel, i: number) =>
                             <li key={i} className="mb-2">
@@ -63,6 +64,22 @@ class NotificationList extends React.Component<Props> {
                             </li>
                         }
                     </ul>
+                    :
+                    <div>
+                        <p>
+                            <i>No notifications yet.</i>
+                        </p>
+                        <p>
+                            Around the site you will see a Watch button, like this:
+                        </p>
+                        <p className="text-center">
+                            <WatchControlDemo />
+                        </p>
+                        <p>
+                            Try watching some Tags, Questions, Answers, or Comments
+                            to be notified of new posts under each.
+                        </p>
+                    </div>
                 }
                 <Loading {...this.props.loadingNotificationList} />
             </>
