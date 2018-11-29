@@ -176,6 +176,7 @@ namespace Pobs.Web
                 .AllowCredentials());
 
             app.UseAuthentication();
+            app.UseDisableApiResponseCaching();
             app.UseFeatureLogging();
             app.UseMvc(routes =>
             {
