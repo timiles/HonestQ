@@ -6,6 +6,7 @@ interface Props {
     identifier?: any;
     onWatch: (on: boolean, identifier?: any) => void;
     isWatchedByLoggedInUser: boolean;
+    hideLabelOnMobile?: boolean;
 }
 
 interface State {
@@ -27,6 +28,7 @@ export default class WatchControl extends React.Component<Props, State> {
     }
 
     public render() {
+        const { hideLabelOnMobile } = this.props;
         const { isWatchedByLoggedInUser } = this.state;
         const watchingClassName = isWatchedByLoggedInUser ? 'btn-success' : 'btn-outline-secondary background-white';
 
@@ -37,7 +39,7 @@ export default class WatchControl extends React.Component<Props, State> {
                 onClick={this.handleChange}
             >
                 <Emoji value={EmojiValue.Watch} />
-                <span className="ml-1">
+                <span className={`ml-1 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
                     {isWatchedByLoggedInUser ? 'Watching' : 'Watch'}
                 </span>
             </ButtonOrLogIn>
