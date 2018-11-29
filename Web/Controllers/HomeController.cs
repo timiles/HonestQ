@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Prerendering;
+using Microsoft.Extensions.Options;
 using Pobs.Web.Helpers;
 using Pobs.Web.Models.Account;
 using Pobs.Web.Services;
@@ -16,11 +17,13 @@ namespace Pobs.Web.Controllers
     {
         private readonly ISpaPrerenderer _spaPrerenderer;
         private readonly IUserService _userService;
+        private readonly AppSettings _appSettings;
 
-        public HomeController(ISpaPrerenderer spaPrerenderer, IUserService userService)
+        public HomeController(ISpaPrerenderer spaPrerenderer, IUserService userService, IOptions<AppSettings> appSettings)
         {
             _spaPrerenderer = spaPrerenderer;
             _userService = userService;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<IActionResult> Index()
@@ -51,6 +54,7 @@ namespace Pobs.Web.Controllers
 
             dynamic data = new
             {
+                googleAnalyticsTrackingCode = _appSettings.GoogleAnalyticsTrackingCode,
                 login = new
                 {
                     loggedInUser = loggedInModel

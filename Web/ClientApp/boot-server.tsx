@@ -50,7 +50,7 @@ export default createServerRenderer((params) => {
             return;
         }
 
-        const trackingCode = 'UA-128648766-1';
+        const trackingCode = params.data.googleAnalyticsTrackingCode;
         const gaScript = `
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
@@ -100,8 +100,12 @@ if (!d.getElementById(id)){
                     />
                     <script src={params.data.versionedAssetPaths.vendorJs} />
                     <script src={params.data.versionedAssetPaths.mainClientJs} />
-                    <script async={true} src={`https://www.googletagmanager.com/gtag/js?id=${trackingCode}`} />
-                    <script dangerouslySetInnerHTML={{ __html: gaScript }} />
+                    {trackingCode &&
+                        <>
+                            <script async={true} src={`https://www.googletagmanager.com/gtag/js?id=${trackingCode}`} />
+                            <script dangerouslySetInnerHTML={{ __html: gaScript }} />
+                        </>
+                    }
                     <script dangerouslySetInnerHTML={{ __html: embedlyScript }} />
                 </body>
             </html>
