@@ -72,15 +72,14 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                var (questionModel, isApproved) = await _questionService.UpdateQuestion(questionId, payload);
+                var (questionModel, hasJustBeenApproved) = await _questionService.UpdateQuestion(questionId, payload);
                 if (questionModel != null)
                 {
-                    if (isApproved)
+                    if (hasJustBeenApproved)
                     {
                         await _notificationsService.CreateNotificationsForQuestion(questionModel.Id);
-                        return Ok(questionModel);
                     }
-                    return Ok();
+                    return Ok(questionModel);
                 }
                 return NotFound();
             }
