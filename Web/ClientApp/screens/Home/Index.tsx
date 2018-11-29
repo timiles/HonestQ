@@ -13,9 +13,7 @@ class Index extends React.Component<Props> {
     public render() {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                {!this.props.loggedInUser &&
-                    <WelcomeMessage />
-                }
+                <WelcomeMessage />
                 <div className="row">
                     <div className="col-md-12">
                         <TagsList buttonSize="md" showNewTagButton={true} />

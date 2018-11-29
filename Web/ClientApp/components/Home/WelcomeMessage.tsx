@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 
 export default class WelcomeMessage extends React.Component {
 
@@ -31,11 +32,15 @@ export default class WelcomeMessage extends React.Component {
                         <p>
                             Happy debating!
                         </p>
-                        <p className="text-center">
-                            <Link className="btn btn-primary" to="/signup">
-                                Sign up for a free account now!
-                            </Link>
-                        </p>
+                        <LoggedInUserContext.Consumer>
+                            {(user) => !user &&
+                                <p className="text-center">
+                                    <Link className="btn btn-primary" to="/signup">
+                                        Sign up for a free account now!
+                                    </Link>
+                                </p>
+                            }
+                        </LoggedInUserContext.Consumer>
                     </div>
                     <div className="col-md-3 order-md-first text-center">
                         <img
