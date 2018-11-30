@@ -1,4 +1,5 @@
 export interface LoggedInUserModel {
+    id: number;
     username: string;
     token: string;
     timeZoneOffsetHours: number;

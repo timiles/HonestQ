@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoggedInUserModel, LogInFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
+declare var gtag: (method: string, arg: { [key: string]: string }) => void;
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -53,6 +54,7 @@ export const actionCreators = {
                 .then((logInResponse: LoggedInUserModel) => {
                     // Log in successful if there's a jwt token in the response
                     if (logInResponse && logInResponse.token) {
+                        gtag('set', { user_id: `${logInResponse.id}` });
                         dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
                     } else {
                         dispatch({ type: 'LOGIN_FAILED', payload: { error: 'An error occurred, please try again' } });

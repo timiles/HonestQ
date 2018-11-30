@@ -54,6 +54,7 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
+                Assert.Equal(_user.Id, responseModel.Id);
                 Assert.Equal(_user.Username, responseModel.Username);
 
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);

@@ -20,8 +20,10 @@ export default createServerRenderer((params) => {
         const store = configureStore(createMemoryHistory());
         store.dispatch(replace(urlAfterBasename));
 
+        let userId;
         if (params.data.login.loggedInUser) {
             store.dispatch({ type: 'LOGIN_SUCCESS', payload: params.data.login.loggedInUser });
+            userId = params.data.login.loggedInUser.id;
         }
 
         // Prepare an instance of the application and perform an inital render that will
@@ -55,7 +57,10 @@ export default createServerRenderer((params) => {
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${trackingCode}');`;
+${userId ? `gtag('set', { user_id: '${userId}' });
+gtag('config', '${trackingCode}');
+` : ''
+            }`;
 
         const embedlyScript = `
 (function(w, d){
