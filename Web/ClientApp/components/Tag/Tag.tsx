@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { TagModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
-import ShortLink from '../shared/ShortLink';
+import TextWithShortLinks from '../shared/TextWithShortLinks';
 import WatchControl from '../shared/WatchControl';
 import QuestionList from './QuestionList';
 
@@ -69,7 +69,7 @@ export default class Tag extends React.Component<Props, {}> {
                         {moreInfoUrl &&
                             <>
                                 <h4>More info</h4>
-                                <ShortLink to={moreInfoUrl} />
+                                <TextWithShortLinks value={moreInfoUrl} />
                             </>
                         }
                     </div>

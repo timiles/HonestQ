@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import * as React from 'react';
 import { generateRandomHtmlId } from '../../utils/html-utils';
-import { extractDomainFromUrl, extractUrlFromText } from '../../utils/string-utils';
+import { extractDomainFromUrl } from '../../utils/string-utils';
 
 interface Props {
     to: string;
@@ -23,26 +23,20 @@ export default class ShortLink extends React.Component<Props, {}> {
 
     public render() {
         const { to } = this.props;
-        const url = extractUrlFromText(to);
 
-        if (!url) {
-            // If it is not a URL, fall back to just the original text.
-            return to;
-        }
-
-        const isPdf = (url.toLowerCase().indexOf('.pdf') >= 0);
-        const domain = extractDomainFromUrl(url);
+        const isPdf = (to.toLowerCase().indexOf('.pdf') >= 0);
+        const domain = extractDomainFromUrl(to);
         return (
             <span>
                 <a
                     id={this.tooltipId}
                     className="badge badge-info"
-                    href={url}
+                    href={to}
                     target="_blank"
                     rel="noopener noreferrer"
                     data-toggle="tooltip"
                     data-placement="top"
-                    title={url}
+                    title={to}
                 >
                     🌐 {domain} {isPdf ? '(PDF)' : ''}
                 </a>
