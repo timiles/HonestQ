@@ -52,34 +52,38 @@ class NotificationList extends React.Component<Props> {
         return (
             <>
                 <h1>Recent notifications</h1>
-                {notificationList && notificationList.notifications.length > 0 ?
-                    <ul className="list-unstyled">
-                        {notificationList.notifications.map((x: NotificationModel, i: number) =>
-                            <li key={i} className="mb-2">
-                                {this.renderNotification(x)}
-                            </li>)}
-                        {notificationList.lastId === 0 && notificationList.notifications.length > 40 &&
-                            <li>
-                                That's all, folks!
+                {notificationList &&
+                    <>
+                        {notificationList.notifications.length > 0 ?
+                            <ul className="list-unstyled">
+                                {notificationList.notifications.map((x: NotificationModel, i: number) =>
+                                    <li key={i} className="mb-2">
+                                        {this.renderNotification(x)}
+                                    </li>)}
+                                {notificationList.lastId === 0 && notificationList.notifications.length > 40 &&
+                                    <li>
+                                        That's all, folks!
                             </li>
+                                }
+                            </ul>
+                            :
+                            <div>
+                                <p>
+                                    <i>No notifications yet.</i>
+                                </p>
+                                <p>
+                                    Around the site you will see a Watch button, like this:
+                                </p>
+                                <p className="text-center">
+                                    <WatchControlDemo />
+                                </p>
+                                <p>
+                                    Try watching some Tags, Questions, Answers, or Comments
+                                    to be notified of new posts under each.
+                                </p>
+                            </div>
                         }
-                    </ul>
-                    :
-                    <div>
-                        <p>
-                            <i>No notifications yet.</i>
-                        </p>
-                        <p>
-                            Around the site you will see a Watch button, like this:
-                        </p>
-                        <p className="text-center">
-                            <WatchControlDemo />
-                        </p>
-                        <p>
-                            Try watching some Tags, Questions, Answers, or Comments
-                            to be notified of new posts under each.
-                        </p>
-                    </div>
+                    </>
                 }
                 <Loading {...this.props.loadingNotificationList} />
             </>
