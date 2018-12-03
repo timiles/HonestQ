@@ -49,7 +49,13 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                await _tagService.SaveTag(payload.Name, payload.Description, payload.MoreInfoUrl, User.Identity.ParseUserId());
+                var userId = User.Identity.ParseUserId();
+                var tagModel = await _tagService.SaveTag(payload.Name, payload.Description, payload.MoreInfoUrl, userId);
+                if (tagModel != null)
+                {
+                    await _notificationsService.AddWatchToTag(userId, tagModel.Slug);
+                }
+
                 return Ok();
             }
             catch (AppException ex)

@@ -43,9 +43,13 @@ namespace Pobs.Tests.Integration.Questions
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var question = dbContext.Questions.Single(x => x.PostedByUser.Id == _userId);
+                    var question = dbContext.Questions
+                        .Include(x => x.Watches)
+                        .Single(x => x.PostedByUser.Id == _userId);
                     Assert.Equal(payload.Text, question.Text);
                     Assert.True(question.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.Equal(PostStatus.OK, question.Status);
+                    Assert.NotEmpty(question.Watches.Where(x => x.UserId == _userId));
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<QuestionListItemModel>(responseContent);
@@ -53,8 +57,6 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(question.Id, responseModel.Id);
                     Assert.Equal(question.Slug, responseModel.Slug);
                     Assert.Equal(question.Text, responseModel.Text);
-
-                    Assert.Equal(PostStatus.OK, question.Status);
                 }
             }
         }

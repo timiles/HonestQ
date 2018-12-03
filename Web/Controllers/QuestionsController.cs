@@ -43,10 +43,12 @@ namespace Pobs.Web.Controllers
                 return BadRequest(string.Join(", ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage)));
             }
 
+            var userId = User.Identity.ParseUserId();
             var isAdmin = User.IsInRole(Role.Admin);
-            var questionModel = await _questionService.SaveQuestion(payload, User.Identity.ParseUserId(), isAdmin);
+            var questionModel = await _questionService.SaveQuestion(payload, userId, isAdmin);
             if (questionModel != null)
             {
+                await _notificationsService.AddWatchToQuestion(userId, questionModel.Id);
                 if (isAdmin)
                 {
                     await _notificationsService.CreateNotificationsForQuestion(questionModel.Id);
@@ -152,10 +154,13 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                var answerModel = await _questionService.SaveAnswer(questionId, payload, User.Identity.ParseUserId());
+                var userId = User.Identity.ParseUserId();
+                var answerModel = await _questionService.SaveAnswer(questionId, payload, userId);
                 if (answerModel != null)
                 {
+                    await _notificationsService.AddWatchToAnswer(userId, questionId, answerModel.Id);
                     await _notificationsService.CreateNotificationsForAnswer(answerModel.Id);
+                    answerModel.IsWatchedByLoggedInUser = true;
                     return Ok(answerModel);
                 }
                 return NotFound();
@@ -294,10 +299,13 @@ namespace Pobs.Web.Controllers
 
             try
             {
-                var commentModel = await _questionService.SaveComment(questionId, answerId, payload, User.Identity.ParseUserId());
+                var userId = User.Identity.ParseUserId();
+                var commentModel = await _questionService.SaveComment(questionId, answerId, payload, userId);
                 if (commentModel != null)
                 {
+                    await _notificationsService.AddWatchToComment(userId, questionId, answerId, commentModel.Id);
                     await _notificationsService.CreateNotificationsForComment(commentModel.Id);
+                    commentModel.IsWatchedByLoggedInUser = true;
                     return Ok(commentModel);
                 }
                 return NotFound();

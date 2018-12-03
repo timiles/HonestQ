@@ -13,7 +13,7 @@ namespace Pobs.Web.Services
     public interface ITagService
     {
         Task<TagsListModel> GetAllTags(bool isApproved);
-        Task SaveTag(string name, string description, string moreInfoUrl, int postedByUserId);
+        Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId);
         Task<AdminTagModel> UpdateTag(string tagSlug, string newSlug, string name, string description, string moreInfoUrl, bool isApproved);
         Task<TagModel> GetTag(string tagSlug, int? loggedInUserId, bool isAdmin);
         Task<TagAutocompleteResultsModel> Query(string q);
@@ -34,7 +34,7 @@ namespace Pobs.Web.Services
             return new TagsListModel(tags);
         }
 
-        public async Task SaveTag(string name, string description, string moreInfoUrl, int postedByUserId)
+        public async Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId)
         {
             var slug = name.ToSlug(true);
             var tagWithSameSlug = _context.Tags.FirstOrDefault(x => x.Slug == slug);
@@ -45,17 +45,18 @@ namespace Pobs.Web.Services
                     throw new AppException($"A tag already exists at /{slug}.");
                 }
                 // If it's not yet approved, no-one needs to know?
-                return;
+                return null;
             }
             var postedByUser = await _context.Users.FindAsync(postedByUserId);
-            _context.Tags.Add(
-                new Tag(slug, name, postedByUser, DateTime.UtcNow)
-                {
-                    Description = description,
-                    MoreInfoUrl = moreInfoUrl,
-                    IsApproved = false
-                });
+            var tag = new Tag(slug, name, postedByUser, DateTime.UtcNow)
+            {
+                Description = description,
+                MoreInfoUrl = moreInfoUrl,
+                IsApproved = false
+            };
+            _context.Tags.Add(tag);
             await _context.SaveChangesAsync();
+            return new TagModel(tag, postedByUserId);
         }
 
         public async Task<AdminTagModel> UpdateTag(string tagSlug, string newSlug, string name, string description, string moreInfoUrl, bool isApproved)

@@ -50,13 +50,14 @@ namespace Pobs.Tests.Integration.Questions
                 {
                     var reloadedQuestion = dbContext.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
+                        .Include(x => x.Answers).ThenInclude(x => x.Watches)
                         .First(x => x.Id == question.Id);
                     var answer = reloadedQuestion.Answers.Single();
                     Assert.Equal(payload.Text.CleanText(), answer.Text);
                     Assert.Equal(payload.Source, answer.Source);
                     Assert.Equal(_user.Id, answer.PostedByUser.Id);
                     Assert.True(answer.PostedAt > DateTime.UtcNow.AddMinutes(-1));
-
+                    Assert.NotEmpty(answer.Watches.Where(x => x.User.Id == _user.Id));
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<AnswerModel>(responseContent);
@@ -67,6 +68,7 @@ namespace Pobs.Tests.Integration.Questions
                     AssertHelpers.Equal(answer.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal(answer.PostedByUser.Username, responseModel.PostedBy);
                     Assert.True(responseModel.IsPostedByLoggedInUser);
+                    Assert.True(responseModel.IsWatchedByLoggedInUser);
                 }
             }
         }
