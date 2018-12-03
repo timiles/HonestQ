@@ -2,6 +2,7 @@ import 'bootstrap';
 import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import * as ReactGA from 'react-ga';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
@@ -20,6 +21,24 @@ const initialState = (window as any).initialReduxState as ApplicationState;
 const store = configureStore(history, initialState);
 
 function renderApp() {
+    // TODO: Use .env instead? Couldn't get it working...
+    const googleAnalyticsTrackingCode = (window.location.host === 'www.honestq.com') ? 'UA-128648766-2' : null;
+    if (googleAnalyticsTrackingCode) {
+        ReactGA.initialize(googleAnalyticsTrackingCode);
+        const loggedInUser = store.getState().login.loggedInUser;
+        if (loggedInUser) {
+            ReactGA.set({ userId: loggedInUser.id });
+        }
+        ReactGA.pageview(window.location.pathname + window.location.search);
+        history.listen((location, action) => {
+            // Only track PUSH and POP, not REPLACE.
+            // TODO: Fix so we don't get REPLACE in the first place?
+            if (action === 'PUSH' || action === 'POP') {
+                ReactGA.pageview(location.pathname + location.search);
+            }
+        });
+    }
+
     // This code starts up the React app when it runs in a browser. It sets up the routing configuration
     // and injects the app into a DOM element.
     ReactDOM.render(

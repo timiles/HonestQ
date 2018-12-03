@@ -6,7 +6,6 @@ namespace Pobs.Web.Helpers
     {
         public string Domain { get; set; }
         public string ExceptionlessApiKey { get; set; }
-        public string GoogleAnalyticsTrackingCode { get; set; }
         public string Secret { get; set; }
 
         public string SmtpUsername { get; set; }

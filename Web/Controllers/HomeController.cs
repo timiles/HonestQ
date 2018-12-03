@@ -54,7 +54,6 @@ namespace Pobs.Web.Controllers
 
             dynamic data = new
             {
-                googleAnalyticsTrackingCode = _appSettings.GoogleAnalyticsTrackingCode,
                 login = new
                 {
                     loggedInUser = loggedInModel

@@ -20,10 +20,8 @@ export default createServerRenderer((params) => {
         const store = configureStore(createMemoryHistory());
         store.dispatch(replace(urlAfterBasename));
 
-        let userId;
         if (params.data.login.loggedInUser) {
             store.dispatch({ type: 'LOGIN_SUCCESS', payload: params.data.login.loggedInUser });
-            userId = params.data.login.loggedInUser.id;
         }
 
         // Prepare an instance of the application and perform an inital render that will
@@ -51,16 +49,6 @@ export default createServerRenderer((params) => {
             });
             return;
         }
-
-        const trackingCode = params.data.googleAnalyticsTrackingCode;
-        const gaScript = `
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-${userId ? `gtag('set', { user_id: '${userId}' });
-gtag('config', '${trackingCode}');
-` : ''
-            }`;
 
         const embedlyScript = `
 (function(w, d){
@@ -105,12 +93,6 @@ if (!d.getElementById(id)){
                     />
                     <script src={params.data.versionedAssetPaths.vendorJs} />
                     <script src={params.data.versionedAssetPaths.mainClientJs} />
-                    {trackingCode &&
-                        <>
-                            <script async={true} src={`https://www.googletagmanager.com/gtag/js?id=${trackingCode}`} />
-                            <script dangerouslySetInnerHTML={{ __html: gaScript }} />
-                        </>
-                    }
                     <script dangerouslySetInnerHTML={{ __html: embedlyScript }} />
                 </body>
             </html>
