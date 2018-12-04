@@ -15,6 +15,7 @@ import UpvoteButton from './UpvoteButton';
 type Props = AnswerModel
     & {
     questionId: number,
+    questionText: string,
     onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
     onWatch: (on: boolean, answerId: number, commentId?: number) => void,
 };
@@ -29,7 +30,7 @@ export default class Answer extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, id, text, source, postedBy, postedAt, comments, reactionCounts, myReactions } = this.props;
+        const { questionId, questionText, id, text, source, postedBy, postedAt, comments, reactionCounts, myReactions } = this.props;
         const { isWatchedByLoggedInUser } = this.props;
 
         return (
@@ -46,6 +47,10 @@ export default class Answer extends React.Component<Props, {}> {
                                 </Link>
                             }
                         </LoggedInUserContext.Consumer>
+                        <p className="small">
+                            <Emoji value={EmojiValue.Question} />
+                            <span className="post quote-marks">{questionText}</span>
+                        </p>
                         <h4>
                             <Emoji value={EmojiValue.Answer} />
                             <span className="ml-1 post">{text}</span>

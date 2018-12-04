@@ -101,6 +101,7 @@ class Container extends React.Component<ContainerProps> {
                                                     <Answer
                                                         {...answer}
                                                         questionId={question.questionId!}
+                                                        questionText={question.model.text}
                                                         onReaction={this.handleReaction}
                                                         onWatch={this.handleWatch}
                                                     />

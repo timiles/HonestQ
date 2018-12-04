@@ -113,15 +113,18 @@ ul.list-comma-separated li:not(:last-child):after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 3.3em;
     }
-    small .quote-marks:before, small .quote-marks:after {
+    p.small .quote-marks:before, p.small .quote-marks:after,
+        small .quote-marks:before, small .quote-marks:after {
         font-size: 1.5rem;
         opacity: 0.8;
     }
-    small .quote-marks:before {
+    p.small .quote-marks:before,
+        small .quote-marks:before {
         margin-right: 1px;
         top: 9px;
     }
-    small .quote-marks:after {
+    p.small .quote-marks:after,
+        small .quote-marks:after {
         bottom: -9px;
         margin-left: 1px;
     }
@@ -154,6 +157,10 @@ dl.button-definitions dd {
     display: inline-block;
     min-width: 23px;
     text-align: center;
+}
+p.small .emoji, small .emoji {
+    max-width: 23px;
+    margin-right: 6px;
 }
 
 .emoji-over-text-area {
