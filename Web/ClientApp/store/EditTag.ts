@@ -25,8 +25,8 @@ interface GetAdminTagSuccessAction {
     payload: { tag: AdminTagModel; tagSlug: string; };
 }
 interface GetAdminTagFailureAction { type: 'GET_ADMIN_TAG_FAILURE'; payload: { tagSlug: string; error: string; }; }
-interface EditTagFormSubmittedAction { type: 'EDIT_TAG_FORM_SUBMITTED'; }
-interface EditTagFormReceivedAction { type: 'EDIT_TAG_FORM_RECEIVED'; payload: { tag: AdminTagModel; }; }
+interface EditTagFormRequestAction { type: 'EDIT_TAG_FORM_REQUEST'; }
+interface EditTagFormSuccessAction { type: 'EDIT_TAG_FORM_SUCCESS'; payload: { tag: AdminTagModel; }; }
 interface EditTagFormFailureAction { type: 'EDIT_TAG_FORM_FAILURE'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -34,8 +34,8 @@ interface EditTagFormFailureAction { type: 'EDIT_TAG_FORM_FAILURE'; payload: { e
 type KnownAction = GetAdminTagRequestAction
     | GetAdminTagSuccessAction
     | GetAdminTagFailureAction
-    | EditTagFormSubmittedAction
-    | EditTagFormReceivedAction
+    | EditTagFormRequestAction
+    | EditTagFormSuccessAction
     | EditTagFormFailureAction;
 
 // ----------------
@@ -66,7 +66,7 @@ export const actionCreators = {
     },
     submit: (slug: string, tagForm: EditTagFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'EDIT_TAG_FORM_SUBMITTED' });
+            dispatch({ type: 'EDIT_TAG_FORM_REQUEST' });
 
             if (!tagForm.name || !tagForm.slug || (tagForm.description && tagForm.description.length > 280)) {
                 // Don't set an error message, the validation properties will display instead
@@ -76,7 +76,7 @@ export const actionCreators = {
 
             putJson<AdminTagModel>(`/api/tags/${slug}`, tagForm, getState().login.loggedInUser!)
                 .then((tagResponse: AdminTagModel) => {
-                    dispatch({ type: 'EDIT_TAG_FORM_RECEIVED', payload: { tag: tagResponse } });
+                    dispatch({ type: 'EDIT_TAG_FORM_SUCCESS', payload: { tag: tagResponse } });
                 })
                 .catch((reason: string) => {
                     dispatch({ type: 'EDIT_TAG_FORM_FAILURE', payload: { error: reason } });
@@ -117,7 +117,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 },
                 editTagForm: state.editTagForm,
             };
-        case 'EDIT_TAG_FORM_SUBMITTED':
+        case 'EDIT_TAG_FORM_REQUEST':
             return {
                 tagModel: state.tagModel,
                 editTagForm: {
@@ -125,7 +125,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                     submitted: true,
                 },
             };
-        case 'EDIT_TAG_FORM_RECEIVED':
+        case 'EDIT_TAG_FORM_SUCCESS':
             return {
                 tagModel: {
                     id: action.payload.tag.slug,

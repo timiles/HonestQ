@@ -19,19 +19,19 @@ export interface LoginState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface LogInSubmittedAction { type: 'LOGIN_SUBMITTED'; }
+interface LogInRequestAction { type: 'LOGIN_REQUEST'; }
 interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
 interface LogInFailureAction { type: 'LOGIN_FAILURE'; payload: { error: string | null; }; }
-interface LogOutSubmittedAction { type: 'LOGOUT_SUBMITTED'; }
+interface LogOutRequestAction { type: 'LOGOUT_REQUEST'; }
 export interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
 interface LogOutFailureAction { type: 'LOGOUT_FAILURE'; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = LogInSubmittedAction
+type KnownAction = LogInRequestAction
     | LogInSuccessAction
     | LogInFailureAction
-    | LogOutSubmittedAction
+    | LogOutRequestAction
     | LogOutSuccessAction
     | LogOutFailureAction;
 
@@ -42,7 +42,7 @@ type KnownAction = LogInSubmittedAction
 export const actionCreators = {
     logIn: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'LOGIN_SUBMITTED' });
+            dispatch({ type: 'LOGIN_REQUEST' });
 
             if (!logInForm.username || !logInForm.password) {
                 // Don't set an error message, the validation properties will display instead
@@ -67,7 +67,7 @@ export const actionCreators = {
     },
     logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'LOGOUT_SUBMITTED' });
+            dispatch({ type: 'LOGOUT_REQUEST' });
 
             postJson('/api/account/logout', null, null, true)
                 .then(() => {
@@ -88,13 +88,13 @@ const defaultState: LoginState = {};
 
 export const reducer: Reducer<LoginState> = (state: LoginState, action: KnownAction) => {
     switch (action.type) {
-        case 'LOGIN_SUBMITTED':
+        case 'LOGIN_REQUEST':
             return { submitting: true, submitted: true };
         case 'LOGIN_SUCCESS':
             return { submitting: false, submitted: true, loggedInUser: action.payload };
         case 'LOGIN_FAILURE':
             return { submitting: false, submitted: true, error: action.payload.error };
-        case 'LOGOUT_SUBMITTED':
+        case 'LOGOUT_REQUEST':
             return { loggedInUser: state.loggedInUser };
         case 'LOGOUT_SUCCESS':
             return defaultState;

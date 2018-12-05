@@ -3,7 +3,7 @@ import { AppThunkAction } from '.';
 import { LoadingProps } from '../components/shared/Loading';
 import { QuestionListItemModel, QuestionsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
-import { NewQuestionFormReceivedAction } from './NewQuestion';
+import { NewQuestionFormSuccessAction } from './NewQuestion';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -24,10 +24,11 @@ interface GetQuestionsListFailureAction { type: 'GET_QUESTIONS_LIST_FAILURE'; pa
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    GetQuestionsListRequestAction
+    | GetQuestionsListRequestAction
     | GetQuestionsListSuccessAction
     | GetQuestionsListFailureAction
-    | NewQuestionFormReceivedAction;
+    | NewQuestionFormSuccessAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -92,7 +93,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
             return {
                 loadingQuestionList: { ...state.loadingQuestionList, error: action.payload.error },
             };
-        case 'NEW_QUESTION_FORM_RECEIVED': {
+        case 'NEW_QUESTION_FORM_SUCCESS': {
             if (!state.loadingQuestionList.loadedModel) {
                 // We could be posting a question from the tags page
                 return state;

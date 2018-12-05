@@ -16,11 +16,11 @@ export interface NewAnswerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface NewAnswerFormSubmittedAction {
-    type: 'NEW_ANSWER_FORM_SUBMITTED';
+interface NewAnswerFormRequestAction {
+    type: 'NEW_ANSWER_FORM_REQUEST';
 }
-export interface NewAnswerFormReceivedAction {
-    type: 'NEW_ANSWER_FORM_RECEIVED';
+export interface NewAnswerFormSuccessAction {
+    type: 'NEW_ANSWER_FORM_SUCCESS';
     payload: { answer: AnswerModel; };
 }
 interface NewAnswerFormFailureAction {
@@ -30,8 +30,8 @@ interface NewAnswerFormFailureAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = NewAnswerFormSubmittedAction
-    | NewAnswerFormReceivedAction
+type KnownAction = NewAnswerFormRequestAction
+    | NewAnswerFormSuccessAction
     | NewAnswerFormFailureAction;
 
 // ----------------
@@ -42,7 +42,7 @@ export const actionCreators = {
     submit: (questionId: number, answerForm: AnswerFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'NEW_ANSWER_FORM_SUBMITTED' });
+                dispatch({ type: 'NEW_ANSWER_FORM_REQUEST' });
 
                 if (!answerForm.text || answerForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
@@ -55,7 +55,7 @@ export const actionCreators = {
                     answerForm, getState().login.loggedInUser!)
                     .then((responseModel: AnswerModel) => {
                         dispatch({
-                            type: 'NEW_ANSWER_FORM_RECEIVED',
+                            type: 'NEW_ANSWER_FORM_SUCCESS',
                             payload: { answer: responseModel },
                         });
                     })
@@ -77,14 +77,14 @@ const defaultState: NewAnswerState = { answerForm: {} };
 
 export const reducer: Reducer<NewAnswerState> = (state: NewAnswerState, action: KnownAction) => {
     switch (action.type) {
-        case 'NEW_ANSWER_FORM_SUBMITTED':
+        case 'NEW_ANSWER_FORM_REQUEST':
             return {
                 answerForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'NEW_ANSWER_FORM_RECEIVED':
+        case 'NEW_ANSWER_FORM_SUCCESS':
             return defaultState;
         case 'NEW_ANSWER_FORM_FAILURE':
             return {

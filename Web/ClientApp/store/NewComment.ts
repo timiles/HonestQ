@@ -16,11 +16,11 @@ export interface NewCommentState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface NewCommentFormSubmittedAction {
-    type: 'NEW_COMMENT_FORM_SUBMITTED';
+interface NewCommentFormRequestAction {
+    type: 'NEW_COMMENT_FORM_REQUEST';
 }
-export interface NewCommentFormReceivedAction {
-    type: 'NEW_COMMENT_FORM_RECEIVED';
+export interface NewCommentFormSuccessAction {
+    type: 'NEW_COMMENT_FORM_SUCCESS';
     payload: { answerId: number; comment: CommentModel; };
 }
 interface NewCommentFormFailureAction {
@@ -30,8 +30,8 @@ interface NewCommentFormFailureAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = NewCommentFormSubmittedAction
-    | NewCommentFormReceivedAction
+type KnownAction = NewCommentFormRequestAction
+    | NewCommentFormSuccessAction
     | NewCommentFormFailureAction;
 
 // ----------------
@@ -42,7 +42,7 @@ export const actionCreators = {
     submit: (questionId: number, answerId: number, commentForm: CommentFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'NEW_COMMENT_FORM_SUBMITTED' });
+                dispatch({ type: 'NEW_COMMENT_FORM_REQUEST' });
 
                 if (!commentForm.text || commentForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
@@ -55,7 +55,7 @@ export const actionCreators = {
                     commentForm, getState().login.loggedInUser!)
                     .then((responseModel: CommentModel) => {
                         dispatch({
-                            type: 'NEW_COMMENT_FORM_RECEIVED',
+                            type: 'NEW_COMMENT_FORM_SUCCESS',
                             payload: { answerId, comment: responseModel },
                         });
                     })
@@ -77,14 +77,14 @@ const defaultState: NewCommentState = { commentForm: {} };
 
 export const reducer: Reducer<NewCommentState> = (state: NewCommentState, action: KnownAction) => {
     switch (action.type) {
-        case 'NEW_COMMENT_FORM_SUBMITTED':
+        case 'NEW_COMMENT_FORM_REQUEST':
             return {
                 commentForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'NEW_COMMENT_FORM_RECEIVED':
+        case 'NEW_COMMENT_FORM_SUCCESS':
             return defaultState;
         case 'NEW_COMMENT_FORM_FAILURE':
             return {

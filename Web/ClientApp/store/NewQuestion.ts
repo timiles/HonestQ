@@ -19,11 +19,11 @@ export interface NewQuestionState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface NewQuestionFormSubmittedAction {
-    type: 'NEW_QUESTION_FORM_SUBMITTED';
+interface NewQuestionFormRequestAction {
+    type: 'NEW_QUESTION_FORM_REQUEST';
 }
-export interface NewQuestionFormReceivedAction {
-    type: 'NEW_QUESTION_FORM_RECEIVED';
+export interface NewQuestionFormSuccessAction {
+    type: 'NEW_QUESTION_FORM_SUCCESS';
     payload: { questionListItem: QuestionListItemModel; };
 }
 interface NewQuestionFormAwaitingApprovalAction {
@@ -40,8 +40,8 @@ interface NewQuestionFormFailureAction {
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | NewQuestionFormSubmittedAction
-    | NewQuestionFormReceivedAction
+    | NewQuestionFormRequestAction
+    | NewQuestionFormSuccessAction
     | NewQuestionFormAwaitingApprovalAction
     | NewQuestionFormResetAction
     | NewQuestionFormFailureAction
@@ -55,7 +55,7 @@ export const actionCreators = {
     submit: (questionForm: QuestionFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'NEW_QUESTION_FORM_SUBMITTED' });
+                dispatch({ type: 'NEW_QUESTION_FORM_REQUEST' });
 
                 if (!questionForm.text || questionForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
@@ -68,7 +68,7 @@ export const actionCreators = {
                     .then((responseModel: QuestionListItemModel) => {
                         if (responseModel) {
                             dispatch({
-                                type: 'NEW_QUESTION_FORM_RECEIVED',
+                                type: 'NEW_QUESTION_FORM_SUCCESS',
                                 payload: { questionListItem: responseModel },
                             });
                             setTimeout(() => {
@@ -108,14 +108,14 @@ const defaultState: NewQuestionState = { questionForm: {} };
 
 export const reducer: Reducer<NewQuestionState> = (state: NewQuestionState, action: KnownAction) => {
     switch (action.type) {
-        case 'NEW_QUESTION_FORM_SUBMITTED':
+        case 'NEW_QUESTION_FORM_REQUEST':
             return {
                 questionForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'NEW_QUESTION_FORM_RECEIVED':
+        case 'NEW_QUESTION_FORM_SUCCESS':
             return defaultState;
         case 'NEW_QUESTION_FORM_AWAITING_APPROVAL':
             return {

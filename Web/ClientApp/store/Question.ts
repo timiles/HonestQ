@@ -4,8 +4,8 @@ import { QuestionProps } from '../components/Question/Question';
 import { CommentModel, QuestionModel } from '../server-models';
 import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
 import { ReactionModel, WatchResponseModel } from './../server-models';
-import { NewAnswerFormReceivedAction } from './NewAnswer';
-import { NewCommentFormReceivedAction } from './NewComment';
+import { NewAnswerFormSuccessAction } from './NewAnswer';
+import { NewCommentFormSuccessAction } from './NewComment';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -54,8 +54,8 @@ type KnownAction =
     | GetQuestionRequestAction
     | GetQuestionSuccessAction
     | GetQuestionFailureAction
-    | NewAnswerFormReceivedAction
-    | NewCommentFormReceivedAction
+    | NewAnswerFormSuccessAction
+    | NewCommentFormSuccessAction
     | AddReactionSuccessAction
     | RemoveReactionSuccessAction
     | UpdateWatchQuestionSuccessAction
@@ -189,7 +189,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                     error: action.payload.error,
                 },
             };
-        case 'NEW_ANSWER_FORM_RECEIVED': {
+        case 'NEW_ANSWER_FORM_SUCCESS': {
             const questionModel = state.question!.model!;
             // Slice for immutability
             const answersNext = questionModel.answers.slice();
@@ -202,7 +202,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                 },
             };
         }
-        case 'NEW_COMMENT_FORM_RECEIVED': {
+        case 'NEW_COMMENT_FORM_SUCCESS': {
             if (action.payload.comment.status !== 'OK') {
                 return state;
             }

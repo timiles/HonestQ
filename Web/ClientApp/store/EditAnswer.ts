@@ -29,11 +29,11 @@ interface GetAnswerFailureAction {
     type: 'GET_ANSWER_FAILURE';
     payload: { answerId: number; error: string; };
 }
-interface EditAnswerFormSubmittedAction {
-    type: 'EDIT_ANSWER_FORM_SUBMITTED';
+interface EditAnswerFormRequestAction {
+    type: 'EDIT_ANSWER_FORM_REQUEST';
 }
-interface EditAnswerFormReceivedAction {
-    type: 'EDIT_ANSWER_FORM_RECEIVED';
+interface EditAnswerFormSuccessAction {
+    type: 'EDIT_ANSWER_FORM_SUCCESS';
     payload: { answerId: number; answer: AnswerModel; };
 }
 interface EditAnswerFormFailureAction {
@@ -46,8 +46,8 @@ interface EditAnswerFormFailureAction {
 type KnownAction = GetAnswerRequestAction
     | GetAnswerSuccessAction
     | GetAnswerFailureAction
-    | EditAnswerFormSubmittedAction
-    | EditAnswerFormReceivedAction
+    | EditAnswerFormRequestAction
+    | EditAnswerFormSuccessAction
     | EditAnswerFormFailureAction;
 
 // ----------------
@@ -78,7 +78,7 @@ export const actionCreators = {
     submit: (questionId: number, answerId: number, answerForm: AnswerFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'EDIT_ANSWER_FORM_SUBMITTED' });
+                dispatch({ type: 'EDIT_ANSWER_FORM_REQUEST' });
 
                 if (!answerForm.text || answerForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
@@ -90,7 +90,7 @@ export const actionCreators = {
                     `/api/questions/${questionId}/answers/${answerId}`, answerForm, getState().login.loggedInUser!)
                     .then((answerResponse: AnswerModel) => {
                         dispatch({
-                            type: 'EDIT_ANSWER_FORM_RECEIVED',
+                            type: 'EDIT_ANSWER_FORM_SUCCESS',
                             payload: { answerId, answer: answerResponse },
                         });
                     })
@@ -127,14 +127,14 @@ export const reducer: Reducer<EditAnswerState> = (state: EditAnswerState, action
                     error: action.payload.error,
                 },
             };
-        case 'EDIT_ANSWER_FORM_SUBMITTED':
+        case 'EDIT_ANSWER_FORM_REQUEST':
             return {
                 editAnswerForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'EDIT_ANSWER_FORM_RECEIVED':
+        case 'EDIT_ANSWER_FORM_SUCCESS':
             return {
                 editAnswerForm: {
                     submitting: false,

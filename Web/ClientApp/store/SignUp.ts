@@ -17,14 +17,14 @@ export interface SignUpState {
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface SignUpSubmittedAction { type: 'SIGNUP_SUBMITTED'; payload: SignUpFormModel; }
+interface SignUpRequestAction { type: 'SIGNUP_REQUEST'; payload: SignUpFormModel; }
 interface SignUpSuccessAction { type: 'SIGNUP_SUCCESS'; }
 interface SignUpFailureAction { type: 'SIGNUP_FAILURE'; payload: { reason: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | SignUpSubmittedAction
+    | SignUpRequestAction
     | SignUpSuccessAction
     | SignUpFailureAction;
 
@@ -36,7 +36,7 @@ export const actionCreators = {
 
     submitSignUpForm: (form: SignUpFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'SIGNUP_SUBMITTED', payload: form });
+            dispatch({ type: 'SIGNUP_REQUEST', payload: form });
 
             const user = form;
             if (!user.email || !user.username || !user.password || user.password.length < 7) {
@@ -70,7 +70,7 @@ const defaultState: SignUpState = {
 export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownAction) => {
     switch (action.type) {
 
-        case 'SIGNUP_SUBMITTED':
+        case 'SIGNUP_REQUEST':
             return {
                 submitting: true,
                 submitted: true,

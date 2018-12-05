@@ -18,14 +18,14 @@ export interface VerifyEmailState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface VerifyEmailSubmittedAction { type: 'VERIFY_EMAIL_SUBMITTED'; }
+interface VerifyEmailRequestAction { type: 'VERIFY_EMAIL_REQUEST'; }
 interface VerifyEmailSuccessAction { type: 'VERIFY_EMAIL_SUCCESS'; payload: { username: string; }; }
 interface VerifyEmailFailureAction { type: 'VERIFY_EMAIL_FAILURE'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | VerifyEmailSubmittedAction
+    | VerifyEmailRequestAction
     | VerifyEmailSuccessAction
     | VerifyEmailFailureAction
     ;
@@ -37,7 +37,7 @@ type KnownAction =
 export const actionCreators = {
     verifyEmail: (verifyEmailForm: VerifyEmailFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'VERIFY_EMAIL_SUBMITTED' });
+            dispatch({ type: 'VERIFY_EMAIL_REQUEST' });
 
             postJson<VerifyEmailResponseModel>('/api/account/verifyemail', verifyEmailForm, null)
                 .then((response: VerifyEmailResponseModel) => {
@@ -58,7 +58,7 @@ const defaultState: VerifyEmailState = {};
 
 export const reducer: Reducer<VerifyEmailState> = (state: VerifyEmailState, action: KnownAction) => {
     switch (action.type) {
-        case 'VERIFY_EMAIL_SUBMITTED':
+        case 'VERIFY_EMAIL_REQUEST':
             return { submitting: true };
         case 'VERIFY_EMAIL_SUCCESS':
             return { success: true, username: action.payload.username };

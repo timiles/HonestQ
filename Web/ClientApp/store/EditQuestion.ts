@@ -29,11 +29,11 @@ interface GetQuestionFailureAction {
     type: 'GET_QUESTION_FAILURE';
     payload: { questionId: number; error: string; };
 }
-interface EditQuestionFormSubmittedAction {
-    type: 'EDIT_QUESTION_FORM_SUBMITTED';
+interface EditQuestionFormRequestAction {
+    type: 'EDIT_QUESTION_FORM_REQUEST';
 }
-interface EditQuestionFormReceivedAction {
-    type: 'EDIT_QUESTION_FORM_RECEIVED';
+interface EditQuestionFormSuccessAction {
+    type: 'EDIT_QUESTION_FORM_SUCCESS';
     payload: { questionId: number; question: AdminQuestionModel; };
 }
 interface EditQuestionFormFailureAction {
@@ -46,8 +46,8 @@ interface EditQuestionFormFailureAction {
 type KnownAction = GetQuestionRequestAction
     | GetQuestionSuccessAction
     | GetQuestionFailureAction
-    | EditQuestionFormSubmittedAction
-    | EditQuestionFormReceivedAction
+    | EditQuestionFormRequestAction
+    | EditQuestionFormSuccessAction
     | EditQuestionFormFailureAction;
 
 // ----------------
@@ -77,7 +77,7 @@ export const actionCreators = {
     submit: (questionId: number, questionForm: AdminQuestionFormModel):
         AppThunkAction<KnownAction> => (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'EDIT_QUESTION_FORM_SUBMITTED' });
+                dispatch({ type: 'EDIT_QUESTION_FORM_REQUEST' });
 
                 if (!questionForm.text || questionForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
@@ -89,7 +89,7 @@ export const actionCreators = {
                     `/api/questions/${questionId}`, questionForm, getState().login.loggedInUser!)
                     .then((questionResponse) => {
                         dispatch({
-                            type: 'EDIT_QUESTION_FORM_RECEIVED',
+                            type: 'EDIT_QUESTION_FORM_SUCCESS',
                             payload: { questionId, question: questionResponse },
                         });
                     })
@@ -126,14 +126,14 @@ export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, ac
                     error: action.payload.error,
                 },
             };
-        case 'EDIT_QUESTION_FORM_SUBMITTED':
+        case 'EDIT_QUESTION_FORM_REQUEST':
             return {
                 editQuestionForm: {
                     submitting: true,
                     submitted: true,
                 },
             };
-        case 'EDIT_QUESTION_FORM_RECEIVED':
+        case 'EDIT_QUESTION_FORM_SUCCESS':
             return {
                 editQuestionForm: {
                     submitting: false,
