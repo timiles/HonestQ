@@ -23,8 +23,8 @@ export interface NewCommentFormReceivedAction {
     type: 'NEW_COMMENT_FORM_RECEIVED';
     payload: { answerId: number; comment: CommentModel; };
 }
-interface NewCommentFormFailedAction {
-    type: 'NEW_COMMENT_FORM_FAILED';
+interface NewCommentFormFailureAction {
+    type: 'NEW_COMMENT_FORM_FAILURE';
     payload: { error?: string; };
 }
 
@@ -32,7 +32,7 @@ interface NewCommentFormFailedAction {
 // declared type strings (and not any other arbitrary string).
 type KnownAction = NewCommentFormSubmittedAction
     | NewCommentFormReceivedAction
-    | NewCommentFormFailedAction;
+    | NewCommentFormFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -46,7 +46,7 @@ export const actionCreators = {
 
                 if (!commentForm.text || commentForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'NEW_COMMENT_FORM_FAILED', payload: {} });
+                    dispatch({ type: 'NEW_COMMENT_FORM_FAILURE', payload: {} });
                     return;
                 }
 
@@ -61,7 +61,7 @@ export const actionCreators = {
                     })
                     .catch((reason: string) => {
                         dispatch({
-                            type: 'NEW_COMMENT_FORM_FAILED',
+                            type: 'NEW_COMMENT_FORM_FAILURE',
                             payload: { error: reason || 'Posting comment failed' },
                         });
                     });
@@ -86,7 +86,7 @@ export const reducer: Reducer<NewCommentState> = (state: NewCommentState, action
             };
         case 'NEW_COMMENT_FORM_RECEIVED':
             return defaultState;
-        case 'NEW_COMMENT_FORM_FAILED':
+        case 'NEW_COMMENT_FORM_FAILURE':
             return {
                 commentForm: {
                     submitted: true,

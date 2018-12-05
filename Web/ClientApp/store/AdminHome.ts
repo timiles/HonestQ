@@ -17,38 +17,38 @@ export interface AdminHomeState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetUnapprovedTagsListRequestedAction {
-    type: 'GET_UNAPPROVED_TAGS_LIST_REQUESTED';
+interface GetUnapprovedTagsListRequestAction {
+    type: 'GET_UNAPPROVED_TAGS_LIST_REQUEST';
 }
 interface GetUnapprovedTagsListSuccessAction {
     type: 'GET_UNAPPROVED_TAGS_LIST_SUCCESS';
     payload: TagsListModel;
 }
-interface GetUnapprovedTagsListFailedAction {
-    type: 'GET_UNAPPROVED_TAGS_LIST_FAILED';
+interface GetUnapprovedTagsListFailureAction {
+    type: 'GET_UNAPPROVED_TAGS_LIST_FAILURE';
     payload: { error: string; };
 }
-interface GetUnapprovedQuestionsListRequestedAction {
-    type: 'GET_UNAPPROVED_QUESTIONS_LIST_REQUESTED';
+interface GetUnapprovedQuestionsListRequestAction {
+    type: 'GET_UNAPPROVED_QUESTIONS_LIST_REQUEST';
 }
 interface GetUnapprovedQuestionsListSuccessAction {
     type: 'GET_UNAPPROVED_QUESTIONS_LIST_SUCCESS';
     payload: QuestionsListModel;
 }
-interface GetUnapprovedQuestionsListFailedAction {
-    type: 'GET_UNAPPROVED_QUESTIONS_LIST_FAILED';
+interface GetUnapprovedQuestionsListFailureAction {
+    type: 'GET_UNAPPROVED_QUESTIONS_LIST_FAILURE';
     payload: { error: string; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetUnapprovedTagsListRequestedAction
+    | GetUnapprovedTagsListRequestAction
     | GetUnapprovedTagsListSuccessAction
-    | GetUnapprovedTagsListFailedAction
-    | GetUnapprovedQuestionsListRequestedAction
+    | GetUnapprovedTagsListFailureAction
+    | GetUnapprovedQuestionsListRequestAction
     | GetUnapprovedQuestionsListSuccessAction
-    | GetUnapprovedQuestionsListFailedAction
+    | GetUnapprovedQuestionsListFailureAction
     ;
 
 // ----------------
@@ -58,7 +58,7 @@ type KnownAction =
 export const actionCreators = {
     getUnapprovedTagsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_UNAPPROVED_TAGS_LIST_REQUESTED' });
+            dispatch({ type: 'GET_UNAPPROVED_TAGS_LIST_REQUEST' });
 
             getJson<TagsListModel>('/api/tags?isApproved=false', getState().login.loggedInUser)
                 .then((tagsListResponse: TagsListModel) => {
@@ -66,7 +66,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_UNAPPROVED_TAGS_LIST_FAILED',
+                        type: 'GET_UNAPPROVED_TAGS_LIST_FAILURE',
                         payload: {
                             error: reason || 'Get tags list failed',
                         },
@@ -76,7 +76,7 @@ export const actionCreators = {
     },
     getUnapprovedQuestionsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_UNAPPROVED_QUESTIONS_LIST_REQUESTED' });
+            dispatch({ type: 'GET_UNAPPROVED_QUESTIONS_LIST_REQUEST' });
 
             getJson<QuestionsListModel>('/api/questions?status=AwaitingApproval', getState().login.loggedInUser)
                 .then((response) => {
@@ -84,7 +84,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_UNAPPROVED_QUESTIONS_LIST_FAILED',
+                        type: 'GET_UNAPPROVED_QUESTIONS_LIST_FAILURE',
                         payload: {
                             error: reason || 'Get questions list failed',
                         },
@@ -102,7 +102,7 @@ const defaultState: AdminHomeState = { unapprovedTagsList: {}, unapprovedQuestio
 
 export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_UNAPPROVED_TAGS_LIST_REQUESTED':
+        case 'GET_UNAPPROVED_TAGS_LIST_REQUEST':
             return {
                 unapprovedTagsList: { loading: true },
                 unapprovedQuestionsList: state.unapprovedQuestionsList,
@@ -112,12 +112,12 @@ export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: 
                 unapprovedTagsList: { loadedModel: action.payload },
                 unapprovedQuestionsList: state.unapprovedQuestionsList,
             };
-        case 'GET_UNAPPROVED_TAGS_LIST_FAILED':
+        case 'GET_UNAPPROVED_TAGS_LIST_FAILURE':
             return {
                 unapprovedTagsList: { error: action.payload.error },
                 unapprovedQuestionsList: state.unapprovedQuestionsList,
             };
-        case 'GET_UNAPPROVED_QUESTIONS_LIST_REQUESTED':
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_REQUEST':
             return {
                 unapprovedTagsList: state.unapprovedTagsList,
                 unapprovedQuestionsList: { loading: true },
@@ -127,7 +127,7 @@ export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: 
                 unapprovedTagsList: state.unapprovedTagsList,
                 unapprovedQuestionsList: { loadedModel: action.payload },
             };
-        case 'GET_UNAPPROVED_QUESTIONS_LIST_FAILED':
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_FAILURE':
             return {
                 unapprovedTagsList: state.unapprovedTagsList,
                 unapprovedQuestionsList: { error: action.payload.error },

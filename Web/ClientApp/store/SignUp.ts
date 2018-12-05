@@ -17,16 +17,16 @@ export interface SignUpState {
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface SubmitRegistrationFormAction { type: 'SUBMIT_SIGNUP'; payload: SignUpFormModel; }
-interface RegistrationSuccessAction { type: 'SIGNUP_SUCCESS'; }
-interface RegistrationFailedAction { type: 'SIGNUP_FAILED'; payload: { reason: string; }; }
+interface SignUpSubmittedAction { type: 'SIGNUP_SUBMITTED'; payload: SignUpFormModel; }
+interface SignUpSuccessAction { type: 'SIGNUP_SUCCESS'; }
+interface SignUpFailureAction { type: 'SIGNUP_FAILURE'; payload: { reason: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | SubmitRegistrationFormAction
-    | RegistrationSuccessAction
-    | RegistrationFailedAction;
+    | SignUpSubmittedAction
+    | SignUpSuccessAction
+    | SignUpFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -34,14 +34,14 @@ type KnownAction =
 
 export const actionCreators = {
 
-    submitRegistrationForm: (form: SignUpFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    submitSignUpForm: (form: SignUpFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'SUBMIT_SIGNUP', payload: form });
+            dispatch({ type: 'SIGNUP_SUBMITTED', payload: form });
 
             const user = form;
             if (!user.email || !user.username || !user.password || user.password.length < 7) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'SIGNUP_FAILED', payload: { reason: '' } });
+                dispatch({ type: 'SIGNUP_FAILURE', payload: { reason: '' } });
                 return;
             }
 
@@ -50,7 +50,7 @@ export const actionCreators = {
                     dispatch({ type: 'SIGNUP_SUCCESS' });
                 })
                 .catch((reason) => {
-                    dispatch({ type: 'SIGNUP_FAILED', payload: { reason } });
+                    dispatch({ type: 'SIGNUP_FAILURE', payload: { reason } });
                 });
         })();
     },
@@ -70,7 +70,7 @@ const defaultState: SignUpState = {
 export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownAction) => {
     switch (action.type) {
 
-        case 'SUBMIT_SIGNUP':
+        case 'SIGNUP_SUBMITTED':
             return {
                 submitting: true,
                 submitted: true,
@@ -84,7 +84,7 @@ export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownA
                 success: true,
                 error: undefined,
             };
-        case 'SIGNUP_FAILED':
+        case 'SIGNUP_FAILURE':
             return {
                 submitting: false,
                 submitted: true,

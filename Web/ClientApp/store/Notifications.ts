@@ -16,9 +16,9 @@ export interface ListState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetNotificationListRequestedAction { type: 'GET_NOTIFICATION_LIST_REQUESTED'; }
-interface GetNotificationListSuccessAction { type: 'GET_NOTIFICATION_LIST_SUCCESS'; payload: NotificationsListModel; }
-interface GetNotificationListFailedAction { type: 'GET_NOTIFICATION_LIST_FAILED'; payload: { error: string; }; }
+interface GetNotificationsListRequestAction { type: 'GET_NOTIFICATIONS_LIST_REQUEST'; }
+interface GetNotificationsListSuccessAction { type: 'GET_NOTIFICATIONS_LIST_SUCCESS'; payload: NotificationsListModel; }
+interface GetNotificationsListFailureAction { type: 'GET_NOTIFICATIONS_LIST_FAILURE'; payload: { error: string; }; }
 
 export interface MarkNotificationAsSeenSuccessAction {
     type: 'MARK_NOTIFICATION_AS_SEEN_SUCCESS';
@@ -28,9 +28,9 @@ export interface MarkNotificationAsSeenSuccessAction {
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetNotificationListRequestedAction
-    | GetNotificationListSuccessAction
-    | GetNotificationListFailedAction
+    | GetNotificationsListRequestAction
+    | GetNotificationsListSuccessAction
+    | GetNotificationsListFailureAction
     | MarkNotificationAsSeenSuccessAction
     ;
 
@@ -44,16 +44,16 @@ export const actionCreators = {
             if (beforeId && beforeId <= 0) {
                 return;
             }
-            dispatch({ type: 'GET_NOTIFICATION_LIST_REQUESTED' });
+            dispatch({ type: 'GET_NOTIFICATIONS_LIST_REQUEST' });
 
             const url = '/api/notifications' + (beforeId ? `?beforeId=${beforeId}` : '');
             getJson<NotificationsListModel>(url, getState().login.loggedInUser)
                 .then((notificationListResponse: NotificationsListModel) => {
-                    dispatch({ type: 'GET_NOTIFICATION_LIST_SUCCESS', payload: notificationListResponse });
+                    dispatch({ type: 'GET_NOTIFICATIONS_LIST_SUCCESS', payload: notificationListResponse });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_NOTIFICATION_LIST_FAILED',
+                        type: 'GET_NOTIFICATIONS_LIST_FAILURE',
                         payload: {
                             error: reason || 'Get Notification list failed',
                         },
@@ -86,11 +86,11 @@ const defaultState: ListState = { loadingNotificationList: {} };
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_NOTIFICATION_LIST_REQUESTED':
+        case 'GET_NOTIFICATIONS_LIST_REQUEST':
             return {
                 loadingNotificationList: { ...state.loadingNotificationList, loading: true },
             };
-        case 'GET_NOTIFICATION_LIST_SUCCESS':
+        case 'GET_NOTIFICATIONS_LIST_SUCCESS':
             {
                 if (state.loadingNotificationList.loadedModel) {
                     // Slice for immutability
@@ -108,7 +108,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                     loadingNotificationList: { loadedModel: action.payload },
                 };
             }
-        case 'GET_NOTIFICATION_LIST_FAILED':
+        case 'GET_NOTIFICATIONS_LIST_FAILURE':
             return {
                 loadingNotificationList: { ...state.loadingNotificationList, error: action.payload.error },
             };

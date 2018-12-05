@@ -23,8 +23,8 @@ export interface NewAnswerFormReceivedAction {
     type: 'NEW_ANSWER_FORM_RECEIVED';
     payload: { answer: AnswerModel; };
 }
-interface NewAnswerFormFailedAction {
-    type: 'NEW_ANSWER_FORM_FAILED';
+interface NewAnswerFormFailureAction {
+    type: 'NEW_ANSWER_FORM_FAILURE';
     payload: { error?: string; };
 }
 
@@ -32,7 +32,7 @@ interface NewAnswerFormFailedAction {
 // declared type strings (and not any other arbitrary string).
 type KnownAction = NewAnswerFormSubmittedAction
     | NewAnswerFormReceivedAction
-    | NewAnswerFormFailedAction;
+    | NewAnswerFormFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -46,7 +46,7 @@ export const actionCreators = {
 
                 if (!answerForm.text || answerForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'NEW_ANSWER_FORM_FAILED', payload: {} });
+                    dispatch({ type: 'NEW_ANSWER_FORM_FAILURE', payload: {} });
                     return;
                 }
 
@@ -61,7 +61,7 @@ export const actionCreators = {
                     })
                     .catch((reason: string) => {
                         dispatch({
-                            type: 'NEW_ANSWER_FORM_FAILED',
+                            type: 'NEW_ANSWER_FORM_FAILURE',
                             payload: { error: reason || 'Posting answer failed' },
                         });
                     });
@@ -86,7 +86,7 @@ export const reducer: Reducer<NewAnswerState> = (state: NewAnswerState, action: 
             };
         case 'NEW_ANSWER_FORM_RECEIVED':
             return defaultState;
-        case 'NEW_ANSWER_FORM_FAILED':
+        case 'NEW_ANSWER_FORM_FAILURE':
             return {
                 answerForm: {
                     submitted: true,

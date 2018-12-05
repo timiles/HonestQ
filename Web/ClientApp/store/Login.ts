@@ -19,21 +19,21 @@ export interface LoginState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface StartLogInAction { type: 'START_LOGIN'; }
+interface LogInSubmittedAction { type: 'LOGIN_SUBMITTED'; }
 interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
-interface LogInFailedAction { type: 'LOGIN_FAILED'; payload: { error: string | null; }; }
-interface StartLogOutAction { type: 'START_LOGOUT'; }
+interface LogInFailureAction { type: 'LOGIN_FAILURE'; payload: { error: string | null; }; }
+interface LogOutSubmittedAction { type: 'LOGOUT_SUBMITTED'; }
 export interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
-interface LogOutFailedAction { type: 'LOGOUT_FAILED'; }
+interface LogOutFailureAction { type: 'LOGOUT_FAILURE'; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = StartLogInAction
+type KnownAction = LogInSubmittedAction
     | LogInSuccessAction
-    | LogInFailedAction
-    | StartLogOutAction
+    | LogInFailureAction
+    | LogOutSubmittedAction
     | LogOutSuccessAction
-    | LogOutFailedAction;
+    | LogOutFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -42,11 +42,11 @@ type KnownAction = StartLogInAction
 export const actionCreators = {
     logIn: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'START_LOGIN' });
+            dispatch({ type: 'LOGIN_SUBMITTED' });
 
             if (!logInForm.username || !logInForm.password) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'LOGIN_FAILED', payload: { error: null } });
+                dispatch({ type: 'LOGIN_FAILURE', payload: { error: null } });
                 return;
             }
 
@@ -57,24 +57,24 @@ export const actionCreators = {
                         ReactGA.set({ userId: logInResponse.id });
                         dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
                     } else {
-                        dispatch({ type: 'LOGIN_FAILED', payload: { error: 'An error occurred, please try again' } });
+                        dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'An error occurred, please try again' } });
                     }
                 })
                 .catch((reason: string) => {
-                    dispatch({ type: 'LOGIN_FAILED', payload: { error: reason || 'LogIn failed' } });
+                    dispatch({ type: 'LOGIN_FAILURE', payload: { error: reason || 'LogIn failed' } });
                 });
         })();
     },
     logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'START_LOGOUT' });
+            dispatch({ type: 'LOGOUT_SUBMITTED' });
 
             postJson('/api/account/logout', null, null, true)
                 .then(() => {
                     dispatch({ type: 'LOGOUT_SUCCESS' });
                 })
                 .catch(() => {
-                    dispatch({ type: 'LOGOUT_FAILED' });
+                    dispatch({ type: 'LOGOUT_FAILURE' });
                 });
         })();
     },
@@ -88,17 +88,17 @@ const defaultState: LoginState = {};
 
 export const reducer: Reducer<LoginState> = (state: LoginState, action: KnownAction) => {
     switch (action.type) {
-        case 'START_LOGIN':
+        case 'LOGIN_SUBMITTED':
             return { submitting: true, submitted: true };
         case 'LOGIN_SUCCESS':
             return { submitting: false, submitted: true, loggedInUser: action.payload };
-        case 'LOGIN_FAILED':
+        case 'LOGIN_FAILURE':
             return { submitting: false, submitted: true, error: action.payload.error };
-        case 'START_LOGOUT':
+        case 'LOGOUT_SUBMITTED':
             return { loggedInUser: state.loggedInUser };
         case 'LOGOUT_SUCCESS':
             return defaultState;
-        case 'LOGOUT_FAILED':
+        case 'LOGOUT_FAILURE':
             return { loggedInUser: state.loggedInUser };
 
         default:

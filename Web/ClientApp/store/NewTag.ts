@@ -20,13 +20,13 @@ export interface NewTagState {
 
 interface TagFormSubmittedAction { type: 'TAG_FORM_SUBMITTED'; }
 interface TagFormReceivedAction { type: 'TAG_FORM_RECEIVED'; payload: { tag: TagFormModel; }; }
-interface TagFormFailedAction { type: 'TAG_FORM_FAILED'; payload: { error: string | null; }; }
+interface TagFormFailureAction { type: 'TAG_FORM_FAILURE'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction = TagFormSubmittedAction
     | TagFormReceivedAction
-    | TagFormFailedAction;
+    | TagFormFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -39,7 +39,7 @@ export const actionCreators = {
 
             if (!tagForm.name || (tagForm.description && tagForm.description.length > 280)) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'TAG_FORM_FAILED', payload: { error: null } });
+                dispatch({ type: 'TAG_FORM_FAILURE', payload: { error: null } });
                 return;
             }
 
@@ -48,7 +48,7 @@ export const actionCreators = {
                     dispatch({ type: 'TAG_FORM_RECEIVED', payload: { tag: tagForm } });
                 })
                 .catch((reason: string) => {
-                    dispatch({ type: 'TAG_FORM_FAILED', payload: { error: reason } });
+                    dispatch({ type: 'TAG_FORM_FAILURE', payload: { error: reason } });
                 });
         })();
     },
@@ -66,7 +66,7 @@ export const reducer: Reducer<NewTagState> = (state: NewTagState, action: KnownA
             return { submitting: true, submitted: true };
         case 'TAG_FORM_RECEIVED':
             return { submitting: false, submitted: false, previouslySubmittedTagFormModel: action.payload.tag };
-        case 'TAG_FORM_FAILED':
+        case 'TAG_FORM_FAILURE':
             return { submitting: false, submitted: true, error: action.payload.error };
 
         default:

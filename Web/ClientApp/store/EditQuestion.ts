@@ -17,16 +17,16 @@ export interface EditQuestionState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetQuestionRequestedAction {
-    type: 'GET_QUESTION_REQUESTED';
+interface GetQuestionRequestAction {
+    type: 'GET_QUESTION_REQUEST';
     payload: { questionId: number; };
 }
 interface GetQuestionSuccessAction {
     type: 'GET_QUESTION_SUCCESS';
     payload: { question: AdminQuestionModel; questionId: number; };
 }
-interface GetQuestionFailedAction {
-    type: 'GET_QUESTION_FAILED';
+interface GetQuestionFailureAction {
+    type: 'GET_QUESTION_FAILURE';
     payload: { questionId: number; error: string; };
 }
 interface EditQuestionFormSubmittedAction {
@@ -36,19 +36,19 @@ interface EditQuestionFormReceivedAction {
     type: 'EDIT_QUESTION_FORM_RECEIVED';
     payload: { questionId: number; question: AdminQuestionModel; };
 }
-interface EditQuestionFormFailedAction {
-    type: 'EDIT_QUESTION_FORM_FAILED';
+interface EditQuestionFormFailureAction {
+    type: 'EDIT_QUESTION_FORM_FAILURE';
     payload: { error: string | null; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetQuestionRequestedAction
+type KnownAction = GetQuestionRequestAction
     | GetQuestionSuccessAction
-    | GetQuestionFailedAction
+    | GetQuestionFailureAction
     | EditQuestionFormSubmittedAction
     | EditQuestionFormReceivedAction
-    | EditQuestionFormFailedAction;
+    | EditQuestionFormFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -57,7 +57,7 @@ type KnownAction = GetQuestionRequestedAction
 export const actionCreators = {
     getQuestion: (questionId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_QUESTION_REQUESTED', payload: { questionId } });
+            dispatch({ type: 'GET_QUESTION_REQUEST', payload: { questionId } });
 
             getJson<AdminQuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
                 .then((questionResponse) => {
@@ -68,7 +68,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_QUESTION_FAILED',
+                        type: 'GET_QUESTION_FAILURE',
                         payload: { questionId, error: reason || 'Get tag failed' },
                     });
                 });
@@ -81,7 +81,7 @@ export const actionCreators = {
 
                 if (!questionForm.text || questionForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'EDIT_QUESTION_FORM_FAILED', payload: { error: null } });
+                    dispatch({ type: 'EDIT_QUESTION_FORM_FAILURE', payload: { error: null } });
                     return;
                 }
 
@@ -94,7 +94,7 @@ export const actionCreators = {
                         });
                     })
                     .catch((reason: string) => {
-                        dispatch({ type: 'EDIT_QUESTION_FORM_FAILED', payload: { error: reason } });
+                        dispatch({ type: 'EDIT_QUESTION_FORM_FAILURE', payload: { error: reason } });
                     });
             })();
         },
@@ -108,7 +108,7 @@ const defaultState: EditQuestionState = { editQuestionForm: {} };
 
 export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_QUESTION_REQUESTED':
+        case 'GET_QUESTION_REQUEST':
             return {
                 editQuestionForm: {
                     loading: true,
@@ -120,7 +120,7 @@ export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, ac
                     initialState: action.payload.question,
                 },
             };
-        case 'GET_QUESTION_FAILED':
+        case 'GET_QUESTION_FAILURE':
             return {
                 editQuestionForm: {
                     error: action.payload.error,
@@ -141,7 +141,7 @@ export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, ac
                 },
                 savedSlug: action.payload.question.slug,
             };
-        case 'EDIT_QUESTION_FORM_FAILED':
+        case 'EDIT_QUESTION_FORM_FAILURE':
             return {
                 editQuestionForm: {
                     submitting: false,

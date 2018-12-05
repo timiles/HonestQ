@@ -21,25 +21,25 @@ export interface TagAutocompleteState {
 interface AutocompleteTagsClearAction {
     type: 'AUTOCOMPLETE_TAGS_CLEAR';
 }
-interface AutocompleteTagsRequestedAction {
-    type: 'AUTOCOMPLETE_TAGS_REQUESTED';
+interface AutocompleteTagsRequestAction {
+    type: 'AUTOCOMPLETE_TAGS_REQUEST';
     payload: { query: string; };
 }
 interface AutocompleteTagsSuccessAction {
     type: 'AUTOCOMPLETE_TAGS_SUCCESS';
     payload: { tags: TagValueModel[]; query: string; };
 }
-interface AutocompleteTagsFailedAction {
-    type: 'AUTOCOMPLETE_TAGS_FAILED';
+interface AutocompleteTagsFailureAction {
+    type: 'AUTOCOMPLETE_TAGS_FAILURE';
     payload: { query: string; error: string; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction = AutocompleteTagsClearAction
-    | AutocompleteTagsRequestedAction
+    | AutocompleteTagsRequestAction
     | AutocompleteTagsSuccessAction
-    | AutocompleteTagsFailedAction;
+    | AutocompleteTagsFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -52,7 +52,7 @@ export const actionCreators = {
                 dispatch({ type: 'AUTOCOMPLETE_TAGS_CLEAR' });
                 return;
             }
-            dispatch({ type: 'AUTOCOMPLETE_TAGS_REQUESTED', payload: { query } });
+            dispatch({ type: 'AUTOCOMPLETE_TAGS_REQUEST', payload: { query } });
 
             const queryUrl = `/api/tags/autocomplete?q=${encodeURIComponent(query)}`;
             getJson<TagAutocompleteResultsModel>(queryUrl, getState().login.loggedInUser)
@@ -64,7 +64,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'AUTOCOMPLETE_TAGS_FAILED',
+                        type: 'AUTOCOMPLETE_TAGS_FAILURE',
                         payload: {
                             query,
                             error: reason || 'Autocomplete tags failed',
@@ -92,7 +92,7 @@ export const reducer: Reducer<TagAutocompleteState> = (state: TagAutocompleteSta
                 suggestions: null,
                 error: null,
             };
-        case 'AUTOCOMPLETE_TAGS_REQUESTED':
+        case 'AUTOCOMPLETE_TAGS_REQUEST':
             return {
                 loading: true,
                 query: action.payload.query,
@@ -106,7 +106,7 @@ export const reducer: Reducer<TagAutocompleteState> = (state: TagAutocompleteSta
                 suggestions: action.payload.tags,
                 error: null,
             };
-        case 'AUTOCOMPLETE_TAGS_FAILED':
+        case 'AUTOCOMPLETE_TAGS_FAILURE':
             return {
                 loading: false,
                 query: action.payload.query,

@@ -19,24 +19,24 @@ export interface EditTagState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetAdminTagRequestedAction { type: 'GET_ADMIN_TAG_REQUESTED'; payload: { tagSlug: string; }; }
+interface GetAdminTagRequestAction { type: 'GET_ADMIN_TAG_REQUEST'; payload: { tagSlug: string; }; }
 interface GetAdminTagSuccessAction {
     type: 'GET_ADMIN_TAG_SUCCESS';
     payload: { tag: AdminTagModel; tagSlug: string; };
 }
-interface GetAdminTagFailedAction { type: 'GET_ADMIN_TAG_FAILED'; payload: { tagSlug: string; error: string; }; }
+interface GetAdminTagFailureAction { type: 'GET_ADMIN_TAG_FAILURE'; payload: { tagSlug: string; error: string; }; }
 interface EditTagFormSubmittedAction { type: 'EDIT_TAG_FORM_SUBMITTED'; }
 interface EditTagFormReceivedAction { type: 'EDIT_TAG_FORM_RECEIVED'; payload: { tag: AdminTagModel; }; }
-interface EditTagFormFailedAction { type: 'EDIT_TAG_FORM_FAILED'; payload: { error: string | null; }; }
+interface EditTagFormFailureAction { type: 'EDIT_TAG_FORM_FAILURE'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetAdminTagRequestedAction
+type KnownAction = GetAdminTagRequestAction
     | GetAdminTagSuccessAction
-    | GetAdminTagFailedAction
+    | GetAdminTagFailureAction
     | EditTagFormSubmittedAction
     | EditTagFormReceivedAction
-    | EditTagFormFailedAction;
+    | EditTagFormFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -45,7 +45,7 @@ type KnownAction = GetAdminTagRequestedAction
 export const actionCreators = {
     getTag: (tagSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_ADMIN_TAG_REQUESTED', payload: { tagSlug } });
+            dispatch({ type: 'GET_ADMIN_TAG_REQUEST', payload: { tagSlug } });
 
             getJson<AdminTagModel>(`/api/tags/${tagSlug}`, getState().login.loggedInUser)
                 .then((tagResponse: AdminTagModel) => {
@@ -56,7 +56,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_ADMIN_TAG_FAILED', payload: {
+                        type: 'GET_ADMIN_TAG_FAILURE', payload: {
                             tagSlug,
                             error: reason || 'Get tag failed',
                         },
@@ -70,7 +70,7 @@ export const actionCreators = {
 
             if (!tagForm.name || !tagForm.slug || (tagForm.description && tagForm.description.length > 280)) {
                 // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'EDIT_TAG_FORM_FAILED', payload: { error: null } });
+                dispatch({ type: 'EDIT_TAG_FORM_FAILURE', payload: { error: null } });
                 return;
             }
 
@@ -79,7 +79,7 @@ export const actionCreators = {
                     dispatch({ type: 'EDIT_TAG_FORM_RECEIVED', payload: { tag: tagResponse } });
                 })
                 .catch((reason: string) => {
-                    dispatch({ type: 'EDIT_TAG_FORM_FAILED', payload: { error: reason } });
+                    dispatch({ type: 'EDIT_TAG_FORM_FAILURE', payload: { error: reason } });
                 });
         })();
     },
@@ -93,7 +93,7 @@ const defaultState: EditTagState = { tagModel: {}, editTagForm: {} };
 
 export const reducer: Reducer<EditTagState> = (state: EditTagState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_ADMIN_TAG_REQUESTED':
+        case 'GET_ADMIN_TAG_REQUEST':
             return {
                 tagModel: {
                     id: action.payload.tagSlug,
@@ -109,7 +109,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 },
                 editTagForm: state.editTagForm,
             };
-        case 'GET_ADMIN_TAG_FAILED':
+        case 'GET_ADMIN_TAG_FAILURE':
             return {
                 tagModel: {
                     id: action.payload.tagSlug,
@@ -138,7 +138,7 @@ export const reducer: Reducer<EditTagState> = (state: EditTagState, action: Know
                 successfullySaved: true,
                 // TODO: if Tag was Approved, update pending list on AdminHome
             };
-        case 'EDIT_TAG_FORM_FAILED':
+        case 'EDIT_TAG_FORM_FAILURE':
             return {
                 tagModel: state.tagModel,
                 editTagForm: {

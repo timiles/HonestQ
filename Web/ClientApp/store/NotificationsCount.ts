@@ -18,24 +18,24 @@ export interface NotificationsCountState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetNotificationsCountRequestedAction {
-    type: 'GET_NOTIFICATIONS_COUNT_REQUESTED';
+interface GetNotificationsCountRequestAction {
+    type: 'GET_NOTIFICATIONS_COUNT_REQUEST';
 }
 interface GetNotificationsCountSuccessAction {
     type: 'GET_NOTIFICATIONS_COUNT_SUCCESS';
     payload: NotificationsCountModel;
 }
-interface GetNotificationsCountFailedAction {
-    type: 'GET_NOTIFICATIONS_COUNT_FAILED';
+interface GetNotificationsCountFailureAction {
+    type: 'GET_NOTIFICATIONS_COUNT_FAILURE';
     payload: { error: string; };
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetNotificationsCountRequestedAction
+    | GetNotificationsCountRequestAction
     | GetNotificationsCountSuccessAction
-    | GetNotificationsCountFailedAction
+    | GetNotificationsCountFailureAction
     | MarkNotificationAsSeenSuccessAction
     | LogOutSuccessAction
     ;
@@ -47,7 +47,7 @@ type KnownAction =
 export const actionCreators = {
     getNotificationsCount: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_NOTIFICATIONS_COUNT_REQUESTED' });
+            dispatch({ type: 'GET_NOTIFICATIONS_COUNT_REQUEST' });
 
             getJson<NotificationsCountModel>('/api/notifications/count', getState().login.loggedInUser)
                 .then((response) => {
@@ -55,7 +55,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_NOTIFICATIONS_COUNT_FAILED',
+                        type: 'GET_NOTIFICATIONS_COUNT_FAILURE',
                         payload: {
                             error: reason || 'Get notifications count failed',
                         },
@@ -73,7 +73,7 @@ const defaultState: NotificationsCountState = { notificationsCount: {} };
 
 export const reducer: Reducer<NotificationsCountState> = (state: NotificationsCountState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_NOTIFICATIONS_COUNT_REQUESTED':
+        case 'GET_NOTIFICATIONS_COUNT_REQUEST':
             return {
                 notificationsCount: { loading: true },
             };
@@ -81,7 +81,7 @@ export const reducer: Reducer<NotificationsCountState> = (state: NotificationsCo
             return {
                 notificationsCount: { loadedModel: action.payload },
             };
-        case 'GET_NOTIFICATIONS_COUNT_FAILED':
+        case 'GET_NOTIFICATIONS_COUNT_FAILURE':
             return {
                 notificationsCount: { error: action.payload.error },
             };

@@ -17,16 +17,16 @@ export interface ContainerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetTagRequestedAction {
-    type: 'GET_TAG_REQUESTED';
+interface GetTagRequestAction {
+    type: 'GET_TAG_REQUEST';
     payload: { tagSlug: string; };
 }
 interface GetTagSuccessAction {
     type: 'GET_TAG_SUCCESS';
     payload: { tag: TagModel; tagSlug: string; };
 }
-interface GetTagFailedAction {
-    type: 'GET_TAG_FAILED';
+interface GetTagFailureAction {
+    type: 'GET_TAG_FAILURE';
     payload: { tagSlug: string; error: string; };
 }
 interface UpdateWatchTagSuccessAction {
@@ -40,9 +40,9 @@ interface UpdateWatchTagSuccessAction {
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetTagRequestedAction
+    | GetTagRequestAction
     | GetTagSuccessAction
-    | GetTagFailedAction
+    | GetTagFailureAction
     | NewQuestionFormReceivedAction
     | UpdateWatchTagSuccessAction
     ;
@@ -54,7 +54,7 @@ type KnownAction =
 export const actionCreators = {
     getTag: (tagSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_TAG_REQUESTED', payload: { tagSlug } });
+            dispatch({ type: 'GET_TAG_REQUEST', payload: { tagSlug } });
 
             getJson<TagModel>(`/api/tags/${tagSlug}`, getState().login.loggedInUser)
                 .then((tagResponse: TagModel) => {
@@ -65,7 +65,7 @@ export const actionCreators = {
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_TAG_FAILED',
+                        type: 'GET_TAG_FAILURE',
                         payload: {
                             tagSlug,
                             error: reason || 'Get tag failed',
@@ -106,7 +106,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
     const action = anyAction as KnownAction;
     switch (action.type) {
-        case 'GET_TAG_REQUESTED':
+        case 'GET_TAG_REQUEST':
             return {
                 ...state,
                 tag: {
@@ -123,7 +123,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                     model: action.payload.tag,
                 },
             };
-        case 'GET_TAG_FAILED':
+        case 'GET_TAG_FAILURE':
             return {
                 ...state,
                 tag: {

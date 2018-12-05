@@ -19,16 +19,16 @@ export interface ContainerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetQuestionRequestedAction {
-    type: 'GET_QUESTION_REQUESTED';
+interface GetQuestionRequestAction {
+    type: 'GET_QUESTION_REQUEST';
     payload: { questionId: number; };
 }
 interface GetQuestionSuccessAction {
     type: 'GET_QUESTION_SUCCESS';
     payload: { questionId: number; question: QuestionModel; };
 }
-interface GetQuestionFailedAction {
-    type: 'GET_QUESTION_FAILED';
+interface GetQuestionFailureAction {
+    type: 'GET_QUESTION_FAILURE';
     payload: { questionId: number; error: string; };
 }
 interface AddReactionSuccessAction {
@@ -51,9 +51,9 @@ interface UpdateWatchQuestionSuccessAction {
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetQuestionRequestedAction
+    | GetQuestionRequestAction
     | GetQuestionSuccessAction
-    | GetQuestionFailedAction
+    | GetQuestionFailureAction
     | NewAnswerFormReceivedAction
     | NewCommentFormReceivedAction
     | AddReactionSuccessAction
@@ -69,7 +69,7 @@ export const actionCreators = {
     getQuestion: (questionId: number): AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'GET_QUESTION_REQUESTED', payload: { questionId } });
+                dispatch({ type: 'GET_QUESTION_REQUEST', payload: { questionId } });
 
                 getJson<QuestionModel>(`/api/questions/${questionId}`,
                     getState().login.loggedInUser)
@@ -81,7 +81,7 @@ export const actionCreators = {
                     })
                     .catch((reason) => {
                         dispatch({
-                            type: 'GET_QUESTION_FAILED',
+                            type: 'GET_QUESTION_FAILURE',
                             payload: {
                                 questionId,
                                 error: reason || 'Get Question failed',
@@ -168,7 +168,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
     const action = anyAction as KnownAction;
     switch (action.type) {
-        case 'GET_QUESTION_REQUESTED':
+        case 'GET_QUESTION_REQUEST':
             return {
                 question: {
                     loading: true,
@@ -182,7 +182,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                     model: action.payload.question,
                 },
             };
-        case 'GET_QUESTION_FAILED':
+        case 'GET_QUESTION_FAILURE':
             return {
                 question: {
                     questionId: action.payload.questionId,

@@ -32,8 +32,8 @@ interface NewQuestionFormAwaitingApprovalAction {
 interface NewQuestionFormResetAction {
     type: 'NEW_QUESTION_FORM_RESET';
 }
-interface NewQuestionFormFailedAction {
-    type: 'NEW_QUESTION_FORM_FAILED';
+interface NewQuestionFormFailureAction {
+    type: 'NEW_QUESTION_FORM_FAILURE';
     payload: { error: string | null; };
 }
 
@@ -44,7 +44,7 @@ type KnownAction =
     | NewQuestionFormReceivedAction
     | NewQuestionFormAwaitingApprovalAction
     | NewQuestionFormResetAction
-    | NewQuestionFormFailedAction
+    | NewQuestionFormFailureAction
     ;
 
 // ----------------
@@ -59,7 +59,7 @@ export const actionCreators = {
 
                 if (!questionForm.text || questionForm.text.length > 280) {
                     // Don't set an error message, the validation properties will display instead
-                    dispatch({ type: 'NEW_QUESTION_FORM_FAILED', payload: { error: null } });
+                    dispatch({ type: 'NEW_QUESTION_FORM_FAILURE', payload: { error: null } });
                     return;
                 }
 
@@ -83,7 +83,7 @@ export const actionCreators = {
                     })
                     .catch((reason: string) => {
                         dispatch({
-                            type: 'NEW_QUESTION_FORM_FAILED',
+                            type: 'NEW_QUESTION_FORM_FAILURE',
                             payload: { error: reason || 'Posting Question failed' },
                         });
                     });
@@ -124,7 +124,7 @@ export const reducer: Reducer<NewQuestionState> = (state: NewQuestionState, acti
             };
         case 'NEW_QUESTION_FORM_RESET':
             return defaultState;
-        case 'NEW_QUESTION_FORM_FAILED':
+        case 'NEW_QUESTION_FORM_FAILURE':
             return {
                 questionForm: {
                     submitting: false,

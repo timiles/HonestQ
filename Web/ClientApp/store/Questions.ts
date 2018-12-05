@@ -17,16 +17,16 @@ export interface ListState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetQuestionListRequestedAction { type: 'GET_QUESTION_LIST_REQUESTED'; }
-interface GetQuestionListSuccessAction { type: 'GET_QUESTION_LIST_SUCCESS'; payload: QuestionsListModel; }
-interface GetQuestionListFailedAction { type: 'GET_QUESTION_LIST_FAILED'; payload: { error: string; }; }
+interface GetQuestionsListRequestAction { type: 'GET_QUESTIONS_LIST_REQUEST'; }
+interface GetQuestionsListSuccessAction { type: 'GET_QUESTIONS_LIST_SUCCESS'; payload: QuestionsListModel; }
+interface GetQuestionsListFailureAction { type: 'GET_QUESTIONS_LIST_FAILURE'; payload: { error: string; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    GetQuestionListRequestedAction
-    | GetQuestionListSuccessAction
-    | GetQuestionListFailedAction
+    GetQuestionsListRequestAction
+    | GetQuestionsListSuccessAction
+    | GetQuestionsListFailureAction
     | NewQuestionFormReceivedAction;
 
 // ----------------
@@ -39,17 +39,17 @@ export const actionCreators = {
             if (beforeTimestamp && beforeTimestamp <= 0) {
                 return;
             }
-            dispatch({ type: 'GET_QUESTION_LIST_REQUESTED' });
+            dispatch({ type: 'GET_QUESTIONS_LIST_REQUEST' });
 
             const url = '/api/questions' + (beforeTimestamp ? `?beforeTimestamp=${beforeTimestamp}` : '');
             getJson<QuestionsListModel>(url,
                 getState().login.loggedInUser)
                 .then((questionListResponse: QuestionsListModel) => {
-                    dispatch({ type: 'GET_QUESTION_LIST_SUCCESS', payload: questionListResponse });
+                    dispatch({ type: 'GET_QUESTIONS_LIST_SUCCESS', payload: questionListResponse });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_QUESTION_LIST_FAILED',
+                        type: 'GET_QUESTIONS_LIST_FAILURE',
                         payload: {
                             error: reason || 'Get Question list failed',
                         },
@@ -67,11 +67,11 @@ const defaultState: ListState = { loadingQuestionList: {} };
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_QUESTION_LIST_REQUESTED':
+        case 'GET_QUESTIONS_LIST_REQUEST':
             return {
                 loadingQuestionList: { ...state.loadingQuestionList, loading: true },
             };
-        case 'GET_QUESTION_LIST_SUCCESS':
+        case 'GET_QUESTIONS_LIST_SUCCESS': {
             if (state.loadingQuestionList.loadedModel) {
                 // Slice for immutability
                 const questionsNext = state.loadingQuestionList.loadedModel.questions.slice();
@@ -87,7 +87,8 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
             return {
                 loadingQuestionList: { loadedModel: action.payload },
             };
-        case 'GET_QUESTION_LIST_FAILED':
+        }
+        case 'GET_QUESTIONS_LIST_FAILURE':
             return {
                 loadingQuestionList: { ...state.loadingQuestionList, error: action.payload.error },
             };
