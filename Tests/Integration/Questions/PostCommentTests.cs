@@ -70,7 +70,7 @@ namespace Pobs.Tests.Integration.Questions
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal(_user.Username, responseModel.PostedBy);
                     Assert.Equal("OK", responseModel.Status);
-                    Assert.True(responseModel.IsWatchedByLoggedInUser);
+                    Assert.True(responseModel.Watching);
                 }
             }
         }

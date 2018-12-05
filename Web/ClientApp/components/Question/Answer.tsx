@@ -30,8 +30,8 @@ export default class Answer extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, questionText, id, text, source, postedBy, postedAt, comments, reactionCounts, myReactions } = this.props;
-        const { isWatchedByLoggedInUser } = this.props;
+        const { questionId, questionText, id, text, source, postedBy, postedAt, comments } = this.props;
+        const { reactionCounts, myReactions, watching } = this.props;
 
         return (
             <div>
@@ -65,7 +65,7 @@ export default class Answer extends React.Component<Props, {}> {
                         <div className="float-right btn-container">
                             <WatchControl
                                 onWatch={this.handleWatch}
-                                isWatchedByLoggedInUser={isWatchedByLoggedInUser}
+                                watching={watching}
                             />
                             <UpvoteButton
                                 answerId={id}

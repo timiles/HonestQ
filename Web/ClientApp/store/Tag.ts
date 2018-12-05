@@ -153,7 +153,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             const { response } = action.payload;
             const tagNext = {
                 ...state.tag.model!,
-                isWatchedByLoggedInUser: response.isWatchedByLoggedInUser,
+                watching: response.watching,
             };
             return {
                 ...state,

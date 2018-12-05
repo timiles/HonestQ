@@ -16,7 +16,7 @@ namespace Pobs.Web.Models.Tags
             this.Description = tag.Description;
             this.MoreInfoUrl = tag.MoreInfoUrl;
             this.Questions = tag.Questions.Where(x => x.Status == PostStatus.OK).Select(x => new QuestionListItemModel(x)).ToArray();
-            this.IsWatchedByLoggedInUser = tag.Watches.Any(x => x.UserId == loggedInUserId);
+            this.Watching = tag.Watches.Any(x => x.UserId == loggedInUserId);
         }
 
         [Required]
@@ -29,7 +29,7 @@ namespace Pobs.Web.Models.Tags
 
         public string MoreInfoUrl { get; set; }
 
-        public bool IsWatchedByLoggedInUser { get; set; }
+        public bool Watching { get; set; }
 
         public QuestionListItemModel[] Questions { get; set; }
     }

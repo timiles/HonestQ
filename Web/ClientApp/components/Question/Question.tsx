@@ -91,7 +91,7 @@ export default class Question extends React.Component<Props, {}> {
                         <div className="float-right">
                             <WatchControl
                                 onWatch={this.handleWatch}
-                                isWatchedByLoggedInUser={model.isWatchedByLoggedInUser}
+                                watching={model.watching}
                             />
                         </div>
                     </div>

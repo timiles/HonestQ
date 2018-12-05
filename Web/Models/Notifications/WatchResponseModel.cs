@@ -8,9 +8,9 @@ namespace Pobs.Web.Models.Notifications
         public WatchResponseModel() { }
         public WatchResponseModel(IHasWatches hasWatches, int loggedInUserId)
         {
-            this.IsWatchedByLoggedInUser = hasWatches.Watches.Any(x => x.UserId == loggedInUserId);
+            this.Watching = hasWatches.Watches.Any(x => x.UserId == loggedInUserId);
         }
 
-        public bool IsWatchedByLoggedInUser { get; set; }
+        public bool Watching { get; set; }
     }
 }

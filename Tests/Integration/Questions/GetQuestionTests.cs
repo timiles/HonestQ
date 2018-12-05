@@ -188,13 +188,13 @@ namespace Pobs.Tests.Integration.Questions
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
                 Assert.Equal(watchedQuestion.Slug, responseModel.Slug);
-                Assert.True(responseModel.IsWatchedByLoggedInUser);
+                Assert.True(responseModel.Watching);
 
                 var responseWatchedAnswer = responseModel.Answers.Single(x => x.Id == watchedAnswer.Id);
-                Assert.True(responseWatchedAnswer.IsWatchedByLoggedInUser);
+                Assert.True(responseWatchedAnswer.Watching);
 
                 var responseWatchedComment = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == watchedComment.Id);
-                Assert.True(responseWatchedComment.IsWatchedByLoggedInUser);
+                Assert.True(responseWatchedComment.Watching);
             }
         }
 

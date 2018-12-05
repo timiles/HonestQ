@@ -299,12 +299,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             if (commentId) {
                 const comment = findComment(answerModel.comments, commentId);
                 if (comment) {
-                    comment.isWatchedByLoggedInUser = response.isWatchedByLoggedInUser;
+                    comment.watching = response.watching;
                 }
             } else if (answerId) {
-                answerModel.isWatchedByLoggedInUser = response.isWatchedByLoggedInUser;
+                answerModel.watching = response.watching;
             } else {
-                questionModel.isWatchedByLoggedInUser = response.isWatchedByLoggedInUser;
+                questionModel.watching = response.watching;
             }
 
             const questionNext = { ...questionModel, answers: answersNext };

@@ -160,7 +160,7 @@ namespace Pobs.Web.Controllers
                 {
                     await _notificationsService.AddWatchToAnswer(userId, questionId, answerModel.Id);
                     await _notificationsService.CreateNotificationsForAnswer(answerModel.Id);
-                    answerModel.IsWatchedByLoggedInUser = true;
+                    answerModel.Watching = true;
                     return Ok(answerModel);
                 }
                 return NotFound();
@@ -305,7 +305,7 @@ namespace Pobs.Web.Controllers
                 {
                     await _notificationsService.AddWatchToComment(userId, questionId, answerId, commentModel.Id);
                     await _notificationsService.CreateNotificationsForComment(commentModel.Id);
-                    commentModel.IsWatchedByLoggedInUser = true;
+                    commentModel.Watching = true;
                     return Ok(commentModel);
                 }
                 return NotFound();

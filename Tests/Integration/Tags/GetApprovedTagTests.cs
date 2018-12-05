@@ -44,7 +44,7 @@ namespace Pobs.Tests.Integration.Tags
                 Assert.Equal(_tag.Name, responseModel.Name);
                 Assert.Equal(_tag.Description, responseModel.Description);
                 Assert.Equal(_tag.MoreInfoUrl, responseModel.MoreInfoUrl);
-                Assert.False(responseModel.IsWatchedByLoggedInUser);
+                Assert.False(responseModel.Watching);
 
                 var dynamicResponseModel = JsonConvert.DeserializeObject<dynamic>(responseContent);
                 Assert.Null(dynamicResponseModel.isApproved);
@@ -69,7 +69,7 @@ namespace Pobs.Tests.Integration.Tags
         }
 
         [Fact]
-        public async Task Authenticated_ShouldGetIsWatchedByLoggedInUser()
+        public async Task Authenticated_ShouldGetWatching()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -83,7 +83,7 @@ namespace Pobs.Tests.Integration.Tags
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<TagModel>(responseContent);
                 Assert.Equal(_tag.Slug, responseModel.Slug);
-                Assert.True(responseModel.IsWatchedByLoggedInUser);
+                Assert.True(responseModel.Watching);
             }
         }
 
