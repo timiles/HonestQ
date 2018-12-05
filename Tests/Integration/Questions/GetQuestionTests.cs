@@ -62,7 +62,6 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Source, responseModel.Source);
                 Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
-                Assert.False(responseModel.IsPostedByLoggedInUser);
 
                 Assert.Single(responseModel.Tags);
                 var responseTag = responseModel.Tags.Single();
@@ -137,7 +136,6 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Source, responseModel.Source);
                 Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
-                Assert.True(responseModel.IsPostedByLoggedInUser);
 
                 Assert.Single(responseModel.Tags);
                 Assert.Equal(3, question.Answers.Count);

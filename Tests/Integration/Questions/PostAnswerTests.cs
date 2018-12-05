@@ -67,7 +67,6 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(answer.Slug, responseModel.Slug);
                     AssertHelpers.Equal(answer.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal(answer.PostedByUser.Username, responseModel.PostedBy);
-                    Assert.True(responseModel.IsPostedByLoggedInUser);
                     Assert.True(responseModel.IsWatchedByLoggedInUser);
                 }
             }

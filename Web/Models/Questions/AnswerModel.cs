@@ -41,7 +41,6 @@ namespace Pobs.Web.Models.Questions
 
             var userPseudoIds = PseudonymiseUserIds(answer);
             this.PostedByUserPseudoId = userPseudoIds?[answer.PostedByUserId] ?? 0;
-            this.IsPostedByLoggedInUser = answer.PostedByUserId == loggedInUserId;
             var topLevelComments = answer.Comments.Where(x => x.Status == PostStatus.OK && x.ParentComment == null);
             this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
 
@@ -69,7 +68,6 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string PostedBy { get; set; }
         public int PostedByUserPseudoId { get; set; }
-        public bool IsPostedByLoggedInUser { get; set; }
 
         public CommentModel[] Comments { get; set; }
         public Dictionary<string, int> ReactionCounts { get; set; }

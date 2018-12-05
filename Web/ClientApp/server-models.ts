@@ -90,7 +90,6 @@ export interface AdminQuestionModel {
     text: string;
     source?: string;
     postedBy: string;
-    isPostedByLoggedInUser: boolean;
     isWatchedByLoggedInUser: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
@@ -109,7 +108,6 @@ export interface AnswerModel {
     postedAt: string;
     postedBy: string;
     postedByUserPseudoId: number;
-    isPostedByLoggedInUser: boolean;
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };
     myReactions: string[];
@@ -162,7 +160,6 @@ export interface QuestionModel {
     text: string;
     source?: string;
     postedBy: string;
-    isPostedByLoggedInUser: boolean;
     isWatchedByLoggedInUser: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
