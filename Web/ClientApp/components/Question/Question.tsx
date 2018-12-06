@@ -11,18 +11,12 @@ import WatchControl from '../shared/WatchControl';
 import DiscussButton from './DiscussButton';
 import NewAnswer from './NewAnswer';
 
-export interface QuestionProps {
-    loading?: boolean;
-    error?: string;
-    questionId?: number;
-    model?: QuestionModel;
+interface Props {
+    questionId: number;
+    question: QuestionModel;
+    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void;
+    onWatch: (on: boolean) => void;
 }
-
-type Props = QuestionProps
-    & {
-    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-    onWatch: (on: boolean) => void,
-};
 
 export default class Question extends React.Component<Props, {}> {
 
@@ -58,13 +52,9 @@ export default class Question extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, model } = this.props;
+        const { questionId, question } = this.props;
 
-        if (!model || !questionId) {
-            return null;
-        }
-
-        const answersHeader = Question.getAnswersHeader(model.answers.length);
+        const answersHeader = Question.getAnswersHeader(question.answers.length);
 
         return (
             <div>
@@ -80,18 +70,18 @@ export default class Question extends React.Component<Props, {}> {
                             </LoggedInUserContext.Consumer>
                             <Emoji value={EmojiValue.Question} /> HonestQ:
                         </p>
-                        <h4><span className="post quote-marks">{model.text}</span></h4>
-                        <Source value={model.source} />
-                        {model.source && <EmbeddedContentCard url={model.source} />}
+                        <h4><span className="post quote-marks">{question.text}</span></h4>
+                        <Source value={question.source} />
+                        {question.source && <EmbeddedContentCard url={question.source} />}
                         <footer className="blockquote-footer">
-                            {model.postedBy}
+                            {question.postedBy}
                         </footer>
                     </blockquote>
                     <div>
                         <div className="float-right">
                             <WatchControl
                                 onWatch={this.handleWatch}
-                                watching={model.watching}
+                                watching={question.watching}
                             />
                         </div>
                     </div>
@@ -102,7 +92,7 @@ export default class Question extends React.Component<Props, {}> {
                     <NewAnswer questionId={questionId} />
                 </div>
                 <ul className="list-unstyled mt-3 mb-3">
-                    {model.answers.map((x: AnswerModel, i: number) =>
+                    {question.answers.map((x: AnswerModel, i: number) =>
                         <li key={i} className="mb-2">
                             <div className="card">
                                 <div className="card-body">
@@ -113,7 +103,7 @@ export default class Question extends React.Component<Props, {}> {
                                     </blockquote>
                                     <div className="mt-2 float-right">
                                         <DiscussButton
-                                            linkToCommentsUrl={buildAnswerUrl(questionId, model.slug, x.id, x.slug)}
+                                            linkToCommentsUrl={buildAnswerUrl(questionId, question.slug, x.id, x.slug)}
                                             commentsCount={Question.getTotalCommentsCount(x.comments)}
                                         />
                                     </div>
@@ -121,7 +111,7 @@ export default class Question extends React.Component<Props, {}> {
                             </div>
                         </li>)}
                 </ul>
-                {model.answers.length >= 5 &&
+                {question.answers.length >= 5 &&
                     <div>
                         <NewAnswer questionId={questionId} />
                     </div>

@@ -5,8 +5,10 @@ import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as QuestionStore from '../../store/Question';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import TagsList from '../Tags/List';
 import Answer from './Answer';
 import BackToQuestionButton from './BackToQuestionButton';
@@ -14,7 +16,13 @@ import Question from './Question';
 
 type ContainerProps = QuestionStore.ContainerState
     & typeof QuestionStore.actionCreators
-    & { questionId: number, questionSlug: string, answerId?: number, answerSlug?: string }
+    & {
+    questionId: number,
+    questionSlug: string,
+    answerId?: number,
+    answerSlug?: string,
+    getQuestionStatus: ActionStatus,
+}
     & RouteComponentProps<{}>;
 
 class Container extends React.Component<ContainerProps> {
@@ -33,19 +41,22 @@ class Container extends React.Component<ContainerProps> {
         }
     }
 
+    public componentWillUnmount() {
+        this.props.reset();
+    }
+
     public render() {
-        const { question, questionSlug, answerId, answerSlug } = this.props;
+        const { question, questionId, questionSlug, answerId, answerSlug } = this.props;
         const answer = this.getCurrentAnswer();
 
-        if (question && question.questionId && question.model &&
-            ((question.model.slug !== questionSlug) || (answer && answer.slug !== answerSlug))) {
+        if (question && ((question.slug !== questionSlug) || (answer && answer.slug !== answerSlug))) {
             // URL isn't canonical. Let's 301 redirect.
             if (this.props.staticContext) {
                 this.props.staticContext.statusCode = 301;
             }
             const canonicalUrl = answer ?
-                buildAnswerUrl(question.questionId, question.model.slug, answer.id, answer.slug) :
-                buildQuestionUrl(question.questionId, question.model.slug);
+                buildAnswerUrl(questionId, question.slug, answer.id, answer.slug) :
+                buildQuestionUrl(questionId, question.slug);
             return <Redirect to={canonicalUrl} />;
         }
 
@@ -55,80 +66,70 @@ class Container extends React.Component<ContainerProps> {
             <>
                 {this.renderHelmetTags()}
 
-                {question &&
-                    <div className="row">
-                        <div className="col-lg-3 d-none d-lg-block">
-                            {question.model &&
-                                <TagsList selectedTagSlugs={question.model.tags.map((x) => x.slug)} />
+                <div className="row">
+                    <div className="col-lg-3 d-none d-lg-block">
+                        <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
+                    </div>
+                    <div className="col-lg-6">
+                        <div className="row">
+                            <ActionStatusDisplay {...this.props.getQuestionStatus} />
+                            {question &&
+                                <TransitionGroup component={undefined}>
+                                    {!answerId &&
+                                        <CSSTransition
+                                            timeout={slideDurationMilliseconds}
+                                            classNames="slide"
+                                        >
+                                            <div className="col-md-12 slide slide-left">
+                                                <Question
+                                                    questionId={questionId}
+                                                    question={question}
+                                                    onReaction={this.handleReaction}
+                                                    onWatch={this.handleWatch}
+                                                />
+                                            </div>
+                                        </CSSTransition>
+                                    }
+                                    {answer &&
+                                        <CSSTransition
+                                            timeout={slideDurationMilliseconds}
+                                            classNames="slide"
+                                        >
+                                            <div className="col-md-12 slide slide-right">
+                                                <BackToQuestionButton
+                                                    id={questionId}
+                                                    slug={question.slug}
+                                                />
+                                                <Answer
+                                                    {...answer}
+                                                    questionId={questionId}
+                                                    questionText={question.text}
+                                                    onReaction={this.handleReaction}
+                                                    onWatch={this.handleWatch}
+                                                />
+                                            </div>
+                                        </CSSTransition>
+                                    }
+                                </TransitionGroup>
                             }
                         </div>
-                        <div className="col-lg-6">
-                            <div className="row">
-                                {(question.loading || question.error) &&
-                                    <div className="col-md-12">
-                                        {question.loading &&
-                                            <p>⏳ <i>Loading...</i></p>}
-                                        {question.error &&
-                                            <div className="alert alert-danger" role="alert">{question.error}</div>}
-                                    </div>
-                                }
-                                {question.model &&
-                                    <TransitionGroup component={undefined}>
-                                        {!answerId &&
-                                            <CSSTransition
-                                                timeout={slideDurationMilliseconds}
-                                                classNames="slide"
-                                            >
-                                                <div className="col-md-12 slide slide-left">
-                                                    <Question
-                                                        {...question}
-                                                        onReaction={this.handleReaction}
-                                                        onWatch={this.handleWatch}
-                                                    />
-                                                </div>
-                                            </CSSTransition>
-                                        }
-                                        {answer &&
-                                            <CSSTransition
-                                                timeout={slideDurationMilliseconds}
-                                                classNames="slide"
-                                            >
-                                                <div className="col-md-12 slide slide-right">
-                                                    <BackToQuestionButton
-                                                        id={question.questionId!}
-                                                        slug={question.model.slug}
-                                                    />
-                                                    <Answer
-                                                        {...answer}
-                                                        questionId={question.questionId!}
-                                                        questionText={question.model.text}
-                                                        onReaction={this.handleReaction}
-                                                        onWatch={this.handleWatch}
-                                                    />
-                                                </div>
-                                            </CSSTransition>
-                                        }
-                                    </TransitionGroup>
-                                }
-                            </div>
-                        </div>
                     </div>
-                }
+                </div>
             </>
         );
     }
 
     private getCurrentAnswer(): AnswerModel | undefined {
         const { question, answerId } = this.props;
-        if (question.model && answerId && answerId > 0) {
-            return question.model.answers.filter((x) => x.id === answerId)[0];
+        if (question && answerId && answerId > 0) {
+            return question.answers.filter((x) => x.id === answerId)[0];
         }
     }
 
     private renderHelmetTags() {
-        const { question } = this.props;
+        const { questionId, question } = this.props;
 
-        if (!question.model) {
+        if (!question) {
             return (
                 <Helmet>
                     <title>⏳ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
@@ -136,8 +137,8 @@ class Container extends React.Component<ContainerProps> {
             );
         }
 
-        let pageTitle = `HonestQ: \u201C${question.model.text}\u201D`;
-        let canonicalUrl = `https://www.honestq.com/questions/${question.questionId}/${question.model.slug}`;
+        let pageTitle = `HonestQ: \u201C${question.text}\u201D`;
+        let canonicalUrl = `https://www.honestq.com/questions/${questionId}/${question.slug}`;
 
         let ogTitle = 'HonestQ';
         let ogDescription = `😇 ${pageTitle}`;
@@ -165,17 +166,11 @@ class Container extends React.Component<ContainerProps> {
     }
 
     private shouldGetQuestion(): boolean {
-        const { questionId, question } = this.props;
-        if (!questionId) {
-            return false;
-        }
-        if (!question) {
+        const { question, getQuestionStatus } = this.props;
+        if (!question && (!getQuestionStatus || !getQuestionStatus.loading)) {
             return true;
         }
-        if (question.loading) {
-            return false;
-        }
-        return (question.questionId !== questionId);
+        return false;
     }
 
     private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
@@ -193,6 +188,9 @@ class Container extends React.Component<ContainerProps> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.question),
+    (state: ApplicationState, ownProps: any) => ({
+        ...state.question,
+        getQuestionStatus: getActionStatus(state, 'GET_QUESTION'),
+    }),
     QuestionStore.actionCreators,
 )(Container);

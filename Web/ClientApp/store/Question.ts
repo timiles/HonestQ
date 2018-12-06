@@ -1,9 +1,7 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { QuestionProps } from '../components/Question/Question';
-import { CommentModel, QuestionModel } from '../server-models';
 import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
-import { ReactionModel, WatchResponseModel } from './../server-models';
+import { CommentModel, QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewCommentFormSuccessAction } from './NewComment';
 
@@ -11,7 +9,7 @@ import { NewCommentFormSuccessAction } from './NewComment';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContainerState {
-    question: QuestionProps;
+    question?: QuestionModel;
 }
 
 // -----------------
@@ -21,7 +19,6 @@ export interface ContainerState {
 
 interface GetQuestionRequestAction {
     type: 'GET_QUESTION_REQUEST';
-    payload: { questionId: number; };
 }
 interface GetQuestionSuccessAction {
     type: 'GET_QUESTION_SUCCESS';
@@ -29,7 +26,10 @@ interface GetQuestionSuccessAction {
 }
 interface GetQuestionFailureAction {
     type: 'GET_QUESTION_FAILURE';
-    payload: { questionId: number; error: string; };
+    payload: { error: string; };
+}
+interface GetQuestionResetAction {
+    type: 'GET_QUESTION_RESET';
 }
 interface AddReactionSuccessAction {
     type: 'ADD_REACTION_SUCCESS';
@@ -54,6 +54,7 @@ type KnownAction =
     | GetQuestionRequestAction
     | GetQuestionSuccessAction
     | GetQuestionFailureAction
+    | GetQuestionResetAction
     | NewAnswerFormSuccessAction
     | NewCommentFormSuccessAction
     | AddReactionSuccessAction
@@ -69,7 +70,7 @@ export const actionCreators = {
     getQuestion: (questionId: number): AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
-                dispatch({ type: 'GET_QUESTION_REQUEST', payload: { questionId } });
+                dispatch({ type: 'GET_QUESTION_REQUEST' });
 
                 getJson<QuestionModel>(`/api/questions/${questionId}`,
                     getState().login.loggedInUser)
@@ -82,10 +83,7 @@ export const actionCreators = {
                     .catch((reason) => {
                         dispatch({
                             type: 'GET_QUESTION_FAILURE',
-                            payload: {
-                                questionId,
-                                error: reason || 'Get Question failed',
-                            },
+                            payload: { error: reason || 'Get Question failed' },
                         });
                     });
             })();
@@ -156,57 +154,46 @@ export const actionCreators = {
                     });
             })();
         },
+    reset: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            dispatch({ type: 'GET_QUESTION_RESET' });
+        })();
+    },
 };
 
 // ----------------
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ContainerState = { question: {} };
+const defaultState: ContainerState = {};
 
 export const reducer: Reducer<ContainerState> = (state: ContainerState, anyAction: AnyAction) => {
     // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
     const action = anyAction as KnownAction;
     switch (action.type) {
         case 'GET_QUESTION_REQUEST':
-            return {
-                question: {
-                    loading: true,
-                    questionId: action.payload.questionId,
-                },
-            };
+        case 'GET_QUESTION_FAILURE':
+            return state;
         case 'GET_QUESTION_SUCCESS':
             return {
-                question: {
-                    questionId: action.payload.questionId,
-                    model: action.payload.question,
-                },
-            };
-        case 'GET_QUESTION_FAILURE':
-            return {
-                question: {
-                    questionId: action.payload.questionId,
-                    error: action.payload.error,
-                },
+                questionId: action.payload.questionId,
+                question: action.payload.question,
             };
         case 'NEW_ANSWER_FORM_SUCCESS': {
-            const questionModel = state.question!.model!;
+            const questionModel = state.question!;
             // Slice for immutability
             const answersNext = questionModel.answers.slice();
             answersNext.push(action.payload.answer);
             const questionNext = { ...questionModel, answers: answersNext };
             return {
-                question: {
-                    questionId: state.question!.questionId,
-                    model: questionNext,
-                },
+                question: questionNext,
             };
         }
         case 'NEW_COMMENT_FORM_SUCCESS': {
             if (action.payload.comment.status !== 'OK') {
                 return state;
             }
-            const questionModel = state.question!.model!;
+            const questionModel = state.question!;
             // Slice for immutability
             const answersNext = questionModel.answers;
             const answerModel = answersNext.filter((x) => x.id === action.payload.answerId)[0];
@@ -221,15 +208,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             }
             const questionNext = { ...questionModel, answers: answersNext };
             return {
-                question: {
-                    questionId: state.question!.questionId,
-                    model: questionNext,
-                },
+                question: questionNext,
             };
         }
         case 'ADD_REACTION_SUCCESS': {
             const reaction = action.payload.reaction;
-            const questionModel = state.question!.model!;
+            const questionModel = state.question!;
             // Slice for immutability
             const answersNext = questionModel.answers;
             const answerModel = answersNext.filter((x) => x.id === reaction.answerId)[0];
@@ -251,15 +235,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
 
             const questionNext = { ...questionModel, answers: answersNext };
             return {
-                question: {
-                    questionId: state.question!.questionId,
-                    model: questionNext,
-                },
+                question: questionNext,
             };
         }
         case 'REMOVE_REACTION_SUCCESS': {
             const reaction = action.payload.reaction;
-            const questionModel = state.question!.model!;
+            const questionModel = state.question!;
             // Slice for immutability
             const answersNext = questionModel.answers;
             const answerModel = answersNext.filter((x) => x.id === reaction.answerId)[0];
@@ -283,15 +264,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
 
             const questionNext = { ...questionModel, answers: answersNext };
             return {
-                question: {
-                    questionId: state.question!.questionId,
-                    model: questionNext,
-                },
+                question: questionNext,
             };
         }
         case 'UPDATE_WATCH_QUESTION_SUCCESS': {
             const { answerId, commentId, response } = action.payload;
-            const questionModel = state.question!.model!;
+            const questionModel = state.question!;
             // Slice for immutability
             const answersNext = questionModel.answers;
             const answerModel = answersNext.filter((x) => x.id === answerId)[0];
@@ -309,12 +287,11 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
 
             const questionNext = { ...questionModel, answers: answersNext };
             return {
-                question: {
-                    questionId: state.question!.questionId,
-                    model: questionNext,
-                },
+                question: questionNext,
             };
         }
+        case 'GET_QUESTION_RESET':
+            return defaultState;
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
