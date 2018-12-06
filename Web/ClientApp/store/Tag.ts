@@ -1,6 +1,5 @@
-﻿import { AnyAction, Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { TagProps } from '../components/Tag/Tag';
 import { TagModel, WatchResponseModel } from '../server-models';
 import { fetchJson, getJson } from '../utils/http-utils';
 import { NewQuestionFormSuccessAction } from './NewQuestion';
@@ -9,7 +8,7 @@ import { NewQuestionFormSuccessAction } from './NewQuestion';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ContainerState {
-    tag: TagProps;
+    tag?: TagModel;
 }
 
 // -----------------
@@ -19,7 +18,6 @@ export interface ContainerState {
 
 interface GetTagRequestAction {
     type: 'GET_TAG_REQUEST';
-    payload: { tagSlug: string; };
 }
 interface GetTagSuccessAction {
     type: 'GET_TAG_SUCCESS';
@@ -27,7 +25,7 @@ interface GetTagSuccessAction {
 }
 interface GetTagFailureAction {
     type: 'GET_TAG_FAILURE';
-    payload: { tagSlug: string; error: string; };
+    payload: { error: string; };
 }
 interface UpdateWatchTagSuccessAction {
     type: 'UPDATE_WATCH_TAG_SUCCESS';
@@ -54,7 +52,7 @@ type KnownAction =
 export const actionCreators = {
     getTag: (tagSlug: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_TAG_REQUEST', payload: { tagSlug } });
+            dispatch({ type: 'GET_TAG_REQUEST' });
 
             getJson<TagModel>(`/api/tags/${tagSlug}`, getState().login.loggedInUser)
                 .then((tagResponse: TagModel) => {
@@ -66,10 +64,7 @@ export const actionCreators = {
                 .catch((reason) => {
                     dispatch({
                         type: 'GET_TAG_FAILURE',
-                        payload: {
-                            tagSlug,
-                            error: reason || 'Get tag failed',
-                        },
+                        payload: { error: reason || 'Get tag failed' },
                     });
                 });
         })();
@@ -100,67 +95,39 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ContainerState = { tag: {} };
+const defaultState: ContainerState = {};
 
-export const reducer: Reducer<ContainerState> = (state: ContainerState, anyAction: AnyAction) => {
-    // Currently all actions have payload so compiler doesn't like matching AnyAction with KnownAction
-    const action = anyAction as KnownAction;
+export const reducer: Reducer<ContainerState> = (state: ContainerState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_TAG_REQUEST':
-            return {
-                ...state,
-                tag: {
-                    loading: true,
-                    slug: action.payload.tagSlug,
-                },
-            };
+        case 'GET_TAG_FAILURE':
+            return state;
         case 'GET_TAG_SUCCESS':
             return {
-                // NOTE: Question is possibly already set if GET_QUESTION_REQUEST returned before GET_TAG_REQUEST
-                ...state,
-                tag: {
-                    slug: action.payload.tagSlug,
-                    model: action.payload.tag,
-                },
-            };
-        case 'GET_TAG_FAILURE':
-            return {
-                ...state,
-                tag: {
-                    slug: action.payload.tagSlug,
-                    error: action.payload.error,
-                },
+                tag: action.payload.tag,
             };
         case 'NEW_QUESTION_FORM_SUCCESS': {
-            if (!state.tag.model) {
+            if (!state.tag) {
                 // We could be posting a Question from the home page
                 return state;
             }
-            const tagModel = state.tag.model;
+            const tagModel = state.tag;
             // Slice for immutability
             const questionsNext = tagModel.questions.slice();
             questionsNext.push(action.payload.questionListItem);
             const tagNext = { ...tagModel, questions: questionsNext };
             return {
-                ...state,
-                tag: {
-                    slug: state.tag.slug,
-                    model: tagNext,
-                },
+                tag: tagNext,
             };
         }
         case 'UPDATE_WATCH_TAG_SUCCESS': {
             const { response } = action.payload;
             const tagNext = {
-                ...state.tag.model!,
+                ...state.tag!,
                 watching: response.watching,
             };
             return {
-                ...state,
-                tag: {
-                    slug: state.tag.slug,
-                    model: tagNext,
-                },
+                tag: tagNext,
             };
         }
 

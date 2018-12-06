@@ -2,14 +2,19 @@ import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as TagStore from '../../store/Tag';
 import NewQuestion from '../QuestionForm/NewQuestion';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import TagsList from '../Tags/List';
 import Tag from './Tag';
 
 type ContainerProps = TagStore.ContainerState
     & typeof TagStore.actionCreators
-    & { tagSlug: string };
+    & {
+    tagSlug: string,
+    getTagStatus: ActionStatus,
+};
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -31,12 +36,7 @@ class Container extends React.Component<ContainerProps, {}> {
     public render() {
         const { tag } = this.props;
 
-        // REVIEW: Is there a better way to handle this?
-        if (!tag) {
-            return false;
-        }
-
-        const numberOfQuestionsInTag = tag.model ? tag.model!.questions.length : 0;
+        const numberOfQuestionsInTag = tag ? tag.questions.length : 0;
 
         return (
             <>
@@ -44,17 +44,22 @@ class Container extends React.Component<ContainerProps, {}> {
 
                 <div className="row">
                     <div className="col-lg-3">
-                        <TagsList selectedTagSlugs={tag.slug ? [tag.slug] : []} />
+                        <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
                     </div>
                     <div className="col-lg-6">
                         <div className="row">
                             <div className="col-md-12">
-                                <Tag {...tag} onWatch={this.handleWatch} />
-                                {tag.model && numberOfQuestionsInTag === 0 &&
+                                <ActionStatusDisplay {...this.props.getTagStatus} />
+                                {tag &&
                                     <>
-                                        <h2>Start the conversation</h2>
-                                        <NewQuestion tagValue={tag.model} />
-                                    </>}
+                                        <Tag tag={tag} onWatch={this.handleWatch} />
+                                        {numberOfQuestionsInTag === 0 &&
+                                            <>
+                                                <h2>Start the conversation</h2>
+                                                <NewQuestion tagValue={tag} />
+                                            </>}
+                                    </>
+                                }
                             </div>
                         </div>
                     </div>
@@ -66,7 +71,7 @@ class Container extends React.Component<ContainerProps, {}> {
     private renderHelmetTags() {
         const { tag } = this.props;
 
-        if (!tag.model) {
+        if (!tag) {
             return (
                 <Helmet>
                     <title>⏳ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
@@ -74,11 +79,11 @@ class Container extends React.Component<ContainerProps, {}> {
             );
         }
 
-        const pageTitle = `HonestQ: ${tag.model.name}`;
-        const canonicalUrl = `https://www.honestq.com/tags/${tag.model.slug}`;
+        const pageTitle = `HonestQ: ${tag.name}`;
+        const canonicalUrl = `https://www.honestq.com/tags/${tag.slug}`;
 
-        const ogTitle = `Questions about ${tag.model.name}`;
-        const ogDescription = `View questions about ${tag.model.name}, ask your own, and join the debate.`;
+        const ogTitle = `Questions about ${tag.name}`;
+        const ogDescription = `View questions about ${tag.name}, ask your own, and join the debate.`;
 
         return (
             <Helmet>
@@ -95,7 +100,8 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private setUp(props: ContainerProps): void {
-        if (!props.tag || (props.tag.slug !== props.tagSlug)) {
+        if ((!props.getTagStatus || !props.getTagStatus.loading) &&
+            (!props.tag || (props.tag.slug !== props.tagSlug))) {
             props.getTag(props.tagSlug);
         }
     }
@@ -106,6 +112,9 @@ class Container extends React.Component<ContainerProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.tag),
+    (state: ApplicationState, ownProps: any) => ({
+        ...state.tag,
+        getTagStatus: getActionStatus(state, 'GET_TAG'),
+    }),
     TagStore.actionCreators,
 )(Container);

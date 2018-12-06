@@ -7,11 +7,8 @@ import TextWithShortLinks from '../shared/TextWithShortLinks';
 import WatchControl from '../shared/WatchControl';
 import QuestionList from './QuestionList';
 
-export interface TagProps {
-    loading?: boolean;
-    error?: string;
-    slug?: string;
-    model?: TagModel;
+interface TagProps {
+    tag: TagModel;
 }
 
 type Props = TagProps & {
@@ -27,18 +24,8 @@ export default class Tag extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { loading, error, slug, model } = this.props;
-        return (
-            <>
-                {loading && <p>⏳ <i>Loading...</i></p>}
-                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                {slug && model && this.renderModel(slug!, model!)}
-            </>
-        );
-    }
-
-    private renderModel(slug: string, model: TagModel) {
-        const { name, description, moreInfoUrl, questions, watching } = model;
+        const { tag } = this.props;
+        const { slug, name, description, moreInfoUrl, questions, watching } = tag;
         const tagValue = { name, slug };
         return (
             <>
