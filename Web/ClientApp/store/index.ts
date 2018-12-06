@@ -1,3 +1,4 @@
+import * as ActionStatuses from './ActionStatuses';
 import * as AdminHome from './AdminHome';
 import * as EditAnswer from './EditAnswer';
 import * as EditQuestion from './EditQuestion';
@@ -19,6 +20,7 @@ import * as VerifyEmail from './VerifyEmail';
 
 // The top-level state object
 export interface ApplicationState {
+    actionStatuses: ActionStatuses.ActionStatusesState;
     adminHome: AdminHome.AdminHomeState;
     editAnswer: EditAnswer.EditAnswerState;
     editQuestion: EditQuestion.EditQuestionState;
@@ -43,6 +45,7 @@ export interface ApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
+    actionStatuses: ActionStatuses.reducer,
     adminHome: AdminHome.reducer,
     editAnswer: EditAnswer.reducer,
     editQuestion: EditQuestion.reducer,

@@ -4,15 +4,19 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { NotificationModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as NotificationsStore from '../../store/Notifications';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
-import Loading from '../shared/Loading';
 import WatchControlDemo from '../shared/WatchControlDemo';
 
 type Props = NotificationsStore.ListState
     & typeof NotificationsStore.actionCreators
-    & { windowScrollEventEmitter: EventEmitter, onAllNotificationsLoaded: () => void };
+    & {
+    windowScrollEventEmitter: EventEmitter, onAllNotificationsLoaded: () => void,
+    getNotificationsListStatus: ActionStatus,
+};
 
 class NotificationList extends React.Component<Props> {
 
@@ -21,9 +25,9 @@ class NotificationList extends React.Component<Props> {
 
         this.props.windowScrollEventEmitter.addListener('scrolledToBottom', () => {
             // Prevent triggering multiple times
-            if (!this.props.loadingNotificationList.loading &&
-                this.props.loadingNotificationList.loadedModel!.lastId > 0) {
-                this.props.loadMoreNotifications(this.props.loadingNotificationList.loadedModel!.lastId);
+            if (!this.props.getNotificationsListStatus.loading && !this.props.getNotificationsListStatus.error &&
+                this.props.notificationsList && this.props.notificationsList.lastId > 0) {
+                this.props.loadMoreNotifications(this.props.notificationsList.lastId);
             }
         });
 
@@ -31,36 +35,36 @@ class NotificationList extends React.Component<Props> {
     }
 
     public componentWillMount() {
-        if (!this.props.loadingNotificationList.loadedModel) {
+        if (!this.props.notificationsList) {
             this.props.loadMoreNotifications();
         }
     }
 
     public componentDidUpdate(prevProps: Props) {
-        if (this.props.loadingNotificationList.loadedModel &&
-            this.props.loadingNotificationList.loadedModel.lastId === 0 &&
-            prevProps.loadingNotificationList.loadedModel &&
-            prevProps.loadingNotificationList.loadedModel.lastId > 0) {
+        if (this.props.notificationsList &&
+            this.props.notificationsList.lastId === 0 &&
+            prevProps.notificationsList &&
+            prevProps.notificationsList.lastId > 0) {
             // Reached the end of the list! Eat your heart out Twitter.
             this.props.onAllNotificationsLoaded();
         }
     }
 
     public render() {
-        const notificationList = this.props.loadingNotificationList.loadedModel;
+        const { notificationsList } = this.props;
 
         return (
             <>
                 <h1>Recent notifications</h1>
-                {notificationList &&
+                {notificationsList &&
                     <>
-                        {notificationList.notifications.length > 0 ?
+                        {notificationsList.notifications.length > 0 ?
                             <ul className="list-unstyled">
-                                {notificationList.notifications.map((x: NotificationModel, i: number) =>
+                                {notificationsList.notifications.map((x: NotificationModel, i: number) =>
                                     <li key={i} className="mb-2">
                                         {this.renderNotification(x)}
                                     </li>)}
-                                {notificationList.lastId === 0 && notificationList.notifications.length > 40 &&
+                                {notificationsList.lastId === 0 && notificationsList.notifications.length > 40 &&
                                     <li>
                                         That's all, folks!
                             </li>
@@ -85,7 +89,7 @@ class NotificationList extends React.Component<Props> {
                         }
                     </>
                 }
-                <Loading {...this.props.loadingNotificationList} />
+                <ActionStatusDisplay {...this.props.getNotificationsListStatus} />
             </>
         );
     }
@@ -197,6 +201,9 @@ class NotificationList extends React.Component<Props> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any): any => (state.notifications),
+    (state: ApplicationState) => ({
+        ...state.notifications,
+        getNotificationsListStatus: getActionStatus(state, 'GET_NOTIFICATIONS_LIST'),
+    }),
     NotificationsStore.actionCreators,
 )(NotificationList);

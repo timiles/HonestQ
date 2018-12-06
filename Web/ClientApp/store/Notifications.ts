@@ -1,6 +1,5 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoadingProps } from '../components/shared/Loading';
 import { NotificationsListModel } from '../server-models';
 import { getJson, postJson } from '../utils/http-utils';
 
@@ -8,7 +7,7 @@ import { getJson, postJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ListState {
-    loadingNotificationList: LoadingProps<NotificationsListModel>;
+    notificationsList?: NotificationsListModel;
 }
 
 // -----------------
@@ -82,52 +81,43 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ListState = { loadingNotificationList: {} };
+const defaultState: ListState = {};
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_NOTIFICATIONS_LIST_REQUEST':
-            return {
-                loadingNotificationList: { ...state.loadingNotificationList, loading: true },
-            };
+        case 'GET_NOTIFICATIONS_LIST_FAILURE':
+            return state;
         case 'GET_NOTIFICATIONS_LIST_SUCCESS':
             {
-                if (state.loadingNotificationList.loadedModel) {
+                if (state.notificationsList) {
                     // Slice for immutability
-                    const notificationsNext = state.loadingNotificationList.loadedModel.notifications.slice();
+                    const notificationsNext = state.notificationsList.notifications.slice();
                     for (const notification of action.payload.notifications) {
                         notificationsNext.push(notification);
                     }
                     return {
-                        loadingNotificationList: {
-                            loadedModel: { ...action.payload, notifications: notificationsNext },
-                        },
+                        notificationsList: { ...action.payload, notifications: notificationsNext },
                     };
                 }
                 return {
-                    loadingNotificationList: { loadedModel: action.payload },
+                    notificationsList: action.payload,
                 };
             }
-        case 'GET_NOTIFICATIONS_LIST_FAILURE':
-            return {
-                loadingNotificationList: { ...state.loadingNotificationList, error: action.payload.error },
-            };
         case 'MARK_NOTIFICATION_AS_SEEN_SUCCESS':
             {
-                if (!state.loadingNotificationList.loadedModel) {
+                if (!state.notificationsList) {
                     // Shouldn't be possible?
                     return state;
                 }
                 // Slice for immutability
-                const notificationsNext = state.loadingNotificationList.loadedModel.notifications.slice();
+                const notificationsNext = state.notificationsList.notifications.slice();
                 const notification = notificationsNext.filter((x) => (x.id === action.payload.id))[0];
                 if (notification) {
                     notification.seen = true;
                 }
                 return {
-                    loadingNotificationList: {
-                        loadedModel: { ...state.loadingNotificationList.loadedModel, notifications: notificationsNext },
-                    },
+                    notificationsList: { ...state.notificationsList, notifications: notificationsNext },
                 };
             }
 
