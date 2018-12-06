@@ -1,6 +1,5 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoadingProps } from '../components/shared/Loading';
 import { QuestionListItemModel, QuestionsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 import { NewQuestionFormSuccessAction } from './NewQuestion';
@@ -9,7 +8,7 @@ import { NewQuestionFormSuccessAction } from './NewQuestion';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ListState {
-    loadingQuestionList: LoadingProps<QuestionsListModel>;
+    questionsList?: QuestionsListModel;
 }
 
 // -----------------
@@ -64,41 +63,34 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ListState = { loadingQuestionList: {} };
+const defaultState: ListState = {};
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_QUESTIONS_LIST_REQUEST':
-            return {
-                loadingQuestionList: { ...state.loadingQuestionList, loading: true },
-            };
+        case 'GET_QUESTIONS_LIST_FAILURE':
+            return state;
         case 'GET_QUESTIONS_LIST_SUCCESS': {
-            if (state.loadingQuestionList.loadedModel) {
+            if (state.questionsList) {
                 // Slice for immutability
-                const questionsNext = state.loadingQuestionList.loadedModel.questions.slice();
+                const questionsNext = state.questionsList.questions.slice();
                 for (const question of action.payload.questions) {
                     questionsNext.push(question);
                 }
                 return {
-                    loadingQuestionList: {
-                        loadedModel: { ...action.payload, questions: questionsNext },
-                    },
+                    questionsList: { ...action.payload, questions: questionsNext },
                 };
             }
             return {
-                loadingQuestionList: { loadedModel: action.payload },
+                questionsList: action.payload,
             };
         }
-        case 'GET_QUESTIONS_LIST_FAILURE':
-            return {
-                loadingQuestionList: { ...state.loadingQuestionList, error: action.payload.error },
-            };
         case 'NEW_QUESTION_FORM_SUCCESS': {
-            if (!state.loadingQuestionList.loadedModel) {
+            if (!state.questionsList) {
                 // We could be posting a question from the tags page
                 return state;
             }
-            const questionListModel = state.loadingQuestionList.loadedModel;
+            const questionListModel = state.questionsList;
             // Slice for immutability
             const questionItemsNext = questionListModel.questions.slice();
             const newQuestionItem: QuestionListItemModel = {
@@ -111,7 +103,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
             questionItemsNext.unshift(newQuestionItem);
             const questionListNext = { ...questionListModel, questions: questionItemsNext };
             return {
-                loadingQuestionList: { loadedModel: questionListNext },
+                questionsList: questionListNext,
             };
         }
 

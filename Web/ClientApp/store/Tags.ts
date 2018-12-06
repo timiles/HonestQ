@@ -1,6 +1,5 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoadingProps } from '../components/shared/Loading';
 import { TagsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 
@@ -8,7 +7,7 @@ import { getJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ListState {
-    loadingTagsList: LoadingProps<TagsListModel>;
+    tagsList?: TagsListModel;
 }
 
 // -----------------
@@ -56,21 +55,16 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: ListState = { loadingTagsList: {} };
+const defaultState: ListState = {};
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_TAGS_LIST_REQUEST':
-            return {
-                loadingTagsList: { loading: true },
-            };
+        case 'GET_TAGS_LIST_FAILURE':
+            return state;
         case 'GET_TAGS_LIST_SUCCESS':
             return {
-                loadingTagsList: { loadedModel: action.payload },
-            };
-        case 'GET_TAGS_LIST_FAILURE':
-            return {
-                loadingTagsList: { error: action.payload.error },
+                tagsList: action.payload,
             };
 
         default:

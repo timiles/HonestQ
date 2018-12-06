@@ -1,6 +1,5 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoadingProps } from '../components/shared/Loading';
 import { QuestionsListModel, TagsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 
@@ -8,8 +7,8 @@ import { getJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface AdminHomeState {
-    unapprovedTagsList: LoadingProps<TagsListModel>;
-    unapprovedQuestionsList: LoadingProps<QuestionsListModel>;
+    unapprovedTagsList?: TagsListModel;
+    unapprovedQuestionsList?: QuestionsListModel;
 }
 
 // -----------------
@@ -98,39 +97,24 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: AdminHomeState = { unapprovedTagsList: {}, unapprovedQuestionsList: {} };
+const defaultState: AdminHomeState = {};
 
 export const reducer: Reducer<AdminHomeState> = (state: AdminHomeState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_UNAPPROVED_TAGS_LIST_REQUEST':
-            return {
-                unapprovedTagsList: { loading: true },
-                unapprovedQuestionsList: state.unapprovedQuestionsList,
-            };
+        case 'GET_UNAPPROVED_TAGS_LIST_FAILURE':
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_REQUEST':
+        case 'GET_UNAPPROVED_QUESTIONS_LIST_FAILURE':
+            return state;
         case 'GET_UNAPPROVED_TAGS_LIST_SUCCESS':
             return {
-                unapprovedTagsList: { loadedModel: action.payload },
+                unapprovedTagsList: action.payload,
                 unapprovedQuestionsList: state.unapprovedQuestionsList,
-            };
-        case 'GET_UNAPPROVED_TAGS_LIST_FAILURE':
-            return {
-                unapprovedTagsList: { error: action.payload.error },
-                unapprovedQuestionsList: state.unapprovedQuestionsList,
-            };
-        case 'GET_UNAPPROVED_QUESTIONS_LIST_REQUEST':
-            return {
-                unapprovedTagsList: state.unapprovedTagsList,
-                unapprovedQuestionsList: { loading: true },
             };
         case 'GET_UNAPPROVED_QUESTIONS_LIST_SUCCESS':
             return {
                 unapprovedTagsList: state.unapprovedTagsList,
-                unapprovedQuestionsList: { loadedModel: action.payload },
-            };
-        case 'GET_UNAPPROVED_QUESTIONS_LIST_FAILURE':
-            return {
-                unapprovedTagsList: state.unapprovedTagsList,
-                unapprovedQuestionsList: { error: action.payload.error },
+                unapprovedQuestionsList: action.payload,
             };
 
         default:

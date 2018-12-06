@@ -4,32 +4,37 @@ import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { TagListItemModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as TagsStore from '../../store/Tags';
-import Loading from '../shared/Loading';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 
 type TagsListProps = TagsStore.ListState
     & typeof TagsStore.actionCreators
-    & { buttonSize?: string, selectedTagSlugs?: string[], showNewTagButton?: boolean };
+    & {
+    buttonSize?: string,
+    selectedTagSlugs?: string[],
+    showNewTagButton?: boolean,
+    getTagsListStatus: ActionStatus,
+};
 
 class TagsList extends React.Component<TagsListProps> {
 
     public componentWillMount() {
-        if (!this.props.loadingTagsList.loadedModel) {
+        if (!this.props.tagsList) {
             this.props.getTagsList();
         }
     }
 
     public render() {
-        const tagsModel = this.props.loadingTagsList.loadedModel;
-        const { buttonSize = 'sm', selectedTagSlugs = [], showNewTagButton = false } = this.props;
+        const { tagsList, buttonSize = 'sm', selectedTagSlugs = [], showNewTagButton = false } = this.props;
 
         return (
             <>
                 <h2>Tags</h2>
-                <Loading {...this.props.loadingTagsList} />
-                {tagsModel &&
+                <ActionStatusDisplay {...this.props.getTagsListStatus} />
+                {tagsList &&
                     <ul className="list-inline">
-                        {tagsModel.tags
+                        {tagsList.tags
                             .sort((a, b) => (a.slug.localeCompare(b.slug)))
                             .map((x: TagListItemModel, i: number) =>
                                 <li key={i} className="mr-1 mb-1 list-inline-item">
@@ -58,6 +63,9 @@ class TagsList extends React.Component<TagsListProps> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any): any => (state.tags),
+    (state: ApplicationState) => ({
+        ...state.tags,
+        getTagsListStatus: getActionStatus(state, 'GET_TAGS_LIST'),
+    }),
     TagsStore.actionCreators,
 )(TagsList);

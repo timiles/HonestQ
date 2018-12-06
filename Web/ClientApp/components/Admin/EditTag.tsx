@@ -3,15 +3,19 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { EditTagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as EditTagStore from '../../store/EditTag';
 import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
-import Loading from '../shared/Loading';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 
 type EditTagProps = EditTagStore.EditTagState
     & typeof EditTagStore.actionCreators
-    & RouteComponentProps<{ tagSlug: string }>;
+    & RouteComponentProps<{ tagSlug: string }>
+    & {
+    getAdminTagStatus: ActionStatus,
+};
 
 class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
 
@@ -37,14 +41,14 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
     }
 
     public componentDidUpdate(prevProps: EditTagProps) {
-        const { loadedModel } = this.props.tagModel;
-        if (!prevProps.tagModel.loadedModel && loadedModel) {
+        const { tagModel } = this.props;
+        if (!prevProps.tagModel && tagModel) {
             this.setState({
-                name: loadedModel.name || '',
-                slug: loadedModel.slug || '',
-                description: loadedModel.description || '',
-                moreInfoUrl: loadedModel.moreInfoUrl || '',
-                isApproved: loadedModel.isApproved,
+                name: tagModel.name || '',
+                slug: tagModel.slug || '',
+                description: tagModel.description || '',
+                moreInfoUrl: tagModel.moreInfoUrl || '',
+                isApproved: tagModel.isApproved,
             });
 
             focusFirstTextInput('form');
@@ -52,27 +56,31 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
         }
     }
 
+    public componentWillUnmount() {
+        this.props.resetForm();
+    }
+
     public render() {
         const { name, slug, description, moreInfoUrl, isApproved } = this.state;
         const { successfullySaved } = this.props;
-        const { loadedModel } = this.props.tagModel;
+        const { tagModel } = this.props;
         const { submitting, submitted, error } = this.props.editTagForm;
-        const successUrl = (successfullySaved && loadedModel && loadedModel.isApproved)
-            ? `/tags/${loadedModel.slug}`
+        const successUrl = (successfullySaved && tagModel && tagModel.isApproved)
+            ? `/tags/${tagModel.slug}`
             : null;
 
         return (
             <div className="row">
                 <div className="col-lg-6 offset-lg-3">
                     <h2>Edit Tag</h2>
-                    {loadedModel && successUrl && (
+                    {tagModel && successUrl && (
                         <div className="alert alert-success" role="alert">
-                            "{loadedModel.name}" approved,
+                            "{tagModel.name}" approved,
                         check it out: <Link to={successUrl}>{successUrl}</Link>
                         </div>
                     )}
-                    <Loading {...this.props.tagModel} />
-                    {loadedModel && (
+                    <ActionStatusDisplay {...this.props.getAdminTagStatus} />
+                    {tagModel && (
                         <>
                             {error && <div className="alert alert-danger" role="alert">{error}</div>}
                             <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
@@ -149,10 +157,10 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
     }
 
     private shouldGetTag(): boolean {
-        if (!this.props.tagModel.loadedModel) {
+        if (!this.props.tagModel) {
             return true;
         }
-        return (this.props.tagModel.id !== this.props.match.params.tagSlug);
+        return (this.props.tagModel.slug !== this.props.match.params.tagSlug);
     }
 
     private handleChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>): void {
@@ -172,11 +180,14 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
     }
 
     private submit(): void {
-        this.props.submit(this.props.tagModel.id!, this.state);
+        this.props.submit(this.props.tagModel!.slug, this.state);
     }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.editTag),
+    (state: ApplicationState, ownProps: any) => ({
+        ...state.editTag,
+        getAdminTagStatus: getActionStatus(state, 'GET_ADMIN_TAG'),
+    }),
     EditTagStore.actionCreators,
 )(EditTag);

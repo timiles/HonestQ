@@ -1,6 +1,5 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { LoadingProps } from '../components/shared/Loading';
 import { NotificationsCountModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 import { LogOutSuccessAction } from './Login';
@@ -10,7 +9,7 @@ import { MarkNotificationAsSeenSuccessAction } from './Notifications';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface NotificationsCountState {
-    notificationsCount: LoadingProps<NotificationsCountModel>;
+    notificationsCount?: NotificationsCountModel;
 }
 
 // -----------------
@@ -69,31 +68,26 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: NotificationsCountState = { notificationsCount: {} };
+const defaultState: NotificationsCountState = {};
 
 export const reducer: Reducer<NotificationsCountState> = (state: NotificationsCountState, action: KnownAction) => {
     switch (action.type) {
         case 'GET_NOTIFICATIONS_COUNT_REQUEST':
-            return {
-                notificationsCount: { loading: true },
-            };
+        case 'GET_NOTIFICATIONS_COUNT_FAILURE':
+            return state;
         case 'GET_NOTIFICATIONS_COUNT_SUCCESS':
             return {
-                notificationsCount: { loadedModel: action.payload },
-            };
-        case 'GET_NOTIFICATIONS_COUNT_FAILURE':
-            return {
-                notificationsCount: { error: action.payload.error },
+                notificationsCount: action.payload,
             };
         case 'MARK_NOTIFICATION_AS_SEEN_SUCCESS':
             {
-                if (!state.notificationsCount.loadedModel) {
+                if (!state.notificationsCount) {
                     return state;
                 }
                 // Just in case of getting out of sync, let's never go below zero.
-                const newCount = Math.max(state.notificationsCount.loadedModel.count - 1, 0);
+                const newCount = Math.max(state.notificationsCount.count - 1, 0);
                 return {
-                    notificationsCount: { loadedModel: { count: newCount } },
+                    notificationsCount: { count: newCount },
                 };
             }
         case 'LOGOUT_SUCCESS':

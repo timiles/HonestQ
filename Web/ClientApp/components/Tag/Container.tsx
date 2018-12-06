@@ -44,7 +44,7 @@ class Container extends React.Component<ContainerProps, {}> {
 
                 <div className="row">
                     <div className="col-lg-3">
-                        <TagsList selectedTagSlugs={[tag.slug]} />
+                        <TagsList selectedTagSlugs={tag.slug ? [tag.slug] : []} />
                     </div>
                     <div className="col-lg-6">
                         <div className="row">

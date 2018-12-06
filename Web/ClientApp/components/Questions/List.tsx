@@ -4,15 +4,20 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { QuestionListItemModel, TagValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as QuestionsStore from '../../store/Questions';
 import { buildQuestionUrl } from '../../utils/route-utils';
 import NewQuestion from '../QuestionForm/NewQuestion';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import Emoji, { EmojiValue } from '../shared/Emoji';
-import Loading from '../shared/Loading';
 
 type Props = QuestionsStore.ListState
     & typeof QuestionsStore.actionCreators
-    & { windowScrollEventEmitter: EventEmitter, onAllQuestionsLoaded: () => void };
+    & {
+    windowScrollEventEmitter: EventEmitter,
+    onAllQuestionsLoaded: () => void,
+    getQuestionsListStatus: ActionStatus,
+};
 
 class QuestionList extends React.Component<Props> {
 
@@ -21,31 +26,31 @@ class QuestionList extends React.Component<Props> {
 
         this.props.windowScrollEventEmitter.addListener('scrolledToBottom', () => {
             // Prevent triggering multiple times
-            if (!this.props.loadingQuestionList.loading &&
-                this.props.loadingQuestionList.loadedModel!.lastTimestamp > 0) {
-                this.props.loadMoreQuestionItems(this.props.loadingQuestionList.loadedModel!.lastTimestamp);
+            if (!this.props.getQuestionsListStatus.loading && !this.props.getQuestionsListStatus.error &&
+                this.props.questionsList!.lastTimestamp > 0) {
+                this.props.loadMoreQuestionItems(this.props.questionsList!.lastTimestamp);
             }
         });
     }
 
     public componentWillMount() {
-        if (!this.props.loadingQuestionList.loadedModel) {
+        if (!this.props.questionsList) {
             this.props.loadMoreQuestionItems();
         }
     }
 
     public componentDidUpdate(prevProps: Props) {
-        if (this.props.loadingQuestionList.loadedModel &&
-            this.props.loadingQuestionList.loadedModel.lastTimestamp === 0 &&
-            prevProps.loadingQuestionList.loadedModel &&
-            prevProps.loadingQuestionList.loadedModel.lastTimestamp > 0) {
+        if (this.props.questionsList &&
+            this.props.questionsList.lastTimestamp === 0 &&
+            prevProps.questionsList &&
+            prevProps.questionsList.lastTimestamp > 0) {
             // Reached the end of the list! Eat your heart out Twitter.
             this.props.onAllQuestionsLoaded();
         }
     }
 
     public render() {
-        const questionList = this.props.loadingQuestionList.loadedModel;
+        const questionList = this.props.questionsList;
 
         return (
             <>
@@ -66,7 +71,7 @@ class QuestionList extends React.Component<Props> {
                         }
                     </ul>
                 }
-                <Loading {...this.props.loadingQuestionList} />
+                <ActionStatusDisplay {...this.props.getQuestionsListStatus} />
             </>
         );
     }
@@ -108,6 +113,9 @@ class QuestionList extends React.Component<Props> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any): any => (state.questions),
+    (state: ApplicationState, ownProps: any): any => ({
+        ...state.questions,
+        getQuestionsListStatus: getActionStatus(state, 'GET_QUESTIONS_LIST'),
+    }),
     QuestionsStore.actionCreators,
 )(QuestionList);
