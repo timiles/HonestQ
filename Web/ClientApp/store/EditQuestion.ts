@@ -1,14 +1,14 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { EditFormProps } from '../components/shared/EditFormProps';
 import { AdminQuestionFormModel, AdminQuestionModel } from '../server-models';
 import { getJson, putJson } from '../utils/http-utils';
+import { FormProps } from './../components/shared/FormProps';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface EditQuestionState {
-    editQuestionForm: EditFormProps<AdminQuestionModel>;
+    editQuestionForm: FormProps<AdminQuestionModel>;
     savedSlug?: string;
 }
 
@@ -17,17 +17,16 @@ export interface EditQuestionState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetQuestionRequestAction {
-    type: 'GET_QUESTION_REQUEST';
-    payload: { questionId: number; };
+interface GetAdminQuestionRequestAction {
+    type: 'GET_ADMIN_QUESTION_REQUEST';
 }
-interface GetQuestionSuccessAction {
-    type: 'GET_QUESTION_SUCCESS';
+interface GetAdminQuestionSuccessAction {
+    type: 'GET_ADMIN_QUESTION_SUCCESS';
     payload: { question: AdminQuestionModel; questionId: number; };
 }
-interface GetQuestionFailureAction {
-    type: 'GET_QUESTION_FAILURE';
-    payload: { questionId: number; error: string; };
+interface GetAdminQuestionFailureAction {
+    type: 'GET_ADMIN_QUESTION_FAILURE';
+    payload: { error: string; };
 }
 interface EditQuestionFormRequestAction {
     type: 'EDIT_QUESTION_FORM_REQUEST';
@@ -40,15 +39,21 @@ interface EditQuestionFormFailureAction {
     type: 'EDIT_QUESTION_FORM_FAILURE';
     payload: { error: string | null; };
 }
+interface EditQuestionFormResetAction {
+    type: 'EDIT_QUESTION_FORM_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetQuestionRequestAction
-    | GetQuestionSuccessAction
-    | GetQuestionFailureAction
+type KnownAction =
+    | GetAdminQuestionRequestAction
+    | GetAdminQuestionSuccessAction
+    | GetAdminQuestionFailureAction
     | EditQuestionFormRequestAction
     | EditQuestionFormSuccessAction
-    | EditQuestionFormFailureAction;
+    | EditQuestionFormFailureAction
+    | EditQuestionFormResetAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -57,19 +62,19 @@ type KnownAction = GetQuestionRequestAction
 export const actionCreators = {
     getQuestion: (questionId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_QUESTION_REQUEST', payload: { questionId } });
+            dispatch({ type: 'GET_ADMIN_QUESTION_REQUEST' });
 
             getJson<AdminQuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
                 .then((questionResponse) => {
                     dispatch({
-                        type: 'GET_QUESTION_SUCCESS',
+                        type: 'GET_ADMIN_QUESTION_SUCCESS',
                         payload: { question: questionResponse, questionId },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_QUESTION_FAILURE',
-                        payload: { questionId, error: reason || 'Get tag failed' },
+                        type: 'GET_ADMIN_QUESTION_FAILURE',
+                        payload: { error: reason || 'Get question failed' },
                     });
                 });
         })();
@@ -98,6 +103,11 @@ export const actionCreators = {
                     });
             })();
         },
+    resetForm: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            dispatch({ type: 'EDIT_QUESTION_FORM_RESET' });
+        })();
+    },
 };
 
 // ----------------
@@ -108,22 +118,13 @@ const defaultState: EditQuestionState = { editQuestionForm: {} };
 
 export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_QUESTION_REQUEST':
-            return {
-                editQuestionForm: {
-                    loading: true,
-                },
-            };
-        case 'GET_QUESTION_SUCCESS':
+        case 'GET_ADMIN_QUESTION_REQUEST':
+        case 'GET_ADMIN_QUESTION_FAILURE':
+            return state;
+        case 'GET_ADMIN_QUESTION_SUCCESS':
             return {
                 editQuestionForm: {
                     initialState: action.payload.question,
-                },
-            };
-        case 'GET_QUESTION_FAILURE':
-            return {
-                editQuestionForm: {
-                    error: action.payload.error,
                 },
             };
         case 'EDIT_QUESTION_FORM_REQUEST':
@@ -149,6 +150,8 @@ export const reducer: Reducer<EditQuestionState> = (state: EditQuestionState, ac
                     error: action.payload.error,
                 },
             };
+        case 'EDIT_QUESTION_FORM_RESET':
+            return defaultState;
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

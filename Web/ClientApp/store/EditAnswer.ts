@@ -1,14 +1,14 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { EditFormProps } from '../components/shared/EditFormProps';
 import { AnswerFormModel, AnswerModel, QuestionModel } from '../server-models';
 import { getJson, putJson } from '../utils/http-utils';
+import { FormProps } from './../components/shared/FormProps';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface EditAnswerState {
-    editAnswerForm: EditFormProps<AnswerFormModel>;
+    editAnswerForm: FormProps<AnswerFormModel>;
     savedSuccessfully?: boolean;
 }
 
@@ -17,17 +17,16 @@ export interface EditAnswerState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface GetAnswerRequestAction {
-    type: 'GET_ANSWER_REQUEST';
-    payload: { questionId: number; answerId: number; };
+interface GetEditAnswerRequestAction {
+    type: 'GET_EDIT_ANSWER_REQUEST';
 }
-interface GetAnswerSuccessAction {
-    type: 'GET_ANSWER_SUCCESS';
+interface GetEditAnswerSuccessAction {
+    type: 'GET_EDIT_ANSWER_SUCCESS';
     payload: { answerId: number; answer: AnswerModel; };
 }
-interface GetAnswerFailureAction {
-    type: 'GET_ANSWER_FAILURE';
-    payload: { answerId: number; error: string; };
+interface GetEditAnswerFailureAction {
+    type: 'GET_EDIT_ANSWER_FAILURE';
+    payload: { error: string; };
 }
 interface EditAnswerFormRequestAction {
     type: 'EDIT_ANSWER_FORM_REQUEST';
@@ -40,15 +39,21 @@ interface EditAnswerFormFailureAction {
     type: 'EDIT_ANSWER_FORM_FAILURE';
     payload: { error: string | null; };
 }
+interface EditAnswerFormResetAction {
+    type: 'EDIT_ANSWER_FORM_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = GetAnswerRequestAction
-    | GetAnswerSuccessAction
-    | GetAnswerFailureAction
+type KnownAction =
+    | GetEditAnswerRequestAction
+    | GetEditAnswerSuccessAction
+    | GetEditAnswerFailureAction
     | EditAnswerFormRequestAction
     | EditAnswerFormSuccessAction
-    | EditAnswerFormFailureAction;
+    | EditAnswerFormFailureAction
+    | EditAnswerFormResetAction
+    ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -57,20 +62,20 @@ type KnownAction = GetAnswerRequestAction
 export const actionCreators = {
     getAnswer: (questionId: number, answerId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         return (async () => {
-            dispatch({ type: 'GET_ANSWER_REQUEST', payload: { questionId, answerId } });
+            dispatch({ type: 'GET_EDIT_ANSWER_REQUEST' });
 
             getJson<QuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
                 .then((questionResponse: QuestionModel) => {
                     const answerResponse = questionResponse.answers.filter((x) => x.id === answerId)[0];
                     dispatch({
-                        type: 'GET_ANSWER_SUCCESS',
+                        type: 'GET_EDIT_ANSWER_SUCCESS',
                         payload: { answerId, answer: answerResponse },
                     });
                 })
                 .catch((reason) => {
                     dispatch({
-                        type: 'GET_ANSWER_FAILURE',
-                        payload: { answerId, error: reason || 'Get tag failed' },
+                        type: 'GET_EDIT_ANSWER_FAILURE',
+                        payload: { error: reason || 'Get answer failed' },
                     });
                 });
         })();
@@ -99,6 +104,11 @@ export const actionCreators = {
                     });
             })();
         },
+    resetForm: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            dispatch({ type: 'EDIT_ANSWER_FORM_RESET' });
+        })();
+    },
 };
 
 // ----------------
@@ -109,22 +119,13 @@ const defaultState: EditAnswerState = { editAnswerForm: {} };
 
 export const reducer: Reducer<EditAnswerState> = (state: EditAnswerState, action: KnownAction) => {
     switch (action.type) {
-        case 'GET_ANSWER_REQUEST':
-            return {
-                editAnswerForm: {
-                    loading: true,
-                },
-            };
-        case 'GET_ANSWER_SUCCESS':
+        case 'GET_EDIT_ANSWER_REQUEST':
+        case 'GET_EDIT_ANSWER_FAILURE':
+            return state;
+        case 'GET_EDIT_ANSWER_SUCCESS':
             return {
                 editAnswerForm: {
                     initialState: action.payload.answer,
-                },
-            };
-        case 'GET_ANSWER_FAILURE':
-            return {
-                editAnswerForm: {
-                    error: action.payload.error,
                 },
             };
         case 'EDIT_ANSWER_FORM_REQUEST':
@@ -150,6 +151,8 @@ export const reducer: Reducer<EditAnswerState> = (state: EditAnswerState, action
                     error: action.payload.error,
                 },
             };
+        case 'EDIT_ANSWER_FORM_RESET':
+            return defaultState;
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above

@@ -3,14 +3,18 @@ import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { AnswerFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as EditAnswerStore from '../../store/EditAnswer';
 import { buildQuestionUrl } from '../../utils/route-utils';
 import AnswerForm from '../Question/AnswerForm';
-import Loading from '../shared/Loading';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 
 type EditAnswerProps = EditAnswerStore.EditAnswerState
     & typeof EditAnswerStore.actionCreators
-    & RouteComponentProps<{ tagSlug: string, questionId: string, answerId: string }>;
+    & RouteComponentProps<{ tagSlug: string, questionId: string, answerId: string }>
+    & {
+    getAnswerStatus: ActionStatus,
+};
 
 class EditAnswer extends React.Component<EditAnswerProps, {}> {
 
@@ -24,6 +28,10 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
         if (this.shouldGetAnswer()) {
             this.props.getAnswer(Number(this.props.match.params.questionId), Number(this.props.match.params.answerId));
         }
+    }
+
+    public componentWillUnmount() {
+        this.props.resetForm();
     }
 
     public render() {
@@ -40,7 +48,7 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
                             Answer updated, check it out: <Link to={successUrl}>{successUrl}</Link>
                         </div>
                     )}
-                    <Loading {...this.props.editAnswerForm} />
+                    <ActionStatusDisplay {...this.props.getAnswerStatus} />
                     {initialState && (
                         <AnswerForm
                             initialState={initialState}
@@ -62,6 +70,9 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.editAnswer),
+    (state: ApplicationState, ownProps: any) => ({
+        ...state.editAnswer,
+        getAnswerStatus: getActionStatus(state, 'GET_ANSWER'),
+    }),
     EditAnswerStore.actionCreators,
 )(EditAnswer);
