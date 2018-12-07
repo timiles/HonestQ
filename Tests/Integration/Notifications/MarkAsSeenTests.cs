@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web.Models.Notifications;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Notifications
@@ -16,7 +14,7 @@ namespace Pobs.Tests.Integration.Notifications
         private string _buildUrl(long notificationId) => $"/api/notifications/{notificationId}/seen";
 
         private readonly int _notificationOwnerUserId;
-        private readonly Notification _notification;
+        private readonly IList<Notification> _notifications;
 
         public MarkAsSeenTests()
         {
@@ -24,8 +22,8 @@ namespace Pobs.Tests.Integration.Notifications
             _notificationOwnerUserId = user.Id;
 
             // In reality, the questions should be posted by a different user, but it's not a requirement for this test.
-            var question = DataHelpers.CreateQuestions(user, 1).Single();
-            _notification = DataHelpers.CreateNotifications(user, question).Single();
+            var question = DataHelpers.CreateQuestions(user, 1, user, 1).Single();
+            _notifications = DataHelpers.CreateNotifications(user, question, question.Answers.Single()).ToList();
         }
 
         [Fact]
@@ -34,7 +32,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var response = await client.PostAsync(_buildUrl(_notification.Id), null);
+                var response = await client.PostAsync(_buildUrl(_notifications[0].Id), null);
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
         }
@@ -42,18 +40,21 @@ namespace Pobs.Tests.Integration.Notifications
         [Fact]
         public async Task ShouldMarkAsSeen()
         {
+            var markAsSeenNotification = _notifications[0];
+            var unseenNotification = _notifications[1];
+
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_notificationOwnerUserId);
 
-                var response = await client.PostAsync(_buildUrl(_notification.Id), null);
+                var response = await client.PostAsync(_buildUrl(markAsSeenNotification.Id), null);
                 response.EnsureSuccessStatusCode();
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var reloadedNotification = dbContext.Notifications.Find(_notification.Id);
-                    Assert.True(reloadedNotification.Seen);
+                    Assert.True(dbContext.Notifications.Find(markAsSeenNotification.Id).Seen);
+                    Assert.False(dbContext.Notifications.Find(unseenNotification.Id).Seen);
                 }
             }
         }
@@ -74,17 +75,19 @@ namespace Pobs.Tests.Integration.Notifications
         [Fact]
         public async Task AuthenticatedAsDifferentUser_ShouldGetNotFound()
         {
+            var notification = _notifications[0];
+
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(1);
 
-                var response = await client.PostAsync(_buildUrl(_notification.Id), null);
+                var response = await client.PostAsync(_buildUrl(notification.Id), null);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    var reloadedNotification = dbContext.Notifications.Find(_notification.Id);
+                    var reloadedNotification = dbContext.Notifications.Find(notification.Id);
                     Assert.False(reloadedNotification.Seen);
                 }
             }

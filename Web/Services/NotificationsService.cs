@@ -26,6 +26,7 @@ namespace Pobs.Web.Services
         Task CreateNotificationsForAnswer(int answerId);
         Task CreateNotificationsForComment(long commentId);
         Task<bool> MarkAsSeen(int loggedInUserId, long notificationId);
+        Task MarkAllAsSeen(int loggedInUserId);
     }
 
     public class NotificationsService : INotificationsService
@@ -260,6 +261,18 @@ namespace Pobs.Web.Services
             notification.Seen = true;
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task MarkAllAsSeen(int loggedInUserId)
+        {
+            // REVIEW: Consider turning into a stored proc, rather than retrieving and updating all records
+            var notifications = await _context.Notifications
+                .Where(x => x.OwnerUserId == loggedInUserId && x.Seen == false).ToListAsync();
+            foreach (var notification in notifications)
+            {
+                notification.Seen = true;
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

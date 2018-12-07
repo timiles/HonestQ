@@ -42,5 +42,12 @@ namespace Pobs.Web.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost, Route("all/seen")]
+        public async Task<IActionResult> MarkAllAsSeen()
+        {
+            await _notificationsService.MarkAllAsSeen(User.Identity.ParseUserId());
+            return Ok();
+        }
     }
 }
