@@ -3,7 +3,7 @@ import { AppThunkAction } from '.';
 import { NotificationsCountModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 import { LogOutSuccessAction } from './Login';
-import { MarkNotificationAsSeenSuccessAction } from './Notifications';
+import { MarkAllNotificationsAsSeenSuccessAction, MarkNotificationAsSeenSuccessAction } from './Notifications';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -36,6 +36,7 @@ type KnownAction =
     | GetNotificationsCountSuccessAction
     | GetNotificationsCountFailureAction
     | MarkNotificationAsSeenSuccessAction
+    | MarkAllNotificationsAsSeenSuccessAction
     | LogOutSuccessAction
     ;
 
@@ -88,6 +89,15 @@ export const reducer: Reducer<NotificationsCountState> = (state: NotificationsCo
                 const newCount = Math.max(state.notificationsCount.count - 1, 0);
                 return {
                     notificationsCount: { count: newCount },
+                };
+            }
+        case 'MARK_ALL_NOTIFICATIONS_AS_SEEN_SUCCESS':
+            {
+                if (!state.notificationsCount) {
+                    return state;
+                }
+                return {
+                    notificationsCount: { count: 0 },
                 };
             }
         case 'LOGOUT_SUCCESS':

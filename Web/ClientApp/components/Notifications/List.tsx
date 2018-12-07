@@ -31,7 +31,8 @@ class NotificationList extends React.Component<Props> {
             }
         });
 
-        this.handleClick = this.handleClick.bind(this);
+        this.handleMarkAsSeen = this.handleMarkAsSeen.bind(this);
+        this.handleMarkAllAsSeen = this.handleMarkAllAsSeen.bind(this);
     }
 
     public componentWillMount() {
@@ -52,10 +53,24 @@ class NotificationList extends React.Component<Props> {
 
     public render() {
         const { notificationsList } = this.props;
+        const unseenCount = notificationsList ? notificationsList.notifications.filter((x) => !x.seen).length : 0;
 
         return (
             <>
-                <h1>Recent notifications</h1>
+                <h1>
+                    <span className="mr-2">Recent notifications</span>
+                    {unseenCount > 0 &&
+                        <small>
+                            <button
+                                className="mb-1 btn btn-sm btn-success"
+                                type="button"
+                                onClick={this.handleMarkAllAsSeen}
+                            >
+                                Mark all as seen
+                            </button>
+                        </small>
+                    }
+                </h1>
                 {notificationsList &&
                     <>
                         {notificationsList.notifications.length > 0 ?
@@ -125,7 +140,7 @@ class NotificationList extends React.Component<Props> {
                             to={questionUrl}
                             className={`btn btn-lg post-list-item ${seenClassName}`}
                             data-id={notification.id}
-                            onClick={this.handleClick}
+                            onClick={this.handleMarkAsSeen}
                         >
                             <Emoji value={EmojiValue.Question} />
                             <span className="ml-1 question">{notification.questionText}</span>
@@ -149,7 +164,7 @@ class NotificationList extends React.Component<Props> {
                             to={answerUrl}
                             className={`btn btn-lg post-list-item ${seenClassName}`}
                             data-id={notification.id}
-                            onClick={this.handleClick}
+                            onClick={this.handleMarkAsSeen}
                         >
                             <Emoji value={EmojiValue.Answer} />
                             <span className="ml-1 answer">{notification.answerText}</span>
@@ -178,7 +193,7 @@ class NotificationList extends React.Component<Props> {
                             to={answerUrl}
                             className={`btn btn-lg post-list-item ${seenClassName}`}
                             data-id={notification.id}
-                            onClick={this.handleClick}
+                            onClick={this.handleMarkAsSeen}
                         >
                             {emojiValue && <Emoji value={emojiValue} />}
                             <span className="ml-1 comment">{notification.commentText}</span>
@@ -190,13 +205,17 @@ class NotificationList extends React.Component<Props> {
         }
     }
 
-    private handleClick(event: React.MouseEvent<HTMLAnchorElement>): void {
+    private handleMarkAsSeen(event: React.MouseEvent<HTMLAnchorElement>): void {
         const notificationId = Number(event.currentTarget.dataset.id);
         if (notificationId) {
             this.props.markAsSeen(notificationId);
         } else {
             // TODO: log?
         }
+    }
+
+    private handleMarkAllAsSeen(event: React.FormEvent<HTMLButtonElement>): void {
+        this.props.markAllAsSeen();
     }
 }
 

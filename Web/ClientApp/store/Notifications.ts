@@ -23,6 +23,9 @@ export interface MarkNotificationAsSeenSuccessAction {
     type: 'MARK_NOTIFICATION_AS_SEEN_SUCCESS';
     payload: { id: number };
 }
+export interface MarkAllNotificationsAsSeenSuccessAction {
+    type: 'MARK_ALL_NOTIFICATIONS_AS_SEEN_SUCCESS';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -31,6 +34,7 @@ type KnownAction =
     | GetNotificationsListSuccessAction
     | GetNotificationsListFailureAction
     | MarkNotificationAsSeenSuccessAction
+    | MarkAllNotificationsAsSeenSuccessAction
     ;
 
 // ----------------
@@ -68,6 +72,20 @@ export const actionCreators = {
                     dispatch({
                         type: 'MARK_NOTIFICATION_AS_SEEN_SUCCESS',
                         payload: { id: notificationId },
+                    });
+                })
+                .catch((reason) => {
+                    // TODO: Toast?
+                });
+        })();
+    },
+    markAllAsSeen: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        return (async () => {
+            const url = '/api/notifications/all/seen';
+            postJson(url, null, getState().login.loggedInUser)
+                .then(() => {
+                    dispatch({
+                        type: 'MARK_ALL_NOTIFICATIONS_AS_SEEN_SUCCESS',
                     });
                 })
                 .catch((reason) => {
@@ -116,6 +134,19 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                 if (notification) {
                     notification.seen = true;
                 }
+                return {
+                    notificationsList: { ...state.notificationsList, notifications: notificationsNext },
+                };
+            }
+        case 'MARK_ALL_NOTIFICATIONS_AS_SEEN_SUCCESS':
+            {
+                if (!state.notificationsList) {
+                    // Shouldn't be possible?
+                    return state;
+                }
+                // Slice for immutability
+                const notificationsNext = state.notificationsList.notifications.slice();
+                notificationsNext.forEach((x) => { x.seen = true; });
                 return {
                     notificationsList: { ...state.notificationsList, notifications: notificationsNext },
                 };
