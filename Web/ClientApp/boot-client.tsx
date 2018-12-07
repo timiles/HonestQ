@@ -31,11 +31,8 @@ function renderApp() {
         }
         ReactGA.pageview(window.location.pathname + window.location.search);
         history.listen((location, action) => {
-            // Only track PUSH and POP, not REPLACE.
-            // TODO: Fix so we don't get REPLACE in the first place?
-            if (action === 'PUSH' || action === 'POP') {
-                ReactGA.pageview(location.pathname + location.search);
-            }
+            // Track all actions: PUSH, POP, REPLACE
+            ReactGA.pageview(location.pathname + location.search);
         });
     }
 
