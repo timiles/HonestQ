@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
-import { AnswerModel, CommentModel, QuestionModel } from '../../server-models';
+import { AnswerModel, QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
@@ -10,6 +10,7 @@ import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import DiscussButton from './DiscussButton';
 import NewAnswer from './NewAnswer';
+import UpvoteButton from './UpvoteButton';
 
 interface Props {
     questionId: number;
@@ -32,17 +33,6 @@ export default class Question extends React.Component<Props, {}> {
                 return `${answersCount} answers`;
             }
         }
-    }
-
-    private static getTotalCommentsCount(comments: CommentModel[]): number {
-        let total = comments.length;
-        for (const comment of comments) {
-            // Also add any child comments
-            if (comment.comments.length > 0) {
-                total += Question.getTotalCommentsCount(comment.comments);
-            }
-        }
-        return total;
     }
 
     constructor(props: Props) {
@@ -104,7 +94,8 @@ export default class Question extends React.Component<Props, {}> {
                                     <div className="mt-2 float-right">
                                         <DiscussButton
                                             linkToCommentsUrl={buildAnswerUrl(questionId, question.slug, x.id, x.slug)}
-                                            commentsCount={Question.getTotalCommentsCount(x.comments)}
+                                            upvotes={x.reactionCounts ? x.reactionCounts[UpvoteButton.ReactionType] : 0}
+                                            comments={x.comments}
                                         />
                                     </div>
                                 </div>
