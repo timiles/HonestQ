@@ -140,15 +140,24 @@ class Container extends React.Component<ContainerProps> {
         let pageTitle = `HonestQ: \u201C${question.text}\u201D`;
         let canonicalUrl = `https://www.honestq.com/questions/${questionId}/${question.slug}`;
 
-        let ogTitle = 'HonestQ';
-        let ogDescription = `😇 ${pageTitle}`;
+        // Only title displays on mobile Twitter
+        const ogTitle = `😇 ${pageTitle}`;
+        let ogDescription: string;
 
         const answer = this.getCurrentAnswer();
         if (answer) {
             pageTitle += ` » 🙋 \u201C${answer.text}\u201D`;
             canonicalUrl += `/${answer.id}/${answer.slug}`;
-            ogTitle = ogDescription;
             ogDescription = `🙋 \u201C${answer.text}\u201D`;
+        } else {
+            const switchAnswerCount = (count: number) => {
+                switch (count) {
+                    case 0: return 'Got an answer?';
+                    case 1: return 'One answer so far.';
+                    default: return `${question.answers.length} answers so far.`;
+                }
+            };
+            ogDescription = switchAnswerCount(question.answers.length);
         }
 
         return (
