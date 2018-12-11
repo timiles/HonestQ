@@ -113,18 +113,27 @@ ul.list-comma-separated li:not(:last-child):after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 3.3em;
     }
-    p.small .quote-marks:before, p.small .quote-marks:after,
-        small .quote-marks:before, small .quote-marks:after {
+    p.small .quote-marks:before, p.small .quote-marks:after {
+        font-size: 2rem;
+        opacity: 0.4;
+    }
+    p.small .quote-marks:before {
+        margin-right: 2px;
+        top: 15px;
+    }
+    p.small .quote-marks:after {
+        bottom: -15px;
+        margin-left: 2px;
+    }
+    small .quote-marks:before, small .quote-marks:after {
         font-size: 1.5rem;
         opacity: 0.8;
     }
-    p.small .quote-marks:before,
-        small .quote-marks:before {
+    small .quote-marks:before {
         margin-right: 1px;
         top: 9px;
     }
-    p.small .quote-marks:after,
-        small .quote-marks:after {
+    small .quote-marks:after {
         bottom: -9px;
         margin-left: 1px;
     }
