@@ -38,7 +38,7 @@ export function extractDomainFromUrl(url: string): string | null {
     return null;
 }
 
-export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number) {
+export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number = 0) {
     // If date from server ends with 'Z', javascript automatically applies the local time zone
     if (dateString && dateString[dateString.length - 1] === 'Z') {
         dateString = dateString.substring(0, dateString.length - 1);

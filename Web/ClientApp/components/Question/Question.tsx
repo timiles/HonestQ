@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
-import { AnswerModel, QuestionModel } from '../../server-models';
+import { QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
-import { buildAnswerUrl } from '../../utils/route-utils';
 import EmbeddedContentCard from '../shared/EmbeddedContentCard';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
-import DiscussButton from './DiscussButton';
+import AnswersList from './AnswersList';
 import NewAnswer from './NewAnswer';
-import UpvoteButton from './UpvoteButton';
 
 interface Props {
     questionId: number;
@@ -19,7 +17,7 @@ interface Props {
     onWatch: (on: boolean) => void;
 }
 
-export default class Question extends React.Component<Props, {}> {
+export default class Question extends React.Component<Props> {
 
     private static getAnswersHeader(answersCount: number): string {
         switch (answersCount) {
@@ -81,27 +79,7 @@ export default class Question extends React.Component<Props, {}> {
                 <div className="mb-3">
                     <NewAnswer questionId={questionId} />
                 </div>
-                <ul className="list-unstyled mt-3 mb-3">
-                    {question.answers.map((x: AnswerModel, i: number) =>
-                        <li key={i} className="mb-2">
-                            <div className="card">
-                                <div className="card-body">
-                                    <blockquote className="blockquote mb-0">
-                                        <Emoji value={EmojiValue.Answer} />
-                                        <span className="ml-2 post">{x.text}</span>
-                                        <Source value={x.source} />
-                                    </blockquote>
-                                    <div className="mt-2 float-right">
-                                        <DiscussButton
-                                            linkToCommentsUrl={buildAnswerUrl(questionId, question.slug, x.id, x.slug)}
-                                            upvotes={x.reactionCounts ? x.reactionCounts[UpvoteButton.ReactionType] : 0}
-                                            comments={x.comments}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </li>)}
-                </ul>
+                <AnswersList questionId={questionId} questionSlug={question.slug} answers={question.answers} />
                 {question.answers.length >= 5 &&
                     <div>
                         <NewAnswer questionId={questionId} />

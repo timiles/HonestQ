@@ -17,6 +17,7 @@ export enum EmojiValue {
     YouBeTrolling,
     Discuss,
     Watch,
+    Recent,
 }
 
 export default class Emoji extends React.Component<Props, {}> {
@@ -39,6 +40,7 @@ export default class Emoji extends React.Component<Props, {}> {
             case EmojiValue.YouBeTrolling: return '🤡';
             case EmojiValue.Discuss: return '💬';
             case EmojiValue.Watch: return '👁';
+            case EmojiValue.Recent: return '🕒';
             default: return '';
         }
     }

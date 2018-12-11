@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { CommentModel } from '../../server-models';
+import { countNestedComments } from '../../utils/model-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
 interface Props {
@@ -11,21 +12,10 @@ interface Props {
 
 export default class DiscussButton extends React.Component<Props> {
 
-    private static getTotalCommentsCount(comments: CommentModel[]): number {
-        let total = comments.length;
-        for (const comment of comments) {
-            // Also add any child comments
-            if (comment.comments.length > 0) {
-                total += DiscussButton.getTotalCommentsCount(comment.comments);
-            }
-        }
-        return total;
-    }
-
     public render() {
         const { linkToCommentsUrl, comments, upvotes } = this.props;
 
-        const commentsCount = DiscussButton.getTotalCommentsCount(comments);
+        const commentsCount = countNestedComments(comments);
 
         let agreeCount = 0;
         let disagreeCount = 0;
