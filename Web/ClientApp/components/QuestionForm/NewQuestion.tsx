@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { QuestionFormModel, TagValueModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewQuestionStore from '../../store/NewQuestion';
+import ButtonOrLogin from '../shared/ButtonOrLogIn';
 import Modal from '../shared/Modal';
 import QuestionForm from './QuestionForm';
 
@@ -40,13 +41,13 @@ class NewQuestion extends React.Component<Props, State> {
 
         return (
             <>
-                <button
+                <ButtonOrLogin
                     type="button"
                     className="btn btn-lg btn-primary btn-block"
                     onClick={this.handleOpen}
                 >
                     Add a question
-                </button>
+                </ButtonOrLogin>
                 <Modal title="Add a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     {!awaitingApproval &&
                         <QuestionForm
