@@ -44,6 +44,6 @@ class VerifyEmail extends React.Component<VerifyEmailProps> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.verifyEmail),
+    (state: ApplicationState, ownProps: any): any => (state.verifyEmail),
     VerifyEmailStore.actionCreators,
 )(VerifyEmail);

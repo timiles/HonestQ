@@ -8,7 +8,7 @@ type LogOutProps = LoginStore.LoginState
     & typeof LoginStore.actionCreators
     & RouteComponentProps<{}>;
 
-class Logout extends React.Component<LogOutProps> {
+class LogOut extends React.Component<LogOutProps> {
 
     public componentDidMount() {
         this.props.logOut();
@@ -30,4 +30,4 @@ class Logout extends React.Component<LogOutProps> {
 export default connect(
     (state: ApplicationState, ownProps: any) => (state.login),
     LoginStore.actionCreators,
-)(Logout);
+)(LogOut);
