@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { QuestionModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
-import EmbeddedContentCard from '../shared/EmbeddedContentCard';
+import EmbeddedContent from '../shared/EmbeddedContent';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
@@ -59,11 +59,11 @@ export default class Question extends React.Component<Props> {
                             <Emoji value={EmojiValue.Question} /> HonestQ:
                         </p>
                         <h4><span className="post quote-marks">{question.text}</span></h4>
-                        <Source value={question.source} />
-                        {question.source && <EmbeddedContentCard url={question.source} />}
                         <footer className="blockquote-footer">
                             {question.postedBy}
                         </footer>
+                        <Source value={question.source} />
+                        <EmbeddedContent value={question.source} />
                     </blockquote>
                     <div>
                         <div className="float-right">

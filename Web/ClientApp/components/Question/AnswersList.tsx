@@ -3,6 +3,7 @@ import { AnswerModel } from '../../server-models';
 import { countNestedComments } from '../../utils/model-utils';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
+import EmbeddedContent from '../shared/EmbeddedContent';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import OrderByControl, { OrderByValue } from '../shared/OrderByControl';
 import Source from '../shared/Source';
@@ -77,6 +78,7 @@ export default class AnswersList extends React.Component<Props, State> {
                                         <Emoji value={EmojiValue.Answer} />
                                         <span className="ml-2 post">{x.text}</span>
                                         <Source value={x.source} />
+                                        <EmbeddedContent value={x.source} />
                                     </blockquote>
                                     <div className="mt-2 float-right">
                                         <DiscussButton

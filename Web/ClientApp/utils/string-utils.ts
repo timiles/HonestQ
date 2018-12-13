@@ -20,13 +20,15 @@ export function splitIntoAlternatingTextFragmentsAndUrls(text: string): string[]
     return parts;
 }
 
-export function extractUrlFromText(text: string): string | null {
-    const urlMatchingRegExp = createUrlRegExp('im');
-    const match = urlMatchingRegExp.exec(text);
-    if (match) {
-        return match[0];
+export function extractUrlsFromText(text: string): string[] {
+    const urlMatchingRegExp = createUrlRegExp('gim');
+    const urls = new Array<string>();
+    let regExpResult = urlMatchingRegExp.exec(text);
+    while (regExpResult) {
+        urls.push(regExpResult[0]);
+        regExpResult = urlMatchingRegExp.exec(text);
     }
-    return null;
+    return urls;
 }
 
 const domainFromUrlRegExp = new RegExp(/^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:\/\n]+)/im);
@@ -36,6 +38,11 @@ export function extractDomainFromUrl(url: string): string | null {
         return match[1];
     }
     return null;
+}
+
+export function extractExtensionFromUrl(url: string): string | null {
+    const split = url.split('.');
+    return split[split.length - 1].toLowerCase();
 }
 
 export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number = 0) {

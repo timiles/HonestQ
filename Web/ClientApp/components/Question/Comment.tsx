@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { CommentModel } from '../../server-models';
-import { extractUrlFromText } from '../../utils/string-utils';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
-import EmbeddedContentCard from '../shared/EmbeddedContentCard';
+import EmbeddedContent from '../shared/EmbeddedContent';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
@@ -30,7 +29,6 @@ export default class Comment extends React.Component<Props, {}> {
         const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
         const { watching } = this.props;
         const { postedAt, postedBy } = this.props;
-        const extractedUrl = (source ? extractUrlFromText(source) : null) || (text ? extractUrlFromText(text) : null);
         const emojiValue = EmojiValue[agreementRating as keyof typeof EmojiValue];
 
         return (
@@ -43,11 +41,11 @@ export default class Comment extends React.Component<Props, {}> {
                                 {agreementRating.toSentenceCase()}
                             </span>
                             {text && <p>{text}</p>}
-                            <Source value={source} />
                             <footer className="blockquote-footer">
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                             </footer>
-                            {extractedUrl && <EmbeddedContentCard url={extractedUrl} />}
+                            <Source value={source} />
+                            <EmbeddedContent value={source} />
                         </blockquote>
                         <div className="float-right btn-container">
                             <WatchControl
