@@ -1,13 +1,21 @@
 import * as $ from 'jquery';
 import * as React from 'react';
 import { generateRandomHtmlId } from '../../utils/html-utils';
-import { extractDomainFromUrl } from '../../utils/string-utils';
+import { extractDomainFromUrl, extractExtensionFromUrl } from '../../utils/string-utils';
 
 interface Props {
     to: string;
 }
 
 export default class ShortLink extends React.Component<Props, {}> {
+
+    private static readonly fileExtensions: string[] = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'pdf',
+        'png',
+    ];
 
     private readonly tooltipId: string;
 
@@ -24,8 +32,10 @@ export default class ShortLink extends React.Component<Props, {}> {
     public render() {
         const { to } = this.props;
 
-        const isPdf = (to.toLowerCase().indexOf('.pdf') >= 0);
         const domain = extractDomainFromUrl(to);
+        const extension = extractExtensionFromUrl(to);
+        const fileExtension = extension && ShortLink.fileExtensions.indexOf(extension) >= 0 ? extension : null;
+
         return (
             <span>
                 <a
@@ -38,7 +48,7 @@ export default class ShortLink extends React.Component<Props, {}> {
                     data-placement="top"
                     title={to}
                 >
-                    🌐 {domain} {isPdf ? '(PDF)' : ''}
+                    🌐 {domain} {fileExtension ? `(${fileExtension.toUpperCase()})` : ''}
                 </a>
             </span>
         );
