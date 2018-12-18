@@ -79,10 +79,12 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
-        const { value, scrollHeight } = event.currentTarget;
+        // Turn three dots into ellipsis to save characters
+        // (Only if ends with ..., as the re-render jumps cursor to the end.)
+        event.currentTarget.value = event.currentTarget.value.replace(/\.\.\.$/gm, '…');
+        const { scrollHeight } = event.currentTarget;
         this.setState((prevState) => ({
             ...prevState,
-            value,
             scrollHeight: Math.max(prevState.scrollHeight, scrollHeight),
         }));
         this.props.onChange(event);
