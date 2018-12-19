@@ -42,6 +42,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     public componentDidUpdate() {
+        this.textAreaRef.current!.selectionStart = this.cursorPosition;
         this.textAreaRef.current!.selectionEnd = this.cursorPosition;
     }
 
