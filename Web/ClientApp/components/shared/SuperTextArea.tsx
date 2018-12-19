@@ -19,10 +19,15 @@ interface State {
 
 export default class SuperTextArea extends React.Component<Props, State> {
 
+    private cursorPosition: number = 0;
+    private readonly textAreaRef: React.RefObject<HTMLTextAreaElement>;
+
     constructor(props: Props) {
         super(props);
 
         this.state = { value: props.value, scrollHeight: 0, focused: false };
+
+        this.textAreaRef = React.createRef<HTMLTextAreaElement>();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleFocus = this.handleFocus.bind(this);
@@ -33,6 +38,12 @@ export default class SuperTextArea extends React.Component<Props, State> {
         this.setState({ value: nextProps.value || '' });
         if (!nextProps.value) {
             this.setState({ scrollHeight: 0 });
+        }
+    }
+
+    public componentDidUpdate() {
+        if (this.textAreaRef.current) {
+            this.textAreaRef.current.selectionEnd = this.cursorPosition;
         }
     }
 
@@ -58,6 +69,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
             <>
                 <textarea
                     id={id}
+                    ref={this.textAreaRef}
                     name={name}
                     className={`${className} ${invalidClass}`}
                     style={{ minHeight: `${scrollHeight}px`, overflow: 'hidden' }}
@@ -79,9 +91,14 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLTextAreaElement>): void {
-        // Turn three dots into ellipsis to save characters
-        // (Only if ends with ..., as the re-render jumps cursor to the end.)
-        event.currentTarget.value = event.currentTarget.value.replace(/\.\.\.$/gm, '…');
+        this.cursorPosition = event.currentTarget.selectionEnd;
+
+        // If we've just typed three dots, turn into ellipsis to save characters
+        if (event.currentTarget.value.substr(this.cursorPosition - 3, 3) === '...') {
+            this.cursorPosition -= 2;
+            event.currentTarget.value = event.currentTarget.value.replace('...', '…');
+        }
+
         const { scrollHeight } = event.currentTarget;
         this.setState((prevState) => ({
             ...prevState,
@@ -95,6 +112,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     private handleBlur(event: React.FormEvent<HTMLTextAreaElement>): void {
+        this.cursorPosition = event.currentTarget.selectionEnd;
         this.setState({ focused: false });
     }
 }
