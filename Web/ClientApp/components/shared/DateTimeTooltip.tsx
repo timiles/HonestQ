@@ -1,8 +1,8 @@
 import * as $ from 'jquery';
 import * as moment from 'moment';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
-import { generateRandomHtmlId } from '../../utils/html-utils';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
 
 interface Props {
@@ -11,16 +11,19 @@ interface Props {
 
 export default class DateTimeTooltip extends React.Component<Props> {
 
-    private readonly tooltipId: string;
+    private readonly tooltipRef: React.RefObject<HTMLSpanElement>;
 
     constructor(props: Props) {
         super(props);
 
-        this.tooltipId = generateRandomHtmlId('tooltip');
+        this.tooltipRef = React.createRef<HTMLSpanElement>();
     }
 
     public componentDidMount() {
-        $(`#${this.tooltipId}`).tooltip();
+        const tooltipElement = ReactDOM.findDOMNode(this.tooltipRef.current!) as Element;
+        if (tooltipElement) {
+            $(tooltipElement).tooltip();
+        }
     }
 
     public render() {
@@ -37,7 +40,7 @@ export default class DateTimeTooltip extends React.Component<Props> {
 
                     return (
                         <span
-                            id={this.tooltipId}
+                            ref={this.tooltipRef}
                             data-toggle="tooltip"
                             data-placement="top"
                             title={fullTime}

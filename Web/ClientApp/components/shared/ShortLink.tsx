@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import * as React from 'react';
-import { generateRandomHtmlId } from '../../utils/html-utils';
+import * as ReactDOM from 'react-dom';
 import { extractDomainFromUrl, extractExtensionFromUrl } from '../../utils/string-utils';
 
 interface Props {
@@ -17,16 +17,19 @@ export default class ShortLink extends React.Component<Props, {}> {
         'png',
     ];
 
-    private readonly tooltipId: string;
+    private readonly tooltipRef: React.RefObject<HTMLAnchorElement>;
 
     constructor(props: Props) {
         super(props);
 
-        this.tooltipId = generateRandomHtmlId('tooltip');
+        this.tooltipRef = React.createRef<HTMLAnchorElement>();
     }
 
     public componentDidMount() {
-        $(`#${this.tooltipId}`).tooltip();
+        const tooltipElement = ReactDOM.findDOMNode(this.tooltipRef.current!) as Element;
+        if (tooltipElement) {
+            $(tooltipElement).tooltip();
+        }
     }
 
     public render() {
@@ -39,7 +42,7 @@ export default class ShortLink extends React.Component<Props, {}> {
         return (
             <span>
                 <a
-                    id={this.tooltipId}
+                    ref={this.tooltipRef}
                     className="badge badge-info"
                     href={to}
                     target="_blank"

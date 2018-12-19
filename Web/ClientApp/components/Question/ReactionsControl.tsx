@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 import * as React from 'react';
-import { generateRandomHtmlId } from '../../utils/html-utils';
+import * as ReactDOM from 'react-dom';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
@@ -26,7 +26,7 @@ interface ReactionValue {
 export default class ReactionsControl extends React.Component<Props, State> {
 
     private readonly values = new Array<ReactionValue>();
-    private readonly reactionDefinitionsPopoverId: string = '';
+    private readonly reactionDefinitionsPopoverRef?: React.RefObject<HTMLButtonElement>;
     private readonly reactionDefinitionsHtml: string = '';
 
     constructor(props: Props) {
@@ -39,7 +39,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
         this.values.push({ value: 'ThisChangedMyView', description: 'This changed my view' });
 
         if (this.props.showHelp) {
-            this.reactionDefinitionsPopoverId = generateRandomHtmlId('reactionDefinitions');
+            this.reactionDefinitionsPopoverRef = React.createRef<HTMLButtonElement>();
             this.reactionDefinitionsHtml =
                 `<dl class="button-definitions">
                 ${this.values.map((x: ReactionValue) =>
@@ -52,8 +52,11 @@ export default class ReactionsControl extends React.Component<Props, State> {
     }
 
     public componentDidMount() {
-        if (this.reactionDefinitionsPopoverId) {
-            $(`#${this.reactionDefinitionsPopoverId}`).popover();
+        if (this.reactionDefinitionsPopoverRef) {
+            const popoverElement = ReactDOM.findDOMNode(this.reactionDefinitionsPopoverRef.current!) as Element;
+            if (popoverElement) {
+                $(popoverElement).popover();
+            }
         }
     }
 
@@ -80,7 +83,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
                 </div>
                 {showHelp &&
                     <button
-                        id={this.reactionDefinitionsPopoverId}
+                        ref={this.reactionDefinitionsPopoverRef}
                         tabIndex={0}
                         className="btn badge badge-pill badge-info ml-1"
                         role="button"
