@@ -9,28 +9,13 @@ export default class WelcomeMessage extends React.Component {
             <div className="jumbotron">
                 <div className="row align-items-center">
                     <div className="col-md-9">
-                        <h1>Welcome to HonestQ!</h1>
-                        <p>
-                            HonestQ is a <b>Q&amp;A site</b> for questions which may not have a simple answer.
+                        <h1 className="mb-4">Step out of your echo chamber.</h1>
+                        <p className="lead">
+                            <b>HonestQ</b> is a Q&amp;A site based on freedom of speech, critical thinking,
+                            and citing your sources.
                         </p>
-                        <p>
-                            This might be because the question is philosophical or subjective in nature;
-                            maybe there are many possible answers; maybe more research is needed;
-                            or perhaps the answers are hotly contested &ndash; they can't all be right... right?
-                        </p>
-                        <p>
-                            HonestQ strongly encourages linking to <b>sources</b>,
-                            and using <b>science</b>, <b>statistics</b>,
-                            and an understanding of the human condition to challenge received wisdom.
-                        </p>
-                        <p>
-                            We believe it can be healthy to embrace conflict, to step out of your comfort zone,
-                            and to <b>listen to diverse opinions outside of your echo chamber</b> &ndash;
-                            even if it's just so that you can argue against them more effectively.
-                            Or who knows, you may even end up with a new point of view yourself.
-                        </p>
-                        <p>
-                            Happy debating!
+                        <p className="lead">
+                            Find out how people can disagree, honestly.
                         </p>
                         <LoggedInUserContext.Consumer>
                             {(user) => !user &&
