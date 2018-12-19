@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { LogInFormModel } from '../../server-models';
-import { focusFirstTextInput } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 
 interface Props {
@@ -14,6 +13,8 @@ interface Props {
 
 export default class LogInForm extends React.Component<Props, LogInFormModel> {
 
+    private readonly usernameInputRef: React.RefObject<HTMLInputElement>;
+
     constructor(props: Props) {
         super(props);
 
@@ -23,12 +24,14 @@ export default class LogInForm extends React.Component<Props, LogInFormModel> {
             rememberMe: true,
         };
 
+        this.usernameInputRef = React.createRef<HTMLInputElement>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.usernameInputRef.current!.focus();
     }
 
     public render() {
@@ -45,6 +48,7 @@ export default class LogInForm extends React.Component<Props, LogInFormModel> {
                             type="text"
                             className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
                             id="username"
+                            ref={this.usernameInputRef}
                             name="username"
                             autoCorrect="off"
                             autoCapitalize="none"

@@ -5,7 +5,7 @@ import { EditTagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as EditTagStore from '../../store/EditTag';
-import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
+import { onCtrlEnter } from '../../utils/html-utils';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -14,11 +14,12 @@ type EditTagProps = EditTagStore.EditTagState
     & typeof EditTagStore.actionCreators
     & RouteComponentProps<{ tagSlug: string }>
     & {
-    getAdminTagStatus: ActionStatus,
-};
+        getAdminTagStatus: ActionStatus,
+    };
 
 class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
 
+    private readonly tagNameInputRef: React.RefObject<HTMLInputElement>;
     constructor(props: EditTagProps) {
         super(props);
 
@@ -29,6 +30,8 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
             moreInfoUrl: '',
             isApproved: false,
         };
+
+        this.tagNameInputRef = React.createRef<HTMLInputElement>();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -51,7 +54,7 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                 isApproved: tagModel.isApproved,
             });
 
-            focusFirstTextInput('form');
+            this.tagNameInputRef.current!.focus();
             onCtrlEnter('form', () => this.submit());
         }
     }
@@ -90,6 +93,7 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                                         type="text"
                                         className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
                                         id="name"
+                                        ref={this.tagNameInputRef}
                                         name="name"
                                         maxLength={100}
                                         value={name}

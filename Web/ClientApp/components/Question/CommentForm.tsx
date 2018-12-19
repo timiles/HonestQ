@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CommentFormModel } from '../../server-models';
-import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
+import { onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -18,6 +18,8 @@ interface CommentFormProps {
 
 export default class CommentForm extends React.Component<Props, CommentFormModel> {
 
+    private readonly commentTextInputRef: React.RefObject<SuperTextArea>;
+
     constructor(props: Props) {
         super(props);
 
@@ -29,12 +31,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
             isAnonymous: false,
         };
 
+        this.commentTextInputRef = React.createRef<SuperTextArea>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.commentTextInputRef.current!.focus();
         onCtrlEnter('form', () => this.submit());
     }
 
@@ -71,6 +75,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                         <label htmlFor="commentText">Comment</label>
                         <SuperTextArea
                             id="commentText"
+                            ref={this.commentTextInputRef}
                             name="text"
                             className="form-control"
                             maxLength={280}

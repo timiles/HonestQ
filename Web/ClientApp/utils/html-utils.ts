@@ -1,9 +1,5 @@
 import * as $ from 'jquery';
 
-export function focusFirstTextInput(formSelector: string) {
-    $($('input[type=text],textarea', $(formSelector))[0]).focus();
-}
-
 export function onCtrlEnter(selector: string, callback: (e: JQuery.Event<HTMLElement, null>) => void): void {
     $(selector).keydown((e) => {
         if ((e.ctrlKey || e.metaKey) && (e.keyCode === 13 || e.keyCode === 10)) {

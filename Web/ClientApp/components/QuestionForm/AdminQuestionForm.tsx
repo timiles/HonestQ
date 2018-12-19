@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AdminQuestionFormModel, TagValueModel } from '../../server-models';
-import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
+import { onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
@@ -10,6 +10,8 @@ import TagAutocomplete from '../Tag/TagAutocomplete';
 type Props = FormProps<AdminQuestionFormModel>;
 
 export default class AdminQuestionForm extends React.Component<Props, AdminQuestionFormModel> {
+
+    private readonly questionTextInputRef: React.RefObject<SuperTextArea>;
 
     constructor(props: Props) {
         super(props);
@@ -23,13 +25,15 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
             } :
             { text: '', source: '', tags: [], isApproved: false };
 
+        this.questionTextInputRef = React.createRef<SuperTextArea>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleTagsChange = this.handleTagsChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.questionTextInputRef.current!.focus();
         onCtrlEnter('form', () => this.submit());
     }
 
@@ -54,6 +58,7 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
                     </div>
                     <SuperTextArea
                         id="questionText"
+                        ref={this.questionTextInputRef}
                         name="text"
                         className="form-control emoji-text-area"
                         maxLength={280}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AnswerFormModel } from '../../server-models';
-import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
+import { onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
@@ -16,6 +16,7 @@ interface AnswerFormProps {
 
 export default class AnswerForm extends React.Component<Props, AnswerFormModel> {
 
+    private readonly answerTextInputRef: React.RefObject<SuperTextArea>;
     constructor(props: Props) {
         super(props);
 
@@ -26,12 +27,14 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
             } :
             { text: '', source: '' };
 
+        this.answerTextInputRef = React.createRef<SuperTextArea>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.answerTextInputRef.current!.focus();
         onCtrlEnter('form', () => this.submit());
     }
 
@@ -57,6 +60,7 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
                         </div>
                         <SuperTextArea
                             id="answerText"
+                            ref={this.answerTextInputRef}
                             name="text"
                             className="form-control emoji-text-area"
                             maxLength={280}

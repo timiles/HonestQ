@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { QuestionFormModel, TagValueModel } from '../../server-models';
-import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
+import { onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
@@ -9,12 +9,14 @@ import TagAutocomplete from '../Tag/TagAutocomplete';
 
 type Props = FormProps<QuestionFormModel>
     & {
-    initialTagValues?: TagValueModel[],
-    isModal?: boolean,
-    onCloseModalRequested?: () => void,
-};
+        initialTagValues?: TagValueModel[],
+        isModal?: boolean,
+        onCloseModalRequested?: () => void,
+    };
 
 export default class QuestionForm extends React.Component<Props, QuestionFormModel> {
+
+    private readonly questionTextInputRef: React.RefObject<SuperTextArea>;
 
     constructor(props: Props) {
         super(props);
@@ -27,13 +29,15 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
             } :
             { text: '', source: '', tags: props.initialTagValues || [] };
 
+        this.questionTextInputRef = React.createRef<SuperTextArea>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleTagsChange = this.handleTagsChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.questionTextInputRef.current!.focus();
         onCtrlEnter('form', () => this.submit());
     }
 
@@ -59,6 +63,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                         </div>
                         <SuperTextArea
                             id="questionText"
+                            ref={this.questionTextInputRef}
                             name="text"
                             className="form-control emoji-text-area"
                             maxLength={280}

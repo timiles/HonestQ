@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { SignUpFormModel } from '../../server-models';
-import { focusFirstTextInput } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 
 interface Props {
@@ -14,6 +13,8 @@ interface Props {
 
 export default class SignUpForm extends React.Component<Props, SignUpFormModel> {
 
+    private readonly emailInputRef: React.RefObject<HTMLInputElement>;
+
     constructor(props: Props) {
         super(props);
 
@@ -23,12 +24,14 @@ export default class SignUpForm extends React.Component<Props, SignUpFormModel> 
             username: '',
         };
 
+        this.emailInputRef = React.createRef<HTMLInputElement>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.emailInputRef.current!.focus();
     }
 
     public render() {
@@ -46,6 +49,7 @@ export default class SignUpForm extends React.Component<Props, SignUpFormModel> 
                             type="text"
                             className={`form-control ${submitted ? email ? 'is-valid' : 'is-invalid' : ''}`}
                             id="email"
+                            ref={this.emailInputRef}
                             name="email"
                             value={email}
                             onChange={this.handleChange}

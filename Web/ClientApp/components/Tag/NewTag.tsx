@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { TagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewTagStore from '../../store/NewTag';
-import { focusFirstTextInput, onCtrlEnter } from '../../utils/html-utils';
+import { onCtrlEnter } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 
@@ -13,6 +13,8 @@ type NewTagProps = NewTagStore.NewTagState
     & RouteComponentProps<{}>;
 
 class NewTag extends React.Component<NewTagProps, TagFormModel> {
+
+    private readonly tagNameInputRef: React.RefObject<HTMLInputElement>;
 
     constructor(props: NewTagProps) {
         super(props);
@@ -23,12 +25,14 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
             moreInfoUrl: '',
         };
 
+        this.tagNameInputRef = React.createRef<HTMLInputElement>();
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
-        focusFirstTextInput('form');
+        this.tagNameInputRef.current!.focus();
         onCtrlEnter('form', () => this.submit());
     }
 
@@ -64,6 +68,7 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
                                 type="text"
                                 className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
                                 id="name"
+                                ref={this.tagNameInputRef}
                                 name="name"
                                 maxLength={100}
                                 value={name}
