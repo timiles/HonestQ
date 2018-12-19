@@ -177,7 +177,8 @@ namespace Pobs.Web
 
             app.UseAuthentication();
             app.UseDisableApiResponseCaching();
-            app.UseFeatureLogging();
+            // Disable FeatureLogging for now, keep exceeding Exceptionless limits
+            // app.UseFeatureLogging();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
