@@ -1,10 +1,10 @@
-function createUrlRegExp(flags: string): RegExp {
+function createUrlRegExp(): RegExp {
     // tslint:disable-next-line:max-line-length
-    return new RegExp(/(?:(?:https?):\/\/|www\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/, flags);
+    return new RegExp(/(?:(?:https?):\/\/|www\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/gim);
 }
 
 export function splitIntoAlternatingTextFragmentsAndUrls(text: string): string[] {
-    const urlMatchingRegExp = createUrlRegExp('gim');
+    const urlMatchingRegExp = createUrlRegExp();
     const parts = new Array<string>();
     let lastIndex = 0;
     let regExpResult = urlMatchingRegExp.exec(text);
@@ -21,7 +21,7 @@ export function splitIntoAlternatingTextFragmentsAndUrls(text: string): string[]
 }
 
 export function extractUrlsFromText(text: string): string[] {
-    const urlMatchingRegExp = createUrlRegExp('gim');
+    const urlMatchingRegExp = createUrlRegExp();
     const urls = new Array<string>();
     let regExpResult = urlMatchingRegExp.exec(text);
     while (regExpResult) {
