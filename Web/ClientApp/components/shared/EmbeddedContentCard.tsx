@@ -41,7 +41,8 @@ export default class EmbeddedContentCard extends React.Component<Props, {}> {
         const { url } = this.props;
 
         if (EmbeddedContentCard.shouldEmbedContent(url)) {
-            return <a href={url} className="embedly-card" data-card-controls="0" data-card-recommend="1" />;
+            // If successful, Embedly will switch out the <a> tag, so surround in a div that React DOM can keep track of
+            return <div><a href={url} className="embedly-card" data-card-controls="0" data-card-recommend="1" /></div>;
         }
 
         return null;
