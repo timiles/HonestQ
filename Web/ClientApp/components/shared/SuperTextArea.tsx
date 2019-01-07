@@ -42,8 +42,11 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     public componentDidUpdate() {
-        this.textAreaRef.current!.selectionStart = this.cursorPosition;
-        this.textAreaRef.current!.selectionEnd = this.cursorPosition;
+        // IE will re-focus the element, so only do this if we actually want to have focus already.
+        if (this.state.focused) {
+            this.textAreaRef.current!.selectionStart = this.cursorPosition;
+            this.textAreaRef.current!.selectionEnd = this.cursorPosition;
+        }
     }
 
     public focus() {
