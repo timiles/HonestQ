@@ -14,11 +14,11 @@ import UpvoteButton from './UpvoteButton';
 
 type Props = AnswerModel
     & {
-    questionId: number,
-    questionText: string,
-    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-    onWatch: (on: boolean, answerId: number, commentId?: number) => void,
-};
+        questionId: number,
+        questionText: string,
+        onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+        onWatch: (on: boolean, answerId: number, commentId?: number) => void,
+    };
 
 export default class Answer extends React.Component<Props, {}> {
 
@@ -82,7 +82,6 @@ export default class Answer extends React.Component<Props, {}> {
                     <NewComment
                         questionId={questionId}
                         answerId={id}
-                        replyingToText={text}
                     />
                 </div>
                 <ol className="list-unstyled mb-3">

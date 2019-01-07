@@ -15,9 +15,15 @@ namespace Pobs.Web.Models.Questions
             this.Id = comment.Id;
             this.Text = comment.Text;
             this.Source = comment.Source;
-            this.AgreementRating = comment.AgreementRating.ToString();
-            this.PostedAt = comment.PostedAt.UtcDateTime;
 
+            if (comment.ParentComment == null)
+            {
+                // Only first-level comments (i.e. those without a Parent) get to Agree/Disagree
+                // TODO: Make nullable in database if we choose to keep it this way.
+                this.AgreementRating = comment.AgreementRating.ToString();
+            }
+
+            this.PostedAt = comment.PostedAt.UtcDateTime;
             if (comment.IsAnonymous)
             {
                 var postedByUserPseudoId = userPseudoIds?[comment.PostedByUserId] ?? 0;
@@ -46,7 +52,6 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string Text { get; set; }
         public string Source { get; set; }
-        [Required]
         public string AgreementRating { get; set; }
         public DateTime PostedAt { get; set; }
         [Required]

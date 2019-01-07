@@ -10,11 +10,11 @@ import UpvoteButton from './UpvoteButton';
 
 type Props = CommentModel
     & {
-    questionId: number,
-    answerId: number,
-    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-    onWatch: (on: boolean, commentId: number) => void,
-};
+        questionId: number,
+        answerId: number,
+        onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+        onWatch: (on: boolean, commentId: number) => void,
+    };
 
 export default class Comment extends React.Component<Props, {}> {
 
@@ -29,17 +29,20 @@ export default class Comment extends React.Component<Props, {}> {
         const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
         const { watching } = this.props;
         const { postedAt, postedBy } = this.props;
-        const emojiValue = EmojiValue[agreementRating as keyof typeof EmojiValue];
 
         return (
             <>
                 <div className="card">
                     <div className="card-body">
                         <blockquote className="blockquote">
-                            {emojiValue && <Emoji value={emojiValue} />}
-                            <span className="badge badge-secondary">
-                                {agreementRating.toSentenceCase()}
-                            </span>
+                            {agreementRating &&
+                                <>
+                                    <Emoji value={EmojiValue[agreementRating as keyof typeof EmojiValue]} />
+                                    <span className="badge badge-secondary">
+                                        {agreementRating.toSentenceCase()}
+                                    </span>
+                                </>
+                            }
                             {text && <p>{text}</p>}
                             <footer className="blockquote-footer">
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
@@ -67,7 +70,6 @@ export default class Comment extends React.Component<Props, {}> {
                         <NewComment
                             questionId={questionId}
                             answerId={answerId}
-                            replyingToText={text}
                             parentCommentId={id}
                         />
                     </div>

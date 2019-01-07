@@ -9,7 +9,7 @@ import CommentForm from './CommentForm';
 
 type Props = NewCommentStore.NewCommentState
     & typeof NewCommentStore.actionCreators
-    & { questionId: number, answerId: number, replyingToText: string, parentCommentId?: number };
+    & { questionId: number, answerId: number, parentCommentId?: number };
 
 interface State {
     isModalOpen: boolean;
@@ -35,7 +35,7 @@ class NewComment extends React.Component<Props, State> {
     }
 
     public render() {
-        const { commentForm, replyingToText, parentCommentId } = this.props;
+        const { commentForm, parentCommentId } = this.props;
         const { isModalOpen } = this.state;
         const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
         const btnClass = parentCommentId ? 'btn btn-outline-secondary' : 'btn btn-lg btn-primary btn-block mb-2';
@@ -53,7 +53,6 @@ class NewComment extends React.Component<Props, State> {
                     <CommentForm
                         {...commentForm}
                         parentCommentId={parentCommentId}
-                        replyingToText={replyingToText}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
                         submit={this.handleSubmit}
