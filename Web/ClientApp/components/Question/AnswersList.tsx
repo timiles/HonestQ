@@ -49,7 +49,7 @@ export default class AnswersList extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = { orderByValue: OrderByValue.Newest };
+        this.state = { orderByValue: OrderByValue.Upvotes };
 
         this.handleOrder = this.handleOrder.bind(this);
     }

@@ -2,9 +2,9 @@ import * as React from 'react';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 
 export enum OrderByValue {
+    Comments,
     Newest,
     Upvotes,
-    Comments,
 }
 
 interface Props {
@@ -45,8 +45,8 @@ export default class OrderByControl extends React.Component<Props, State> {
 
         return (
             <div className="btn-group" role="group">
-                {renderButton(OrderByValue.Newest, EmojiValue.Recent)}
                 {renderButton(OrderByValue.Upvotes, EmojiValue.Upvote)}
+                {renderButton(OrderByValue.Newest, EmojiValue.Recent)}
                 {renderButton(OrderByValue.Comments, EmojiValue.Discuss)}
             </div>
         );
