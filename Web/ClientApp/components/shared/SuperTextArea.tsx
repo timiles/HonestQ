@@ -55,7 +55,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
 
     public render() {
         const { id, name, className, maxLength, required, submitted } = this.props;
-        const { value, scrollHeight, focused } = this.state;
+        const { value, scrollHeight } = this.state;
         const remainingCharacterCount = maxLength - (value ? value.length : 0);
 
         // Always show exceeded character count error even if not submitted.
@@ -70,7 +70,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
         }
 
         // Use rows to specify a minimum, then the min-height CSS will override it as the text grows
-        const rowCount = (value || focused) ? 3 : 1;
+        const minimumNumberOfRows = 3;
         return (
             <>
                 <textarea
@@ -79,7 +79,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
                     name={name}
                     className={`${className} ${invalidClass}`}
                     style={{ minHeight: `${scrollHeight}px`, overflow: 'hidden' }}
-                    rows={rowCount}
+                    rows={minimumNumberOfRows}
                     value={value}
                     onChange={this.handleChange}
                     onFocus={this.handleFocus}
