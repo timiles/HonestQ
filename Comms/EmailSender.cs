@@ -6,6 +6,7 @@ namespace Pobs.Comms
     public interface IEmailSender
     {
         void SendEmailVerification(string to, string username, string confirmationUrl);
+        void SendNewUserSignedUpNotification(string to, string username);
     }
     public class EmailSender : IEmailSender
     {
@@ -46,6 +47,11 @@ namespace Pobs.Comms
         public void SendEmailVerification(string to, string username, string verifyUrl)
         {
             Send(to, new EmailVerificationEmailMessage(username, verifyUrl));
+        }
+
+        public void SendNewUserSignedUpNotification(string to, string username)
+        {
+            Send(to, new NewUserSignedUpNotificationEmailMessage(username));
         }
     }
 }

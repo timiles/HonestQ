@@ -99,6 +99,14 @@ namespace WebApi.Controllers
                 var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
                 var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
                 _emailSender.SendEmailVerification(signUpFormModel.Email, signUpFormModel.Username, verifyEmailUrl);
+                try
+                {
+                    _emailSender.SendNewUserSignedUpNotification("tim@timiles.com", signUpFormModel.Username);
+                }
+                catch
+                {
+                    // Ignore, it's only me.
+                }
                 return Ok();
             }
             catch (AppException ex)
