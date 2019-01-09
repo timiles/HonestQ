@@ -50,6 +50,7 @@ export default createServerRenderer((params) => {
             return;
         }
 
+        const headerColor = '#4aa9ff';
         const embedlyScript = `
 (function(w, d){
 var id='embedly-platform', n = 'script';
@@ -72,13 +73,18 @@ if (!d.getElementById(id)){
                     {helmetData.meta.toComponent()}
                     <base href="/" />
 
-                    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
                     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
                     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                    {/* Chrome, Firefox OS and Opera */}
                     <link rel="manifest" href="/site.webmanifest" />
-                    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+                    <meta name="theme-color" content={headerColor} />
+                    {/* Windows Phone */}
+                    <meta name="msapplication-navbutton-color" content={headerColor} />
                     <meta name="msapplication-TileColor" content="#da532c" />
-                    <meta name="theme-color" content="#ffffff" />
+                    {/* iOS Safari */}
+                    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+                    <meta name="apple-mobile-web-app-status-bar-style" content={headerColor} />
 
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />
