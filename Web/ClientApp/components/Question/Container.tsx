@@ -17,12 +17,12 @@ import Question from './Question';
 type ContainerProps = QuestionStore.ContainerState
     & typeof QuestionStore.actionCreators
     & {
-    questionId: number,
-    questionSlug: string,
-    answerId?: number,
-    answerSlug?: string,
-    getQuestionStatus: ActionStatus,
-}
+        questionId: number,
+        questionSlug: string,
+        answerId?: number,
+        answerSlug?: string,
+        getQuestionStatus: ActionStatus,
+    }
     & RouteComponentProps<{}>;
 
 class Container extends React.Component<ContainerProps> {
@@ -138,26 +138,21 @@ class Container extends React.Component<ContainerProps> {
         }
 
         let pageTitle = `HonestQ: \u201C${question.text}\u201D`;
-        let canonicalUrl = `https://www.honestq.com/questions/${questionId}/${question.slug}`;
 
-        // Only title displays on mobile Twitter
+        // Only title displays on mobile Twitter, so we have to have the Question there.
+        // If linking to the Question and not an Answer, we repeat the Question in the description.
         const ogTitle = `😇 ${pageTitle}`;
+        let canonicalUrl = 'https://www.honestq.com';
         let ogDescription: string;
 
         const answer = this.getCurrentAnswer();
         if (answer) {
             pageTitle += ` » 🙋 \u201C${answer.text}\u201D`;
-            canonicalUrl += `/${answer.id}/${answer.slug}`;
+            canonicalUrl += buildAnswerUrl(questionId, question.slug, answer.id, answer.slug);
             ogDescription = `🙋 \u201C${answer.text}\u201D`;
         } else {
-            const switchAnswerCount = (count: number) => {
-                switch (count) {
-                    case 0: return 'Got an answer?';
-                    case 1: return 'One answer so far.';
-                    default: return `${question.answers.length} answers so far.`;
-                }
-            };
-            ogDescription = switchAnswerCount(question.answers.length);
+            canonicalUrl += buildQuestionUrl(questionId, question.slug);
+            ogDescription = `\u201C${question.text}\u201D`;
         }
 
         return (
