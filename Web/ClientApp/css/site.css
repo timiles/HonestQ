@@ -12,6 +12,10 @@ body {
     overflow-y: scroll;
 }
 
+.footer {
+    background-color: #f8f9fa;
+}
+
 blockquote p {
     white-space: pre-wrap;
 }

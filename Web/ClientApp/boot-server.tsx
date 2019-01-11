@@ -64,7 +64,7 @@ if (!d.getElementById(id)){
 })(window, document);`;
 
         const fullHtml = (helmetData: HelmetData, renderedApp: string, state: ApplicationState) => (
-            <html lang="en">
+            <html lang="en" className="h-100">
                 <head>
                     <meta charSet="utf-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -89,8 +89,15 @@ if (!d.getElementById(id)){
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />
                 </head>
-                <body>
-                    <div id="react-app" dangerouslySetInnerHTML={{ __html: renderedApp }} />
+                <body className="d-flex flex-column h-100">
+                    <main role="main" className="flex-shrink-0">
+                        <div id="react-app" dangerouslySetInnerHTML={{ __html: renderedApp }} />
+                    </main>
+                    <footer className="footer mt-auto py-3">
+                        <div className="container">
+                            <span className="text-muted">&copy; HonestQ.com {new Date().getFullYear()}</span>
+                        </div>
+                    </footer>
                     <script
                         dangerouslySetInnerHTML={{
                             // XSS: replace "<" to defend against "</script>" in the state data
