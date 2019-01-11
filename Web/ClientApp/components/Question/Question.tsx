@@ -9,6 +9,7 @@ import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import AnswersList from './AnswersList';
 import NewAnswer from './NewAnswer';
+import TagsList from './TagsList';
 
 interface Props {
     questionId: number;
@@ -73,6 +74,9 @@ export default class Question extends React.Component<Props> {
                             />
                         </div>
                     </div>
+                </div>
+                <div className="d-lg-none mt-3">
+                    <TagsList tags={question.tags} />
                 </div>
                 <hr />
                 <h5>{answersHeader}</h5>
