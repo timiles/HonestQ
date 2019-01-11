@@ -81,7 +81,7 @@ export default class Question extends React.Component<Props> {
                 </div>
                 <AnswersList questionId={questionId} questionSlug={question.slug} answers={question.answers} />
                 {question.answers.length >= 5 &&
-                    <div>
+                    <div className="mb-3">
                         <NewAnswer questionId={questionId} />
                     </div>
                 }

@@ -78,7 +78,7 @@ export default class Answer extends React.Component<Props, {}> {
                     </div>
                 </div>
                 <hr />
-                <div>
+                <div className="mb-3">
                     <NewComment
                         questionId={questionId}
                         answerId={id}
@@ -86,7 +86,7 @@ export default class Answer extends React.Component<Props, {}> {
                 </div>
                 <ol className="list-unstyled mb-3">
                     {comments.map((x: CommentModel, i: number) =>
-                        <li key={i} className="mb-3">
+                        <li key={i} className="mb-2">
                             <Comment
                                 {...x}
                                 questionId={questionId}
