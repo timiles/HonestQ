@@ -1,5 +1,5 @@
-/* Prevent long words & URLs from breaking out of their containing element */
 body {
+    /* Prevent long words & URLs from breaking out of their containing element */
     overflow-wrap: break-word;
     word-wrap: break-word;
     -ms-word-break: break-word;
@@ -8,6 +8,8 @@ body {
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
+    /* Always show right scrollbar for consistency */
+    overflow-y: scroll;
 }
 
 blockquote p {
