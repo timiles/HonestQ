@@ -2,7 +2,6 @@ import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Redirect, RouteComponentProps } from 'react-router-dom';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
@@ -60,8 +59,6 @@ class Container extends React.Component<ContainerProps> {
             return <Redirect to={canonicalUrl} />;
         }
 
-        const slideDurationMilliseconds = 500;
-
         return (
             <>
                 {this.renderHelmetTags()}
@@ -73,44 +70,30 @@ class Container extends React.Component<ContainerProps> {
                     <div className="col-lg-6">
                         <div className="row">
                             <ActionStatusDisplay {...this.props.getQuestionStatus} />
-                            {question &&
-                                <TransitionGroup component={undefined}>
-                                    {!answerId &&
-                                        <CSSTransition
-                                            timeout={slideDurationMilliseconds}
-                                            classNames="slide"
-                                        >
-                                            <div className="col-md-12 slide slide-left">
-                                                <Question
-                                                    questionId={questionId}
-                                                    question={question}
-                                                    onReaction={this.handleReaction}
-                                                    onWatch={this.handleWatch}
-                                                />
-                                            </div>
-                                        </CSSTransition>
-                                    }
-                                    {answer &&
-                                        <CSSTransition
-                                            timeout={slideDurationMilliseconds}
-                                            classNames="slide"
-                                        >
-                                            <div className="col-md-12 slide slide-right">
-                                                <BackToQuestionButton
-                                                    id={questionId}
-                                                    slug={question.slug}
-                                                />
-                                                <Answer
-                                                    {...answer}
-                                                    questionId={questionId}
-                                                    questionText={question.text}
-                                                    onReaction={this.handleReaction}
-                                                    onWatch={this.handleWatch}
-                                                />
-                                            </div>
-                                        </CSSTransition>
-                                    }
-                                </TransitionGroup>
+                            {question && !answerId &&
+                                <div className="col-md-12">
+                                    <Question
+                                        questionId={questionId}
+                                        question={question}
+                                        onReaction={this.handleReaction}
+                                        onWatch={this.handleWatch}
+                                    />
+                                </div>
+                            }
+                            {question && answer &&
+                                <div className="col-md-12">
+                                    <BackToQuestionButton
+                                        id={questionId}
+                                        slug={question.slug}
+                                    />
+                                    <Answer
+                                        {...answer}
+                                        questionId={questionId}
+                                        questionText={question.text}
+                                        onReaction={this.handleReaction}
+                                        onWatch={this.handleWatch}
+                                    />
+                                </div>
                             }
                         </div>
                     </div>

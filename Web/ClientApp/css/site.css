@@ -219,50 +219,6 @@ p.small .emoji, small .emoji {
     background-color: #fff;
 }
 
-/* Slide animation */
-.slide {
-    position: absolute;
-    width: 100%;
-    transition: left 500ms ease-in, opacity 500ms ease-in;
-}
-    .slide-left.slide-enter {
-        left: -110%;
-        opacity: 0;
-    }
-    .slide-left.slide-enter-active {
-        left: 0;
-        opacity: 1;
-    }
-
-    .slide-left.slide-exit {
-        left: 0;
-        opacity: 1;
-    }
-    .slide-left.slide-exit-active {
-        left: -110%;
-        opacity: 0;
-    }
-
-    .slide-right.slide-enter {
-        left: 110%;
-        opacity: 0;
-    }
-    .slide-right.slide-enter-active {
-        left: 0;
-        opacity: 1;
-    }
-
-    .slide-right.slide-exit {
-        left: 0;
-        opacity: 1;
-    }
-    .slide-right.slide-exit-active {
-        left: 110%;
-        opacity: 0;
-    }
-
-	
-
 .ReactModal__Overlay {
     -webkit-perspective: 600;
     perspective: 600;
