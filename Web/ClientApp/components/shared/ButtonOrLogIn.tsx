@@ -6,6 +6,7 @@ import Modal from './Modal';
 interface Props {
     className: string;
     onClick: (event: React.FormEvent<HTMLButtonElement>) => void;
+    submitting?: boolean;
     type: string;
     value?: string | number | string[] | undefined;
 }
@@ -26,7 +27,7 @@ export default class ButtonOrLogIn extends React.Component<Props, State> {
     }
 
     public render() {
-        const { className, onClick, type, value } = this.props;
+        const { className, onClick, submitting, type, value } = this.props;
         const { isModalOpen } = this.state;
 
         return (
@@ -37,6 +38,7 @@ export default class ButtonOrLogIn extends React.Component<Props, State> {
                         className={className}
                         onClick={onClick}
                         value={value}
+                        disabled={submitting}
                     >
                         {this.props.children}
                     </button>

@@ -11,6 +11,7 @@ interface Props {
 
 interface State {
     watching: boolean;
+    submitting: boolean;
 }
 
 export default class WatchControl extends React.Component<Props, State> {
@@ -18,18 +19,18 @@ export default class WatchControl extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = { watching: this.props.watching };
+        this.state = { watching: this.props.watching, submitting: false };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
     public componentWillReceiveProps(nextProps: Props) {
-        this.setState({ watching: nextProps.watching });
+        this.setState({ watching: nextProps.watching, submitting: false });
     }
 
     public render() {
         const { hideLabelOnMobile } = this.props;
-        const { watching } = this.state;
+        const { watching, submitting } = this.state;
         const watchingClassName = watching ? 'btn-success' : 'btn-outline-secondary background-white';
 
         return (
@@ -37,6 +38,7 @@ export default class WatchControl extends React.Component<Props, State> {
                 type="button"
                 className={`btn ${watchingClassName}`}
                 onClick={this.handleChange}
+                submitting={submitting}
             >
                 <Emoji value={EmojiValue.Watch} />
                 <span className={`ml-1 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
@@ -47,6 +49,7 @@ export default class WatchControl extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
-        this.props.onWatch(!this.state.watching, this.props.identifier);
+        this.setState({ submitting: true },
+            () => this.props.onWatch(!this.state.watching, this.props.identifier));
     }
 }
