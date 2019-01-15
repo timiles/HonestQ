@@ -4,6 +4,7 @@ import * as ReactModal from 'react-modal';
 // Import prototypes globally so they're available in every component
 import '../prototypes';
 import NavMenu from './NavMenu';
+import Toasts from './Toasts';
 
 ReactModal.setAppElement('#react-app');
 
@@ -25,6 +26,7 @@ export class Layout extends React.Component<{}, {}> {
                     <meta name="twitter:site" content="@HonestQ_com" />
                 </Helmet>
                 <NavMenu />
+                <Toasts />
                 <div className="container">
                     {this.props.children}
                 </div>

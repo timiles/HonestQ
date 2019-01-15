@@ -16,6 +16,7 @@ import * as SignUp from './SignUp';
 import * as Tag from './Tag';
 import * as TagAutocomplete from './TagAutocomplete';
 import * as Tags from './Tags';
+import * as Toast from './Toast';
 import * as VerifyEmail from './VerifyEmail';
 
 // The top-level state object
@@ -38,6 +39,7 @@ export interface ApplicationState {
     tag: Tag.ContainerState;
     tagAutocomplete: TagAutocomplete.TagAutocompleteState;
     tags: Tags.ListState;
+    toast: Toast.ToastState;
     verifyEmail: VerifyEmail.VerifyEmailState;
 }
 
@@ -63,6 +65,7 @@ export const reducers = {
     tag: Tag.reducer,
     tagAutocomplete: TagAutocomplete.reducer,
     tags: Tags.reducer,
+    toast: Toast.reducer,
     verifyEmail: VerifyEmail.reducer,
 };
 

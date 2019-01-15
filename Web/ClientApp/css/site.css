@@ -258,3 +258,30 @@ p.small .emoji, small .emoji {
         border: none;
         background-color: transparent;
     }
+
+/* Bootstrap Toast overrides */
+#toastsContainer{
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    width: 100%;
+    z-index: 99999;
+}
+    /* Small devices (landscape phones), Extra small devices (portrait phones) */
+    @media (max-width: 767.98px) {
+        #toastsContainer{
+            right: 8px;
+        }    
+    }
+
+@keyframes toast-fade-in {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+.toast {
+    animation: toast-fade-in .2s ease-in-out;
+    background-color: #fff;
+}

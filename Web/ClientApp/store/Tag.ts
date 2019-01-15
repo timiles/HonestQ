@@ -27,7 +27,7 @@ interface GetTagFailureAction {
     type: 'GET_TAG_FAILURE';
     payload: { error: string; };
 }
-interface UpdateWatchTagSuccessAction {
+export interface UpdateWatchTagSuccessAction {
     type: 'UPDATE_WATCH_TAG_SUCCESS';
     payload: {
         tagSlug: string;

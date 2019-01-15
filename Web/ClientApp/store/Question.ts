@@ -39,8 +39,8 @@ interface RemoveReactionSuccessAction {
     type: 'REMOVE_REACTION_SUCCESS';
     payload: { reaction: ReactionModel; };
 }
-interface UpdateWatchQuestionSuccessAction {
-    type: 'UPDATE_WATCH_QUESTION_SUCCESS';
+export interface UpdateWatchSuccessAction {
+    type: 'UPDATE_WATCH_SUCCESS';
     payload: {
         answerId?: number;
         commentId?: number;
@@ -59,7 +59,7 @@ type KnownAction =
     | NewCommentFormSuccessAction
     | AddReactionSuccessAction
     | RemoveReactionSuccessAction
-    | UpdateWatchQuestionSuccessAction
+    | UpdateWatchSuccessAction
     ;
 
 // ----------------
@@ -145,7 +145,7 @@ export const actionCreators = {
                 fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
                     .then((watchResponse) => {
                         dispatch({
-                            type: 'UPDATE_WATCH_QUESTION_SUCCESS',
+                            type: 'UPDATE_WATCH_SUCCESS',
                             payload: { answerId, commentId, response: watchResponse },
                         });
                     })
@@ -267,7 +267,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
                 question: questionNext,
             };
         }
-        case 'UPDATE_WATCH_QUESTION_SUCCESS': {
+        case 'UPDATE_WATCH_SUCCESS': {
             const { answerId, commentId, response } = action.payload;
             const questionModel = state.question!;
             // Slice for immutability
