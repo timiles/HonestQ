@@ -29,9 +29,9 @@ export const routes = (
             <Route path="/login" component={LogIn} />
             <Route path="/account/verifyemail" component={VerifyEmail} />
             <Route path="/logout" component={LogOut} />
-            <Route path="/newtag" component={NewTag} />
             <Route path="/signup" component={SignUp} />
             <Route path="/questions/:questionId/:questionSlug/:answerId?/:answerSlug?" component={Question} />
+            <Route path="/tags/_" component={NewTag} />
             <Route path="/tags/:tagSlug" component={Tag} />
         </Switch>
     </Layout>

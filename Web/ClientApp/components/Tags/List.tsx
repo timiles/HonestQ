@@ -11,11 +11,11 @@ import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 type TagsListProps = TagsStore.ListState
     & typeof TagsStore.actionCreators
     & {
-    buttonSize?: string,
-    selectedTagSlugs?: string[],
-    showNewTagButton?: boolean,
-    getTagsListStatus: ActionStatus,
-};
+        buttonSize?: string,
+        selectedTagSlugs?: string[],
+        showNewTagButton?: boolean,
+        getTagsListStatus: ActionStatus,
+    };
 
 class TagsList extends React.Component<TagsListProps> {
 
@@ -50,7 +50,7 @@ class TagsList extends React.Component<TagsListProps> {
                             <LoggedInUserContext.Consumer>
                                 {(user) => user &&
                                     <li className="list-inline-item">
-                                        <Link to="/newtag" className={`btn btn-${buttonSize} btn-primary`}>
+                                        <Link to="/tags/_" className={`btn btn-${buttonSize} btn-primary`}>
                                             Suggest a new tag
                                         </Link>
                                     </li>}
