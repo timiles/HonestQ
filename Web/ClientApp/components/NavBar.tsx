@@ -6,11 +6,11 @@ import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils/auth-utils';
 import NotificationsCount from './Notifications/NotificationsCount';
 
-interface NavMenuProps {
+interface NavBarProps {
     loggedInUser: LoggedInUserModel;
 }
 
-class NavMenu extends React.Component<NavMenuProps, {}> {
+class NavBar extends React.Component<NavBarProps, {}> {
     public render() {
 
         const AutoCollapseNavLink = class extends React.Component<NavLinkProps, {}> {
@@ -101,4 +101,4 @@ export default connect(
     // REVIEW: mark this component as not pure, so that activeClassName updates every time the parent element renders.
     // Note that this is not best for performance, but nav isn't going to stay like this forever anyway...
     { pure: false },
-)(NavMenu);
+)(NavBar);

@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import * as ReactModal from 'react-modal';
 // Import prototypes globally so they're available in every component
 import '../prototypes';
-import NavMenu from './NavMenu';
+import NavBar from './NavBar';
 import Toasts from './Toasts';
 
 ReactModal.setAppElement('#react-app');
@@ -25,7 +25,7 @@ export class Layout extends React.Component<{}, {}> {
                     <meta name="twitter:card" content="summary" />
                     <meta name="twitter:site" content="@HonestQ_com" />
                 </Helmet>
-                <NavMenu />
+                <NavBar />
                 <Toasts />
                 <div className="container">
                     {this.props.children}
