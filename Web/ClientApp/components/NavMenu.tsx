@@ -39,6 +39,13 @@ class NavMenu extends React.Component<NavMenuProps, {}> {
                     <Link className="navbar-brand" to={'/'}>
                         HonestQ <small><sup className="badge badge-info">BETA</sup></small>
                     </Link>
+                    {loggedInUser &&
+                        <div className="ml-auto mr-2 d-lg-none">
+                            <Link to="/notifications" className="no-underline">
+                                🔔 <NotificationsCount />
+                            </Link>
+                        </div>
+                    }
                     <button
                         className="navbar-toggler"
                         type="button"

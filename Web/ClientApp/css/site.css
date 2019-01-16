@@ -20,6 +20,9 @@ blockquote p {
     white-space: pre-wrap;
 }
 
+a.no-underline {
+    text-decoration: none;
+}
 
 /* Callout */
 .bs-callout {
