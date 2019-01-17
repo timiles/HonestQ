@@ -24,6 +24,7 @@ using Pobs.Web.Services;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System.Linq;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Net.Http.Headers;
 
 namespace Pobs.Web
 {
@@ -143,8 +144,9 @@ namespace Pobs.Web
                 app.UseRewriter(new RewriteOptions()
                     .Add(rule =>
                     {
-                        // Important! Permit health check for internal pings
-                        if (rule.HttpContext.Request.Path == "/api/health")
+                        // Permit "ELB-HealthChecker/XXX" and "POBSWEB-HealthChecker" for internal health check pings
+                        var userAgentValues = rule.HttpContext.Request.Headers[HeaderNames.UserAgent];
+                        if (userAgentValues.Any(x => x.StartsWith("ELB-HealthChecker/") || x == "POBSWEB-HealthChecker"))
                         {
                             return;
                         }

@@ -29,11 +29,11 @@
         "retries": 2,
         "command": [
           "CMD-SHELL",
-          "curl -f http://localhost:5000/api/health/ || exit 1"
+          "curl -A 'POBSWEB-HealthChecker' -f http://localhost:5000/ && curl -A 'POBSWEB-HealthChecker' -f http://localhost:5000/api/health/ || exit 1"
         ],
-        "timeout": 5,
+        "startPeriod": 60,
         "interval": 30,
-        "startPeriod": 10
+        "timeout": 5
       },
       "essential": true,
       "name": "pobsweb"
