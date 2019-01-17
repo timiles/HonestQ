@@ -19,6 +19,12 @@
       "cpu": 0,
       "memory": 300,
       "image": "627618477028.dkr.ecr.eu-west-2.amazonaws.com/pobsweb:<build_number>",
+      "environment": [
+        {
+          "name": "POBSWEB_BUILD_NUMBER",
+          "value": "<build_number>"
+        }
+      ],
       "healthCheck": {
         "retries": 2,
         "command": [

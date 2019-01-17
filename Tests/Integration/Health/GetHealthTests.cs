@@ -18,7 +18,7 @@ namespace Pobs.Tests.Integration.Health
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("OK", responseContent);
+                Assert.StartsWith("OK: ", responseContent);
             }
         }
     }

@@ -31,7 +31,7 @@ namespace Pobs.Web.Controllers
                     try
                     {
                         // Test our connection to exceptionless (if it was initialized)
-                        exceptionlessClient.SubmitLog("Health check");
+                        exceptionlessClient.SubmitLog("Health check: " + AppSettings.BuildNumber.Value);
                     }
                     catch (Exception ex)
                     {
@@ -59,7 +59,8 @@ namespace Pobs.Web.Controllers
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return Content("ERROR: " + string.Join("; ", errors.Keys));
             }
-            return Content("OK");
+
+            return Content("OK: " + AppSettings.BuildNumber.Value);
         }
     }
 }

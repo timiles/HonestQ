@@ -1,9 +1,12 @@
+using System;
 using Pobs.Comms;
 
 namespace Pobs.Web.Helpers
 {
     public class AppSettings : IEmailSenderConfig
     {
+        public static Lazy<string> BuildNumber = new Lazy<string>(() => Environment.GetEnvironmentVariable("POBSWEB_BUILD_NUMBER"));
+
         public string Domain { get; set; }
         public string ExceptionlessApiKey { get; set; }
         public string Secret { get; set; }
