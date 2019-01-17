@@ -1,3 +1,6 @@
+# How many previous images to keep in the repository in case of rollback
+numberOfImagesToKeep=10
+
 # Set build number
 buildNumber=`cat build/next-build-number.txt`
 if [ $? -ne 0 ]; then read -p "Enter next build number: " buildNumber; fi
@@ -31,6 +34,10 @@ aws ecs register-task-definition --cli-input-json file://build/task-definition.j
 
 # Update service to new task definition
 aws ecs update-service --cluster pobsweb --service pobsweb --task-definition "pobsweb:$((buildNumber))"
+
+# Delete old image from repository, deregister old task definition
+aws ecr batch-delete-image --repository-name pobsweb --image-ids imageTag="$((buildNumber-numberOfImagesToKeep))"
+aws ecs deregister-task-definition --task-definition "pobsweb:$((buildNumber-numberOfImagesToKeep))"
 
 start chrome https://eu-west-2.console.aws.amazon.com/ecs/home?region=eu-west-2#/clusters/pobsweb/services/pobsweb/tasks
 
