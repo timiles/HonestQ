@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Spinner from './Spinner';
 
 interface SubmitButtonProps {
     submitting?: boolean;
@@ -12,7 +11,13 @@ export default class SubmitButton extends React.Component<SubmitButtonProps, {}>
         return (
             <button className="btn btn-primary" disabled={submitting}>
                 {text || 'Submit'}
-                {submitting && <Spinner />}
+                {submitting &&
+                    <span
+                        className="spinner-border spinner-border-sm ml-2"
+                        role="status"
+                        aria-hidden="true"
+                    />
+                }
             </button>
         );
     }
