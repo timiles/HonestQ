@@ -65,7 +65,9 @@ namespace Pobs.Tests.Integration.Helpers
             {
                 // Stagger PostedAt times
                 var questionPostedAt = DateTime.UtcNow.AddHours(-1.0 * (questionIndex + 1) / numberOfQuestions);
-                var question = new Question(Utils.GenerateRandomString(10), questionUser, questionPostedAt)
+                // 3 random words for the Question text
+                var questionText = $"{Utils.GenerateRandomString(4)} {Utils.GenerateRandomString(4)} {Utils.GenerateRandomString(4)}";
+                var question = new Question(questionText, questionUser, questionPostedAt)
                 {
                     Source = Utils.GenerateRandomString(10),
                     Status = questionStatus,

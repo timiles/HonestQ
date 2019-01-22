@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +31,27 @@ namespace Pobs.Web.Controllers
             }
 
             var questionsList = await _questionService.ListQuestions(status, pageSize, beforeTimestamp);
+            return Ok(questionsList);
+        }
+
+        [HttpGet, Route("search")]
+        public async Task<IActionResult> Search(string q = null, long pageNumber = 1, long pageSize = 20)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+            {
+                return BadRequest("Q is required.");
+            }
+            if (pageNumber < 1 || pageNumber > 9999)
+            {
+                return BadRequest("PageNumber must be between 1 and 9999.");
+            }
+            if (pageSize < 1 || pageSize > 200)
+            {
+                return BadRequest("PageSize must be between 1 and 200.");
+            }
+
+
+            var questionsList = await _questionService.SearchQuestions(q, (int)pageNumber, (int)pageSize);
             return Ok(questionsList);
         }
 

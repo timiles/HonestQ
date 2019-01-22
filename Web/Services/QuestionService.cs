@@ -14,6 +14,7 @@ namespace Pobs.Web.Services
     public interface IQuestionService
     {
         Task<QuestionsListModel> ListQuestions(PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null);
+        Task<QuestionSearchResultsModel> SearchQuestions(string query, int pageNumber, int pageSize);
         Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin);
         Task<(QuestionListItemModel questionModel, bool hasJustBeenApproved)> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm);
         Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin);
@@ -47,6 +48,25 @@ namespace Pobs.Web.Services
                 .Take(pageSize)
                 .ToListAsync();
             return new QuestionsListModel(questions);
+        }
+
+        public async Task<QuestionSearchResultsModel> SearchQuestions(string query, int pageNumber, int pageSize)
+        {
+            var questions = await _context.QuestionSearch
+                .FromSql(@"
+                    SELECT * FROM (SELECT Id AS QuestionId, MATCH(Text) AGAINST (@query) AS MatchScore FROM Question) x
+                    INNER JOIN Question q ON x.QuestionId = q.Id
+                ",
+                    new MySql.Data.MySqlClient.MySqlParameter("query", query))
+                .Include(x => x.Question)
+                .Include(x => x.Question).ThenInclude(x => x.Answers)
+                .Include(x => x.Question).ThenInclude(x => x.QuestionTags).ThenInclude(x => x.Tag)
+                .Where(x => x.Question.Status == PostStatus.OK && x.MatchScore > 0)
+                .OrderByDescending(x => x.MatchScore)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new QuestionSearchResultsModel(questions.Select(x => x.Question), pageNumber, pageSize);
         }
 
         public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin)

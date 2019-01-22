@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Pobs.Domain.Entities;
+using Pobs.Domain.QueryObjects;
 
 namespace Pobs.Domain
 {
@@ -10,6 +11,7 @@ namespace Pobs.Domain
         {
         }
 
+        // Entities
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<Question> Questions { get; set; }
@@ -19,6 +21,9 @@ namespace Pobs.Domain
         public DbSet<User> Users { get; set; }
 
         public DbSet<Watch> Watches { get; set; }
+
+        // Query objects
+        public DbQuery<QuestionSearchResult> QuestionSearch { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -93,6 +98,9 @@ namespace Pobs.Domain
             modelBuilder.Entity<QuestionTag>().HasKey(x => new { x.QuestionId, x.TagId });
             modelBuilder.Entity<QuestionTag>().HasOne(x => x.Question).WithMany(x => x.QuestionTags);
             modelBuilder.Entity<QuestionTag>().HasOne(x => x.Tag).WithMany(x => x.QuestionTags);
+
+            // Full text indexes for searching
+            modelBuilder.Entity<Question>().HasIndex(x => x.Text).ForMySqlIsFullText();
         }
     }
 }
