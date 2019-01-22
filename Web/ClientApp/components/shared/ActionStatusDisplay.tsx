@@ -7,7 +7,13 @@ export default class ActionStatusDisplay extends React.Component<ActionStatus> {
 
         return (
             <>
-                {loading && <p>⏳ <i>Loading...</i></p>}
+                {loading &&
+                    <div className="loading-spinner-container text-center">
+                        <div className="loading-spinner spinner-border text-info mt-3" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                }
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
             </>
         );

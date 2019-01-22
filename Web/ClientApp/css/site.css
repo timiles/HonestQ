@@ -288,3 +288,12 @@ p.small .emoji, small .emoji {
     animation: toast-fade-in .2s ease-in-out;
     background-color: #fff;
 }
+
+/* Loading spinner to float above content */
+.loading-spinner-container {
+    position: relative;
+    z-index: 99999;
+}
+.loading-spinner {
+    position: absolute;
+}
