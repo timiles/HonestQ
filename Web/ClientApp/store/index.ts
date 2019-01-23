@@ -12,6 +12,7 @@ import * as Notifications from './Notifications';
 import * as NotificationsCount from './NotificationsCount';
 import * as Question from './Question';
 import * as Questions from './Questions';
+import * as QuestionSearch from './QuestionSearch';
 import * as SignUp from './SignUp';
 import * as Tag from './Tag';
 import * as TagAutocomplete from './TagAutocomplete';
@@ -35,6 +36,7 @@ export interface ApplicationState {
     notificationsCount: NotificationsCount.NotificationsCountState;
     question: Question.ContainerState;
     questions: Questions.ListState;
+    questionSearch: QuestionSearch.QuestionSearchState;
     signUp: SignUp.SignUpState;
     tag: Tag.ContainerState;
     tagAutocomplete: TagAutocomplete.TagAutocompleteState;
@@ -61,6 +63,7 @@ export const reducers = {
     notificationsCount: NotificationsCount.reducer,
     question: Question.reducer,
     questions: Questions.reducer,
+    questionSearch: QuestionSearch.reducer,
     signUp: SignUp.reducer,
     tag: Tag.reducer,
     tagAutocomplete: TagAutocomplete.reducer,

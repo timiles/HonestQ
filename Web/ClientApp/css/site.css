@@ -118,6 +118,14 @@ ul.list-comma-separated li:not(:last-child):after {
         margin-left: 6px;
         bottom: -32px;
     }
+    .btn-sm .quote-marks:before {
+        margin-right: 3px;
+        top: 24px;
+    }
+    .btn-sm .quote-marks:after {
+        margin-left: 3px;
+        bottom: -24px;
+    }
     a.btn .quote-marks:before, a.btn .quote-marks:after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 3.3em;

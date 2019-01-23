@@ -6,6 +6,7 @@ import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import TagAutocomplete from '../Tag/TagAutocomplete';
+import QuestionSearchResults from './QuestionSearchResults';
 
 type Props = FormProps<QuestionFormModel>
     & {
@@ -72,6 +73,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                             value={text}
                             onChange={this.handleChange}
                         />
+                        <QuestionSearchResults containerClassName="bs-callout bs-callout-info" query={text} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="questionSource">Source (optional)</label>

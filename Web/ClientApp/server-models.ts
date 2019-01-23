@@ -165,6 +165,12 @@ export interface QuestionModel {
     answers: AnswerModel[];
 }
 
+export interface QuestionSearchResultsModel {
+    questions: QuestionListItemModel[];
+    pageNumber: number;
+    pageSize: number;
+}
+
 export interface QuestionsListModel {
     questions: QuestionListItemModel[];
     lastTimestamp: number;
