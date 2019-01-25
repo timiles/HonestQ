@@ -68,34 +68,30 @@ class Container extends React.Component<ContainerProps> {
                         <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
                     </div>
                     <div className="col-lg-6">
-                        <div className="row">
-                            <ActionStatusDisplay {...this.props.getQuestionStatus} />
-                            {question && !answerId &&
-                                <div className="col-md-12">
-                                    <Question
-                                        questionId={questionId}
-                                        question={question}
-                                        onReaction={this.handleReaction}
-                                        onWatch={this.handleWatch}
-                                    />
-                                </div>
-                            }
-                            {question && answer &&
-                                <div className="col-md-12">
-                                    <BackToQuestionButton
-                                        id={questionId}
-                                        slug={question.slug}
-                                    />
-                                    <Answer
-                                        {...answer}
-                                        questionId={questionId}
-                                        questionText={question.text}
-                                        onReaction={this.handleReaction}
-                                        onWatch={this.handleWatch}
-                                    />
-                                </div>
-                            }
-                        </div>
+                        <ActionStatusDisplay {...this.props.getQuestionStatus} />
+                        {question && !answerId &&
+                            <Question
+                                questionId={questionId}
+                                question={question}
+                                onReaction={this.handleReaction}
+                                onWatch={this.handleWatch}
+                            />
+                        }
+                        {question && answer &&
+                            <>
+                                <BackToQuestionButton
+                                    id={questionId}
+                                    slug={question.slug}
+                                />
+                                <Answer
+                                    {...answer}
+                                    questionId={questionId}
+                                    questionText={question.text}
+                                    onReaction={this.handleReaction}
+                                    onWatch={this.handleWatch}
+                                />
+                            </>
+                        }
                     </div>
                 </div>
             </>
