@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { CommentFormModel } from '../../server-models';
-import { onCtrlEnter } from '../../utils/html-utils';
+import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -46,6 +46,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '' });
         }
+    }
+
+    public componentDidUpdate() {
+        enableConfirmOnLeave(this.shouldConfirmOnLeave());
     }
 
     public render() {
@@ -141,5 +145,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
     private submit(): void {
         this.props.submit!(this.state);
+    }
+
+    private shouldConfirmOnLeave(): boolean {
+        const { text, source } = this.state;
+        return (!!text || !!source);
     }
 }

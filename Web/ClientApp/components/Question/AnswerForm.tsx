@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { AnswerFormModel } from '../../server-models';
-import { onCtrlEnter } from '../../utils/html-utils';
+import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
@@ -43,6 +43,10 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '' });
         }
+    }
+
+    public componentDidUpdate() {
+        enableConfirmOnLeave(this.shouldConfirmOnLeave());
     }
 
     public render() {
@@ -110,5 +114,10 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
 
     private submit(): void {
         this.props.submit!(this.state);
+    }
+
+    private shouldConfirmOnLeave(): boolean {
+        const { text, source } = this.state;
+        return (!!text || !!source);
     }
 }
