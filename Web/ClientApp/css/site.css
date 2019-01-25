@@ -239,7 +239,7 @@ p.small .emoji, small .emoji {
     perspective: 600;
     opacity: 0;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 100;
 }
