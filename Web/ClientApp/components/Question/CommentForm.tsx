@@ -12,6 +12,7 @@ type Props = FormProps<CommentFormModel>
 interface CommentFormProps {
     isModal?: boolean;
     onCloseModalRequested?: () => void;
+    replyingToText: string;
     parentCommentId?: number;
 }
 
@@ -53,18 +54,23 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public render() {
-        const { parentCommentId, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
+        const { replyingToText, parentCommentId, isModal, onCloseModalRequested } = this.props;
+        const { submitting, submitted, error } = this.props;
         const { text, source, agreementRating, isAnonymous } = this.state;
 
         return (
             <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    <div className="form-group">
+                        Replying to: {}
+                        <span className="quote-marks">{replyingToText}</span>
+                    </div>
                     {!parentCommentId &&
                         <div className="form-group">
                             <label htmlFor="agreementRating">
                                 Does your comment agree with this answer?
-                                </label>
+                            </label>
                             <div>
                                 <AgreementRatingInput
                                     name="agreementRating"

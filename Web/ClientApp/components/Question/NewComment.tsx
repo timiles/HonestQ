@@ -7,9 +7,15 @@ import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Modal from '../shared/Modal';
 import CommentForm from './CommentForm';
 
+interface OwnProps {
+    questionId: number;
+    answerId: number;
+    replyingToText: string;
+    parentCommentId?: number;
+}
 type Props = NewCommentStore.NewCommentState
     & typeof NewCommentStore.actionCreators
-    & { questionId: number, answerId: number, parentCommentId?: number };
+    & OwnProps;
 
 interface State {
     isModalOpen: boolean;
@@ -35,7 +41,7 @@ class NewComment extends React.Component<Props, State> {
     }
 
     public render() {
-        const { commentForm, parentCommentId } = this.props;
+        const { commentForm, replyingToText, parentCommentId } = this.props;
         const { isModalOpen } = this.state;
         const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
         const btnClass = parentCommentId ? 'btn btn-outline-secondary' : 'btn btn-lg btn-primary btn-block';
@@ -52,6 +58,7 @@ class NewComment extends React.Component<Props, State> {
                 <Modal title={headerText} isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <CommentForm
                         {...commentForm}
+                        replyingToText={replyingToText}
                         parentCommentId={parentCommentId}
                         isModal={true}
                         onCloseModalRequested={this.handleClose}
@@ -76,6 +83,6 @@ class NewComment extends React.Component<Props, State> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.newComment),
+    (state: ApplicationState, ownProps: OwnProps) => (state.newComment),
     NewCommentStore.actionCreators,
 )(NewComment);
