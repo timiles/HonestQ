@@ -41,8 +41,12 @@ export function extractDomainFromUrl(url: string): string | null {
 }
 
 export function extractExtensionFromUrl(url: string): string | null {
-    const split = url.split('.');
-    return split[split.length - 1].toLowerCase();
+    const urlWithoutQueryString = url.split('?')[0];
+    const urlPartsSplitOnDot = urlWithoutQueryString.split('.');
+    if (urlPartsSplitOnDot.length < 2) {
+        return null;
+    }
+    return urlPartsSplitOnDot[urlPartsSplitOnDot.length - 1].toLowerCase();
 }
 
 export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number = 0) {
