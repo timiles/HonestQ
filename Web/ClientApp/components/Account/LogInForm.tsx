@@ -69,18 +69,18 @@ export default class LogInForm extends React.Component<Props, LogInFormModel> {
                         />
                         <div className="invalid-feedback">Password is required</div>
                     </div>
-                    {/* <div className="form-group">
-                            <div className="checkbox">
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        name="rememberMe"
-                                        checked={rememberMe}
-                                        onChange={this.handleChange}
-                                    /> Remember me
+                    <div className="form-group">
+                        <div className="checkbox">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    name="rememberMe"
+                                    checked={rememberMe}
+                                    onChange={this.handleChange}
+                                /> Remember me
                             </label>
-                            </div>
-                        </div> */}
+                        </div>
+                    </div>
                     <div className="form-group">
                         <SubmitButton submitting={submitting} text="Log in" />
                         <Link to="/signup" className="btn btn-link">Sign up</Link>

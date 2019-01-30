@@ -56,7 +56,8 @@ namespace WebApi.Controllers
             var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, roles.ToArray());
 
             // Put token into Cookies to enable Server Side Rendering
-            this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true });
+            var expiry = userModel.RememberMe ? DateTime.UtcNow.AddYears(5) : null as DateTime?;
+            this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true, Expires = expiry });
 
             // Return basic user info and token to store client side
             return Ok(new LoggedInUserModel(user, token));

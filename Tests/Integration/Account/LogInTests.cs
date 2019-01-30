@@ -44,7 +44,7 @@ namespace Pobs.Tests.Integration.Account
             var payload = new LogInFormModel
             {
                 Username = _user.Username,
-                Password = _password
+                Password = _password,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -67,6 +67,34 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(responseModel.Token, idTokenCookie.Value);
                 Assert.Equal("/", idTokenCookie.Path);
                 Assert.True(idTokenCookie.HttpOnly);
+                Assert.Null(idTokenCookie.Expires);
+            }
+        }
+
+        [Fact]
+        public async Task RememberMe_CookieShouldExpireInFuture()
+        {
+            var payload = new LogInFormModel
+            {
+                Username = _user.Username,
+                Password = _password,
+                RememberMe = true,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.NotNull(idTokenCookie);
+                Assert.Equal(responseModel.Token, idTokenCookie.Value);
+                Assert.True(idTokenCookie.Expires.HasValue);
+                // Cookie should persist for at least a year, in reality it's even more
+                Assert.True((idTokenCookie.Expires.Value - DateTime.UtcNow).TotalDays > 365);
             }
         }
 
