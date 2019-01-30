@@ -10,9 +10,9 @@ import LogIn from './screens/Account/LogIn';
 import LogOut from './screens/Account/LogOut';
 import SignUp from './screens/Account/SignUp';
 import VerifyEmail from './screens/Account/VerifyEmail';
-import Home from './screens/Home/Index1';
-import NotificationsList from './screens/Notifications/Index1';
-import QuestionsList from './screens/Questions/Index1';
+import Home from './screens/Home';
+import Notifications from './screens/Notifications';
+import Questions from './screens/Questions';
 import Question from './screens/Questions/Item';
 import Tag from './screens/Tags/Item';
 
@@ -24,8 +24,8 @@ export const routes = (
             <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
             <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
             <Route exact={true} path="/admin/edit/tags/:tagSlug" component={EditTag} />
-            <Route exact={true} path="/notifications" component={NotificationsList} />
-            <Route exact={true} path="/questions" component={QuestionsList} />
+            <Route exact={true} path="/notifications" component={Notifications} />
+            <Route exact={true} path="/questions" component={Questions} />
             <Route path="/login" component={LogIn} />
             <Route path="/account/verifyemail" component={VerifyEmail} />
             <Route path="/logout" component={LogOut} />
