@@ -10,9 +10,9 @@ import LogIn from './screens/Account/LogIn';
 import LogOut from './screens/Account/LogOut';
 import SignUp from './screens/Account/SignUp';
 import VerifyEmail from './screens/Account/VerifyEmail';
-import Home from './screens/Home';
-import NotificationsList from './screens/Notifications';
-import QuestionsList from './screens/Questions';
+import Home from './screens/Home/Index1';
+import NotificationsList from './screens/Notifications/Index1';
+import QuestionsList from './screens/Questions/Index1';
 import Question from './screens/Questions/Item';
 import Tag from './screens/Tags/Item';
 
