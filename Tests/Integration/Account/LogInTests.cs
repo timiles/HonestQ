@@ -72,6 +72,68 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
+        public async Task LogInWithEmail_ShouldLogIn()
+        {
+            var payload = new LogInFormModel
+            {
+                Username = _user.Email,
+                Password = _password,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
+                Assert.Equal(_user.Id, responseModel.Id);
+                Assert.Equal(_user.Username, responseModel.Username);
+
+                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
+                var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
+                int.TryParse(identityClaim.Value, out int userId);
+                Assert.True(userId > 0);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.NotNull(idTokenCookie);
+                Assert.Equal(responseModel.Token, idTokenCookie.Value);
+                Assert.Null(idTokenCookie.Expires);
+            }
+        }
+
+        [Fact]
+        public async Task LogInWithEmailUpperCase_ShouldLogIn()
+        {
+            var payload = new LogInFormModel
+            {
+                Username = _user.Email.ToUpper(),
+                Password = _password,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
+                Assert.Equal(_user.Id, responseModel.Id);
+                Assert.Equal(_user.Username, responseModel.Username);
+
+                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
+                var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
+                int.TryParse(identityClaim.Value, out int userId);
+                Assert.True(userId > 0);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.NotNull(idTokenCookie);
+                Assert.Equal(responseModel.Token, idTokenCookie.Value);
+                Assert.Null(idTokenCookie.Expires);
+            }
+        }
+
+        [Fact]
         public async Task RememberMe_CookieShouldExpireInFuture()
         {
             var payload = new LogInFormModel
@@ -111,7 +173,7 @@ namespace Pobs.Tests.Integration.Account
             var payload = new LogInFormModel
             {
                 Username = _user.Username,
-                Password = _password
+                Password = _password,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -133,7 +195,7 @@ namespace Pobs.Tests.Integration.Account
             var payload = new LogInFormModel
             {
                 Username = _user.Username,
-                Password = "WRONG_PASSWORD"
+                Password = "WRONG_PASSWORD",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -155,7 +217,7 @@ namespace Pobs.Tests.Integration.Account
             var payload = new LogInFormModel
             {
                 Username = "i_do_not_exist",
-                Password = _password
+                Password = _password,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -165,6 +227,49 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal("Username or password is incorrect.", responseContent);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.Null(idTokenCookie);
+            }
+        }
+
+        [Fact]
+        public async Task InvalidEmail_ShouldBeDenied()
+        {
+            var payload = new LogInFormModel
+            {
+                Username = "i_do_not_exist@example.com",
+                Password = _password,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Username or password is incorrect.", responseContent);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.Null(idTokenCookie);
+            }
+        }
+
+        [Fact]
+        public async Task MissingUsername_ShouldGetBadRequest()
+        {
+            var payload = new LogInFormModel
+            {
+                Password = _password,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal("Username is required.", responseContent);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.Null(idTokenCookie);

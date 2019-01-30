@@ -36,7 +36,23 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult LogIn([FromBody]LogInFormModel userModel)
         {
-            var user = _userService.Authenticate(userModel.Username, userModel.Password);
+            var username = userModel.Username?.Trim();
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                return BadRequest("Username is required.");
+            }
+
+            if (username.Contains('@'))
+            {
+                var userByEmailAddress = _userService.GetAll().FirstOrDefault(
+                    x => x.Email == userModel.Username.ToLowerInvariant());
+                if (userByEmailAddress == null)
+                {
+                    return BadRequest("Username or password is incorrect.");
+                }
+                username = userByEmailAddress.Username;
+            }
+            var user = _userService.Authenticate(username, userModel.Password);
 
             if (user == null)
             {
@@ -73,14 +89,20 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult SignUp([FromBody]SignUpFormModel signUpFormModel)
         {
-            MailAddress validEmail;
+            string validatedEmail;
             try
             {
-                validEmail = new MailAddress(signUpFormModel.Email);
+                var validEmail = new MailAddress(signUpFormModel.Email);
+                validatedEmail = validEmail.Address.ToLowerInvariant();
             }
             catch (FormatException)
             {
                 return BadRequest($"Invalid Email address: '{signUpFormModel.Email}'.");
+            }
+
+            if (signUpFormModel.Username.Contains('@'))
+            {
+                return BadRequest($"Invalid Username, must not contain '@': '{signUpFormModel.Username}'.");
             }
 
             if (signUpFormModel.Password?.Length < 7)
@@ -88,7 +110,7 @@ namespace WebApi.Controllers
                 return BadRequest("Password must be at least 7 characters.");
             }
 
-            var user = new User(validEmail.Address, signUpFormModel.Username, DateTimeOffset.UtcNow)
+            var user = new User(validatedEmail, signUpFormModel.Username, DateTimeOffset.UtcNow)
             {
                 EmailVerificationToken = GenerateRandomString()
             };
@@ -99,7 +121,7 @@ namespace WebApi.Controllers
                 _userService.Create(user, signUpFormModel.Password);
                 var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
                 var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
-                _emailSender.SendEmailVerification(signUpFormModel.Email, signUpFormModel.Username, verifyEmailUrl);
+                _emailSender.SendEmailVerification(validatedEmail, signUpFormModel.Username, verifyEmailUrl);
                 try
                 {
                     _emailSender.SendNewUserSignedUpNotification("tim@timiles.com", signUpFormModel.Username);

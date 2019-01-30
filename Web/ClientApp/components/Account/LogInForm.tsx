@@ -43,7 +43,7 @@ export default class LogInForm extends React.Component<Props, LogInFormModel> {
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <form name="form" noValidate={true} onSubmit={this.handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Username or email</label>
                         <input
                             type="text"
                             className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}

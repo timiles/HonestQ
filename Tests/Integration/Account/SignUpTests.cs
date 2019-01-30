@@ -54,6 +54,34 @@ namespace Pobs.Tests.Integration.Account
         }
 
         [Fact]
+        public async Task UpperCaseEmail_ShouldStoreLowerCase()
+        {
+            var lowerCaseEmail = Utils.GenerateRandomString(10) + "💩@example.com".ToLowerInvariant();
+            var payload = new SignUpFormModel
+            {
+                Email = lowerCaseEmail.ToUpperInvariant(),
+                Username = _username,
+                Password = "Password1",
+            };
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.FirstOrDefault(x => x.Username == payload.Username);
+                Assert.Equal(lowerCaseEmail, user.Email);
+
+                emailSenderMock.Verify(x => x.SendEmailVerification(lowerCaseEmail, payload.Username, It.IsAny<string>()));
+            }
+        }
+
+        [Fact]
         public async Task ExistingEmail_ShouldError()
         {
             var payload = new SignUpFormModel
@@ -83,7 +111,7 @@ namespace Pobs.Tests.Integration.Account
                 Assert.Equal(HttpStatusCode.BadRequest, response2.StatusCode);
 
                 var responseContent = await response2.Content.ReadAsStringAsync();
-                Assert.Equal($"An account already exists for '{payload2.Email.Trim()}'.", responseContent);
+                Assert.Equal($"An account already exists for '{payload.Email}'.", responseContent);
             }
 
             emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
@@ -111,6 +139,33 @@ namespace Pobs.Tests.Integration.Account
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal($"Invalid Email address: '{payload.Email}'.", responseContent);
+            }
+
+            emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData("username@")]
+        [InlineData("username@example.com")]
+        [InlineData("@username")]
+        public async Task InvalidUsername_ShouldError(string username)
+        {
+            var payload = new SignUpFormModel
+            {
+                Email = Utils.GenerateRandomString(10) + "@example.com",
+                Username = username,
+                Password = "Password1",
+            };
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Assert.Equal($"Invalid Username, must not contain '@': '{payload.Username}'.", responseContent);
             }
 
             emailSenderMock.Verify(x => x.SendEmailVerification(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
