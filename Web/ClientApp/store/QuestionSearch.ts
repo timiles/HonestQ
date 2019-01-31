@@ -51,33 +51,35 @@ export const actionCreators = {
             dispatch({ type: 'QUESTION_SEARCH_CLEAR' });
         })();
     },
-    searchQuestions: (query: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        return (async () => {
-            if (!query) {
-                dispatch({ type: 'QUESTION_SEARCH_CLEAR' });
-                return;
-            }
-            dispatch({ type: 'QUESTION_SEARCH_REQUEST', payload: { query } });
+    searchQuestions: (query: string, pageNumber: number, pageSize: number):
+        AppThunkAction<KnownAction> => (dispatch, getState) => {
+            return (async () => {
+                if (!query) {
+                    dispatch({ type: 'QUESTION_SEARCH_CLEAR' });
+                    return;
+                }
+                dispatch({ type: 'QUESTION_SEARCH_REQUEST', payload: { query } });
 
-            const queryUrl = `/api/questions/search?q=${encodeURIComponent(query)}&pageSize=5`;
-            getJson<QuestionSearchResultsModel>(queryUrl, getState().login.loggedInUser)
-                .then((response) => {
-                    dispatch({
-                        type: 'QUESTION_SEARCH_SUCCESS',
-                        payload: { searchResults: response, query },
+                const q = encodeURIComponent(query);
+                const queryUrl = `/api/questions/search?q=${q}&pageNumber=${pageNumber}&pageSize=${pageSize}`;
+                getJson<QuestionSearchResultsModel>(queryUrl, getState().login.loggedInUser)
+                    .then((response) => {
+                        dispatch({
+                            type: 'QUESTION_SEARCH_SUCCESS',
+                            payload: { searchResults: response, query },
+                        });
+                    })
+                    .catch((reason) => {
+                        dispatch({
+                            type: 'QUESTION_SEARCH_FAILURE',
+                            payload: {
+                                query,
+                                error: reason || 'Question search failed',
+                            },
+                        });
                     });
-                })
-                .catch((reason) => {
-                    dispatch({
-                        type: 'QUESTION_SEARCH_FAILURE',
-                        payload: {
-                            query,
-                            error: reason || 'Question search failed',
-                        },
-                    });
-                });
-        })();
-    },
+            })();
+        },
 };
 
 // ----------------

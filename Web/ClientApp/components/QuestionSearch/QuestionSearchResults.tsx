@@ -5,6 +5,7 @@ import { QuestionListItemModel, QuestionSearchResultsModel } from '../../server-
 import { ApplicationState } from '../../store';
 import * as QuestionSearchStore from '../../store/QuestionSearch';
 import { buildQuestionUrl } from '../../utils/route-utils';
+import PaginationControl from '../shared/PaginationControl';
 
 interface OwnProps {
     containerClassName?: string;
@@ -29,6 +30,8 @@ class QuestionSearchResults extends React.Component<Props, State> {
         super(props);
 
         this.state = { searchResults: props.searchResults };
+
+        this.handlePageChange = this.handlePageChange.bind(this);
     }
 
     public componentWillReceiveProps(nextProps: Props) {
@@ -40,7 +43,7 @@ class QuestionSearchResults extends React.Component<Props, State> {
             // If the query was cleared, dispatch immediately
             const delay = (!nextProps.query) ? 0 : this.inputDelayMilliseconds;
             this.waitForInputTimeoutId = setTimeout((q: string): void => {
-                this.props.searchQuestions(q);
+                this.props.searchQuestions(q, 1, 5);
             }, delay, nextProps.query);
         }
 
@@ -64,6 +67,7 @@ class QuestionSearchResults extends React.Component<Props, State> {
                 {headerText &&
                     <h6>{headerText}</h6>
                 }
+                <PaginationControl {...searchResults} onPageChange={this.handlePageChange} />
                 <ul className="list-unstyled">
                     {searchResults.questions.map((x: QuestionListItemModel, i: number) =>
                         <li key={i} className="mb-2">
@@ -80,6 +84,11 @@ class QuestionSearchResults extends React.Component<Props, State> {
                 }
             </div>
         );
+    }
+
+    private handlePageChange(nextPageNumber: number): void {
+        const { query, pageSize } = this.state.searchResults!;
+        this.props.searchQuestions(query, nextPageNumber, pageSize);
     }
 }
 

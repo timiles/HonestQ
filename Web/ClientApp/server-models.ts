@@ -170,6 +170,7 @@ export interface QuestionSearchResultsModel {
     pageNumber: number;
     pageSize: number;
     questions: QuestionListItemModel[];
+    more: boolean;
 }
 
 export interface QuestionsListModel {

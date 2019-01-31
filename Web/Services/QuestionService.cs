@@ -64,9 +64,12 @@ namespace Pobs.Web.Services
                 .Where(x => x.Question.Status == PostStatus.OK && x.MatchScore > 0)
                 .OrderByDescending(x => x.MatchScore)
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Take(pageSize + 1)
                 .ToListAsync();
-            return new QuestionSearchResultsModel(query, pageNumber, pageSize, questions.Select(x => x.Question));
+
+            var moreRecordsExist = questions.Count() > pageSize;
+            return new QuestionSearchResultsModel(query, pageNumber, pageSize,
+                questions.Select(x => x.Question).Take(pageSize), moreRecordsExist);
         }
 
         public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin)

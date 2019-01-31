@@ -78,6 +78,7 @@ namespace Pobs.Tests.Integration.Questions
                 // Check the defaults too
                 Assert.Equal(20, responseModel.PageSize);
                 Assert.Equal(1, responseModel.PageNumber);
+                Assert.False(responseModel.More);
             }
         }
 
@@ -159,6 +160,7 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Single(responseModel.Questions);
                 Assert.Equal(1, responseModel.PageSize);
                 Assert.Equal(1, responseModel.PageNumber);
+                Assert.True(responseModel.More);
             }
         }
 
