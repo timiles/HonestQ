@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { QuestionListItemModel, QuestionSearchResultsModel } from '../../server-models';
 import { ApplicationState } from '../../store';
+import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as QuestionSearchStore from '../../store/QuestionSearch';
 import { buildQuestionUrl } from '../../utils/route-utils';
+import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import PaginationControl from '../shared/PaginationControl';
 
 interface OwnProps {
@@ -15,7 +17,10 @@ interface OwnProps {
 }
 type Props = QuestionSearchStore.QuestionSearchState
     & typeof QuestionSearchStore.actionCreators
-    & OwnProps;
+    & OwnProps
+    & {
+        searchQuestionsStatus: ActionStatus,
+    };
 
 interface State {
     searchResults?: QuestionSearchResultsModel;
@@ -58,7 +63,7 @@ class QuestionSearchResults extends React.Component<Props, State> {
         const { containerClassName, headerText, hideWhenNoResults } = this.props;
         const { searchResults } = this.state;
 
-        if (!searchResults || (searchResults.questions.length === 0 && hideWhenNoResults)) {
+        if (hideWhenNoResults && (!searchResults || searchResults.questions.length === 0)) {
             return null;
         }
 
@@ -67,20 +72,26 @@ class QuestionSearchResults extends React.Component<Props, State> {
                 {headerText &&
                     <h6>{headerText}</h6>
                 }
-                <PaginationControl {...searchResults} onPageChange={this.handlePageChange} />
-                <ul className="list-unstyled">
-                    {searchResults.questions.map((x: QuestionListItemModel, i: number) =>
-                        <li key={i} className="mb-2">
-                            <Link
-                                to={buildQuestionUrl(x.id, x.slug)}
-                                className="btn btn-sm btn-outline-secondary post-list-item"
-                            >
-                                <span className="ml-1 quote-marks">{x.text}</span>
-                            </Link>
-                        </li>)}
-                </ul>
-                {searchResults.questions.length === 0 &&
-                    <p><i>No questions found related to "{searchResults.query}".</i></p>
+                <ActionStatusDisplay {...this.props.searchQuestionsStatus} />
+                {searchResults &&
+                    <>
+                        <PaginationControl {...searchResults} onPageChange={this.handlePageChange} />
+                        {searchResults.questions.length > 0 &&
+                            <ul className="list-unstyled">
+                                {searchResults.questions.map((x: QuestionListItemModel, i: number) =>
+                                    <li key={i} className="mb-2">
+                                        <Link
+                                            to={buildQuestionUrl(x.id, x.slug)}
+                                            className="btn btn-sm btn-outline-secondary post-list-item"
+                                        >
+                                            <span className="ml-1 quote-marks">{x.text}</span>
+                                        </Link>
+                                    </li>)}
+                            </ul>
+                            ||
+                            <p><i>No questions found related to "{searchResults.query}".</i></p>
+                        }
+                    </>
                 }
             </div>
         );
@@ -93,6 +104,10 @@ class QuestionSearchResults extends React.Component<Props, State> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: OwnProps) => ({ ...state.questionSearch, ...ownProps }),
+    (state: ApplicationState, ownProps: OwnProps) => ({
+        ...state.questionSearch,
+        ...ownProps,
+        searchQuestionsStatus: getActionStatus(state, 'QUESTION_SEARCH'),
+    }),
     QuestionSearchStore.actionCreators,
 )(QuestionSearchResults);
