@@ -62,7 +62,7 @@ namespace Pobs.Web.Services
                 .Include(x => x.Question).ThenInclude(x => x.Answers)
                 .Include(x => x.Question).ThenInclude(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Where(x => x.Question.Status == PostStatus.OK && x.MatchScore > 0)
-                .OrderByDescending(x => x.MatchScore)
+                .OrderByDescending(x => x.MatchScore).ThenByDescending(x => x.Question.PostedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize + 1)
                 .ToListAsync();
