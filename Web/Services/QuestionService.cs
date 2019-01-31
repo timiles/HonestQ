@@ -66,7 +66,7 @@ namespace Pobs.Web.Services
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-            return new QuestionSearchResultsModel(questions.Select(x => x.Question), pageNumber, pageSize);
+            return new QuestionSearchResultsModel(query, pageNumber, pageSize, questions.Select(x => x.Question));
         }
 
         public async Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin)

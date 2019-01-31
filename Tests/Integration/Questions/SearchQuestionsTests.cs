@@ -68,6 +68,8 @@ namespace Pobs.Tests.Integration.Questions
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<QuestionSearchResultsModel>(responseContent);
 
+                Assert.Equal(q, responseModel.Query);
+
                 Assert.Equal(2, responseModel.Questions.Length);
                 // First result should match the Question with 2 matches
                 Assert.Equal(questionToQuery2.Id, responseModel.Questions[0].Id);

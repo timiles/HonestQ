@@ -34,7 +34,7 @@ class NewQuestion extends React.Component<Props, State> {
         }
     }
 
-    public render() {
+    public render(): JSX.Element {
         const { questionForm, awaitingApproval, tagValue } = this.props;
         const { isModalOpen } = this.state;
         const initialTagValues = !tagValue ? [] : [{ ...tagValue }];
@@ -46,9 +46,9 @@ class NewQuestion extends React.Component<Props, State> {
                     className="btn btn-lg btn-primary btn-block"
                     onClick={this.handleOpen}
                 >
-                    Add a question
+                    Ask a question
                 </ButtonOrLogin>
-                <Modal title="Add a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+                <Modal title="Ask a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     {!awaitingApproval &&
                         <QuestionForm
                             {...questionForm}

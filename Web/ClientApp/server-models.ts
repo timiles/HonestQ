@@ -166,9 +166,10 @@ export interface QuestionModel {
 }
 
 export interface QuestionSearchResultsModel {
-    questions: QuestionListItemModel[];
+    query: string;
     pageNumber: number;
     pageSize: number;
+    questions: QuestionListItemModel[];
 }
 
 export interface QuestionsListModel {

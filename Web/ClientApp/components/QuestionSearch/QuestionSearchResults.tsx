@@ -8,6 +8,8 @@ import { buildQuestionUrl } from '../../utils/route-utils';
 
 interface OwnProps {
     containerClassName?: string;
+    headerText?: string;
+    hideWhenNoResults?: boolean;
     query: string;
 }
 type Props = QuestionSearchStore.QuestionSearchState
@@ -50,16 +52,18 @@ class QuestionSearchResults extends React.Component<Props, State> {
     }
 
     public render() {
-        const { containerClassName } = this.props;
+        const { containerClassName, headerText, hideWhenNoResults } = this.props;
         const { searchResults } = this.state;
 
-        if (!searchResults || searchResults.questions.length === 0) {
+        if (!searchResults || (searchResults.questions.length === 0 && hideWhenNoResults)) {
             return null;
         }
 
         return (
             <div className={containerClassName}>
-                <h6>Related questions?</h6>
+                {headerText &&
+                    <h6>{headerText}</h6>
+                }
                 <ul className="list-unstyled">
                     {searchResults.questions.map((x: QuestionListItemModel, i: number) =>
                         <li key={i} className="mb-2">
@@ -71,6 +75,9 @@ class QuestionSearchResults extends React.Component<Props, State> {
                             </Link>
                         </li>)}
                 </ul>
+                {searchResults.questions.length === 0 &&
+                    <p><i>No questions found related to "{searchResults.query}".</i></p>
+                }
             </div>
         );
     }

@@ -30,7 +30,6 @@ class TagsList extends React.Component<TagsListProps> {
 
         return (
             <>
-                <h2>Tags</h2>
                 <ActionStatusDisplay {...this.props.getTagsListStatus} />
                 {tagsList &&
                     <ul className="list-inline">
