@@ -124,7 +124,7 @@ namespace WebApi.Controllers
                 _emailSender.SendEmailVerification(validatedEmail, signUpFormModel.Username, verifyEmailUrl);
                 try
                 {
-                    _emailSender.SendNewUserSignedUpNotification("tim@timiles.com", signUpFormModel.Username);
+                    _emailSender.SendNewUserSignedUpNotification("honestq@pm.me", signUpFormModel.Username);
                 }
                 catch
                 {
