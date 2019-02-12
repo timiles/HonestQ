@@ -17,6 +17,7 @@
     <PackageReference Include="Exceptionless.AspNetCore" Version="4.3.2012" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.7" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.4" />
+    <PackageReference Include="xsitemap" Version="2.0.6" />
   </ItemGroup>
 
   <ItemGroup>

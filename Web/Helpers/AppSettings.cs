@@ -5,6 +5,7 @@ namespace Pobs.Web.Helpers
 {
     public class AppSettings : IEmailSenderConfig
     {
+        public const string ProductionDomain = "www.honestq.com";
         public static Lazy<string> BuildNumber = new Lazy<string>(() => Environment.GetEnvironmentVariable("POBSWEB_BUILD_NUMBER"));
 
         public string Domain { get; set; }

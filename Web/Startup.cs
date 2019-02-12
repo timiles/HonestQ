@@ -140,7 +140,6 @@ namespace Pobs.Web
                 // app.UseForwardedHeaders() is for some reason not working;
                 // app.UseHttpsRedirection() would also redirect health check;
                 // so I'm taking a bit more explicit control and just doing it like this instead.
-                const string productionDomain = "www.honestq.com";
                 app.UseRewriter(new RewriteOptions()
                     .Add(rule =>
                     {
@@ -153,10 +152,10 @@ namespace Pobs.Web
 
                         // Get scheme according to X-Forwarded-Proto from the load balancer
                         var scheme = rule.HttpContext.Request.Headers[ForwardedHeadersDefaults.XForwardedProtoHeaderName];
-                        if (rule.HttpContext.Request.Host.Value != productionDomain
+                        if (rule.HttpContext.Request.Host.Value != AppSettings.ProductionDomain
                             || scheme == "http")
                         {
-                            var url = $"https://{productionDomain}{rule.HttpContext.Request.Path}{rule.HttpContext.Request.QueryString}";
+                            var url = $"https://{AppSettings.ProductionDomain}{rule.HttpContext.Request.Path}{rule.HttpContext.Request.QueryString}";
                             rule.HttpContext.Response.Redirect(url);
                             rule.Result = RuleResult.EndResponse;
                         }

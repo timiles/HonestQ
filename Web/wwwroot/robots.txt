@@ -3,3 +3,5 @@ Disallow: /api/
 Disallow: /docs/
 Disallow: /login
 Disallow: /signup
+
+Sitemap: https://www.honestq.com/sitemap.xml
