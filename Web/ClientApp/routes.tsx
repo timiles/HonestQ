@@ -10,6 +10,7 @@ import LogIn from './screens/Account/LogIn';
 import LogOut from './screens/Account/LogOut';
 import SignUp from './screens/Account/SignUp';
 import VerifyEmail from './screens/Account/VerifyEmail';
+import ThrowError from './screens/Admin/ThrowError';
 import Home from './screens/Home';
 import Notifications from './screens/Notifications';
 import Questions from './screens/Questions';
@@ -21,6 +22,7 @@ export const routes = (
         <Switch>
             <Route exact={true} path="/" component={Home} />
             <Route exact={true} path="/admin" component={AdminHome} />
+            <Route exact={true} path="/admin/throwerror" component={ThrowError} />
             <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
             <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
             <Route exact={true} path="/admin/edit/tags/:tagSlug" component={EditTag} />

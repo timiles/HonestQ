@@ -1,9 +1,8 @@
 using System;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Prerendering;
 using Microsoft.Extensions.Options;
@@ -67,21 +66,28 @@ namespace Pobs.Web.Controllers
                 }
             };
 
-            var renderResult = (RenderToStringResult)await _spaPrerenderer.RenderToString("ClientApp/dist/main-server", null, data, 30000);
-            if (!string.IsNullOrEmpty(renderResult.RedirectUrl))
+            try
             {
-                if (renderResult.StatusCode != null && renderResult.StatusCode.Value == 301)
+                var renderResult = (RenderToStringResult)await _spaPrerenderer.RenderToString("ClientApp/dist/main-server", null, data, 30000);
+                if (!string.IsNullOrEmpty(renderResult.RedirectUrl))
                 {
-                    return RedirectPermanent(renderResult.RedirectUrl);
+                    if (renderResult.StatusCode != null && renderResult.StatusCode.Value == 301)
+                    {
+                        return RedirectPermanent(renderResult.RedirectUrl);
+                    }
+                    return Redirect(renderResult.RedirectUrl);
                 }
-                return Redirect(renderResult.RedirectUrl);
+                if (renderResult.StatusCode != null)
+                {
+                    this.HttpContext.Response.StatusCode = renderResult.StatusCode.Value;
+                }
+                return Content(renderResult.Html, "text/html");
             }
-            if (renderResult.StatusCode != null)
+            catch
             {
-                this.HttpContext.Response.StatusCode = renderResult.StatusCode.Value;
+                this.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                return View("Error");
             }
-
-            return Content(renderResult.Html, "text/html");
         }
     }
 }
