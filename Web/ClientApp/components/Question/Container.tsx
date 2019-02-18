@@ -1,28 +1,31 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
 import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as QuestionStore from '../../store/Question';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
+import RedirectWithStatusCode from '../shared/RedirectWithStatusCode';
 import TagsList from '../Tags/List';
 import Answer from './Answer';
 import BackToQuestionButton from './BackToQuestionButton';
 import Question from './Question';
 
+interface OwnProps {
+    questionId: number;
+    questionSlug: string;
+    answerId?: number;
+    answerSlug?: string;
+}
+
 type ContainerProps = QuestionStore.ContainerState
     & typeof QuestionStore.actionCreators
+    & OwnProps
     & {
-        questionId: number,
-        questionSlug: string,
-        answerId?: number,
-        answerSlug?: string,
         getQuestionStatus: ActionStatus,
-    }
-    & RouteComponentProps<{}>;
+    };
 
 class Container extends React.Component<ContainerProps> {
 
@@ -50,13 +53,10 @@ class Container extends React.Component<ContainerProps> {
 
         if (question && ((question.slug !== questionSlug) || (answer && answer.slug !== answerSlug))) {
             // URL isn't canonical. Let's 301 redirect.
-            if (this.props.staticContext) {
-                this.props.staticContext.statusCode = 301;
-            }
             const canonicalUrl = answer ?
                 buildAnswerUrl(questionId, question.slug, answer.id, answer.slug) :
                 buildQuestionUrl(questionId, question.slug);
-            return <Redirect to={canonicalUrl} />;
+            return <RedirectWithStatusCode to={canonicalUrl} statusCode={301} />;
         }
 
         return (
@@ -171,7 +171,7 @@ class Container extends React.Component<ContainerProps> {
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => ({
+    (state: ApplicationState, ownProps: OwnProps) => ({
         ...state.question,
         getQuestionStatus: getActionStatus(state, 'GET_QUESTION'),
     }),

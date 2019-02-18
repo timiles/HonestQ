@@ -5,6 +5,7 @@ import * as React from 'react';
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import Helmet, { HelmetData } from 'react-helmet';
 import { Provider } from 'react-redux';
+import { StaticContext, StaticRouterContext } from 'react-router';
 import { StaticRouter } from 'react-router-dom';
 import { replace } from 'react-router-redux';
 import configureStore from './configureStore';
@@ -26,7 +27,9 @@ export default createServerRenderer((params) => {
 
         // Prepare an instance of the application and perform an inital render that will
         // cause any async tasks (e.g., data access) to begin
-        const routerContext: any = {};
+
+        // This works alongside <RedirectWithStatusCode>, not sure I understand it though!
+        const routerContext: StaticRouterContext & StaticContext = {};
         const app = (
             <Provider store={store}>
                 <StaticRouter
@@ -130,7 +133,7 @@ if (!d.getElementById(id)){
             const helmetData = Helmet.renderStatic();
             resolve({
                 html: '<!DOCTYPE html>' + renderToStaticMarkup(fullHtml(helmetData, renderedApp, store.getState())),
-                statusCode: routerContext.status,
+                statusCode: routerContext.statusCode,
             });
         }, reject); // Also propagate any errors back into the host application
     });
