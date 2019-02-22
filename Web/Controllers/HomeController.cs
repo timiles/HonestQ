@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Exceptionless;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.Prerendering;
 using Microsoft.Extensions.Options;
@@ -83,8 +84,17 @@ namespace Pobs.Web.Controllers
                 }
                 return Content(renderResult.Html, "text/html");
             }
-            catch
+            catch (Exception ex)
             {
+                if (_appSettings.ExceptionlessApiKey != null)
+                {
+                    try
+                    {
+                        var exceptionlessClient = new ExceptionlessClient(_appSettings.ExceptionlessApiKey);
+                        exceptionlessClient.SubmitException(ex);
+                    }
+                    catch { }
+                }
                 this.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 return View("Error");
             }
