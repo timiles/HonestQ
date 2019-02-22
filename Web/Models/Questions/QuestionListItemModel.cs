@@ -15,7 +15,7 @@ namespace Pobs.Web.Models.Questions
             this.Id = question.Id;
             this.Slug = question.Slug;
             this.Text = question.Text;
-            this.Tags = question.Tags.Select(x => new TagValueModel(x)).ToArray();
+            this.Tags = question.Tags.Where(x => x.IsApproved).Select(x => new TagValueModel(x)).ToArray();
             this.AnswersCount = question.Answers.Count();
         }
 

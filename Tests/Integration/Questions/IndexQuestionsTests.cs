@@ -23,6 +23,8 @@ namespace Pobs.Tests.Integration.Questions
         private readonly int _answerUserId;
         private readonly IEnumerable<Question> _questions;
         private readonly Question _unapprovedQuestion;
+        private readonly Tag _approvedTag;
+        private readonly Tag _unapprovedTag;
 
         public IndexQuestionsTests()
         {
@@ -33,6 +35,9 @@ namespace Pobs.Tests.Integration.Questions
             // Create multiple Questions and Answers
             _questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
             _unapprovedQuestion = DataHelpers.CreateQuestions(questionUser, 1, questionStatus: PostStatus.AwaitingApproval).Single();
+
+            _approvedTag = DataHelpers.CreateTag(questionUser, isApproved: true, questions: _questions.ToArray());
+            _unapprovedTag = DataHelpers.CreateTag(questionUser, isApproved: false, questions: _questions.ToArray());
         }
 
         [Fact]
@@ -55,6 +60,9 @@ namespace Pobs.Tests.Integration.Questions
                         Assert.Equal(question.Slug, responseQuestion.Slug);
                         Assert.Equal(question.Text, responseQuestion.Text);
                         Assert.Equal(3, responseQuestion.AnswersCount);
+
+                        Assert.Contains(_approvedTag.Slug, responseQuestion.Tags.Select(x => x.Slug));
+                        Assert.DoesNotContain(_unapprovedTag.Slug, responseQuestion.Tags.Select(x => x.Slug));
                     }
                 }
 

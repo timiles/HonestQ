@@ -13,7 +13,7 @@ namespace Pobs.Web.Models.Questions
             this.Slug = question.Slug;
             this.Text = question.Text;
             this.Source = question.Source;
-            this.Tags = question.Tags.Select(x => new TagValueModel(x)).ToArray();
+            this.Tags = question.Tags.Where(x => x.IsApproved).Select(x => new TagValueModel(x)).ToArray();
 
             this.PostedBy = question.PostedByUser.Username;
             this.Watching = question.Watches.Any(x => x.UserId == loggedInUserId);

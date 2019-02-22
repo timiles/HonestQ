@@ -18,6 +18,7 @@ namespace Pobs.Tests.Integration.Questions
         private readonly int _questionUserId;
         private readonly int _answerUserId;
         private readonly Tag _tag;
+        private readonly Tag _unapprovedTag;
 
         public GetQuestionTests()
         {
@@ -28,6 +29,7 @@ namespace Pobs.Tests.Integration.Questions
             // Create 3 questions so we can be sure we get the one we request
             var questions = DataHelpers.CreateQuestions(questionUser, 3, answerUser, 3);
             _tag = DataHelpers.CreateTag(questionUser, isApproved: true, questions: questions.ToArray());
+            _unapprovedTag = DataHelpers.CreateTag(questionUser, isApproved: false, questions: questions.ToArray());
         }
 
         [Fact]
@@ -62,6 +64,8 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Source, responseModel.Source);
                 Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
+
+                Assert.DoesNotContain(_unapprovedTag.Slug, responseModel.Tags.Select(x => x.Slug));
 
                 Assert.Single(responseModel.Tags);
                 var responseTag = responseModel.Tags.Single();
