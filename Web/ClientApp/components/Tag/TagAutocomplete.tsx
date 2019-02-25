@@ -18,7 +18,6 @@ type TagAutocompleteProps = TagAutocompleteStore.TagAutocompleteState
 interface State {
     query: string;
     selectedTags: TagValueModel[];
-    suggestedTags: TagValueModel[] | null;
 }
 
 class TagAutocomplete extends React.Component<TagAutocompleteProps, State> {
@@ -29,22 +28,18 @@ class TagAutocomplete extends React.Component<TagAutocompleteProps, State> {
     constructor(props: TagAutocompleteProps) {
         super(props);
 
-        this.state = { query: props.query, selectedTags: props.selectedTags, suggestedTags: props.suggestions };
+        this.state = { query: props.query, selectedTags: props.selectedTags };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: TagAutocompleteProps) {
-        this.setState({ suggestedTags: nextProps.suggestions });
-    }
-
     public render() {
-        const { name, loading, error } = this.props;
-        const { query, selectedTags, suggestedTags } = this.state;
+        const { name, suggestions, loading, error } = this.props;
+        const { query, selectedTags } = this.state;
         const selectedSlugs = selectedTags.map((x) => x.slug);
         let newSuggestedTags: TagValueModel[] | null = null;
-        if (suggestedTags) {
-            newSuggestedTags = suggestedTags.filter((x) => selectedSlugs.indexOf(x.slug) < 0);
+        if (suggestions) {
+            newSuggestedTags = suggestions.filter((x) => selectedSlugs.indexOf(x.slug) < 0);
         }
 
         return (
