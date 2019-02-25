@@ -12,8 +12,6 @@ interface Props {
 }
 
 interface State {
-    count: number;
-    isUpvotedByLoggedInUser: boolean;
     submitting: boolean;
 }
 
@@ -23,26 +21,20 @@ export default class UpvoteButton extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = {
-            count: this.props.count,
-            isUpvotedByLoggedInUser: this.props.isUpvotedByLoggedInUser,
-            submitting: false,
-        };
+        this.state = { submitting: false };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
-        this.setState({
-            count: nextProps.count,
-            isUpvotedByLoggedInUser: nextProps.isUpvotedByLoggedInUser,
-            submitting: false,
-        });
+    public componentDidUpdate(prevProps: Props) {
+        if (this.props.isUpvotedByLoggedInUser !== prevProps.isUpvotedByLoggedInUser) {
+            this.setState({ submitting: false });
+        }
     }
 
     public render() {
-        const { hideLabelOnMobile } = this.props;
-        const { count, isUpvotedByLoggedInUser, submitting } = this.state;
+        const { count, isUpvotedByLoggedInUser, hideLabelOnMobile } = this.props;
+        const { submitting } = this.state;
         const upvotedClassName = isUpvotedByLoggedInUser ? 'btn-success' : 'btn-outline-secondary background-white';
 
         return (
@@ -66,8 +58,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
     }
 
     private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
-        const { answerId, commentId } = this.props;
-        const { isUpvotedByLoggedInUser } = this.state;
+        const { answerId, commentId, isUpvotedByLoggedInUser } = this.props;
         this.setState({ submitting: true },
             () => this.props.onReaction(UpvoteButton.ReactionType, !isUpvotedByLoggedInUser, answerId, commentId));
     }
