@@ -12,7 +12,6 @@ interface Props {
 }
 
 interface State {
-    value?: string;
     scrollHeight: number;
     focused: boolean;
 }
@@ -25,7 +24,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = { value: props.value, scrollHeight: 0, focused: false };
+        this.state = { scrollHeight: 0, focused: false };
 
         this.textAreaRef = React.createRef<HTMLTextAreaElement>();
 
@@ -34,9 +33,8 @@ export default class SuperTextArea extends React.Component<Props, State> {
         this.handleBlur = this.handleBlur.bind(this);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
-        this.setState({ value: nextProps.value || '' });
-        if (!nextProps.value) {
+    public componentWillUpdate(prevProps: Props) {
+        if (prevProps.value && !this.props.value) {
             this.setState({ scrollHeight: 0 });
         }
     }
@@ -54,8 +52,8 @@ export default class SuperTextArea extends React.Component<Props, State> {
     }
 
     public render() {
-        const { id, name, className, maxLength, required, submitted } = this.props;
-        const { value, scrollHeight } = this.state;
+        const { id, name, className, maxLength, required, value, submitted } = this.props;
+        const { scrollHeight } = this.state;
         const remainingCharacterCount = maxLength - (value ? value.length : 0);
 
         // Always show exceeded character count error even if not submitted.
