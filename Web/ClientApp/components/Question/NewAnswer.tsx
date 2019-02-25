@@ -27,7 +27,7 @@ class NewAnswer extends React.Component<Props, State> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         // This will close the modal when a answer has been successfully submitted
         if (!nextProps.answerForm!.submitted) {
             this.setState({ isModalOpen: false });

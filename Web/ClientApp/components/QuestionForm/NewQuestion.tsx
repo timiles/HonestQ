@@ -27,7 +27,7 @@ class NewQuestion extends React.Component<Props, State> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         // This will close the modal when a Question has been successfully submitted
         if (!nextProps.awaitingApproval && !nextProps.questionForm!.submitted) {
             this.setState({ isModalOpen: false });

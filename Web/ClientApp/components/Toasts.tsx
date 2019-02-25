@@ -8,7 +8,7 @@ type ToastProps = ToastStore.ToastState
 
 class Toasts extends React.Component<ToastProps> {
 
-    public componentWillReceiveProps(nextProps: ToastProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ToastProps) {
         // If we just added a Toast, queue up for clearing it too
         if (nextProps.toasts.length > this.props.toasts.length) {
             this.props.clearToast(3000);

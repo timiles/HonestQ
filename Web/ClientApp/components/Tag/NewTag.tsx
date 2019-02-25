@@ -36,7 +36,7 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
         onCtrlEnter('form', () => this.submit());
     }
 
-    public componentWillReceiveProps(nextProps: NewTagProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: NewTagProps) {
         // This will reset the form when a tag has been successfully submitted
         if (!nextProps.submitted) {
             this.setState({

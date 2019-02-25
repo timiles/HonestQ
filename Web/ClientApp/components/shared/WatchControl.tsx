@@ -24,7 +24,7 @@ export default class WatchControl extends React.Component<Props, State> {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         this.setState({ watching: nextProps.watching, submitting: false });
     }
 

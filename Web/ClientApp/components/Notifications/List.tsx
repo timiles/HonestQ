@@ -14,9 +14,9 @@ import WatchControlDemo from '../shared/WatchControlDemo';
 type Props = NotificationsStore.ListState
     & typeof NotificationsStore.actionCreators
     & {
-    windowScrollEventEmitter: EventEmitter, onAllNotificationsLoaded: () => void,
-    getNotificationsListStatus: ActionStatus,
-};
+        windowScrollEventEmitter: EventEmitter, onAllNotificationsLoaded: () => void,
+        getNotificationsListStatus: ActionStatus,
+    };
 
 class NotificationList extends React.Component<Props> {
 
@@ -35,7 +35,7 @@ class NotificationList extends React.Component<Props> {
         this.handleMarkAllAsSeen = this.handleMarkAllAsSeen.bind(this);
     }
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         if (!this.props.notificationsList) {
             this.props.loadMoreNotifications();
         }

@@ -10,10 +10,10 @@ import * as TagAutocompleteStore from '../../store/TagAutocomplete';
 type TagAutocompleteProps = TagAutocompleteStore.TagAutocompleteState
     & typeof TagAutocompleteStore.actionCreators
     & {
-    name?: string,
-    selectedTags: TagValueModel[],
-    onChange: (selectedTags: TagValueModel[]) => void,
-};
+        name?: string,
+        selectedTags: TagValueModel[],
+        onChange: (selectedTags: TagValueModel[]) => void,
+    };
 
 interface State {
     query: string;
@@ -34,7 +34,7 @@ class TagAutocomplete extends React.Component<TagAutocompleteProps, State> {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: TagAutocompleteProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: TagAutocompleteProps) {
         this.setState({ suggestedTags: nextProps.suggestions });
     }
 

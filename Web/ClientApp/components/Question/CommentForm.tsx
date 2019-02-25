@@ -42,7 +42,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         onCtrlEnter('form', () => this.submit());
     }
 
-    public componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
+    public UNSAFE_componentWillReceiveProps(nextProps: FormProps<CommentFormModel>) {
         // This will reset the form when a Comment has been successfully submitted
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '' });

@@ -14,10 +14,10 @@ import Emoji, { EmojiValue } from '../shared/Emoji';
 type Props = QuestionsStore.ListState
     & typeof QuestionsStore.actionCreators
     & {
-    windowScrollEventEmitter: EventEmitter,
-    onAllQuestionsLoaded: () => void,
-    getQuestionsListStatus: ActionStatus,
-};
+        windowScrollEventEmitter: EventEmitter,
+        onAllQuestionsLoaded: () => void,
+        getQuestionsListStatus: ActionStatus,
+    };
 
 class QuestionList extends React.Component<Props> {
 
@@ -33,7 +33,7 @@ class QuestionList extends React.Component<Props> {
         });
     }
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         if (!this.props.questionsList) {
             this.props.loadMoreQuestionItems();
         }

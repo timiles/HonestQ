@@ -39,7 +39,7 @@ class QuestionSearchResults extends React.Component<Props, State> {
         this.handlePageChange = this.handlePageChange.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         if (nextProps.query !== this.props.query) {
             // Wait for user to have stopped typing before firing event
             if (this.waitForInputTimeoutId) {

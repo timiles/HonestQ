@@ -32,7 +32,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         this.setState({
             count: nextProps.count,
             isUpvotedByLoggedInUser: nextProps.isUpvotedByLoggedInUser,

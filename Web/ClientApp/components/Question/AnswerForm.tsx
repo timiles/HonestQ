@@ -38,7 +38,7 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
         onCtrlEnter('form', () => this.submit());
     }
 
-    public componentWillReceiveProps(nextProps: FormProps<AnswerFormModel>) {
+    public UNSAFE_componentWillReceiveProps(nextProps: FormProps<AnswerFormModel>) {
         // This will reset the form when an Answer has been successfully submitted
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '' });

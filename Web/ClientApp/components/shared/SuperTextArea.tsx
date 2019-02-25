@@ -34,7 +34,7 @@ export default class SuperTextArea extends React.Component<Props, State> {
         this.handleBlur = this.handleBlur.bind(this);
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         this.setState({ value: nextProps.value || '' });
         if (!nextProps.value) {
             this.setState({ scrollHeight: 0 });

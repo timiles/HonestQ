@@ -12,9 +12,9 @@ import Tag from './Tag';
 type ContainerProps = TagStore.ContainerState
     & typeof TagStore.actionCreators
     & {
-    tagSlug: string,
-    getTagStatus: ActionStatus,
-};
+        tagSlug: string,
+        getTagStatus: ActionStatus,
+    };
 
 class Container extends React.Component<ContainerProps, {}> {
 
@@ -24,12 +24,12 @@ class Container extends React.Component<ContainerProps, {}> {
         this.handleWatch = this.handleWatch.bind(this);
     }
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         // This will also run on server side render
         this.setUp(this.props);
     }
 
-    public componentWillReceiveProps(nextProps: ContainerProps) {
+    public UNSAFE_componentWillReceiveProps(nextProps: ContainerProps) {
         this.setUp(nextProps);
     }
 

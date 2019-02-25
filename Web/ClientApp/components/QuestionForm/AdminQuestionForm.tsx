@@ -37,7 +37,7 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
         onCtrlEnter('form', () => this.submit());
     }
 
-    public componentWillReceiveProps(nextProps: Props) {
+    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
         // This will reset the form when a Question has been successfully submitted
         if (!nextProps.submitted) {
             this.setState({ text: '', source: '', tags: [] });

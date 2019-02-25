@@ -12,14 +12,14 @@ type AdminHomeProps = AdminHomeStore.AdminHomeState
     & typeof AdminHomeStore.actionCreators
     & RouteComponentProps<{}>
     & {
-    loggedInUser: LoggedInUserModel,
-    getUnapprovedTagsListStatus: ActionStatus,
-    getUnapprovedQuestionsListStatus: ActionStatus,
-};
+        loggedInUser: LoggedInUserModel,
+        getUnapprovedTagsListStatus: ActionStatus,
+        getUnapprovedQuestionsListStatus: ActionStatus,
+    };
 
 class AdminHome extends React.Component<AdminHomeProps, {}> {
 
-    public componentWillMount() {
+    public UNSAFE_componentWillMount() {
         if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
             return;
         }
