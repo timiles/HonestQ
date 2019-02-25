@@ -54,8 +54,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public render() {
-        const { replyingToText, parentCommentId, isModal, onCloseModalRequested } = this.props;
-        const { submitting, submitted, error } = this.props;
+        const { replyingToText, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
         const { text, source, agreementRating, isAnonymous } = this.state;
 
         return (
@@ -63,23 +62,19 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className="form-group">
-                        Replying to: {}
-                        <span className="quote-marks">{replyingToText}</span>
-                    </div>
-                    {!parentCommentId &&
-                        <div className="form-group">
-                            <label htmlFor="agreementRating">
-                                Does your comment agree with this answer?
-                            </label>
-                            <div>
-                                <AgreementRatingInput
-                                    name="agreementRating"
-                                    value={agreementRating}
-                                    onChange={this.handleChange}
-                                />
-                            </div>
+                        <label htmlFor="agreementRating">
+                            Does your comment agree with
+                            <br />
+                            <span className="quote-marks">{replyingToText}</span>?
+                        </label>
+                        <div>
+                            <AgreementRatingInput
+                                name="agreementRating"
+                                value={agreementRating}
+                                onChange={this.handleChange}
+                            />
                         </div>
-                    }
+                    </div>
                     <div className="form-group">
                         <label htmlFor="commentText">Comment</label>
                         <SuperTextArea

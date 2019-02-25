@@ -126,7 +126,7 @@ export interface CommentModel {
     id: number;
     text: string;
     source?: string;
-    agreementRating?: string;
+    agreementRating: string;
     postedAt: string;
     postedBy: string;
     status: string;
