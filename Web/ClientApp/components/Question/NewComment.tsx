@@ -33,9 +33,9 @@ class NewComment extends React.Component<Props, State> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
-        // This will close the modal when a comment has been successfully submitted
-        if (!nextProps.commentForm!.submitted) {
+    public componentDidUpdate(prevProps: Props) {
+        if (prevProps.commentForm!.submitted && !this.props.commentForm!.submitted) {
+            // Close the modal when a Comment has been successfully submitted
             this.setState({ isModalOpen: false });
         }
     }

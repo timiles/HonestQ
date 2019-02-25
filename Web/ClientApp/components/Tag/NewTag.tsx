@@ -36,19 +36,17 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
         onCtrlEnter('form', () => this.submit());
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: NewTagProps) {
-        // This will reset the form when a tag has been successfully submitted
-        if (!nextProps.submitted) {
+    public componentDidUpdate(prevProps: NewTagProps) {
+        if (prevProps.submitted && !this.props.submitted) {
+            // Reset the form when a tag has been successfully submitted
             this.setState({
                 name: '',
                 description: '',
                 moreInfoUrl: '',
-            });
+            }, () => { enableConfirmOnLeave(false); });
+        } else {
+            enableConfirmOnLeave(this.shouldConfirmOnLeave());
         }
-    }
-
-    public componentDidUpdate() {
-        enableConfirmOnLeave(this.shouldConfirmOnLeave());
     }
 
     public render() {
