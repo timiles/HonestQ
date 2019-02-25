@@ -10,7 +10,6 @@ interface Props {
 }
 
 interface State {
-    watching: boolean;
     submitting: boolean;
 }
 
@@ -19,18 +18,20 @@ export default class WatchControl extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = { watching: this.props.watching, submitting: false };
+        this.state = { submitting: false };
 
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
-        this.setState({ watching: nextProps.watching, submitting: false });
+    public componentWillUpdate(prevProps: Props) {
+        if (this.props.watching !== prevProps.watching) {
+            this.setState({ submitting: false });
+        }
     }
 
     public render() {
-        const { hideLabelOnMobile } = this.props;
-        const { watching, submitting } = this.state;
+        const { watching, hideLabelOnMobile } = this.props;
+        const { submitting } = this.state;
         const watchingClassName = watching ? 'btn-success' : 'btn-outline-secondary background-white';
 
         return (
@@ -50,6 +51,6 @@ export default class WatchControl extends React.Component<Props, State> {
 
     private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
         this.setState({ submitting: true },
-            () => this.props.onWatch(!this.state.watching, this.props.identifier));
+            () => this.props.onWatch(!this.props.watching, this.props.identifier));
     }
 }
