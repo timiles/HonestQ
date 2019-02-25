@@ -2,8 +2,9 @@ import * as React from 'react';
 
 export default class ThrowError extends React.Component {
 
-    public UNSAFE_componentWillMount() {
-        // This runs server side
+    constructor(props: {}) {
+        super(props);
+
         throw new Error('Error');
     }
 }

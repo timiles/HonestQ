@@ -22,9 +22,7 @@ class Container extends React.Component<ContainerProps, {}> {
         super(props);
 
         this.handleWatch = this.handleWatch.bind(this);
-    }
 
-    public UNSAFE_componentWillMount() {
         // This will also run on server side render
         this.setUp(this.props);
     }

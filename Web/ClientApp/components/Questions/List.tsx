@@ -31,9 +31,7 @@ class QuestionList extends React.Component<Props> {
                 this.props.loadMoreQuestionItems(this.props.questionsList!.lastTimestamp);
             }
         });
-    }
 
-    public UNSAFE_componentWillMount() {
         if (!this.props.questionsList) {
             this.props.loadMoreQuestionItems();
         }

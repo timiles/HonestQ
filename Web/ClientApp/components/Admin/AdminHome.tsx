@@ -19,15 +19,16 @@ type AdminHomeProps = AdminHomeStore.AdminHomeState
 
 class AdminHome extends React.Component<AdminHomeProps, {}> {
 
-    public UNSAFE_componentWillMount() {
-        if (!isUserInRole(this.props.loggedInUser, 'Admin')) {
-            return;
-        }
-        if (!this.props.unapprovedTagsList) {
-            this.props.getUnapprovedTagsList();
-        }
-        if (!this.props.unapprovedQuestionsList) {
-            this.props.getUnapprovedQuestionsList();
+    constructor(props: AdminHomeProps) {
+        super(props);
+
+        if (isUserInRole(this.props.loggedInUser, 'Admin')) {
+            if (!this.props.unapprovedTagsList) {
+                this.props.getUnapprovedTagsList();
+            }
+            if (!this.props.unapprovedQuestionsList) {
+                this.props.getUnapprovedQuestionsList();
+            }
         }
     }
 

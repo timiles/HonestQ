@@ -19,7 +19,9 @@ type TagsListProps = TagsStore.ListState
 
 class TagsList extends React.Component<TagsListProps> {
 
-    public UNSAFE_componentWillMount() {
+    constructor(props: TagsListProps) {
+        super(props);
+
         if (!this.props.tagsList) {
             this.props.getTagsList();
         }

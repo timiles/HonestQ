@@ -34,9 +34,7 @@ class Container extends React.Component<ContainerProps> {
 
         this.handleReaction = this.handleReaction.bind(this);
         this.handleWatch = this.handleWatch.bind(this);
-    }
 
-    public UNSAFE_componentWillMount() {
         // This will also run on server side render
         if (this.shouldGetQuestion()) {
             this.props.getQuestion(this.props.questionId);

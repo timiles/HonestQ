@@ -33,9 +33,7 @@ class NotificationList extends React.Component<Props> {
 
         this.handleMarkAsSeen = this.handleMarkAsSeen.bind(this);
         this.handleMarkAllAsSeen = this.handleMarkAllAsSeen.bind(this);
-    }
 
-    public UNSAFE_componentWillMount() {
         if (!this.props.notificationsList) {
             this.props.loadMoreNotifications();
         }
