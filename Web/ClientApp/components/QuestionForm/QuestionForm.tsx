@@ -42,15 +42,12 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
         onCtrlEnter('form', () => this.submit());
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
-        // This will reset the form when a Question has been successfully submitted
-        if (!nextProps.submitted) {
-            this.setState({ text: '', source: '', tags: [] });
-        }
-    }
-
     public componentDidUpdate() {
         enableConfirmOnLeave(this.shouldConfirmOnLeave());
+    }
+
+    public componentWillUnmount() {
+        enableConfirmOnLeave(false);
     }
 
     public render() {
