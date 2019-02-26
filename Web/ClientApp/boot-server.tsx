@@ -116,6 +116,8 @@ if (!d.getElementById(id)){
 
         // Once any async tasks are done, we can perform the final render
         // We also send the redux store state, so the client can continue execution where the server left off
+        // TODO: Use "suspense" (when it's available) to avoid two-pass render?
+        // REF: https://github.com/reactjs/reactjs.org/issues/727#issuecomment-376857584
         params.domainTasks.then(() => {
             // Final render of the app
             const renderedApp = renderToString(app);
