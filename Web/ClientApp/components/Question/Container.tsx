@@ -36,9 +36,7 @@ class Container extends React.Component<ContainerProps> {
         this.handleWatch = this.handleWatch.bind(this);
 
         // This will also run on server side render
-        if (this.shouldGetQuestion()) {
-            this.props.getQuestion(this.props.questionId);
-        }
+        this.props.getQuestion(this.props.questionId);
     }
 
     public componentWillUnmount() {
@@ -144,14 +142,6 @@ class Container extends React.Component<ContainerProps> {
                 <meta name="twitter:site" content="@HonestQ_com" />
             </Helmet>
         );
-    }
-
-    private shouldGetQuestion(): boolean {
-        const { question, getQuestionStatus } = this.props;
-        if (!question && (!getQuestionStatus || !getQuestionStatus.loading)) {
-            return true;
-        }
-        return false;
     }
 
     private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {

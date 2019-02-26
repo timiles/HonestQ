@@ -17,6 +17,7 @@ class Item extends React.Component<Props> {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
                 <Container
+                    key={questionId}
                     questionId={Number(questionId)}
                     questionSlug={questionSlug}
                     answerId={Number(answerId)}
