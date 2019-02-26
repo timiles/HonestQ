@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { QuestionListItemModel, QuestionSearchResultsModel } from '../../server-models';
+import { QuestionListItemModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as QuestionSearchStore from '../../store/QuestionSearch';
@@ -22,11 +22,7 @@ type Props = QuestionSearchStore.QuestionSearchState
         searchQuestionsStatus: ActionStatus,
     };
 
-interface State {
-    searchResults?: QuestionSearchResultsModel;
-}
-
-class QuestionSearchResults extends React.Component<Props, State> {
+class QuestionSearchResults extends React.Component<Props> {
 
     private readonly inputDelayMilliseconds = 500;
     private waitForInputTimeoutId: number | null = null;
@@ -34,25 +30,21 @@ class QuestionSearchResults extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
-        this.state = { searchResults: props.searchResults };
-
         this.handlePageChange = this.handlePageChange.bind(this);
     }
 
-    public UNSAFE_componentWillReceiveProps(nextProps: Props) {
-        if (nextProps.query !== this.props.query) {
+    public componentDidUpdate(prevProps: Props) {
+        if (this.props.query !== prevProps.query) {
             // Wait for user to have stopped typing before firing event
             if (this.waitForInputTimeoutId) {
                 clearTimeout(this.waitForInputTimeoutId);
             }
             // If the query was cleared, dispatch immediately
-            const delay = (!nextProps.query) ? 0 : this.inputDelayMilliseconds;
+            const delay = (!this.props.query) ? 0 : this.inputDelayMilliseconds;
             this.waitForInputTimeoutId = setTimeout((q: string): void => {
                 this.props.searchQuestions(q, 1, 5);
-            }, delay, nextProps.query);
+            }, delay, this.props.query);
         }
-
-        this.setState({ searchResults: nextProps.searchResults });
     }
 
     public componentWillUnmount() {
@@ -60,8 +52,7 @@ class QuestionSearchResults extends React.Component<Props, State> {
     }
 
     public render() {
-        const { containerClassName, headerText, hideWhenNoResults } = this.props;
-        const { searchResults } = this.state;
+        const { containerClassName, headerText, searchResults, hideWhenNoResults } = this.props;
 
         if (hideWhenNoResults && (!searchResults || searchResults.questions.length === 0)) {
             return null;
@@ -98,7 +89,7 @@ class QuestionSearchResults extends React.Component<Props, State> {
     }
 
     private handlePageChange(nextPageNumber: number): void {
-        const { query, pageSize } = this.state.searchResults!;
+        const { query, pageSize } = this.props.searchResults!;
         this.props.searchQuestions(query, nextPageNumber, pageSize);
     }
 }
