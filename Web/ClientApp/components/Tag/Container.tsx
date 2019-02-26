@@ -9,10 +9,13 @@ import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import TagsList from '../Tags/List';
 import Tag from './Tag';
 
+interface OwnProps {
+    tagSlug: string;
+}
 type ContainerProps = TagStore.ContainerState
     & typeof TagStore.actionCreators
+    & OwnProps
     & {
-        tagSlug: string,
         getTagStatus: ActionStatus,
     };
 
@@ -24,11 +27,7 @@ class Container extends React.Component<ContainerProps, {}> {
         this.handleWatch = this.handleWatch.bind(this);
 
         // This will also run on server side render
-        this.setUp(this.props);
-    }
-
-    public UNSAFE_componentWillReceiveProps(nextProps: ContainerProps) {
-        this.setUp(nextProps);
+        props.getTag(props.tagSlug);
     }
 
     public render() {
@@ -67,9 +66,9 @@ class Container extends React.Component<ContainerProps, {}> {
     }
 
     private renderHelmetTags() {
-        const { tag } = this.props;
+        const { tag, tagSlug } = this.props;
 
-        if (!tag) {
+        if (!tag || tag.slug !== tagSlug) {
             return (
                 <Helmet>
                     <title>⏳ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
@@ -97,20 +96,13 @@ class Container extends React.Component<ContainerProps, {}> {
         );
     }
 
-    private setUp(props: ContainerProps): void {
-        if ((!props.getTagStatus || !props.getTagStatus.loading) &&
-            (!props.tag || (props.tag.slug !== props.tagSlug))) {
-            props.getTag(props.tagSlug);
-        }
-    }
-
     private handleWatch(on: boolean): void {
         this.props.updateWatch(on, this.props.tagSlug);
     }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => ({
+    (state: ApplicationState, ownProps: OwnProps) => ({
         ...state.tag,
         getTagStatus: getActionStatus(state, 'GET_TAG'),
     }),

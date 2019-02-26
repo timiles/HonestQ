@@ -16,7 +16,7 @@ class Item extends React.Component<Props> {
 
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <Container tagSlug={tagSlug} />
+                <Container key={tagSlug} tagSlug={tagSlug} />
             </LoggedInUserContext.Provider>
         );
     }
