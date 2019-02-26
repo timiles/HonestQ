@@ -33,17 +33,15 @@ export default class SuperTextArea extends React.Component<Props, State> {
         this.handleBlur = this.handleBlur.bind(this);
     }
 
-    public componentWillUpdate(prevProps: Props) {
-        if (prevProps.value && !this.props.value) {
-            this.setState({ scrollHeight: 0 });
-        }
-    }
-
-    public componentDidUpdate() {
+    public componentDidUpdate(prevProps: Props) {
         // IE will re-focus the element, so only do this if we actually want to have focus already.
         if (this.state.focused) {
             this.textAreaRef.current!.selectionStart = this.cursorPosition;
             this.textAreaRef.current!.selectionEnd = this.cursorPosition;
+        }
+
+        if (prevProps.value && !this.props.value) {
+            this.setState({ scrollHeight: 0 });
         }
     }
 

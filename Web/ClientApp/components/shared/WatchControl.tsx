@@ -23,7 +23,7 @@ export default class WatchControl extends React.Component<Props, State> {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    public componentWillUpdate(prevProps: Props) {
+    public componentDidUpdate(prevProps: Props) {
         if (this.props.watching !== prevProps.watching) {
             this.setState({ submitting: false });
         }
