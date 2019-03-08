@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@ namespace Pobs.Web.Controllers
 
             var sitemap = new Sitemap();
 
-            foreach (var tag in tagsListModel.Tags)
+            foreach (var tag in tagsListModel.Tags.OrderBy(x => x.Slug))
             {
                 sitemap.Add(new Url
                 {
@@ -44,7 +45,7 @@ namespace Pobs.Web.Controllers
                 });
             }
 
-            foreach (var question in questionsListModel.Questions)
+            foreach (var question in questionsListModel.Questions.OrderBy(x => x.Id))
             {
                 sitemap.Add(new Url
                 {
