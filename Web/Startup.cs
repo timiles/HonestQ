@@ -152,10 +152,9 @@ namespace Pobs.Web
 
                         // Get scheme according to X-Forwarded-Proto from the load balancer
                         var scheme = rule.HttpContext.Request.Headers[ForwardedHeadersDefaults.XForwardedProtoHeaderName];
-                        if (rule.HttpContext.Request.Host.Value != AppSettings.ProductionDomain
-                            || scheme == "http")
+                        if ($"{scheme}://{rule.HttpContext.Request.Host.Value}" != appSettings.Domain)
                         {
-                            var url = $"https://{AppSettings.ProductionDomain}{rule.HttpContext.Request.Path}{rule.HttpContext.Request.QueryString}";
+                            var url = $"{appSettings.Domain}{rule.HttpContext.Request.Path}{rule.HttpContext.Request.QueryString}";
                             rule.HttpContext.Response.Redirect(url);
                             rule.Result = RuleResult.EndResponse;
                         }

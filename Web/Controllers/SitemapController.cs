@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
 using Pobs.Web.Services;
@@ -14,11 +15,13 @@ namespace Pobs.Web.Controllers
     {
         private readonly ITagService _tagService;
         private readonly IQuestionService _questionService;
+        private readonly AppSettings _appSettings;
 
-        public SitemapController(ITagService tagService, IQuestionService questionService)
+        public SitemapController(ITagService tagService, IQuestionService questionService, IOptions<AppSettings> appSettings)
         {
             this._tagService = tagService;
             this._questionService = questionService;
+            this._appSettings = appSettings.Value;
         }
 
         // Cache for 1 day since we currently have ChangeFrequency set to 1 day
@@ -39,7 +42,7 @@ namespace Pobs.Web.Controllers
                 sitemap.Add(new Url
                 {
                     ChangeFrequency = ChangeFrequency.Daily,
-                    Location = $"https://{AppSettings.ProductionDomain}/tags/{tag.Slug}",
+                    Location = $"{this._appSettings.Domain}/tags/{tag.Slug}",
                     Priority = 0.5,
                     TimeStamp = timeStamp
                 });
@@ -50,7 +53,7 @@ namespace Pobs.Web.Controllers
                 sitemap.Add(new Url
                 {
                     ChangeFrequency = ChangeFrequency.Daily,
-                    Location = $"https://{AppSettings.ProductionDomain}/questions/{question.Id}/{question.Slug}",
+                    Location = $"{this._appSettings.Domain}/questions/{question.Id}/{question.Slug}",
                     Priority = 1,
                     TimeStamp = timeStamp
                 });
