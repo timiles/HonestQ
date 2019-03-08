@@ -62,8 +62,8 @@ namespace Pobs.Tests.Integration.Tags
         {
             var payload = new TagFormModel
             {
-                Name = "💩",
-                Description = "This tag is all about 💩💩💩"
+                Name = Utils.GenerateRandomString(10) + "💩💩💩",
+                Description = "This tag is all about 💩💩💩",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
