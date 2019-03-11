@@ -6,10 +6,16 @@ body {
     word-break: break-word;
     /* Always show right scrollbar for consistency */
     overflow-y: scroll;
+
+    background-color: #EDF6FB;
+}
+
+body.dark {
+    background-color: #28374B;
 }
 
 .footer {
-    background-color: #f8f9fa;
+    background-color: #0E1F31;
 }
 
 blockquote p {

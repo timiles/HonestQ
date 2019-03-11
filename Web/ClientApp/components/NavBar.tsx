@@ -9,8 +9,20 @@ import NotificationsCount from './Notifications/NotificationsCount';
 interface NavBarProps {
     loggedInUser: LoggedInUserModel;
 }
+interface State {
+    isDarkMode: boolean;
+}
 
-class NavBar extends React.Component<NavBarProps, {}> {
+class NavBar extends React.Component<NavBarProps, State> {
+
+    constructor(props: NavBarProps) {
+        super(props);
+
+        this.state = { isDarkMode: false };
+
+        this.toggleLightDarkMode = this.toggleLightDarkMode.bind(this);
+    }
+
     public render() {
 
         const AutoCollapseNavLink = class extends React.Component<NavLinkProps, {}> {
@@ -33,12 +45,20 @@ class NavBar extends React.Component<NavBarProps, {}> {
         ) : null;
         const isAdmin = isUserInRole(loggedInUser, 'Admin');
 
+        const { isDarkMode } = this.state;
+
         return (
-            <nav className="navbar navbar-expand-lg navbar-light bg-light mb-3">
+            <nav className={`navbar navbar-expand-lg mb-3 ${isDarkMode ? 'navbar-dark' : 'navbar-light'}`}>
                 <div className="container">
-                    <Link className="navbar-brand" to={'/'}>
+                    <Link className="navbar-brand" to="/">
                         HonestQ <small><sup className="badge badge-info">BETA</sup></small>
                     </Link>
+                    <button
+                        className={`btn btn-outline-${isDarkMode ? 'light' : 'dark'}`}
+                        onClick={this.toggleLightDarkMode}
+                    >
+                        {isDarkMode ? 'Light mode' : 'Dark mode'}
+                    </button>
                     {loggedInUser &&
                         <div className="ml-auto mr-2 d-lg-none">
                             <Link to="/notifications" className="no-underline">
@@ -91,6 +111,17 @@ class NavBar extends React.Component<NavBarProps, {}> {
                 </div>
             </nav>
         );
+    }
+
+    private toggleLightDarkMode(): void {
+        this.setState((prevState) => ({ isDarkMode: !prevState.isDarkMode }),
+            () => {
+                if (this.state.isDarkMode) {
+                    document.body.classList.add('dark');
+                } else {
+                    document.body.classList.remove('dark');
+                }
+            });
     }
 }
 
