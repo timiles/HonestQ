@@ -13,6 +13,7 @@ type TagsListProps = TagsStore.ListState
     & {
         buttonSize?: string,
         selectedTagSlugs?: string[],
+        numberOfTagsToShow?: number,
         showNewTagButton?: boolean,
         getTagsListStatus: ActionStatus,
     };
@@ -28,15 +29,26 @@ class TagsList extends React.Component<TagsListProps> {
     }
 
     public render() {
-        const { tagsList, buttonSize = 'sm', selectedTagSlugs = [], showNewTagButton = false } = this.props;
+        const { tagsList, buttonSize = 'sm', selectedTagSlugs = [] } = this.props;
+        const { showNewTagButton = false, numberOfTagsToShow } = this.props;
+
+        if (!tagsList) {
+            return <ActionStatusDisplay {...this.props.getTagsListStatus} />;
+        }
+
+        const tagsToShow = (numberOfTagsToShow! > 0) ?
+            // TODO: order by most recent activity? Certainly not this random method anyway.
+            tagsList.tags.sort((a, b) => Math.random() - .5).slice(0, numberOfTagsToShow) :
+            tagsList.tags.sort((a, b) => (a.slug.localeCompare(b.slug)));
+
+        const showMoreTagsButton = numberOfTagsToShow! > 0;
 
         return (
             <>
                 <ActionStatusDisplay {...this.props.getTagsListStatus} />
-                {tagsList &&
+                {tagsToShow &&
                     <ul className="list-inline">
-                        {tagsList.tags
-                            .sort((a, b) => (a.slug.localeCompare(b.slug)))
+                        {tagsToShow
                             .map((x: TagListItemModel, i: number) =>
                                 <li key={i} className="mr-1 mb-1 list-inline-item">
                                     <Link
@@ -56,6 +68,12 @@ class TagsList extends React.Component<TagsListProps> {
                                         </Link>
                                     </li>}
                             </LoggedInUserContext.Consumer>}
+                        {showMoreTagsButton &&
+                            <li className="list-inline-item">
+                                <Link to="/tags/_all" className={`btn btn-${buttonSize} btn-primary`}>
+                                    Show more
+                                </Link>
+                            </li>}
                     </ul>
                 }
             </>

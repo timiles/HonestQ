@@ -1,4 +1,33 @@
+/* Fonts */
+@font-face {
+    font-family: 'lineto-circular-black';
+    src: url('/assets/lineto-circular-black.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'lineto-circular-bold';
+    src: url('/assets/lineto-circular-bold.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'lineto-circular-book';
+    src: url('/assets/lineto-circular-book.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'lineto-circular-medium';
+    src: url('/assets/lineto-circular-medium.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Nexa Bold';
+    src: url('/assets/Nexa Bold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'Nexa Light';
+    src: url('/assets/Nexa Light.otf') format('opentype');
+}
+
+/* Page */
 body {
+    font-family: 'Nexa Light';
+
     /* Prevent long words & URLs from breaking out of their containing element */
     overflow-wrap: break-word;
     word-wrap: break-word;
@@ -14,6 +43,65 @@ body.dark {
     background-color: #28374B;
 }
 
+
+.home-page-container {
+    background-image: url('/assets/light-ellipse.png');
+    background-repeat: no-repeat;
+    background-position: center top;
+    padding-top: 100px;
+}
+.welcome-message {
+    font-family: 'lineto-circular-book';
+}
+.step-out-of-your {
+    font-size: 0.9em;
+    color: #28374B;
+}
+.echo-chamber {
+    font-size: 1.3em;
+    color: #007BFF;
+}
+.lead {
+    color: #616F7F;
+}
+.or-browse-by-tag {
+    color: #456180;
+}
+
+body.dark .home-page-container {
+    background-image: url('/assets/dark-ellipse.png');
+}
+body.dark .step-out-of-your {
+    color: #FFF;
+}
+body.dark .echo-chamber {
+    color: #69E1F1;
+}
+body.dark .lead {
+    color: #ABB2BA;
+}
+body.dark .or-browse-by-tag {
+    color: #46A8B3;
+}
+
+
+.question-search-control {
+    margin: 80px 0;
+    position: relative;
+}
+.question-search-control input {
+    padding-top: 34px;
+    padding-bottom: 34px;
+}
+.question-search-control .search-icon {
+    background-image: url('/assets/search-icon.png');
+    height: 48px;
+    width: 48px;
+    position: absolute;
+    top: 10px;
+    right: -16px;
+}
+
 .footer {
     background-color: #0E1F31;
 }
@@ -24,6 +112,15 @@ blockquote p {
 
 a.no-underline {
     text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #46A8B3;
+    border-color: #46A8B3;
+}
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .btn-primary:hover {
+    background-color: #0C8795;
+    border-color: #0C8795;
 }
 
 /* Callout */

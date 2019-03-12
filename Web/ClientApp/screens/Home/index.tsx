@@ -14,15 +14,14 @@ class Index extends React.Component<Props> {
     public render() {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <WelcomeMessage />
-                <div className="row">
-                    <div className="col-md-6">
-                        <h2>Search Questions</h2>
-                        <QuestionSearchControl />
-                    </div>
-                    <div className="col-md-6">
-                        <h2>Or browse by Tags</h2>
-                        <TagsList buttonSize="md" showNewTagButton={true} />
+                <div className="home-page-container">
+                    <WelcomeMessage />
+                    <div className="row text-center">
+                        <div className="col-md-6 offset-md-3">
+                            <QuestionSearchControl />
+                            <p className="welcome-message or-browse-by-tag">Or browse by Tags</p>
+                            <TagsList buttonSize="md" numberOfTagsToShow={11} />
+                        </div>
                     </div>
                 </div>
             </LoggedInUserContext.Provider>

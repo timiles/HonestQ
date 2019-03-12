@@ -19,18 +19,19 @@ export default class QuestionSearchControl extends React.Component<{}, State> {
         const { query } = this.state;
 
         return (
-            <>
+            <div className="question-search-control">
                 <input
                     className="form-control mb-1"
                     onChange={this.handleChange}
-                    placeholder="Enter keywords..."
+                    placeholder="Search Questions by keywords..."
                     value={query}
                 />
+                <div className="search-icon" />
                 <QuestionSearchResults
                     containerClassName="mt-2"
                     query={query}
                 />
-            </>
+            </div>
         );
     }
 
