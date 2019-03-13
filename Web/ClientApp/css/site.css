@@ -113,6 +113,29 @@ body.dark .or-browse-by-tag {
     background-color: #0E1F31;
 }
 
+.avatar {
+    background-color: white;
+    border-radius: 50%;
+    text-align: center;
+    height: 40px;
+    width: 40px;
+    padding-top: 4px;
+}
+
+.circle-tag {
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1.5em;
+    height: 36px;
+    width: 36px;
+}
+.circle-tag.circle-tag-Q {
+    background-color: #FF5A00;
+}
+.circle-tag.circle-tag-Q::after {
+    content: 'Q';
+}
+
 blockquote p {
     white-space: pre-wrap;
 }
@@ -128,6 +151,26 @@ a.no-underline {
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .btn-primary:hover {
     background-color: #0C8795;
     border-color: #0C8795;
+}
+
+/* Header breaking out of Container */
+.break-out {
+    width: 100vw;
+    position: relative;
+    left: calc(-1 * (100vw - 100%) / 2);
+}
+.header {
+    background-image: url('/assets/header.png');
+    background-size: cover;
+    color: #FFF;
+}
+.header hr {
+    border-top: 1px solid rgba(0, 0, 0, .1);
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+.header .answers-count {
+    margin-left: 32px;
+    opacity: .4;
 }
 
 /* Callout */
@@ -260,16 +303,16 @@ ul.list-comma-separated li:not(:last-child):after {
         bottom: -9px;
         margin-left: 1px;
     }
-    .card-body h4 .quote-marks:before, .card-body h4 .quote-marks:after {
+    .header h4 .quote-marks:before, .header h4 .quote-marks:after {
         color: rgba(0, 0, 0, 0.2);
         font-size: 2.9em;
         opacity: 0.9;
     }
-    .card-body h4 .quote-marks:before {
+    .header h4 .quote-marks:before {
         margin-right: 4px;
         top: 34px;
     }
-    .card-body h4 .quote-marks:after {
+    .header h4 .quote-marks:after {
         bottom: -34px;
         margin-left: 4px;
     }

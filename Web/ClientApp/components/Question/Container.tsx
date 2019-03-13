@@ -35,20 +35,6 @@ type ContainerProps = QuestionStore.ContainerState
 
 class Container extends React.Component<ContainerProps> {
 
-    private static getAnswersHeader(answersCount: number): string {
-        switch (answersCount) {
-            case 0: {
-                return 'No answers yet';
-            }
-            case 1: {
-                return '1 answer';
-            }
-            default: {
-                return `${answersCount} answers`;
-            }
-        }
-    }
-
     constructor(props: ContainerProps) {
         super(props);
 
@@ -75,12 +61,13 @@ class Container extends React.Component<ContainerProps> {
             return <RedirectWithStatusCode to={canonicalUrl} statusCode={301} />;
         }
 
-        const answersHeader = question ? Container.getAnswersHeader(question.answers.length) : null;
-
         return (
             <>
                 {this.renderHelmetTags()}
 
+                {question && !answerId &&
+                    <QuestionHeader question={question} onWatch={this.handleWatch} />
+                }
                 <div className="row">
                     <div className="col-lg-3 d-none d-lg-block">
                         <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
@@ -96,12 +83,10 @@ class Container extends React.Component<ContainerProps> {
                                         </Link>
                                     }
                                 </LoggedInUserContext.Consumer>
-                                <QuestionHeader question={question} onWatch={this.handleWatch} />
                                 <div className="d-lg-none mt-3">
                                     <QuestionTagsList tags={question.tags} />
                                 </div>
                                 <hr />
-                                <h5>{answersHeader}</h5>
                                 <div className="mb-3">
                                     <NewAnswer questionId={questionId} />
                                 </div>
