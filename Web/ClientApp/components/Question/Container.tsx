@@ -1,17 +1,23 @@
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as QuestionStore from '../../store/Question';
+import { isUserInRole } from '../../utils/auth-utils';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import RedirectWithStatusCode from '../shared/RedirectWithStatusCode';
 import TagsList from '../Tags/List';
 import Answer from './Answer';
+import AnswersList from './AnswersList';
 import BackToQuestionButton from './BackToQuestionButton';
-import Question from './Question';
+import NewAnswer from './NewAnswer';
+import QuestionHeader from './QuestionHeader';
+import QuestionTagsList from './QuestionTagsList';
 
 interface OwnProps {
     questionId: number;
@@ -28,6 +34,20 @@ type ContainerProps = QuestionStore.ContainerState
     };
 
 class Container extends React.Component<ContainerProps> {
+
+    private static getAnswersHeader(answersCount: number): string {
+        switch (answersCount) {
+            case 0: {
+                return 'No answers yet';
+            }
+            case 1: {
+                return '1 answer';
+            }
+            default: {
+                return `${answersCount} answers`;
+            }
+        }
+    }
 
     constructor(props: ContainerProps) {
         super(props);
@@ -55,6 +75,8 @@ class Container extends React.Component<ContainerProps> {
             return <RedirectWithStatusCode to={canonicalUrl} statusCode={301} />;
         }
 
+        const answersHeader = question ? Container.getAnswersHeader(question.answers.length) : null;
+
         return (
             <>
                 {this.renderHelmetTags()}
@@ -66,12 +88,34 @@ class Container extends React.Component<ContainerProps> {
                     <div className="col-lg-6">
                         <ActionStatusDisplay {...this.props.getQuestionStatus} />
                         {question && !answerId &&
-                            <Question
-                                questionId={questionId}
-                                question={question}
-                                onReaction={this.handleReaction}
-                                onWatch={this.handleWatch}
-                            />
+                            <div>
+                                <LoggedInUserContext.Consumer>
+                                    {(user) => isUserInRole(user, 'Admin') &&
+                                        <Link to={`/admin/edit/questions/${questionId}`}>
+                                            Edit
+                                        </Link>
+                                    }
+                                </LoggedInUserContext.Consumer>
+                                <QuestionHeader question={question} onWatch={this.handleWatch} />
+                                <div className="d-lg-none mt-3">
+                                    <QuestionTagsList tags={question.tags} />
+                                </div>
+                                <hr />
+                                <h5>{answersHeader}</h5>
+                                <div className="mb-3">
+                                    <NewAnswer questionId={questionId} />
+                                </div>
+                                <AnswersList
+                                    questionId={questionId}
+                                    questionSlug={question.slug}
+                                    answers={question.answers}
+                                />
+                                {question.answers.length >= 5 &&
+                                    <div className="mb-3">
+                                        <NewAnswer questionId={questionId} />
+                                    </div>
+                                }
+                            </div>
                         }
                         {question && answer &&
                             <>

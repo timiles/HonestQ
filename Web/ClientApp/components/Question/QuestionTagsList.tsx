@@ -6,7 +6,7 @@ interface Props {
     tags: TagValueModel[];
 }
 
-export default class TagsList extends React.Component<Props, {}> {
+export default class QuestionTagsList extends React.Component<Props, {}> {
 
     public render() {
         const { tags } = this.props;
