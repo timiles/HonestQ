@@ -5,7 +5,7 @@ import { EditTagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as EditTagStore from '../../store/EditTag';
-import { onCtrlEnter } from '../../utils/html-utils';
+import { getValidationClassName, onCtrlEnter } from '../../utils/html-utils';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -91,7 +91,7 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                                     <label htmlFor="name">Tag name</label>
                                     <input
                                         type="text"
-                                        className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
+                                        className={`form-control ${getValidationClassName(submitted, name)}`}
                                         id="name"
                                         ref={this.tagNameInputRef}
                                         name="name"
@@ -105,7 +105,7 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
                                     <label htmlFor="slug">Slug</label>
                                     <input
                                         type="text"
-                                        className={`form-control ${submitted ? slug ? 'is-valid' : 'is-invalid' : ''}`}
+                                        className={`form-control ${getValidationClassName(submitted, slug)}`}
                                         id="slug"
                                         name="slug"
                                         maxLength={100}

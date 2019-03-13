@@ -12,3 +12,7 @@ export function onCtrlEnter(selector: string, callback: (e: JQuery.Event<HTMLEle
 export function enableConfirmOnLeave(shouldConfirm: boolean): void {
     window.onbeforeunload = shouldConfirm ? () => true : null;
 }
+
+export function getValidationClassName(submitted?: boolean, value?: any): string {
+    return submitted ? value ? 'is-valid' : 'is-invalid' : '';
+}

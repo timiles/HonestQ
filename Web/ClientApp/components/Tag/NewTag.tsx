@@ -4,7 +4,7 @@ import { Prompt, RouteComponentProps } from 'react-router-dom';
 import { TagFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as NewTagStore from '../../store/NewTag';
-import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
+import { enableConfirmOnLeave, getValidationClassName, onCtrlEnter } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 
@@ -73,7 +73,7 @@ class NewTag extends React.Component<NewTagProps, TagFormModel> {
                                 <label htmlFor="name">Tag name</label>
                                 <input
                                     type="text"
-                                    className={`form-control ${submitted ? name ? 'is-valid' : 'is-invalid' : ''}`}
+                                    className={`form-control ${getValidationClassName(submitted, name)}`}
                                     id="name"
                                     ref={this.tagNameInputRef}
                                     name="name"

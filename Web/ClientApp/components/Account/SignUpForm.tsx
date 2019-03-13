@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { SignUpFormModel } from '../../server-models';
+import { getValidationClassName } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 
 interface Props {
@@ -47,7 +48,7 @@ export default class SignUpForm extends React.Component<Props, SignUpFormModel> 
                         <label htmlFor="email">Email</label>
                         <input
                             type="text"
-                            className={`form-control ${submitted ? email ? 'is-valid' : 'is-invalid' : ''}`}
+                            className={`form-control ${getValidationClassName(submitted, email)}`}
                             id="email"
                             ref={this.emailInputRef}
                             name="email"
@@ -64,7 +65,7 @@ export default class SignUpForm extends React.Component<Props, SignUpFormModel> 
                         <label htmlFor="username">Username</label>
                         <input
                             type="text"
-                            className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
+                            className={`form-control ${getValidationClassName(submitted, username)}`}
                             id="username"
                             name="username"
                             autoCorrect="off"
@@ -85,7 +86,7 @@ export default class SignUpForm extends React.Component<Props, SignUpFormModel> 
                             autoCorrect="off"
                             autoCapitalize="none"
                             className={`form-control
-                                ${submitted ? password && password.length >= 7 ? 'is-valid' : 'is-invalid' : ''}`}
+                                ${getValidationClassName(submitted, password && password.length >= 7)}`}
                             id="password"
                             name="password"
                             value={password}

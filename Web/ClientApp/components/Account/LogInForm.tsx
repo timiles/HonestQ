@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { LogInFormModel } from '../../server-models';
+import { getValidationClassName } from '../../utils/html-utils';
 import SubmitButton from '../shared/SubmitButton';
 
 interface Props {
@@ -46,7 +47,7 @@ export default class LogInForm extends React.Component<Props, LogInFormModel> {
                         <label htmlFor="username">Username or email</label>
                         <input
                             type="text"
-                            className={`form-control ${submitted ? username ? 'is-valid' : 'is-invalid' : ''}`}
+                            className={`form-control ${getValidationClassName(submitted, username)}`}
                             id="username"
                             ref={this.usernameInputRef}
                             name="username"
@@ -61,7 +62,7 @@ export default class LogInForm extends React.Component<Props, LogInFormModel> {
                         <label htmlFor="password">Password</label>
                         <input
                             type="password"
-                            className={`form-control ${submitted ? password ? 'is-valid' : 'is-invalid' : ''}`}
+                            className={`form-control ${getValidationClassName(submitted, password)}`}
                             id="password"
                             name="password"
                             value={password}
