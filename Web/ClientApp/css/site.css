@@ -144,11 +144,11 @@ a.no-underline {
     text-decoration: none;
 }
 
-.btn-primary {
+.btn-primary-brand {
     background-color: #46A8B3;
     border-color: #46A8B3;
 }
-.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle, .btn-primary:hover {
+.btn-primary-brand:not(:disabled):not(.disabled):active, .btn-primary-brand:not(:disabled):not(.disabled).active, .show > .btn-primary-brand.dropdown-toggle, .btn-primary-brand:hover {
     background-color: #0C8795;
     border-color: #0C8795;
 }
