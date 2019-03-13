@@ -50,7 +50,7 @@ class NavBar extends React.Component<NavBarProps, State> {
         return (
             <nav className={`navbar navbar-expand-lg mb-3 ${isDarkMode ? 'navbar-dark' : 'navbar-light'}`}>
                 <div className="container">
-                    <Link className="navbar-brand" to="/">
+                    <Link className="navbar-brand brand-font" to="/">
                         HonestQ <small><sup className="badge badge-info">BETA</sup></small>
                     </Link>
                     <button

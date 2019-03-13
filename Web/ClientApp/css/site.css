@@ -26,7 +26,7 @@
 
 /* Page */
 body {
-    font-family: 'Nexa Light';
+    font-family: 'lineto-circular-book';
 
     /* Prevent long words & URLs from breaking out of their containing element */
     overflow-wrap: break-word;
@@ -43,6 +43,9 @@ body.dark {
     background-color: #28374B;
 }
 
+.navbar {
+    font-family: 'Nexa Light';
+}
 
 .home-page-container {
     background-image: url('/assets/light-ellipse.png');
@@ -100,6 +103,10 @@ body.dark .or-browse-by-tag {
     position: absolute;
     top: 10px;
     right: -16px;
+}
+
+.brand-font {
+    font-family: 'Lato';
 }
 
 .footer {

@@ -78,6 +78,7 @@ if (!d.getElementById(id)){
 
                     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
                     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" />
                     {/* Chrome, Firefox OS and Opera */}
                     <link rel="manifest" href="/site.webmanifest" />
                     <meta name="theme-color" content={headerColor} />
@@ -97,8 +98,13 @@ if (!d.getElementById(id)){
                         <div id="react-app" dangerouslySetInnerHTML={{ __html: renderedApp }} />
                     </main>
                     <footer className="footer mt-auto py-3">
-                        <div className="container">
-                            <span className="text-muted">&copy; HonestQ.com {new Date().getFullYear()}</span>
+                        <div className="container navbar navbar-dark">
+                            <span className="navbar-brand brand-font">
+                                HonestQ <small><sup className="badge badge-info">BETA</sup></small>
+                            </span>
+                            <span className="text-muted float-right pt-2">
+                                &copy; HonestQ.com {new Date().getFullYear()}
+                            </span>
                         </div>
                     </footer>
                     <script
