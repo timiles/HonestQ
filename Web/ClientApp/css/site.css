@@ -37,10 +37,12 @@ body {
     overflow-y: scroll;
 
     background-color: #EDF6FB;
+    color: #757575;
 }
 
 body.dark {
     background-color: #28374B;
+    color: #AECCF5;
 }
 
 .navbar {
