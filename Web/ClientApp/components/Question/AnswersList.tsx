@@ -4,10 +4,10 @@ import { countNestedComments } from '../../utils/model-utils';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
 import EmbeddedContent from '../shared/EmbeddedContent';
-import Emoji, { EmojiValue } from '../shared/Emoji';
 import OrderByControl, { OrderByValue } from '../shared/OrderByControl';
 import Source from '../shared/Source';
 import DiscussButton from './DiscussButton';
+import NewAnswer from './NewAnswer';
 import UpvoteButton from './UpvoteButton';
 
 interface Props {
@@ -62,25 +62,29 @@ export default class AnswersList extends React.Component<Props, State> {
 
         return (
             <>
-                {answers.length > 0 &&
-                    <div className="clearfix">
-                        <div className="float-right">
+                <div className="clearfix">
+                    <div className="float-right">
+                        <NewAnswer questionId={questionId} />
+                    </div>
+                    {answers.length > 0 &&
+                        <div>
                             Order by: <OrderByControl value={orderByValue} onChange={this.handleOrder} />
                         </div>
-                    </div>
-                }
+                    }
+                </div>
+                <hr />
                 <ul className="list-unstyled mt-3 mb-3">
                     {orderedAnswers.map((x: AnswerModel, i: number) =>
-                        <li key={i} className="mb-2">
+                        <li key={i} className="mb-4">
                             <div className="card">
-                                <div className="card-body">
+                                <div className="circle-tag circle-tag-A" />
+                                <div className="card-body px-5">
                                     <blockquote className="blockquote mb-0">
-                                        <Emoji value={EmojiValue.Answer} />
-                                        <span className="ml-2 post">{x.text}</span>
-                                        <Source value={x.source} />
-                                        <EmbeddedContent value={x.source} />
+                                        <span className="post">{x.text}</span>
                                     </blockquote>
-                                    <div className="mt-2 float-right">
+                                    <Source value={x.source} />
+                                    <EmbeddedContent value={x.source} />
+                                    <div className="mt-3">
                                         <DiscussButton
                                             linkToCommentsUrl={buildAnswerUrl(questionId, questionSlug, x.id, x.slug)}
                                             upvotes={x.reactionCounts ? x.reactionCounts[UpvoteButton.ReactionType] : 0}
@@ -92,6 +96,13 @@ export default class AnswersList extends React.Component<Props, State> {
                         </li>)
                     }
                 </ul>
+                {answers.length >= 5 &&
+                    <div className="clearfix">
+                        <div className="float-right">
+                            <NewAnswer questionId={questionId} />
+                        </div>
+                    </div>
+                }
             </>
         );
     }

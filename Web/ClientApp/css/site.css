@@ -127,6 +127,7 @@ body.dark .or-browse-by-tag {
 .circle-tag {
     border-radius: 50%;
     text-align: center;
+    color: #FFF;
     font-size: 1.5em;
     height: 36px;
     width: 36px;
@@ -136,6 +137,21 @@ body.dark .or-browse-by-tag {
 }
 .circle-tag.circle-tag-Q::after {
     content: 'Q';
+}
+.circle-tag.circle-tag-A {
+    background-color: #12BC62;
+}
+.circle-tag.circle-tag-A::after {
+    content: 'A';
+}
+
+.card {
+    background-color: transparent;
+}
+.card .circle-tag {
+    position: absolute;
+    top: -16px;
+    left: 5px;
 }
 
 blockquote p {

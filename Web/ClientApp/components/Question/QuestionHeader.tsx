@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { QuestionModel } from '../../server-models';
-import EmbeddedContent from '../shared/EmbeddedContent';
 import Emoji, { EmojiValue } from '../shared/Emoji';
-import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 
 interface Props {
@@ -65,8 +63,6 @@ export default class QuestionHeader extends React.Component<Props> {
                             <div className="float-left ml-3">
                                 <h4><span className="post quote-marks">{question.text}</span></h4>
                                 <p className="answers-count">{answersHeader}</p>
-                                <Source value={question.source} />
-                                <EmbeddedContent value={question.source} />
                             </div>
                         </div>
                     </div>

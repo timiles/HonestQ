@@ -42,7 +42,7 @@ class NewAnswer extends React.Component<Props, State> {
             <>
                 <ButtonOrLogIn
                     type="button"
-                    className="btn btn-lg btn-primary btn-block"
+                    className="btn btn-lg btn-primary shadow-lg"
                     onClick={this.handleOpen}
                 >
                     Got an answer?

@@ -10,12 +10,13 @@ import * as QuestionStore from '../../store/Question';
 import { isUserInRole } from '../../utils/auth-utils';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
+import EmbeddedContent from '../shared/EmbeddedContent';
 import RedirectWithStatusCode from '../shared/RedirectWithStatusCode';
+import Source from '../shared/Source';
 import TagsList from '../Tags/List';
 import Answer from './Answer';
 import AnswersList from './AnswersList';
 import BackToQuestionButton from './BackToQuestionButton';
-import NewAnswer from './NewAnswer';
 import QuestionHeader from './QuestionHeader';
 import QuestionTagsList from './QuestionTagsList';
 
@@ -65,42 +66,42 @@ class Container extends React.Component<ContainerProps> {
             <>
                 {this.renderHelmetTags()}
 
+                <LoggedInUserContext.Consumer>
+                    {(user) => isUserInRole(user, 'Admin') &&
+                        <div className="container">
+                            <div className="clearfix">
+                                <Link className="btn btn-danger float-right" to={`/admin/edit/questions/${questionId}`}>
+                                    Edit
+                                </Link>
+                            </div>
+                        </div>
+                    }
+                </LoggedInUserContext.Consumer>
                 {question && !answerId &&
                     <QuestionHeader question={question} onWatch={this.handleWatch} />
                 }
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-3 d-none d-lg-block">
-                            <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
-                        </div>
-                        <div className="col-lg-6">
+                        <div className="col-lg-8">
                             <ActionStatusDisplay {...this.props.getQuestionStatus} />
                             {question && !answerId &&
                                 <div>
-                                    <LoggedInUserContext.Consumer>
-                                        {(user) => isUserInRole(user, 'Admin') &&
-                                            <Link to={`/admin/edit/questions/${questionId}`}>
-                                                Edit
-                                        </Link>
-                                        }
-                                    </LoggedInUserContext.Consumer>
+                                    {question.source &&
+                                        <div className="card mb-3">
+                                            <div className="card-body px-5">
+                                                <Source value={question.source} />
+                                                <EmbeddedContent value={question.source} />
+                                            </div>
+                                        </div>
+                                    }
                                     <div className="d-lg-none mt-3">
                                         <QuestionTagsList tags={question.tags} />
-                                    </div>
-                                    <hr />
-                                    <div className="mb-3">
-                                        <NewAnswer questionId={questionId} />
                                     </div>
                                     <AnswersList
                                         questionId={questionId}
                                         questionSlug={question.slug}
                                         answers={question.answers}
                                     />
-                                    {question.answers.length >= 5 &&
-                                        <div className="mb-3">
-                                            <NewAnswer questionId={questionId} />
-                                        </div>
-                                    }
                                 </div>
                             }
                             {question && answer &&
@@ -118,6 +119,9 @@ class Container extends React.Component<ContainerProps> {
                                     />
                                 </>
                             }
+                        </div>
+                        <div className="col-lg-4 d-none d-lg-block">
+                            <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
                         </div>
                     </div>
                 </div>

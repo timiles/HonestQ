@@ -53,8 +53,8 @@ class TagsList extends React.Component<TagsListProps> {
                                 <li key={i} className="mr-1 mb-1 list-inline-item">
                                     <Link
                                         to={`/tags/${x.slug}`}
-                                        className={`btn btn-${buttonSize} btn-outline-secondary ` +
-                                            `${selectedTagSlugs.indexOf(x.slug) >= 0 ? 'active' : ''}`}
+                                        className={`btn btn-${buttonSize} btn-outline-secondary
+                                            ${selectedTagSlugs.indexOf(x.slug) >= 0 ? 'active btn-primary-brand' : ''}`}
                                     >
                                         {x.name}
                                     </Link>

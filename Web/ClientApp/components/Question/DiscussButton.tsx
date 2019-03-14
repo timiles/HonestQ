@@ -34,16 +34,16 @@ export default class DiscussButton extends React.Component<Props> {
                 to={linkToCommentsUrl}
             >
                 <span>Discuss</span>
-                {commentsCount > 0 &&
-                    <span className="badge badge-info ml-1">
-                        <Emoji value={EmojiValue.Discuss} /> {commentsCount}
-                        <span className="sr-only">comments</span>
-                    </span>
-                }
                 {upvotes > 0 &&
                     <span className="badge badge-info ml-1">
                         <Emoji value={EmojiValue.Upvote} /> {upvotes}
                         <span className="sr-only">upvotes</span>
+                    </span>
+                }
+                {commentsCount > 0 &&
+                    <span className="badge badge-info ml-1">
+                        <Emoji value={EmojiValue.Discuss} /> {commentsCount}
+                        <span className="sr-only">comments</span>
                     </span>
                 }
                 {agreeCount > 0 &&
