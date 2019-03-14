@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as TagStore from '../../store/Tag';
-import NewQuestion from '../QuestionForm/NewQuestion';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import TagsList from '../Tags/List';
 import Tag from './Tag';
@@ -33,33 +32,25 @@ class Container extends React.Component<ContainerProps, {}> {
     public render() {
         const { tag } = this.props;
 
-        const numberOfQuestionsInTag = tag ? tag.questions.length : 0;
-
         return (
             <>
                 {this.renderHelmetTags()}
 
                 <div className="container">
                     <div className="row">
-                        <div className="col-lg-3">
-                            <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
-                        </div>
-                        <div className="col-lg-6">
+                        <div className="col-lg-8">
                             <div className="row">
                                 <div className="col-md-12">
                                     <ActionStatusDisplay {...this.props.getTagStatus} />
                                     {tag &&
-                                        <>
-                                            <Tag tag={tag} onWatch={this.handleWatch} />
-                                            {numberOfQuestionsInTag === 0 &&
-                                                <>
-                                                    <h2>Start the conversation</h2>
-                                                    <NewQuestion tagValue={tag} />
-                                                </>}
-                                        </>
+                                        <Tag tag={tag} onWatch={this.handleWatch} />
                                     }
                                 </div>
                             </div>
+                        </div>
+                        <div className="col-lg-4">
+                            <p>Browse by Tags</p>
+                            <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
                         </div>
                     </div>
                 </div>

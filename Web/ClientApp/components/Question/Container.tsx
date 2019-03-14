@@ -121,6 +121,7 @@ class Container extends React.Component<ContainerProps> {
                             }
                         </div>
                         <div className="col-lg-4 d-none d-lg-block">
+                            <p>Browse by Tags</p>
                             <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
                         </div>
                     </div>

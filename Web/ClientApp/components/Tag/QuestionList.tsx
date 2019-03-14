@@ -14,9 +14,6 @@ export default class QuestionList extends React.Component<Props, {}> {
 
     public render() {
         const { questions, tagValue } = this.props;
-        if (questions.length === 0) {
-            return null;
-        }
 
         return (
             <ul className="list-unstyled">

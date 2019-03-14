@@ -62,6 +62,9 @@ export default class Tag extends React.Component<Props, {}> {
                     </div>
                 }
                 <hr />
+                {questions.length === 0 &&
+                    <h2>Start the conversation</h2>
+                }
                 <QuestionList questions={questions} tagValue={tagValue} />
             </>
         );
