@@ -16,13 +16,15 @@ class Item extends React.Component<Props> {
 
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <Container
-                    key={questionId}
-                    questionId={Number(questionId)}
-                    questionSlug={questionSlug}
-                    answerId={Number(answerId)}
-                    answerSlug={answerSlug}
-                />
+                <div className="cityscape-background">
+                    <Container
+                        key={questionId}
+                        questionId={Number(questionId)}
+                        questionSlug={questionSlug}
+                        answerId={Number(answerId)}
+                        answerSlug={answerSlug}
+                    />
+                </div>
             </LoggedInUserContext.Provider>
         );
     }

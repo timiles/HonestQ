@@ -89,6 +89,15 @@ body.dark .or-browse-by-tag {
     color: #46A8B3;
 }
 
+.cityscape-background {
+    background-image: url('/assets/light-cityscape.png');
+    background-repeat: repeat-x;
+    background-position: bottom;
+    padding-bottom: 180px;
+}
+body.dark .cityscape-background {
+    background-image: url('/assets/dark-cityscape.png');
+}
 
 .question-search-control {
     margin: 80px 0;
