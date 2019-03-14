@@ -13,8 +13,8 @@ type EditAnswerProps = EditAnswerStore.EditAnswerState
     & typeof EditAnswerStore.actionCreators
     & RouteComponentProps<{ tagSlug: string, questionId: string, answerId: string }>
     & {
-    getAnswerStatus: ActionStatus,
-};
+        getAnswerStatus: ActionStatus,
+    };
 
 class EditAnswer extends React.Component<EditAnswerProps, {}> {
 
@@ -40,21 +40,23 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
         const successUrl = (savedSuccessfully) ? buildQuestionUrl(this.props.match.params.questionId, 'todo') : null;
 
         return (
-            <div className="row">
-                <div className="col-lg-6 offset-lg-3">
-                    <h2>Edit Answer</h2>
-                    {successUrl && (
-                        <div className="alert alert-success" role="alert">
-                            Answer updated, check it out: <Link to={successUrl}>{successUrl}</Link>
-                        </div>
-                    )}
-                    <ActionStatusDisplay {...this.props.getAnswerStatus} />
-                    {initialState && (
-                        <AnswerForm
-                            initialState={initialState}
-                            submit={this.handleSubmit}
-                        />
-                    )}
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-6 offset-lg-3">
+                        <h2>Edit Answer</h2>
+                        {successUrl && (
+                            <div className="alert alert-success" role="alert">
+                                Answer updated, check it out: <Link to={successUrl}>{successUrl}</Link>
+                            </div>
+                        )}
+                        <ActionStatusDisplay {...this.props.getAnswerStatus} />
+                        {initialState && (
+                            <AnswerForm
+                                initialState={initialState}
+                                submit={this.handleSubmit}
+                            />
+                        )}
+                    </div>
                 </div>
             </div>
         );

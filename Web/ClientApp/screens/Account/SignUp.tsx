@@ -27,15 +27,17 @@ class SignUp extends React.Component<SignUpProps> {
         const { error, submitting, submitted, success } = this.props;
 
         return (
-            <div className="row">
-                <div className="col-lg-6 offset-lg-3">
-                    <SignUpForm
-                        onSubmit={this.handleSubmit}
-                        error={error}
-                        submitting={submitting}
-                        submitted={submitted}
-                        success={success}
-                    />
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-6 offset-lg-3">
+                        <SignUpForm
+                            onSubmit={this.handleSubmit}
+                            error={error}
+                            submitting={submitting}
+                            submitted={submitted}
+                            success={success}
+                        />
+                    </div>
                 </div>
             </div>
         );

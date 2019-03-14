@@ -39,24 +39,26 @@ class Container extends React.Component<ContainerProps, {}> {
             <>
                 {this.renderHelmetTags()}
 
-                <div className="row">
-                    <div className="col-lg-3">
-                        <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
-                    </div>
-                    <div className="col-lg-6">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <ActionStatusDisplay {...this.props.getTagStatus} />
-                                {tag &&
-                                    <>
-                                        <Tag tag={tag} onWatch={this.handleWatch} />
-                                        {numberOfQuestionsInTag === 0 &&
-                                            <>
-                                                <h2>Start the conversation</h2>
-                                                <NewQuestion tagValue={tag} />
-                                            </>}
-                                    </>
-                                }
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-3">
+                            <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
+                        </div>
+                        <div className="col-lg-6">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <ActionStatusDisplay {...this.props.getTagStatus} />
+                                    {tag &&
+                                        <>
+                                            <Tag tag={tag} onWatch={this.handleWatch} />
+                                            {numberOfQuestionsInTag === 0 &&
+                                                <>
+                                                    <h2>Start the conversation</h2>
+                                                    <NewQuestion tagValue={tag} />
+                                                </>}
+                                        </>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

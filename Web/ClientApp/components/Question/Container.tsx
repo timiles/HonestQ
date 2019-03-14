@@ -68,55 +68,57 @@ class Container extends React.Component<ContainerProps> {
                 {question && !answerId &&
                     <QuestionHeader question={question} onWatch={this.handleWatch} />
                 }
-                <div className="row">
-                    <div className="col-lg-3 d-none d-lg-block">
-                        <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
-                    </div>
-                    <div className="col-lg-6">
-                        <ActionStatusDisplay {...this.props.getQuestionStatus} />
-                        {question && !answerId &&
-                            <div>
-                                <LoggedInUserContext.Consumer>
-                                    {(user) => isUserInRole(user, 'Admin') &&
-                                        <Link to={`/admin/edit/questions/${questionId}`}>
-                                            Edit
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-3 d-none d-lg-block">
+                            <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
+                        </div>
+                        <div className="col-lg-6">
+                            <ActionStatusDisplay {...this.props.getQuestionStatus} />
+                            {question && !answerId &&
+                                <div>
+                                    <LoggedInUserContext.Consumer>
+                                        {(user) => isUserInRole(user, 'Admin') &&
+                                            <Link to={`/admin/edit/questions/${questionId}`}>
+                                                Edit
                                         </Link>
-                                    }
-                                </LoggedInUserContext.Consumer>
-                                <div className="d-lg-none mt-3">
-                                    <QuestionTagsList tags={question.tags} />
-                                </div>
-                                <hr />
-                                <div className="mb-3">
-                                    <NewAnswer questionId={questionId} />
-                                </div>
-                                <AnswersList
-                                    questionId={questionId}
-                                    questionSlug={question.slug}
-                                    answers={question.answers}
-                                />
-                                {question.answers.length >= 5 &&
+                                        }
+                                    </LoggedInUserContext.Consumer>
+                                    <div className="d-lg-none mt-3">
+                                        <QuestionTagsList tags={question.tags} />
+                                    </div>
+                                    <hr />
                                     <div className="mb-3">
                                         <NewAnswer questionId={questionId} />
                                     </div>
-                                }
-                            </div>
-                        }
-                        {question && answer &&
-                            <>
-                                <BackToQuestionButton
-                                    id={questionId}
-                                    slug={question.slug}
-                                />
-                                <Answer
-                                    {...answer}
-                                    questionId={questionId}
-                                    questionText={question.text}
-                                    onReaction={this.handleReaction}
-                                    onWatch={this.handleWatch}
-                                />
-                            </>
-                        }
+                                    <AnswersList
+                                        questionId={questionId}
+                                        questionSlug={question.slug}
+                                        answers={question.answers}
+                                    />
+                                    {question.answers.length >= 5 &&
+                                        <div className="mb-3">
+                                            <NewAnswer questionId={questionId} />
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            {question && answer &&
+                                <>
+                                    <BackToQuestionButton
+                                        id={questionId}
+                                        slug={question.slug}
+                                    />
+                                    <Answer
+                                        {...answer}
+                                        questionId={questionId}
+                                        questionText={question.text}
+                                        onReaction={this.handleReaction}
+                                        onWatch={this.handleWatch}
+                                    />
+                                </>
+                            }
+                        </div>
                     </div>
                 </div>
             </>

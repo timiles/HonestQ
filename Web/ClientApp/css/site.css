@@ -155,12 +155,7 @@ a.no-underline {
     border-color: #0C8795;
 }
 
-/* Header breaking out of Container */
-.break-out {
-    width: 100vw;
-    position: relative;
-    left: calc(-1 * (100vw - 100%) / 2);
-}
+/* Header */
 .header {
     background-image: url('/assets/header.png');
     background-size: cover;

@@ -29,12 +29,14 @@ class Index extends React.Component<Props> {
     public render() {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <div className="row">
-                    <div className="col-md-12 col-lg-6 offset-lg-3">
-                        <QuestionList
-                            windowScrollEventEmitter={this.windowScrollEventEmitter}
-                            onAllQuestionsLoaded={this.onAllQuestionsLoaded}
-                        />
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-12 col-lg-6 offset-lg-3">
+                            <QuestionList
+                                windowScrollEventEmitter={this.windowScrollEventEmitter}
+                                onAllQuestionsLoaded={this.onAllQuestionsLoaded}
+                            />
+                        </div>
                     </div>
                 </div>
             </LoggedInUserContext.Provider>

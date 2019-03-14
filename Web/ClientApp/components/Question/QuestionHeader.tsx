@@ -38,7 +38,7 @@ export default class QuestionHeader extends React.Component<Props> {
         const answersHeader = question ? QuestionHeader.getAnswersHeader(question.answers.length) : null;
 
         return (
-            <div className="break-out header mb-3">
+            <div className="header mb-3">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12 pt-3">

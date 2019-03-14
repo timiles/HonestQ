@@ -27,9 +27,7 @@ export class Layout extends React.Component<{}, {}> {
                 </Helmet>
                 <NavBar />
                 <Toasts />
-                <div className="container">
-                    {this.props.children}
-                </div>
+                {this.props.children}
             </>
         );
     }

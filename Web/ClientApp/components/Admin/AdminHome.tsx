@@ -39,7 +39,7 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
         const { unapprovedTagsList, getUnapprovedTagsListStatus } = this.props;
         const { unapprovedQuestionsList, getUnapprovedQuestionsListStatus } = this.props;
         return (
-            <>
+            <div className="container">
                 <div className="row">
                     <div className="col-lg-6 offset-lg-3">
                         <h1>Admin</h1>
@@ -87,7 +87,7 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
                             )}
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
 }

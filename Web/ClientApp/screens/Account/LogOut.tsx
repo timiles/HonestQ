@@ -17,8 +17,10 @@ class LogOut extends React.Component<LogOutProps> {
     public render() {
         if (this.props.loggedInUser) {
             return (
-                <div className="row">
-                    <div>Logging out....</div>
+                <div className="container">
+                    <div className="row">
+                        <div>Logging out....</div>
+                    </div>
                 </div>
             );
         } else {

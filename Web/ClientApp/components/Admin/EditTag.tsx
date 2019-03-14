@@ -73,88 +73,92 @@ class EditTag extends React.Component<EditTagProps, EditTagFormModel> {
             : null;
 
         return (
-            <div className="row">
-                <div className="col-lg-6 offset-lg-3">
-                    <h2>Edit Tag</h2>
-                    {tagModel && successUrl && (
-                        <div className="alert alert-success" role="alert">
-                            "{tagModel.name}" approved,
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-6 offset-lg-3">
+                        <h2>Edit Tag</h2>
+                        {tagModel && successUrl && (
+                            <div className="alert alert-success" role="alert">
+                                "{tagModel.name}" approved,
                         check it out: <Link to={successUrl}>{successUrl}</Link>
-                        </div>
-                    )}
-                    <ActionStatusDisplay {...this.props.getAdminTagStatus} />
-                    {tagModel && (
-                        <>
-                            {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                            <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
-                                <div className="form-group">
-                                    <label htmlFor="name">Tag name</label>
-                                    <input
-                                        type="text"
-                                        className={`form-control ${getValidationClassName(submitted, name)}`}
-                                        id="name"
-                                        ref={this.tagNameInputRef}
-                                        name="name"
-                                        maxLength={100}
-                                        value={name}
-                                        onChange={this.handleChange}
-                                    />
-                                    <div className="invalid-feedback">Tag name is required</div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="slug">Slug</label>
-                                    <input
-                                        type="text"
-                                        className={`form-control ${getValidationClassName(submitted, slug)}`}
-                                        id="slug"
-                                        name="slug"
-                                        maxLength={100}
-                                        value={slug}
-                                        onChange={this.handleChange}
-                                    />
-                                    <div className="invalid-feedback">Slug is required</div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="description">Description (optional)</label>
-                                    <SuperTextArea
-                                        className="form-control"
-                                        id="description"
-                                        name="description"
-                                        maxLength={280}
-                                        submitted={submitted}
-                                        value={description}
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="moreInfoUrl"
-                                        name="moreInfoUrl"
-                                        maxLength={2000}
-                                        value={moreInfoUrl}
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
-                                <div className="form-group form-check">
-                                    <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id="isApproved"
-                                        name="isApproved"
-                                        checked={isApproved}
-                                        onChange={this.handleChange}
-                                    />
-                                    <label className="form-check-label" htmlFor="isApproved">Mark as Approved</label>
-                                </div>
-                                <div className="form-group">
-                                    <SubmitButton submitting={submitting} />
-                                </div>
-                            </form>
-                        </>
-                    )}
+                            </div>
+                        )}
+                        <ActionStatusDisplay {...this.props.getAdminTagStatus} />
+                        {tagModel && (
+                            <>
+                                {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                                <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                                    <div className="form-group">
+                                        <label htmlFor="name">Tag name</label>
+                                        <input
+                                            type="text"
+                                            className={`form-control ${getValidationClassName(submitted, name)}`}
+                                            id="name"
+                                            ref={this.tagNameInputRef}
+                                            name="name"
+                                            maxLength={100}
+                                            value={name}
+                                            onChange={this.handleChange}
+                                        />
+                                        <div className="invalid-feedback">Tag name is required</div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="slug">Slug</label>
+                                        <input
+                                            type="text"
+                                            className={`form-control ${getValidationClassName(submitted, slug)}`}
+                                            id="slug"
+                                            name="slug"
+                                            maxLength={100}
+                                            value={slug}
+                                            onChange={this.handleChange}
+                                        />
+                                        <div className="invalid-feedback">Slug is required</div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="description">Description (optional)</label>
+                                        <SuperTextArea
+                                            className="form-control"
+                                            id="description"
+                                            name="description"
+                                            maxLength={280}
+                                            submitted={submitted}
+                                            value={description}
+                                            onChange={this.handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="moreInfoUrl">Link to more info, e.g. a Wikipedia page</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="moreInfoUrl"
+                                            name="moreInfoUrl"
+                                            maxLength={2000}
+                                            value={moreInfoUrl}
+                                            onChange={this.handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id="isApproved"
+                                            name="isApproved"
+                                            checked={isApproved}
+                                            onChange={this.handleChange}
+                                        />
+                                        <label className="form-check-label" htmlFor="isApproved">
+                                            Mark as Approved
+                                        </label>
+                                    </div>
+                                    <div className="form-group">
+                                        <SubmitButton submitting={submitting} />
+                                    </div>
+                                </form>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         );

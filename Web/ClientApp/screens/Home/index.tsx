@@ -14,7 +14,7 @@ class Index extends React.Component<Props> {
     public render() {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <div className="home-page-container">
+                <div className="container home-page-container">
                     <WelcomeMessage />
                     <div className="row text-center">
                         <div className="col-md-6 offset-md-3">

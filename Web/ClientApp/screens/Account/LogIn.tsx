@@ -33,20 +33,22 @@ class LogIn extends React.Component<LogInProps> {
         }
 
         return (
-            <div className="row">
-                <div className="col-lg-6 offset-lg-3">
-                    {this.isVerified &&
-                        <div className="alert alert-success mt-3" role="alert">
-                            <strong>Account verified!</strong> Log in below to get full access.
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-6 offset-lg-3">
+                        {this.isVerified &&
+                            <div className="alert alert-success mt-3" role="alert">
+                                <strong>Account verified!</strong> Log in below to get full access.
                         </div>
-                    }
-                    <LogInForm
-                        username={this.username}
-                        onSubmit={this.handleSubmit}
-                        submitting={this.props.submitting}
-                        submitted={this.props.submitted}
-                        error={this.props.error}
-                    />
+                        }
+                        <LogInForm
+                            username={this.username}
+                            onSubmit={this.handleSubmit}
+                            submitting={this.props.submitting}
+                            submitted={this.props.submitted}
+                            error={this.props.error}
+                        />
+                    </div>
                 </div>
             </div>
         );
