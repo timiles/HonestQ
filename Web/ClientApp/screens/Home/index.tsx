@@ -14,13 +14,17 @@ class Index extends React.Component<Props> {
     public render() {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <div className="container home-page-container">
-                    <WelcomeMessage />
-                    <div className="row text-center">
-                        <div className="col-md-6 offset-md-3">
-                            <QuestionSearchControl />
-                            <p className="welcome-message or-browse-by-tag">Or browse by Tags</p>
-                            <TagsList buttonSize="md" numberOfTagsToShow={11} />
+                <div className="nature-background">
+                    <div className="homepage-circle-background">
+                        <div className="container">
+                            <WelcomeMessage />
+                            <div className="row text-center">
+                                <div className="col-md-6 offset-md-3">
+                                    <QuestionSearchControl />
+                                    <p className="welcome-message or-browse-by-tag">Or browse by Tags</p>
+                                    <TagsList buttonSize="md" numberOfTagsToShow={11} />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

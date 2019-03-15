@@ -49,8 +49,8 @@ body.dark {
     font-family: 'Nexa Light';
 }
 
-.home-page-container {
-    background-image: url('/assets/light-ellipse.png');
+.homepage-circle-background {
+    background-image: url('/assets/light-homepage-circle.png');
     background-repeat: no-repeat;
     background-position: center top;
     padding-top: 100px;
@@ -73,8 +73,8 @@ body.dark {
     color: #456180;
 }
 
-body.dark .home-page-container {
-    background-image: url('/assets/dark-ellipse.png');
+body.dark .homepage-circle-background {
+    background-image: url('/assets/dark-homepage-circle.png');
 }
 body.dark .step-out-of-your {
     color: #FFF;
@@ -87,6 +87,46 @@ body.dark .lead {
 }
 body.dark .or-browse-by-tag {
     color: #46A8B3;
+}
+
+.nature-background {
+    background-image: url('/assets/light-nature.png');
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
+    padding-bottom: 258px;
+}
+body.dark .nature-background {
+    background-image: url('/assets/dark-nature.png');
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+.nature-background {
+    padding-bottom: 140px;
+}
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .nature-background {
+        padding-bottom: 160px;
+    }
+}
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .nature-background {
+        padding-bottom: 170px;
+    }
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .nature-background {
+        padding-bottom: 270px;
+    }
+}
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .nature-background {
+        padding-bottom: 260px;
+    }
 }
 
 .cityscape-background {
@@ -109,11 +149,11 @@ body.dark .cityscape-background {
 }
 .question-search-control .search-icon {
     background-image: url('/assets/search-icon.png');
-    height: 48px;
-    width: 48px;
     position: absolute;
-    top: 10px;
-    right: -16px;
+    height: 86px;
+    width: 86px;
+    top: -8px;
+    right: -38px;
 }
 
 .brand-font {
