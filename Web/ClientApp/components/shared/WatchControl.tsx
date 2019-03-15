@@ -32,19 +32,18 @@ export default class WatchControl extends React.Component<Props, State> {
     public render() {
         const { watching, hideLabelOnMobile } = this.props;
         const { submitting } = this.state;
-        const watchingClassName = watching ? 'btn-success' : 'btn-outline-secondary background-white';
 
         return (
             <ButtonOrLogIn
                 type="button"
-                className={`btn ${watchingClassName}`}
+                className="btn btn-watch"
                 onClick={this.handleChange}
                 submitting={submitting}
             >
-                <Emoji value={EmojiValue.Watch} />
-                <span className={`ml-1 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
+                <span className={`mr-2 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
                     {watching ? 'Watching' : 'Watch'}
                 </span>
+                <Emoji value={EmojiValue.Watch} />
             </ButtonOrLogIn>
         );
     }

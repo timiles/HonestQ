@@ -1,4 +1,5 @@
 import * as React from 'react';
+import WatchIcon from './WatchIcon';
 
 interface Props {
     value: EmojiValue;
@@ -39,7 +40,7 @@ export default class Emoji extends React.Component<Props, {}> {
             case EmojiValue.NotRelevant: return '⁉';
             case EmojiValue.YouBeTrolling: return '🤡';
             case EmojiValue.Discuss: return '💬';
-            case EmojiValue.Watch: return '👁';
+            case EmojiValue.Watch: return <WatchIcon width={23} height={23} />;
             case EmojiValue.Recent: return '🕒';
             default: return '';
         }
