@@ -65,67 +65,81 @@ class Container extends React.Component<ContainerProps> {
         return (
             <>
                 {this.renderHelmetTags()}
-
-                <LoggedInUserContext.Consumer>
-                    {(user) => isUserInRole(user, 'Admin') &&
-                        <div className="container">
-                            <div className="clearfix">
-                                <Link className="btn btn-danger float-right" to={`/admin/edit/questions/${questionId}`}>
-                                    Edit
-                                </Link>
-                            </div>
-                        </div>
-                    }
-                </LoggedInUserContext.Consumer>
-                {question && !answerId &&
-                    <QuestionHeader question={question} onWatch={this.handleWatch} />
-                }
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-8">
-                            <ActionStatusDisplay {...this.props.getQuestionStatus} />
-                            {question && !answerId &&
-                                <div>
-                                    {question.source &&
-                                        <div className="card mb-3">
-                                            <div className="card-body px-5">
-                                                <Source value={question.source} />
-                                                <EmbeddedContent value={question.source} />
-                                            </div>
-                                        </div>
-                                    }
-                                    <div className="d-lg-none mt-3">
-                                        <QuestionTagsList tags={question.tags} />
+                {question &&
+                    <div className="cityscape-background">
+                        <LoggedInUserContext.Consumer>
+                            {(user) => isUserInRole(user, 'Admin') &&
+                                <div className="container">
+                                    <div className="clearfix">
+                                        <Link
+                                            className="btn btn-danger float-right"
+                                            to={`/admin/edit/questions/${questionId}`}
+                                        >
+                                            Edit
+                                        </Link>
                                     </div>
-                                    <AnswersList
-                                        questionId={questionId}
-                                        questionSlug={question.slug}
-                                        answers={question.answers}
-                                    />
                                 </div>
                             }
-                            {question && answer &&
-                                <>
-                                    <BackToQuestionButton
-                                        id={questionId}
-                                        slug={question.slug}
-                                    />
-                                    <Answer
-                                        {...answer}
-                                        questionId={questionId}
-                                        questionText={question.text}
-                                        onReaction={this.handleReaction}
-                                        onWatch={this.handleWatch}
-                                    />
-                                </>
-                            }
-                        </div>
-                        <div className="col-lg-4 d-none d-lg-block">
-                            <p>Browse by Tags</p>
-                            <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
+                        </LoggedInUserContext.Consumer>
+                        {!answerId &&
+                            <QuestionHeader question={question} onWatch={this.handleWatch} />
+                        }
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-lg-8">
+                                    <ActionStatusDisplay {...this.props.getQuestionStatus} />
+                                    {!answerId &&
+                                        <div>
+                                            {question.source &&
+                                                <div className="card mb-3">
+                                                    <div className="card-body px-5">
+                                                        <Source value={question.source} />
+                                                        <EmbeddedContent value={question.source} />
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div className="d-lg-none mt-3">
+                                                <QuestionTagsList tags={question.tags} />
+                                            </div>
+                                            <AnswersList
+                                                questionId={questionId}
+                                                questionSlug={question.slug}
+                                                answers={question.answers}
+                                            />
+                                        </div>
+                                    }
+                                    {answer &&
+                                        <>
+                                            <BackToQuestionButton
+                                                id={questionId}
+                                                slug={question.slug}
+                                            />
+                                            <Answer
+                                                {...answer}
+                                                questionId={questionId}
+                                                questionText={question.text}
+                                                onReaction={this.handleReaction}
+                                                onWatch={this.handleWatch}
+                                            />
+                                        </>
+                                    }
+                                </div>
+                                <div className="col-lg-4 d-none d-lg-block">
+                                    <p>Browse by Tags</p>
+                                    <TagsList selectedTagSlugs={question ? question.tags.map((x) => x.slug) : []} />
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    ||
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-8">
+                                <ActionStatusDisplay {...this.props.getQuestionStatus} />
+                            </div>
+                        </div>
+                    </div>
+                }
             </>
         );
     }

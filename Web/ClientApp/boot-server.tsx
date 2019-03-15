@@ -94,8 +94,12 @@ if (!d.getElementById(id)){
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />
                 </head>
                 <body className="d-flex flex-column h-100">
-                    <main role="main" className="flex-shrink-0">
-                        <div id="react-app" dangerouslySetInnerHTML={{ __html: renderedApp }} />
+                    <main role="main" className="flex-grow-1">
+                        <div
+                            id="react-app"
+                            className="d-flex flex-column h-100"
+                            dangerouslySetInnerHTML={{ __html: renderedApp }}
+                        />
                     </main>
                     <footer className="footer mt-auto py-3">
                         <div className="container navbar navbar-dark">

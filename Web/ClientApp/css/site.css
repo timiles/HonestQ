@@ -94,6 +94,7 @@ body.dark .or-browse-by-tag {
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: contain;
+    height: 100%;
     padding-bottom: 258px;
 }
 body.dark .nature-background {
@@ -133,6 +134,7 @@ body.dark .nature-background {
     background-image: url('/assets/light-cityscape.png');
     background-repeat: repeat-x;
     background-position: bottom;
+    height: 100%;
     padding-bottom: 180px;
 }
 body.dark .cityscape-background {
