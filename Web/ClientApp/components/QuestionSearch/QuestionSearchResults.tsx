@@ -54,12 +54,13 @@ class QuestionSearchResults extends React.Component<Props> {
     public render() {
         const { containerClassName, headerText, searchResults, hideWhenNoResults } = this.props;
 
-        if (hideWhenNoResults && (!searchResults || searchResults.questions.length === 0)) {
-            return null;
+        if ((!headerText && !searchResults) ||
+            (hideWhenNoResults && (!searchResults || searchResults.questions.length === 0))) {
+            return <ActionStatusDisplay {...this.props.searchQuestionsStatus} />;
         }
 
         return (
-            <div className={containerClassName}>
+            <div className={`question-search-results ${containerClassName}`}>
                 {headerText &&
                     <h6>{headerText}</h6>
                 }
@@ -68,9 +69,9 @@ class QuestionSearchResults extends React.Component<Props> {
                     <>
                         <PaginationControl {...searchResults} onPageChange={this.handlePageChange} />
                         {searchResults.questions.length > 0 &&
-                            <ul className="list-unstyled">
+                            <ul className="list-unstyled mb-0">
                                 {searchResults.questions.map((x: QuestionListItemModel, i: number) =>
-                                    <li key={i} className="mb-2">
+                                    <li key={i} className="mt-2">
                                         <Link
                                             to={buildQuestionUrl(x.id, x.slug)}
                                             className="btn btn-sm btn-outline-secondary post-list-item"
@@ -80,7 +81,7 @@ class QuestionSearchResults extends React.Component<Props> {
                                     </li>)}
                             </ul>
                             ||
-                            <p><i>No questions found related to "{searchResults.query}".</i></p>
+                            <p className="mb-0"><i>No questions found related to "{searchResults.query}".</i></p>
                         }
                     </>
                 }

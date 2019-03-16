@@ -28,7 +28,7 @@ export default class QuestionSearchControl extends React.Component<{}, State> {
                 />
                 <div className="search-icon" />
                 <QuestionSearchResults
-                    containerClassName="mt-2"
+                    containerClassName="mt-2 p-2 position-absolute w-100 rounded shadow-lg"
                     query={query}
                 />
             </div>

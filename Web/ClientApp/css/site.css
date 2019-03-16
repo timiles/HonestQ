@@ -158,6 +158,13 @@ body.dark .cityscape-background {
     right: -38px;
 }
 
+.question-search-results {
+    background-color: #EDF6FB;
+}
+body.dark .question-search-results {
+    background-color: #28374B;
+}
+
 .brand-font {
     font-family: 'Lato';
 }
