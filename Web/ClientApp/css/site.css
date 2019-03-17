@@ -478,6 +478,16 @@ p.small .emoji, small .emoji {
     fill: #5EC7D7;
 }
 
+/* Discuss reactions */
+.badge-reaction {
+    background-color: #D9E9F9;
+    border: 1px solid #D1DFEE;
+    padding: 6px 12px;
+}
+.badge-reaction svg {
+    fill: #1686FF;
+}
+
 /* Modal */
 .ReactModal__Overlay {
     -webkit-perspective: 600;
