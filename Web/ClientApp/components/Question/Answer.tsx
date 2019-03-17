@@ -14,7 +14,6 @@ import UpvoteButton from './UpvoteButton';
 type Props = AnswerModel
     & {
         questionId: number,
-        questionText: string,
         onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
         onWatch: (on: boolean, answerId: number, commentId?: number) => void,
     };
@@ -29,7 +28,7 @@ export default class Answer extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, questionText, id, text, source, postedBy, postedAt, comments } = this.props;
+        const { questionId, id, text, source, postedBy, postedAt, comments } = this.props;
         const { reactionCounts, myReactions, watching } = this.props;
 
         return (
