@@ -37,11 +37,16 @@ body {
     overflow-y: scroll;
 
     background-color: #EDF6FB;
-    color: #757575;
 }
 
 body.dark {
     background-color: #28374B;
+}
+
+body, .brand-font-color {
+    color: #757575;
+}
+body.dark, body.dark .brand-font-color {
     color: #AECCF5;
 }
 
@@ -240,7 +245,6 @@ a.no-underline {
     border-bottom: 1px solid rgba(255, 255, 255, .1);
 }
 .header .answers-count {
-    margin-left: 32px;
     opacity: .4;
 }
 
@@ -330,6 +334,10 @@ ul.list-comma-separated li:not(:last-child):after {
     .quote-marks:after {
         content: close-quote;
     }
+    .btn-lg .quote-marks:before, a.btn .quote-marks:after {
+        font-size: 3.3em;
+        opacity: 0.4;
+    }
     .btn-lg .quote-marks:before {
         margin-right: 6px;
         top: 32px;
@@ -338,29 +346,17 @@ ul.list-comma-separated li:not(:last-child):after {
         margin-left: 6px;
         bottom: -32px;
     }
-    .btn-sm .quote-marks:before {
+    blockquote .quote-marks:before, blockquote .quote-marks:after {
+        font-size: 3em;
+        opacity: 0.4;
+    }
+    blockquote .quote-marks:before {
         margin-right: 3px;
-        top: 24px;
+        top: 26px;
     }
-    .btn-sm .quote-marks:after {
+    blockquote .quote-marks:after {
+        bottom: -26px;
         margin-left: 3px;
-        bottom: -24px;
-    }
-    a.btn .quote-marks:before, a.btn .quote-marks:after {
-        color: rgba(0, 0, 0, 0.2);
-        font-size: 3.3em;
-    }
-    p.small .quote-marks:before, p.small .quote-marks:after {
-        font-size: 2.9rem;
-        opacity: 0.3;
-    }
-    p.small .quote-marks:before {
-        margin-right: 2px;
-        top: 23px;
-    }
-    p.small .quote-marks:after {
-        bottom: -23px;
-        margin-left: 2px;
     }
     small .quote-marks:before, small .quote-marks:after {
         font-size: 1.5rem;
@@ -373,19 +369,6 @@ ul.list-comma-separated li:not(:last-child):after {
     small .quote-marks:after {
         bottom: -9px;
         margin-left: 1px;
-    }
-    .header h4 .quote-marks:before, .header h4 .quote-marks:after {
-        color: rgba(0, 0, 0, 0.2);
-        font-size: 2.9em;
-        opacity: 0.9;
-    }
-    .header h4 .quote-marks:before {
-        margin-right: 4px;
-        top: 34px;
-    }
-    .header h4 .quote-marks:after {
-        bottom: -34px;
-        margin-left: 4px;
     }
 
 dl.button-definitions {

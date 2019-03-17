@@ -76,7 +76,7 @@ class QuestionSearchResults extends React.Component<Props> {
                                             to={buildQuestionUrl(x.id, x.slug)}
                                             className="btn btn-sm btn-outline-secondary post-list-item"
                                         >
-                                            <span className="ml-1 quote-marks">{x.text}</span>
+                                            <span className="ml-1">{x.text}</span>
                                         </Link>
                                     </li>)}
                             </ul>

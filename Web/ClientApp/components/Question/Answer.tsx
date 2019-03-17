@@ -47,9 +47,7 @@ export default class Answer extends React.Component<Props, {}> {
                                     </Link>
                                 }
                             </LoggedInUserContext.Consumer>
-                            <h4>
-                                <span className="ml-1 post">{text}</span>
-                            </h4>
+                            <span className="post quote-marks">{text}</span>
                             <footer className="blockquote-footer">
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                             </footer>

@@ -59,7 +59,7 @@ export default class QuestionHeader extends React.Component<Props> {
                         <div className="col-md-12">
                             <CircleTag className="float-left" value={CircleTagValue.Question} />
                             <div className="float-left ml-3">
-                                <h4><span className="post quote-marks">{question.text}</span></h4>
+                                <h4><span className="post">{question.text}</span></h4>
                                 <p className="answers-count">{answersHeader}</p>
                             </div>
                         </div>

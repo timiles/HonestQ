@@ -24,7 +24,7 @@ export default class QuestionList extends React.Component<Props, {}> {
                             className="btn btn-lg btn-outline-secondary post-list-item"
                         >
                             <CircleTag className="float-left mr-2" value={CircleTagValue.Question} />
-                            <span className="quote-marks">{x.text}</span>
+                            <span>{x.text}</span>
                         </Link>
                     </li>)}
                 <li>

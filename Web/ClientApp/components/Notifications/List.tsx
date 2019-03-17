@@ -81,7 +81,7 @@ class NotificationList extends React.Component<Props> {
                                 {notificationsList.lastId === 0 && notificationsList.notifications.length > 40 &&
                                     <li>
                                         That's all, folks!
-                            </li>
+                                    </li>
                                 }
                             </ul>
                             :
@@ -137,7 +137,7 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={questionUrl}
-                            className={`btn btn-lg post-list-item ${seenClassName}`}
+                            className={`btn btn-lg post-list-item brand-font-color ${seenClassName}`}
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
@@ -161,12 +161,12 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={answerUrl}
-                            className={`btn btn-lg post-list-item ${seenClassName}`}
+                            className={`btn btn-lg post-list-item brand-font-color ${seenClassName}`}
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
                             <CircleTag className="float-left" value={CircleTagValue.Answer} />
-                            <span className="ml-2 answer">{notification.answerText}</span>
+                            <span className="ml-2 answer quote-marks">{notification.answerText}</span>
                         </Link>
                     </>
                 );
@@ -182,7 +182,7 @@ class NotificationList extends React.Component<Props> {
                                     <b>{notification.questionText}</b>
                                 </Link>
                                 {} » {}
-                                <Link to={answerUrl} className="answer">
+                                <Link to={answerUrl} className="answer quote-marks">
                                     <b>{notification.answerText}</b>
                                 </Link>
                                 , <DateTimeTooltip dateTime={notification.postedAt} />
@@ -190,7 +190,7 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={answerUrl}
-                            className={`btn btn-lg post-list-item ${seenClassName}`}
+                            className={`btn btn-lg post-list-item brand-font-color ${seenClassName}`}
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >

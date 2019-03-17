@@ -96,10 +96,10 @@ class QuestionList extends React.Component<Props> {
                 </div>
                 <Link
                     to={buildQuestionUrl(question.id, question.slug)}
-                    className="btn btn-lg btn-outline-secondary post-list-item"
+                    className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
                 >
                     <CircleTag className="float-left mr-2" value={CircleTagValue.Question} />
-                    <span className="question quote-marks">{question.text}</span>
+                    <span className="question">{question.text}</span>
                     <small className="ml-1">
                         <span className="badge badge-info">{question.answersCount}</span>
                         <span className="sr-only">answers</span>

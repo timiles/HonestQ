@@ -81,7 +81,7 @@ export default class AnswersList extends React.Component<Props, State> {
                                 <CircleTag value={CircleTagValue.Answer} />
                                 <div className="card-body px-5">
                                     <blockquote className="blockquote mb-0">
-                                        <span className="post">{x.text}</span>
+                                        <span className="post quote-marks">{x.text}</span>
                                     </blockquote>
                                     <Source value={x.source} />
                                     <EmbeddedContent value={x.source} />
