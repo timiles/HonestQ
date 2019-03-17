@@ -80,7 +80,7 @@ class NewQuestion extends React.Component<Props, State> {
                                         <img
                                             className="img-fluid"
                                             src="/android-chrome-256x256.png"
-                                            alt="The HonestQ logo: a smiley face emoji with a halo shaped like a Q."
+                                            alt="The HonestQ logo: a white Q in a red circle."
                                         />
                                     </div>
                                 </div>
