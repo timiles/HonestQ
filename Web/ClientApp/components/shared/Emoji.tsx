@@ -29,7 +29,7 @@ export default class Emoji extends React.Component<Props, {}> {
 
     public static getEmoji(value: EmojiValue): string | JSX.Element {
         switch (value) {
-            case EmojiValue.Question: return <img className="img-fluid" src="/favicon-32x32.png" />;
+            case EmojiValue.Question: return <img className="img-fluid" src="/assets/avatar.png" />;
             case EmojiValue.Answer: return '🙋';
             case EmojiValue.Agree: return '✔️';
             case EmojiValue.Neutral: return '🤷';

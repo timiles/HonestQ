@@ -53,7 +53,7 @@ export default createServerRenderer((params) => {
             return;
         }
 
-        const headerColor = '#4aa9ff';
+        const headerColor = '#FF5A00';
         const embedlyScript = `
 (function(w, d){
 var id='embedly-platform', n = 'script';
