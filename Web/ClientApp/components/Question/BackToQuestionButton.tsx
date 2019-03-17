@@ -16,7 +16,7 @@ export default class BackToQuestionButton extends React.Component<BackToQuestion
                 to={buildQuestionUrl(id, slug)}
                 className="btn btn-md btn-outline-secondary btn-block text-left mb-3"
             >
-                &larr; <span className="ml-1">Back to the question</span>
+                &larr; <span className="ml-1">Back to more answers</span>
             </Link>
         );
     }

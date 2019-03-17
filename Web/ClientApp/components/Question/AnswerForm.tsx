@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AnswerFormModel } from '../../server-models';
 import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
-import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -56,14 +55,11 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className="form-group">
                         <label htmlFor="answerText">Answer</label>
-                        <div className="emoji-over-text-area">
-                            <Emoji value={EmojiValue.Answer} />
-                        </div>
                         <SuperTextArea
                             id="answerText"
                             ref={this.answerTextInputRef}
                             name="text"
-                            className="form-control emoji-text-area"
+                            className="form-control"
                             maxLength={280}
                             required={true}
                             submitted={submitted}

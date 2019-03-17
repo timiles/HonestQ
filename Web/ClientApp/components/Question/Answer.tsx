@@ -5,7 +5,6 @@ import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
-import Emoji, { EmojiValue } from '../shared/Emoji';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
@@ -14,11 +13,11 @@ import UpvoteButton from './UpvoteButton';
 
 type Props = AnswerModel
     & {
-    questionId: number,
-    questionText: string,
-    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-    onWatch: (on: boolean, answerId: number, commentId?: number) => void,
-};
+        questionId: number,
+        questionText: string,
+        onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+        onWatch: (on: boolean, answerId: number, commentId?: number) => void,
+    };
 
 export default class Answer extends React.Component<Props, {}> {
 
@@ -35,45 +34,43 @@ export default class Answer extends React.Component<Props, {}> {
 
         return (
             <div>
-                <div className="card card-body bg-light">
-                    <blockquote className="blockquote">
-                        <LoggedInUserContext.Consumer>
-                            {(user) => isUserInRole(user, 'Admin') &&
-                                <Link
-                                    to={`/admin/edit/questions/${questionId}/answers/${id}`}
-                                    className="float-right"
-                                >
-                                    Edit
-                                </Link>
-                            }
-                        </LoggedInUserContext.Consumer>
-                        <p className="small">
-                            <Emoji value={EmojiValue.Question} />
-                            <span className="post quote-marks">{questionText}</span>
-                        </p>
-                        <h4>
-                            <Emoji value={EmojiValue.Answer} />
-                            <span className="ml-1 post">{text}</span>
-                        </h4>
-                        <footer className="blockquote-footer">
-                            {postedBy}, <DateTimeTooltip dateTime={postedAt} />
-                        </footer>
+                <div className="card mt-4">
+                    <div className="circle-tag circle-tag-A" />
+                    <div className="card-body">
+                        <blockquote className="blockquote">
+                            <LoggedInUserContext.Consumer>
+                                {(user) => isUserInRole(user, 'Admin') &&
+                                    <Link
+                                        to={`/admin/edit/questions/${questionId}/answers/${id}`}
+                                        className="btn btn-danger float-right"
+                                    >
+                                        Edit
+                                    </Link>
+                                }
+                            </LoggedInUserContext.Consumer>
+                            <h4>
+                                <span className="ml-1 post">{text}</span>
+                            </h4>
+                            <footer className="blockquote-footer">
+                                {postedBy}, <DateTimeTooltip dateTime={postedAt} />
+                            </footer>
+                        </blockquote>
                         <Source value={source} />
                         <EmbeddedContent value={source} />
-                    </blockquote>
-                    <div>
-                        <div className="float-right btn-container">
-                            <WatchControl
-                                onWatch={this.handleWatch}
-                                watching={watching}
-                            />
-                            <UpvoteButton
-                                answerId={id}
-                                count={reactionCounts[UpvoteButton.ReactionType]}
-                                isUpvotedByLoggedInUser={myReactions &&
-                                    myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
-                                onReaction={this.handleReaction}
-                            />
+                        <div>
+                            <div className="float-right btn-container">
+                                <WatchControl
+                                    onWatch={this.handleWatch}
+                                    watching={watching}
+                                />
+                                <UpvoteButton
+                                    answerId={id}
+                                    count={reactionCounts[UpvoteButton.ReactionType]}
+                                    isUpvotedByLoggedInUser={myReactions &&
+                                        myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
+                                    onReaction={this.handleReaction}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

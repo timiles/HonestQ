@@ -81,9 +81,7 @@ class Container extends React.Component<ContainerProps> {
                                 </div>
                             }
                         </LoggedInUserContext.Consumer>
-                        {!answerId &&
-                            <QuestionHeader question={question} onWatch={this.handleWatch} />
-                        }
+                        <QuestionHeader question={question} onWatch={this.handleWatch} />
                         <div className="container">
                             <div className="row">
                                 <div className="col-lg-8">
@@ -166,15 +164,15 @@ class Container extends React.Component<ContainerProps> {
 
         // Only title displays on mobile Twitter, so we have to have the Question there.
         // If linking to the Question and not an Answer, we repeat the Question in the description.
-        const ogTitle = `😇 ${pageTitle}`;
+        const ogTitle = `Ⓠ ${pageTitle}`;
         let canonicalUrl = 'https://www.honestq.com';
         let ogDescription: string;
 
         const answer = this.getCurrentAnswer();
         if (answer) {
-            pageTitle += ` » 🙋 \u201C${answer.text}\u201D`;
+            pageTitle += ` » Ⓐ \u201C${answer.text}\u201D`;
             canonicalUrl += buildAnswerUrl(questionId, question.slug, answer.id, answer.slug);
-            ogDescription = `🙋 \u201C${answer.text}\u201D`;
+            ogDescription = `Ⓐ \u201C${answer.text}\u201D`;
         } else {
             canonicalUrl += buildQuestionUrl(questionId, question.slug);
             ogDescription = `\u201C${question.text}\u201D`;
