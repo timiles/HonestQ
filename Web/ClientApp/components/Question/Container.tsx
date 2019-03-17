@@ -160,31 +160,37 @@ class Container extends React.Component<ContainerProps> {
             );
         }
 
-        let pageTitle = `HonestQ: \u201C${question.text}\u201D`;
-
         // Only title displays on mobile Twitter, so we have to have the Question there.
         // If linking to the Question and not an Answer, we repeat the Question in the description.
-        const ogTitle = `Ⓠ ${pageTitle}`;
-        let canonicalUrl = 'https://www.honestq.com';
-        let ogDescription: string;
-
-        const answer = this.getCurrentAnswer();
-        if (answer) {
-            pageTitle += ` » Ⓐ \u201C${answer.text}\u201D`;
-            canonicalUrl += buildAnswerUrl(questionId, question.slug, answer.id, answer.slug);
-            ogDescription = `Ⓐ \u201C${answer.text}\u201D`;
-        } else {
-            canonicalUrl += buildQuestionUrl(questionId, question.slug);
-            ogDescription = `\u201C${question.text}\u201D`;
+        interface HelmetValues {
+            pageTitle: string;
+            canonicalUrl: string;
+            ogTitle: string;
+            ogDescription: string;
         }
+        const answer = this.getCurrentAnswer();
+        const root = 'https://www.honestq.com';
+        const helmetValues: HelmetValues = (answer) ?
+            {
+                pageTitle: `HonestQ: ${question.text} » Ⓐ \u201C${answer.text}\u201D`,
+                canonicalUrl: `${root}${buildAnswerUrl(questionId, question.slug, answer.id, answer.slug)}`,
+                ogTitle: `HonestQ: ${question.text}`,
+                ogDescription: `Ⓐ \u201C${answer.text}\u201D`,
+            } :
+            {
+                pageTitle: `HonestQ: ${question.text}`,
+                canonicalUrl: `${root}${buildQuestionUrl(questionId, question.slug)}`,
+                ogTitle: `HonestQ: ${question.text}`,
+                ogDescription: `Ⓠ ${question.text}`,
+            };
 
         return (
             <Helmet>
-                <title>{pageTitle}</title>
-                <link rel="canonical" href={canonicalUrl} />
-                <meta property="og:url" content={canonicalUrl} />
-                <meta property="og:title" content={ogTitle} />
-                <meta property="og:description" content={ogDescription} />
+                <title>{helmetValues.pageTitle}</title>
+                <link rel="canonical" href={helmetValues.canonicalUrl} />
+                <meta property="og:url" content={helmetValues.canonicalUrl} />
+                <meta property="og:title" content={helmetValues.ogTitle} />
+                <meta property="og:description" content={helmetValues.ogDescription} />
                 <meta property="og:image" content="https://www.honestq.com/android-chrome-256x256.png" />
                 <meta name="twitter:card" content="summary" />
                 <meta name="twitter:site" content="@HonestQ_com" />
