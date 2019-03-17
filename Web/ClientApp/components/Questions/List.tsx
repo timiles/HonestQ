@@ -9,7 +9,7 @@ import * as QuestionsStore from '../../store/Questions';
 import { buildQuestionUrl } from '../../utils/route-utils';
 import NewQuestion from '../QuestionForm/NewQuestion';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 
 type Props = QuestionsStore.ListState
     & typeof QuestionsStore.actionCreators
@@ -98,8 +98,8 @@ class QuestionList extends React.Component<Props> {
                     to={buildQuestionUrl(question.id, question.slug)}
                     className="btn btn-lg btn-outline-secondary post-list-item"
                 >
-                    <Emoji value={EmojiValue.Question} />
-                    <span className="ml-1 question quote-marks">{question.text}</span>
+                    <CircleTag className="float-left mr-2" value={CircleTagValue.Question} />
+                    <span className="question quote-marks">{question.text}</span>
                     <small className="ml-1">
                         <span className="badge badge-info">{question.answersCount}</span>
                         <span className="sr-only">answers</span>

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AdminQuestionFormModel, TagValueModel } from '../../server-models';
 import { onCtrlEnter } from '../../utils/html-utils';
-import Emoji, { EmojiValue } from '../shared/Emoji';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
@@ -46,14 +45,11 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
                 {error && <div className="alert alert-danger" role="alert">{error}</div>}
                 <div className="form-group">
                     <label htmlFor="questionText">Question</label>
-                    <div className="emoji-over-text-area">
-                        <Emoji value={EmojiValue.Question} />
-                    </div>
                     <SuperTextArea
                         id="questionText"
                         ref={this.questionTextInputRef}
                         name="text"
-                        className="form-control emoji-text-area"
+                        className="form-control"
                         maxLength={280}
                         required={true}
                         submitted={submitted}

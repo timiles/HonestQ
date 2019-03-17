@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { QuestionModel } from '../../server-models';
 import CircleTag, { CircleTagValue } from '../shared/CircleTag';
-import Emoji, { EmojiValue } from '../shared/Emoji';
 import WatchControl from '../shared/WatchControl';
 
 interface Props {
@@ -42,7 +41,7 @@ export default class QuestionHeader extends React.Component<Props> {
                     <div className="row">
                         <div className="col-md-12 pt-3">
                             <div className="float-left mr-2">
-                                <div className="avatar"><Emoji value={EmojiValue.Question} /></div>
+                                <div className="avatar"><img className="img-fluid" src="/assets/avatar.png" /></div>
                             </div>
                             <p className="float-left mr-3 mt-2">
                                 {question.postedBy}

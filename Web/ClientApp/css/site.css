@@ -409,21 +409,6 @@ p.small .emoji, small .emoji {
     margin-right: 6px;
 }
 
-.emoji-over-text-area {
-    position: absolute;
-}
-.emoji-over-text-area .emoji {
-    margin-left: 10px;
-    max-width: 23px;
-    position: relative;
-    top: 8px;
-}
-.emoji-text-area {
-    font-size: 18px;
-    padding-left: 40px;
-    resize: none;
-}
-
 
 .post {
     white-space: pre-wrap;

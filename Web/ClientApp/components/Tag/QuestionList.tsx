@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { QuestionListItemModel, TagValueModel } from '../../server-models';
 import { buildQuestionUrl } from '../../utils/route-utils';
 import NewQuestion from '../QuestionForm/NewQuestion';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 
 interface Props {
     questions: QuestionListItemModel[];
@@ -23,8 +23,8 @@ export default class QuestionList extends React.Component<Props, {}> {
                             to={buildQuestionUrl(x.id, x.slug)}
                             className="btn btn-lg btn-outline-secondary post-list-item"
                         >
-                            <Emoji value={EmojiValue.Question} />
-                            <span className="ml-1 quote-marks">{x.text}</span>
+                            <CircleTag className="float-left mr-2" value={CircleTagValue.Question} />
+                            <span className="quote-marks">{x.text}</span>
                         </Link>
                     </li>)}
                 <li>

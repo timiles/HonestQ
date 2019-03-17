@@ -11,7 +11,6 @@ interface Props {
 }
 
 export enum EmojiValue {
-    Question,
     Agree,
     Neutral,
     Disagree,
@@ -33,7 +32,6 @@ export default class Emoji extends React.Component<Props, {}> {
 
     public static getEmoji(value: EmojiValue): string | JSX.Element {
         switch (value) {
-            case EmojiValue.Question: return <img className="img-fluid" src="/assets/avatar.png" />;
             case EmojiValue.Agree: return <AgreeIcon width={21} height={16} />;
             case EmojiValue.Neutral: return <CommentIcon width={16} height={16} />;
             case EmojiValue.Disagree: return <DisagreeIcon width={16} height={16} />;
