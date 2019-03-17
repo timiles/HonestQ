@@ -186,20 +186,20 @@ body.dark .question-search-results {
     border-radius: 50%;
     text-align: center;
     color: #FFF;
-    font-size: 1.5em;
+    font-size: 24px;
     height: 36px;
     width: 36px;
 }
-.circle-tag.circle-tag-Q {
+.circle-tag.circle-tag-question {
     background-color: #FF5A00;
 }
-.circle-tag.circle-tag-Q::after {
+.circle-tag.circle-tag-question::after {
     content: 'Q';
 }
-.circle-tag.circle-tag-A {
+.circle-tag.circle-tag-answer {
     background-color: #12BC62;
 }
-.circle-tag.circle-tag-A::after {
+.circle-tag.circle-tag-answer::after {
     content: 'A';
 }
 

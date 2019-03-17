@@ -3,6 +3,7 @@ import { AnswerModel } from '../../server-models';
 import { countNestedComments } from '../../utils/model-utils';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
+import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import OrderByControl, { OrderByValue } from '../shared/OrderByControl';
 import Source from '../shared/Source';
@@ -77,7 +78,7 @@ export default class AnswersList extends React.Component<Props, State> {
                     {orderedAnswers.map((x: AnswerModel, i: number) =>
                         <li key={i} className="mb-4">
                             <div className="card">
-                                <div className="circle-tag circle-tag-A" />
+                                <CircleTag value={CircleTagValue.Answer} />
                                 <div className="card-body px-5">
                                     <blockquote className="blockquote mb-0">
                                         <span className="post">{x.text}</span>

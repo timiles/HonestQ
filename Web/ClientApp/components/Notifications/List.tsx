@@ -7,6 +7,7 @@ import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as NotificationsStore from '../../store/Notifications';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
+import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Emoji, { EmojiValue } from '../shared/Emoji';
 import WatchControlDemo from '../shared/WatchControlDemo';
@@ -140,8 +141,8 @@ class NotificationList extends React.Component<Props> {
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
-                            <Emoji value={EmojiValue.Question} />
-                            <span className="ml-1 question">{notification.questionText}</span>
+                            <CircleTag className="float-left" value={CircleTagValue.Question} />
+                            <span className="ml-2 question">{notification.questionText}</span>
                         </Link>
                     </>
                 );
@@ -164,8 +165,8 @@ class NotificationList extends React.Component<Props> {
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
-                            <Emoji value={EmojiValue.Answer} />
-                            <span className="ml-1 answer">{notification.answerText}</span>
+                            <CircleTag className="float-left" value={CircleTagValue.Answer} />
+                            <span className="ml-2 answer">{notification.answerText}</span>
                         </Link>
                     </>
                 );
