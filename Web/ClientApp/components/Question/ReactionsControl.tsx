@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from '../shared/Icon';
 
 interface Props {
     answerId: number;
@@ -43,7 +43,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
             this.reactionDefinitionsHtml =
                 `<dl class="button-definitions">
                 ${this.values.map((x: ReactionValue) =>
-                    `<dt><span class="emoji">${Emoji.getEmojiByString(x.value)}</span></dt>
+                    `<dt><span class="icon">${Icon.getIconByString(x.value)}</span></dt>
                     <dd>${x.description}</dd>`).join('')}
                 </dl>`;
         }
@@ -76,7 +76,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
                             value={x.value}
                             onClick={this.handleChange}
                         >
-                            <Emoji value={EmojiValue[x.value as keyof typeof EmojiValue]} />
+                            <Icon value={IconValue[x.value as keyof typeof IconValue]} />
                             {reactionCounts[x.value] || 0}
                         </ButtonOrLogIn>)
                     }

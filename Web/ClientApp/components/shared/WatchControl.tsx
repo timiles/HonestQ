@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ButtonOrLogIn from './ButtonOrLogIn';
-import Emoji, { EmojiValue } from './Emoji';
+import Icon, { IconValue } from './Icon';
 
 interface Props {
     identifier?: any;
@@ -43,7 +43,7 @@ export default class WatchControl extends React.Component<Props, State> {
                 <span className={`mr-2 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
                     {watching ? 'Watching' : 'Watch'}
                 </span>
-                <Emoji value={EmojiValue.Watch} />
+                <Icon value={IconValue.Watch} />
             </ButtonOrLogIn>
         );
     }

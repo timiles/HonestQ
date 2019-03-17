@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from './Icon';
 
 export enum OrderByValue {
     Comments,
@@ -29,14 +29,14 @@ export default class OrderByControl extends React.Component<Props, State> {
     public render() {
         const currentValue = this.state.value;
 
-        const renderButton = (value: OrderByValue, emojiValue: EmojiValue) => (
+        const renderButton = (value: OrderByValue, iconValue: IconValue) => (
             <button
                 type="button"
                 className={`btn btn-sm btn-outline-secondary ${value === currentValue ? 'active' : ''}`}
                 value={OrderByValue[value]}
                 onClick={this.handleChange}
             >
-                <Emoji value={emojiValue} />
+                <Icon value={iconValue} />
                 <span className="ml-1">
                     {OrderByValue[value]}
                 </span>
@@ -45,9 +45,9 @@ export default class OrderByControl extends React.Component<Props, State> {
 
         return (
             <div className="btn-group" role="group">
-                {renderButton(OrderByValue.Upvotes, EmojiValue.Upvote)}
-                {renderButton(OrderByValue.Newest, EmojiValue.Recent)}
-                {renderButton(OrderByValue.Comments, EmojiValue.Discuss)}
+                {renderButton(OrderByValue.Upvotes, IconValue.Upvote)}
+                {renderButton(OrderByValue.Newest, IconValue.Recent)}
+                {renderButton(OrderByValue.Comments, IconValue.Discuss)}
             </div>
         );
     }

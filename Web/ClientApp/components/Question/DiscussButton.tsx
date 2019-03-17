@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { CommentModel } from '../../server-models';
 import { countNestedComments } from '../../utils/model-utils';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from '../shared/Icon';
 
 interface Props {
     linkToCommentsUrl: string;
@@ -36,25 +36,25 @@ export default class DiscussButton extends React.Component<Props> {
                 <span>Discuss</span>
                 {upvotes > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Emoji value={EmojiValue.Upvote} /> {upvotes}
+                        <Icon value={IconValue.Upvote} /> {upvotes}
                         <span className="sr-only">upvotes</span>
                     </span>
                 }
                 {commentsCount > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Emoji value={EmojiValue.Discuss} /> {commentsCount}
+                        <Icon value={IconValue.Discuss} /> {commentsCount}
                         <span className="sr-only">comments</span>
                     </span>
                 }
                 {agreeCount > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Emoji value={EmojiValue.Agree} /> {agreeCount}
+                        <Icon value={IconValue.Agree} /> {agreeCount}
                         <span className="sr-only">agree</span>
                     </span>
                 }
                 {disagreeCount > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Emoji value={EmojiValue.Disagree} /> {disagreeCount}
+                        <Icon value={IconValue.Disagree} /> {disagreeCount}
                         <span className="sr-only">disagree</span>
                     </span>
                 }

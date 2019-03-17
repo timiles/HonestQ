@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from '../shared/Icon';
 
 interface Props {
     answerId: number;
@@ -44,7 +44,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
                 onClick={this.handleChange}
                 submitting={submitting}
             >
-                <Emoji value={EmojiValue.Upvote} />
+                <Icon value={IconValue.Upvote} />
                 <span className={`ml-1 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
                     Upvote
                 </span>

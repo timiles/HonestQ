@@ -9,7 +9,7 @@ import * as NotificationsStore from '../../store/Notifications';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from '../shared/Icon';
 import WatchControlDemo from '../shared/WatchControlDemo';
 
 type Props = NotificationsStore.ListState
@@ -172,7 +172,7 @@ class NotificationList extends React.Component<Props> {
                 );
             }
             case 'Comment': {
-                const emojiValue = EmojiValue[notification.agreementRating as keyof typeof EmojiValue];
+                const iconValue = IconValue[notification.agreementRating as keyof typeof IconValue];
                 return (
                     <>
                         <div>
@@ -194,7 +194,7 @@ class NotificationList extends React.Component<Props> {
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
-                            {emojiValue && <Emoji value={emojiValue} />}
+                            {iconValue && <Icon value={iconValue} />}
                             <span className="ml-1 comment">{notification.commentText}</span>
                         </Link>
                     </>

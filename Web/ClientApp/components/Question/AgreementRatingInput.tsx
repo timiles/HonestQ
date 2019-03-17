@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from '../shared/Icon';
 
 interface Props {
     name?: string;
@@ -39,7 +39,7 @@ export default class AgreementRatingInput extends React.Component<Props, State> 
                         name={name}
                         onClick={this.handleChange}
                     >
-                        <Emoji value={EmojiValue[x as keyof typeof EmojiValue]} />
+                        <Icon value={IconValue[x as keyof typeof IconValue]} />
                         <span className="ml-1">
                             {x}
                         </span>

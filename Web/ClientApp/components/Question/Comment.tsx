@@ -2,7 +2,7 @@ import * as React from 'react';
 import { CommentModel } from '../../server-models';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
-import Emoji, { EmojiValue } from '../shared/Emoji';
+import Icon, { IconValue } from '../shared/Icon';
 import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import NewComment from './NewComment';
@@ -10,11 +10,11 @@ import UpvoteButton from './UpvoteButton';
 
 type Props = CommentModel
     & {
-    questionId: number,
-    answerId: number,
-    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-    onWatch: (on: boolean, commentId: number) => void,
-};
+        questionId: number,
+        answerId: number,
+        onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+        onWatch: (on: boolean, commentId: number) => void,
+    };
 
 export default class Comment extends React.Component<Props, {}> {
 
@@ -29,14 +29,14 @@ export default class Comment extends React.Component<Props, {}> {
         const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
         const { watching } = this.props;
         const { postedAt, postedBy } = this.props;
-        const emojiValue = EmojiValue[agreementRating as keyof typeof EmojiValue];
+        const iconValue = IconValue[agreementRating as keyof typeof IconValue];
 
         return (
             <>
                 <div className="card">
                     <div className="card-body">
                         <blockquote className="blockquote">
-                            {emojiValue && <Emoji value={emojiValue} />}
+                            {iconValue && <Icon value={iconValue} />}
                             <span className="badge badge-secondary">
                                 {agreementRating.toSentenceCase()}
                             </span>
