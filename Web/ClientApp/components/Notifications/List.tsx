@@ -111,7 +111,6 @@ class NotificationList extends React.Component<Props> {
     private renderNotification(notification: NotificationModel) {
         const questionUrl = `/questions/${notification.questionId}/${notification.questionSlug}`;
         const answerUrl = `${questionUrl}/${notification.answerId}/${notification.answerSlug}`;
-        const seenClassName = notification.seen ? 'btn-outline-secondary' : 'btn-success';
 
         switch (notification.type) {
             case 'Question': {
@@ -137,10 +136,15 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={questionUrl}
-                            className={`btn btn-lg post-list-item brand-font-color ${seenClassName}`}
+                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
+                            {!notification.seen &&
+                                <span className="float-right ml-1">
+                                    <Icon value={IconValue.Watch} />
+                                </span>
+                            }
                             <CircleTag className="float-left" value={CircleTagValue.Question} />
                             <span className="ml-2 question">{notification.questionText}</span>
                         </Link>
@@ -161,10 +165,15 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={answerUrl}
-                            className={`btn btn-lg post-list-item brand-font-color ${seenClassName}`}
+                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
+                            {!notification.seen &&
+                                <span className="float-right ml-1">
+                                    <Icon value={IconValue.Watch} />
+                                </span>
+                            }
                             <CircleTag className="float-left" value={CircleTagValue.Answer} />
                             <span className="ml-2 answer quote-marks">{notification.answerText}</span>
                         </Link>
@@ -190,11 +199,19 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={answerUrl}
-                            className={`btn btn-lg post-list-item brand-font-color ${seenClassName}`}
+                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
-                            {iconValue && <Icon value={iconValue} />}
+                            {!notification.seen &&
+                                <span className="float-right ml-1">
+                                    <Icon value={IconValue.Watch} />
+                                </span>
+                            }
+                            {iconValue >= 0 &&
+                                <span className="badge badge-pill badge-reaction float-left mr-2">
+                                    <Icon value={iconValue} />
+                                </span>}
                             <span className="ml-1 comment">{notification.commentText}</span>
                         </Link>
                     </>

@@ -46,8 +46,14 @@ body.dark {
 body, .brand-font-color {
     color: #757575;
 }
+body svg, .brand-font-color svg {
+    fill: #757575;
+}
 body.dark, body.dark .brand-font-color {
     color: #AECCF5;
+}
+body.dark svg, body.dark .brand-font-color svg {
+    fill: #AECCF5;
 }
 
 .navbar {
