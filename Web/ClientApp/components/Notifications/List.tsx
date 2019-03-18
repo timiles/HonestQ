@@ -7,7 +7,7 @@ import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as NotificationsStore from '../../store/Notifications';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
-import CircleTag, { CircleTagValue } from '../shared/CircleTag';
+import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import Icon, { IconValue } from '../shared/Icon';
 import WatchControlDemo from '../shared/WatchControlDemo';
@@ -145,7 +145,7 @@ class NotificationList extends React.Component<Props> {
                                     <Icon value={IconValue.Watch} />
                                 </span>
                             }
-                            <CircleTag className="float-left" value={CircleTagValue.Question} />
+                            <CircleIcon className="float-left" value={CircleIconValue.Question} />
                             <span className="ml-2 question">{notification.questionText}</span>
                         </Link>
                     </>
@@ -174,7 +174,7 @@ class NotificationList extends React.Component<Props> {
                                     <Icon value={IconValue.Watch} />
                                 </span>
                             }
-                            <CircleTag className="float-left" value={CircleTagValue.Answer} />
+                            <CircleIcon className="float-left" value={CircleIconValue.Answer} />
                             <span className="ml-2 answer quote-marks">{notification.answerText}</span>
                         </Link>
                     </>

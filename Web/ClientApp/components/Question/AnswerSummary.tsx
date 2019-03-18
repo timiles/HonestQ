@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { AnswerModel } from '../../server-models';
 import { buildAnswerUrl } from '../../utils/route-utils';
-import CircleTag, { CircleTagValue } from '../shared/CircleTag';
+import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
 import DiscussButton from './DiscussButton';
@@ -20,7 +20,7 @@ export default class AnswerSummary extends React.Component<Props> {
 
         return (
             <div className="card">
-                <CircleTag value={CircleTagValue.Answer} />
+                <CircleIcon value={CircleIconValue.Answer} />
                 <div className="card-body px-5">
                     <blockquote className="blockquote mb-0">
                         <span className="post quote-marks">{answer.text}</span>

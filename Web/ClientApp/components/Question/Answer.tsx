@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
-import CircleTag, { CircleTagValue } from '../shared/CircleTag';
+import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
@@ -35,7 +35,7 @@ export default class Answer extends React.Component<Props, {}> {
         return (
             <div>
                 <div className="card mt-4">
-                    <CircleTag value={CircleTagValue.Answer} />
+                    <CircleIcon value={CircleIconValue.Answer} />
                     <div className="card-body">
                         <blockquote className="blockquote">
                             <LoggedInUserContext.Consumer>

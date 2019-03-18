@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { QuestionModel } from '../../server-models';
-import CircleTag, { CircleTagValue } from '../shared/CircleTag';
+import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import WatchControl from '../shared/WatchControl';
 
 interface Props {
@@ -57,7 +57,7 @@ export default class QuestionHeader extends React.Component<Props> {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
-                            <CircleTag className="float-left" value={CircleTagValue.Question} />
+                            <CircleIcon className="float-left" value={CircleIconValue.Question} />
                             <div className="float-left ml-3">
                                 <h4><span className="post">{question.text}</span></h4>
                                 <p className="child-count">{answersHeader}</p>
