@@ -1,50 +1,21 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { TagModel } from '../../server-models';
-import { isUserInRole } from '../../utils/auth-utils';
+import NewQuestion from '../QuestionForm/NewQuestion';
 import TextWithShortLinks from '../shared/TextWithShortLinks';
-import WatchControl from '../shared/WatchControl';
 import QuestionList from './QuestionList';
 
 interface TagProps {
     tag: TagModel;
 }
 
-type Props = TagProps & {
-    onWatch: (on: boolean) => void;
-};
-
-export default class Tag extends React.Component<Props, {}> {
-
-    constructor(props: Props) {
-        super(props);
-
-        this.handleWatch = this.handleWatch.bind(this);
-    }
+export default class Tag extends React.Component<TagProps, {}> {
 
     public render() {
         const { tag } = this.props;
-        const { slug, name, description, moreInfoUrl, questions, watching } = tag;
+        const { slug, name, description, moreInfoUrl, questions } = tag;
         const tagValue = { name, slug };
         return (
             <>
-                <div className="card bg-light">
-                    <div className="card-body">
-                        <div className="float-right">
-                            <WatchControl
-                                onWatch={this.handleWatch}
-                                watching={watching}
-                            />
-                            <LoggedInUserContext.Consumer>
-                                {(user) => isUserInRole(user, 'Admin') &&
-                                    <div><Link to={`/admin/edit/tags/${slug}`} className="float-right">Edit</Link></div>
-                                }
-                            </LoggedInUserContext.Consumer>
-                        </div>
-                        <h1>{name}</h1>
-                    </div>
-                </div>
                 {(description || moreInfoUrl) &&
                     <div className="bs-callout bs-callout-info">
                         {description &&
@@ -65,12 +36,20 @@ export default class Tag extends React.Component<Props, {}> {
                 {questions.length === 0 &&
                     <h2>Start the conversation</h2>
                 }
-                <QuestionList questions={questions} tagValue={tagValue} />
+                <div className="clearfix mb-3">
+                    <div className="float-right">
+                        <NewQuestion tagValue={tagValue} />
+                    </div>
+                </div>
+                <QuestionList questions={questions} />
+                {questions.length >= 5 &&
+                    <div className="clearfix">
+                        <div className="float-right">
+                            <NewQuestion tagValue={tagValue} />
+                        </div>
+                    </div>
+                }
             </>
         );
-    }
-
-    private handleWatch(on: boolean): void {
-        this.props.onWatch(on);
     }
 }

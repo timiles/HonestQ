@@ -201,6 +201,12 @@ body.dark .question-search-results {
     height: 36px;
     width: 36px;
 }
+.circle-tag.circle-tag-tag {
+    background-color: #0095ff;
+}
+.circle-tag.circle-tag-tag::after {
+    content: '#';
+}
 .circle-tag.circle-tag-question {
     background-color: #FF5A00;
 }
@@ -255,7 +261,7 @@ a.no-underline {
     border-top: 1px solid rgba(0, 0, 0, .1);
     border-bottom: 1px solid rgba(255, 255, 255, .1);
 }
-.header .answers-count {
+.header .child-count {
     opacity: .4;
 }
 

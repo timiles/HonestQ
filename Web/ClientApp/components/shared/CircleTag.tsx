@@ -6,6 +6,7 @@ interface Props {
 }
 
 export enum CircleTagValue {
+    Tag,
     Question,
     Answer,
 }

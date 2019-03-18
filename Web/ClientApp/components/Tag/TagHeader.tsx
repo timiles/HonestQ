@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { QuestionModel } from '../../server-models';
+import { TagModel } from '../../server-models';
 import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 import WatchControl from '../shared/WatchControl';
 
 interface Props {
-    question: QuestionModel;
+    tag: TagModel;
     onWatch: (on: boolean) => void;
 }
 
-export default class QuestionHeader extends React.Component<Props> {
+export default class TagHeader extends React.Component<Props> {
 
-    private static getAnswersHeader(answersCount: number): string {
-        switch (answersCount) {
+    private static getQuestionsHeader(questionsCount: number): string {
+        switch (questionsCount) {
             case 0: {
-                return 'No answers yet';
+                return 'No questions yet';
             }
             case 1: {
-                return '1 answer';
+                return '1 question';
             }
             default: {
-                return `${answersCount} answers`;
+                return `${questionsCount} questions`;
             }
         }
     }
@@ -31,24 +31,18 @@ export default class QuestionHeader extends React.Component<Props> {
     }
 
     public render() {
-        const { question } = this.props;
+        const { tag } = this.props;
 
-        const answersHeader = QuestionHeader.getAnswersHeader(question.answers.length);
+        const questionsHeader = TagHeader.getQuestionsHeader(tag.questions.length);
 
         return (
             <div className="header mb-3">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12 pt-3">
-                            <div className="float-left mr-2">
-                                <div className="avatar"><img className="img-fluid" src="/assets/avatar.png" /></div>
-                            </div>
-                            <p className="float-left mr-3 mt-2">
-                                {question.postedBy}
-                            </p>
                             <WatchControl
                                 onWatch={this.handleWatch}
-                                watching={question.watching}
+                                watching={tag.watching}
                             />
                         </div>
                     </div>
@@ -57,10 +51,10 @@ export default class QuestionHeader extends React.Component<Props> {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
-                            <CircleTag className="float-left" value={CircleTagValue.Question} />
+                            <CircleTag className="float-left" value={CircleTagValue.Tag} />
                             <div className="float-left ml-3">
-                                <h4><span className="post">{question.text}</span></h4>
-                                <p className="child-count">{answersHeader}</p>
+                                <h4><span className="post">{tag.name}</span></h4>
+                                <p className="child-count">{questionsHeader}</p>
                             </div>
                         </div>
                     </div>
