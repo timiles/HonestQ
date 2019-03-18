@@ -1,13 +1,9 @@
 import * as React from 'react';
 import { AnswerModel } from '../../server-models';
 import { countNestedComments } from '../../utils/model-utils';
-import { buildAnswerUrl } from '../../utils/route-utils';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
-import CircleTag, { CircleTagValue } from '../shared/CircleTag';
-import EmbeddedContent from '../shared/EmbeddedContent';
 import OrderByControl, { OrderByValue } from '../shared/OrderByControl';
-import Source from '../shared/Source';
-import DiscussButton from './DiscussButton';
+import AnswerSummary from './AnswerSummary';
 import NewAnswer from './NewAnswer';
 import UpvoteButton from './UpvoteButton';
 
@@ -77,23 +73,7 @@ export default class AnswersList extends React.Component<Props, State> {
                 <ul className="list-unstyled mt-3 mb-3">
                     {orderedAnswers.map((x: AnswerModel, i: number) =>
                         <li key={i} className="mb-4">
-                            <div className="card">
-                                <CircleTag value={CircleTagValue.Answer} />
-                                <div className="card-body px-5">
-                                    <blockquote className="blockquote mb-0">
-                                        <span className="post quote-marks">{x.text}</span>
-                                    </blockquote>
-                                    <Source value={x.source} />
-                                    <EmbeddedContent value={x.source} />
-                                    <div className="mt-3">
-                                        <DiscussButton
-                                            linkToCommentsUrl={buildAnswerUrl(questionId, questionSlug, x.id, x.slug)}
-                                            upvotes={x.reactionCounts ? x.reactionCounts[UpvoteButton.ReactionType] : 0}
-                                            comments={x.comments}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
+                            <AnswerSummary questionId={questionId} questionSlug={questionSlug} answer={x} />
                         </li>)
                     }
                 </ul>

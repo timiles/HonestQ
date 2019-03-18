@@ -1,0 +1,41 @@
+import * as React from 'react';
+import { AnswerModel } from '../../server-models';
+import { buildAnswerUrl } from '../../utils/route-utils';
+import CircleTag, { CircleTagValue } from '../shared/CircleTag';
+import EmbeddedContent from '../shared/EmbeddedContent';
+import Source from '../shared/Source';
+import DiscussButton from './DiscussButton';
+import UpvoteButton from './UpvoteButton';
+
+interface Props {
+    questionId: number;
+    questionSlug: string;
+    answer: AnswerModel;
+}
+
+export default class AnswerSummary extends React.Component<Props> {
+
+    public render() {
+        const { questionId, questionSlug, answer } = this.props;
+
+        return (
+            <div className="card">
+                <CircleTag value={CircleTagValue.Answer} />
+                <div className="card-body px-5">
+                    <blockquote className="blockquote mb-0">
+                        <span className="post quote-marks">{answer.text}</span>
+                    </blockquote>
+                    <Source value={answer.source} />
+                    <EmbeddedContent value={answer.source} />
+                    <div className="mt-3">
+                        <DiscussButton
+                            linkToCommentsUrl={buildAnswerUrl(questionId, questionSlug, answer.id, answer.slug)}
+                            upvotes={answer.reactionCounts ? answer.reactionCounts[UpvoteButton.ReactionType] : 0}
+                            comments={answer.comments}
+                        />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
