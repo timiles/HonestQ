@@ -36,7 +36,7 @@ export default class WatchControl extends React.Component<Props, State> {
         return (
             <ButtonOrLogIn
                 type="button"
-                className="btn btn-watch"
+                className={`btn btn-outline-secondary ${watching ? 'active btn-primary-brand' : 'btn-watch'}`}
                 onClick={this.handleChange}
                 submitting={submitting}
             >

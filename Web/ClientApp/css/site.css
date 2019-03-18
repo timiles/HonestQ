@@ -426,32 +426,35 @@ p.small .icon, small .icon {
     border-top: 0;
 }
 
-.btn-outline-secondary:not(:hover).background-white {
-    background-color: #fff;
-}
-
 /* Watch button */
-.btn-watch {
+.header .btn-watch {
     color: #5EC7D7;
     background-color: #254B51;
     border-color: #254B51;
 }
-.btn-watch:not(:disabled):not(.disabled):active, .btn-watch:not(:disabled):not(.disabled).active, .show > .btn-watch.dropdown-toggle {
+.header .btn-watch:not(:disabled):not(.disabled):active, .header .btn-watch:not(:disabled):not(.disabled).active, .header .show > .btn-watch.dropdown-toggle {
     color: #5EC7D7;
     background-color: #152b2e; /* darken(#254B51, 10%); */
     border-color: #152b2e;
 }
-.btn-watch:hover {
+.header .btn-watch:hover {
     color: #5EC7D7;
     background-color: #193337; /* darken(#254B51, 7.5%); */
     border-color: #193337;
 }
-.btn-watch:focus, .btn-watch.focus {
+.header .btn-watch:focus, .btn-watch.focus {
     box-shadow: 0 0 0 0.2rem rgba(49, 99, 107, 0.5); /* #31636b = lighten(#254B51, 7.5%) */
 }
 
-.btn-watch svg {
-    fill: #5EC7D7;
+.header .btn-watch svg {
+    fill: #5EC7D7 !important;
+}
+
+.btn-outline-secondary svg {
+    fill: #6C757D;
+}
+.btn-outline-secondary:not(:disabled):not(.disabled):active svg, .btn-outline-secondary:not(:disabled):not(.disabled).active svg, .btn-outline-secondary:hover svg {
+    fill: #FFF;
 }
 
 /* Discuss reactions */

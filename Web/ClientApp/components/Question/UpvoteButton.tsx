@@ -35,19 +35,18 @@ export default class UpvoteButton extends React.Component<Props, State> {
     public render() {
         const { count, isUpvotedByLoggedInUser, hideLabelOnMobile } = this.props;
         const { submitting } = this.state;
-        const upvotedClassName = isUpvotedByLoggedInUser ? 'btn-success' : 'btn-outline-secondary background-white';
 
         return (
             <ButtonOrLogIn
                 type="button"
-                className={`btn ${upvotedClassName}`}
+                className={`btn btn-outline-secondary ${isUpvotedByLoggedInUser ? 'active btn-primary-brand' : ''}`}
                 onClick={this.handleChange}
                 submitting={submitting}
             >
-                <Icon value={IconValue.Upvote} />
-                <span className={`ml-1 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
+                <span className={`mr-2 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
                     Upvote
                 </span>
+                <Icon value={IconValue.Upvote} />
                 {count > 0 &&
                     <span className={`ml-2 badge ${isUpvotedByLoggedInUser ? 'badge-light' : 'badge-info'}`}>
                         {count}

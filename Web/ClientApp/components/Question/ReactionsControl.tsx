@@ -71,7 +71,7 @@ export default class ReactionsControl extends React.Component<Props, State> {
                         <ButtonOrLogIn
                             key={i}
                             type="button"
-                            className={`btn btn-outline-secondary background-white
+                            className={`btn btn-outline-secondary
                                 ${myReactions && myReactions.indexOf(x.value) >= 0 ? 'active' : ''}`}
                             value={x.value}
                             onClick={this.handleChange}
