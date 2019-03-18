@@ -36,8 +36,8 @@ export default class Comment extends React.Component<Props, {}> {
                 <div className="card">
                     <div className="card-body">
                         <blockquote className="blockquote">
-                            {iconValue && <Icon value={iconValue} />}
-                            <span className="badge badge-secondary">
+                            <span className="badge badge-pill badge-reaction float-left mr-2">
+                                {iconValue >= 0 && <Icon value={iconValue} />}
                                 {agreementRating.toSentenceCase()}
                             </span>
                             {text && <p>{text}</p>}

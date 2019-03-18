@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
+import CircleTag, { CircleTagValue } from '../shared/CircleTag';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
@@ -34,7 +35,7 @@ export default class Answer extends React.Component<Props, {}> {
         return (
             <div>
                 <div className="card mt-4">
-                    <div className="circle-tag circle-tag-A" />
+                    <CircleTag value={CircleTagValue.Answer} />
                     <div className="card-body">
                         <blockquote className="blockquote">
                             <LoggedInUserContext.Consumer>
@@ -72,12 +73,14 @@ export default class Answer extends React.Component<Props, {}> {
                     </div>
                 </div>
                 <hr />
-                <div className="mb-3">
-                    <NewComment
-                        questionId={questionId}
-                        answerId={id}
-                        replyingToText={text}
-                    />
+                <div className="mb-3 clearfix">
+                    <div className="float-right">
+                        <NewComment
+                            questionId={questionId}
+                            answerId={id}
+                            replyingToText={text}
+                        />
+                    </div>
                 </div>
                 <ol className="list-unstyled mb-3">
                     {comments.map((x: CommentModel, i: number) =>
@@ -91,6 +94,17 @@ export default class Answer extends React.Component<Props, {}> {
                             />
                         </li>)}
                 </ol>
+                {comments.length > 3 &&
+                    <div className="mb-3 clearfix">
+                        <div className="float-right">
+                            <NewComment
+                                questionId={questionId}
+                                answerId={id}
+                                replyingToText={text}
+                            />
+                        </div>
+                    </div>
+                }
             </div>
         );
     }

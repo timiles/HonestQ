@@ -210,11 +210,16 @@ body.dark .question-search-results {
 
 .card {
     background-color: transparent;
+    border: 1px solid #C9D4DD;
 }
 .card .circle-tag {
     position: absolute;
     top: -16px;
     left: 5px;
+}
+
+body.dark .card {
+    border: 1px solid #394D67;
 }
 
 blockquote p {
@@ -417,6 +422,9 @@ p.small .icon, small .icon {
 .list-comments-nested {
     margin-left: 10px;
 }
+.list-comments-nested .card {
+    border-top: 0;
+}
 
 .btn-outline-secondary:not(:hover).background-white {
     background-color: #fff;
@@ -450,10 +458,20 @@ p.small .icon, small .icon {
 .badge-reaction {
     background-color: #D9E9F9;
     border: 1px solid #D1DFEE;
+    color: #1686FF;
     padding: 6px 12px;
 }
 .badge-reaction svg {
     fill: #1686FF;
+}
+
+body.dark .badge-reaction {
+    background-color: #202C3C;
+    border: 1px solid #202C3C;
+    color: #2293A5;
+}
+body.dark .badge-reaction svg {
+    fill: #2293A5;
 }
 
 /* Modal */
