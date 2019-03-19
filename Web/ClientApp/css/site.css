@@ -496,8 +496,11 @@ body.dark .badge-reaction svg {
     opacity: 0;
     overflow-x: hidden;
     overflow-y: scroll;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(237, 246, 251, 0.75) !important; /* #EDF6FB */
     z-index: 100;
+}
+body.dark .ReactModal__Overlay {
+    background-color: rgba(40, 55, 75 , 0.75) !important; /* #28374B */
 }
     .ReactModal__Overlay--after-open {
         opacity: 1;
@@ -525,6 +528,30 @@ body.dark .badge-reaction svg {
         border: none;
         background-color: transparent;
     }
+
+.modal-header {
+    border-bottom: 1px solid #C9D4DD;    
+}
+body.dark .modal-header {
+    border-bottom: 1px solid #394D67;
+}
+.modal-content {
+    background-color: #EDF6FB;
+}
+body.dark .modal-content {
+    background-color: #28374B;
+}
+.modal-footer {
+    border-top: 1px solid #C9D4DD;
+}
+body.dark .modal-footer {
+    border-top: 1px solid #394D67;
+}
+
+body.dark .modal-header .close, body.dark .modal-header .close:hover {
+    color: #FFF;
+    text-shadow: none;
+}
 
 /* Bootstrap Toast overrides */
 #toastsContainer{
