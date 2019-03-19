@@ -39,26 +39,38 @@ export default class DiscussButton extends React.Component<Props> {
                 </Link>
                 {upvotes > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Icon value={IconValue.Upvote} /> {upvotes}
-                        <span className="sr-only">upvotes</span>
+                        <Icon value={IconValue.Upvote} />
+                        <label>
+                            {upvotes}
+                            <span className="sr-only">upvotes</span>
+                        </label>
                     </span>
                 }
                 {agreeCount > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Icon value={IconValue.Agree} /> {agreeCount}
-                        <span className="sr-only">agree</span>
+                        <Icon value={IconValue.Agree} />
+                        <label>
+                            {agreeCount}
+                            <span className="sr-only">agree</span>
+                        </label>
                     </span>
                 }
                 {neutralCount > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Icon value={IconValue.Discuss} /> {neutralCount}
-                        <span className="sr-only">neutral</span>
+                        <Icon value={IconValue.Discuss} />
+                        <label>
+                            {neutralCount}
+                            <span className="sr-only">neutral</span>
+                        </label>
                     </span>
                 }
                 {disagreeCount > 0 &&
                     <span className="badge badge-pill badge-reaction ml-1">
-                        <Icon value={IconValue.Disagree} /> {disagreeCount}
-                        <span className="sr-only">disagree</span>
+                        <Icon value={IconValue.Disagree} />
+                        <label>
+                            {disagreeCount}
+                            <span className="sr-only">disagree</span>
+                        </label>
                     </span>
                 }
             </>

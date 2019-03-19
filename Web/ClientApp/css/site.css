@@ -43,6 +43,11 @@ body.dark {
     background-color: #28374B;
 }
 
+label {
+    font-family: 'Nexa Bold';
+    margin-bottom: 0;
+}
+
 body, .brand-font-color {
     color: #757575;
 }

@@ -15,7 +15,7 @@ export default class Source extends React.Component<Props, {}> {
 
         return (
             <p>
-                <small>Source: </small><TextWithShortLinks value={value} />
+                <label><small>Source:</small></label> <TextWithShortLinks value={value} />
             </p>
         );
     }

@@ -38,7 +38,7 @@ export default class Comment extends React.Component<Props, {}> {
                         <blockquote className="blockquote">
                             <span className="badge badge-pill badge-reaction float-left mr-2">
                                 {iconValue >= 0 && <Icon value={iconValue} />}
-                                {agreementRating.toSentenceCase()}
+                                <label>{agreementRating.toSentenceCase()}</label>
                             </span>
                             {text && <p>{text}</p>}
                             <footer className="blockquote-footer">

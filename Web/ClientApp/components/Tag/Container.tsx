@@ -67,7 +67,7 @@ class Container extends React.Component<ContainerProps, {}> {
                                     </div>
                                 </div>
                                 <div className="col-lg-4">
-                                    <p>Browse by Tags</p>
+                                    <label className="mb-1">Browse by Tags</label>
                                     <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
                                 </div>
                             </div>

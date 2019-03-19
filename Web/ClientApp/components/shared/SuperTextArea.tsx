@@ -82,7 +82,9 @@ export default class SuperTextArea extends React.Component<Props, State> {
                     onBlur={this.handleBlur}
                 />
                 <div className={`float-right ${remainingCharacterCountClass}`}>
-                    {remainingCharacterCount} characters remaining
+                    <label>
+                        {remainingCharacterCount} characters remaining
+                    </label>
                 </div>
                 {required && !value &&
                     <div className="invalid-feedback">{name.toSentenceCase(true)} is required</div>

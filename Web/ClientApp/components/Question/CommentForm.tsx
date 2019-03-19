@@ -59,10 +59,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className="form-group">
+                        <label>
+                            Replying to
+                        </label>
+                        <p className="quote-marks">{replyingToText}</p>
+                    </div>
+                    <div className="form-group">
                         <label htmlFor="agreementRating">
-                            Does your comment agree with
-                            <br />
-                            <span className="quote-marks">{replyingToText}</span>?
+                            Do you...
                         </label>
                         <div>
                             <AgreementRatingInput

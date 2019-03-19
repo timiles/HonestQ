@@ -65,7 +65,7 @@ export default class AnswersList extends React.Component<Props, State> {
                     </div>
                     {answers.length > 0 &&
                         <div>
-                            Order by: <OrderByControl value={orderByValue} onChange={this.handleOrder} />
+                            <label>Order by:</label> <OrderByControl value={orderByValue} onChange={this.handleOrder} />
                         </div>
                     }
                 </div>
