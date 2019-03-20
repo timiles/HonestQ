@@ -43,6 +43,9 @@ body.dark {
     background-color: #28374B;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Nexa Bold';
+}
 label {
     font-family: 'Nexa Bold';
     margin-bottom: 0;
@@ -416,6 +419,7 @@ p.small .icon, small .icon {
 
 
 .post {
+    font-family: 'lineto-circular-book', Sans-Serif;
     white-space: pre-wrap;
 }
 .post-list-item {
