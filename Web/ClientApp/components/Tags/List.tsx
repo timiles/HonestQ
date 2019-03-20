@@ -42,6 +42,7 @@ class TagsList extends React.Component<TagsListProps> {
             tagsList.tags.sort((a, b) => (a.slug.localeCompare(b.slug)));
 
         const showMoreTagsButton = numberOfTagsToShow! > 0;
+        const isActive = (tag: TagListItemModel) => selectedTagSlugs.indexOf(tag.slug) >= 0;
 
         return (
             <>
@@ -53,8 +54,8 @@ class TagsList extends React.Component<TagsListProps> {
                                 <li key={i} className="mr-1 mb-1 list-inline-item">
                                     <Link
                                         to={`/tags/${x.slug}`}
-                                        className={`btn btn-${buttonSize} btn-outline-secondary
-                                            ${selectedTagSlugs.indexOf(x.slug) >= 0 ? 'active btn-primary-brand' : ''}`}
+                                        className={`btn btn-${buttonSize} btn-outline-secondary` +
+                                            `${isActive(x) ? ' active btn-primary-brand' : ''}`}
                                     >
                                         {x.name}
                                     </Link>
