@@ -71,7 +71,7 @@ class TagsList extends React.Component<TagsListProps> {
                             </LoggedInUserContext.Consumer>}
                         {showMoreTagsButton &&
                             <li className="list-inline-item">
-                                <Link to="/tags/_all" className={`btn btn-${buttonSize} btn-primary btn-primary-brand`}>
+                                <Link to="/tags" className={`btn btn-${buttonSize} btn-primary btn-primary-brand`}>
                                     Show more
                                 </Link>
                             </li>}

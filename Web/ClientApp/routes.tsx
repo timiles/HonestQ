@@ -15,6 +15,7 @@ import Home from './screens/Home';
 import Notifications from './screens/Notifications';
 import Questions from './screens/Questions';
 import Question from './screens/Questions/Item';
+import Tags from './screens/Tags';
 import Tag from './screens/Tags/Item';
 
 export const routes = (
@@ -33,6 +34,7 @@ export const routes = (
             <Route path="/logout" component={LogOut} />
             <Route path="/signup" component={SignUp} />
             <Route path="/questions/:questionId/:questionSlug/:answerId?/:answerSlug?" component={Question} />
+            <Route exact={true} path="/tags" component={Tags} />
             <Route path="/tags/_" component={NewTag} />
             <Route path="/tags/:tagSlug" component={Tag} />
         </Switch>
