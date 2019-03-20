@@ -19,7 +19,7 @@ class Index extends React.Component<Props> {
                         <div className="container">
                             <WelcomeMessage />
                             <div className="row text-center">
-                                <div className="col-md-6 offset-md-3">
+                                <div className="col-lg-6 offset-lg-3">
                                     <QuestionSearchControl />
                                     <p className="welcome-message or-browse-by-tag">Or browse by Tags</p>
                                     <TagsList buttonSize="md" numberOfTagsToShow={11} />
