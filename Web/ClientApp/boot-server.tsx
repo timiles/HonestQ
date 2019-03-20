@@ -11,6 +11,7 @@ import { replace } from 'react-router-redux';
 import configureStore from './configureStore';
 import { routes } from './routes';
 import { ApplicationState } from './store';
+import { getBackgroundColor } from './utils/html-utils';
 
 export default createServerRenderer((params) => {
     return new Promise<RenderResult>((resolve, reject) => {
@@ -53,7 +54,7 @@ export default createServerRenderer((params) => {
             return;
         }
 
-        const headerColor = '#FF5A00';
+        const headerColor = getBackgroundColor();
         const embedlyScript = `
 (function(w, d){
 var id='embedly-platform', n = 'script';
@@ -88,7 +89,7 @@ if (!d.getElementById(id)){
                     {/* iOS Safari */}
                     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
                     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-                    <meta name="apple-mobile-web-app-status-bar-style" content={headerColor} />
+                    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.vendorCss} />
                     <link rel="stylesheet" href={params.data.versionedAssetPaths.siteCss} />

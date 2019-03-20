@@ -4,6 +4,7 @@ import { Link, NavLink, NavLinkProps } from 'react-router-dom';
 import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils/auth-utils';
+import { setDarkMode } from '../utils/html-utils';
 import NotificationsCount from './Notifications/NotificationsCount';
 
 interface NavBarProps {
@@ -116,11 +117,7 @@ class NavBar extends React.Component<NavBarProps, State> {
     private toggleLightDarkMode(): void {
         this.setState((prevState) => ({ isDarkMode: !prevState.isDarkMode }),
             () => {
-                if (this.state.isDarkMode) {
-                    document.body.classList.add('dark');
-                } else {
-                    document.body.classList.remove('dark');
-                }
+                setDarkMode(this.state.isDarkMode);
             });
     }
 }

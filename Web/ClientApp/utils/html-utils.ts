@@ -16,3 +16,27 @@ export function enableConfirmOnLeave(shouldConfirm: boolean): void {
 export function getValidationClassName(submitted?: boolean, value?: any): string {
     return submitted ? value ? 'is-valid' : 'is-invalid' : '';
 }
+
+export function getBackgroundColor(isDarkMode = false) {
+    return isDarkMode ? '#28374B' : '#EDF6FB';
+}
+
+export function setDarkMode(isDarkMode = true) {
+    if (isDarkMode) {
+        document.body.classList.add('dark');
+    } else {
+        document.body.classList.remove('dark');
+    }
+    // Update mobile browser theme
+    const headerColor = getBackgroundColor(isDarkMode);
+    Array.from(document.head.childNodes).forEach((x: ChildNode) => {
+        const meta = x as HTMLMetaElement;
+        switch (meta.name) {
+            case 'msapplication-navbutton-color':
+            case 'theme': {
+                meta.content = headerColor;
+                break;
+            }
+        }
+    });
+}
