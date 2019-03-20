@@ -596,4 +596,5 @@ body.dark .modal-header .close, body.dark .modal-header .close:hover {
 }
 .loading-spinner {
     position: absolute;
+    color: #FF5A00;
 }

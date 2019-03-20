@@ -9,7 +9,7 @@ export default class ActionStatusDisplay extends React.Component<ActionStatus> {
             <>
                 {loading &&
                     <div className="loading-spinner-container text-center">
-                        <div className="loading-spinner spinner-border text-info mt-3" role="status">
+                        <div className="loading-spinner spinner-border mt-3" role="status">
                             <span className="sr-only">Loading...</span>
                         </div>
                     </div>
