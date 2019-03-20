@@ -22,10 +22,15 @@ export function getBackgroundColor(isDarkMode = false) {
 }
 
 export function setDarkMode(isDarkMode = true) {
+    const nav = document.body.getElementsByTagName('nav')[0];
     if (isDarkMode) {
         document.body.classList.add('dark');
+        nav.classList.add('navbar-dark');
+        nav.classList.remove('navbar-light');
     } else {
         document.body.classList.remove('dark');
+        nav.classList.remove('navbar-dark');
+        nav.classList.add('navbar-light');
     }
     // Update mobile browser theme
     const headerColor = getBackgroundColor(isDarkMode);

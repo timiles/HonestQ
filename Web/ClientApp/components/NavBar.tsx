@@ -4,25 +4,14 @@ import { Link, NavLink, NavLinkProps } from 'react-router-dom';
 import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import { isUserInRole } from '../utils/auth-utils';
-import { setDarkMode } from '../utils/html-utils';
 import NotificationsCount from './Notifications/NotificationsCount';
+import LightSwitch from './shared/LightSwitch';
 
 interface NavBarProps {
     loggedInUser: LoggedInUserModel;
 }
-interface State {
-    isDarkMode: boolean;
-}
 
-class NavBar extends React.Component<NavBarProps, State> {
-
-    constructor(props: NavBarProps) {
-        super(props);
-
-        this.state = { isDarkMode: false };
-
-        this.toggleLightDarkMode = this.toggleLightDarkMode.bind(this);
-    }
+class NavBar extends React.Component<NavBarProps> {
 
     public render() {
 
@@ -46,20 +35,13 @@ class NavBar extends React.Component<NavBarProps, State> {
         ) : null;
         const isAdmin = isUserInRole(loggedInUser, 'Admin');
 
-        const { isDarkMode } = this.state;
-
         return (
-            <nav className={`navbar navbar-expand-lg mb-3 ${isDarkMode ? 'navbar-dark' : 'navbar-light'}`}>
+            <nav className="navbar navbar-expand-lg mb-3 navbar-light">
                 <div className="container">
                     <Link className="navbar-brand brand-font" to="/">
                         HonestQ <small><sup className="badge badge-info">BETA</sup></small>
                     </Link>
-                    <button
-                        className={`btn btn-outline-${isDarkMode ? 'light' : 'dark'}`}
-                        onClick={this.toggleLightDarkMode}
-                    >
-                        {isDarkMode ? 'Light mode' : 'Dark mode'}
-                    </button>
+                    <LightSwitch />
                     {loggedInUser &&
                         <div className="ml-auto mr-2 d-lg-none">
                             <Link to="/notifications" className="no-underline">
@@ -112,13 +94,6 @@ class NavBar extends React.Component<NavBarProps, State> {
                 </div>
             </nav>
         );
-    }
-
-    private toggleLightDarkMode(): void {
-        this.setState((prevState) => ({ isDarkMode: !prevState.isDarkMode }),
-            () => {
-                setDarkMode(this.state.isDarkMode);
-            });
     }
 }
 
