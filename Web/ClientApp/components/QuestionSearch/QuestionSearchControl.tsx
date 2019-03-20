@@ -26,7 +26,7 @@ export default class QuestionSearchControl extends React.Component<{}, State> {
                     placeholder="Search Questions by keywords..."
                     value={query}
                 />
-                <div className="search-icon" />
+                <div className="d-none d-sm-block search-icon" />
                 <QuestionSearchResults
                     containerClassName="mt-2 p-2 position-absolute w-100 rounded shadow-lg"
                     query={query}
