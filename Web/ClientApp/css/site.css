@@ -43,6 +43,11 @@ body.dark {
     background-color: #28374B;
 }
 
+::selection {
+    background-color: #FF5A00;
+    color: #FFF;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Nexa Bold';
 }
