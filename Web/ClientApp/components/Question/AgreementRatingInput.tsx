@@ -34,7 +34,7 @@ export default class AgreementRatingInput extends React.Component<Props, State> 
                     <button
                         key={i}
                         type="button"
-                        className={`btn btn-outline-secondary ${x === value ? 'active' : ''}`}
+                        className={`btn btn-agreement-rating ${x === value ? 'active' : ''}`}
                         value={x}
                         name={name}
                         onClick={this.handleChange}
