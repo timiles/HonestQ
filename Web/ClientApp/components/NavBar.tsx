@@ -41,14 +41,18 @@ class NavBar extends React.Component<NavBarProps> {
                     <Link className="navbar-brand brand-font" to="/">
                         HonestQ <small><sup className="badge badge-info">BETA</sup></small>
                     </Link>
-                    <LightSwitch />
-                    {loggedInUser &&
-                        <div className="ml-auto mr-2 d-lg-none">
-                            <Link to="/notifications" className="no-underline">
-                                🔔 <NotificationsCount />
-                            </Link>
+                    <div className="ml-auto mr-2 d-lg-none">
+                        <div className="float-left">
+                            <LightSwitch />
                         </div>
-                    }
+                        {loggedInUser &&
+                            <div className="float-left">
+                                <Link to="/notifications" className="btn no-underline">
+                                    🔔 <NotificationsCount />
+                                </Link>
+                            </div>
+                        }
+                    </div>
                     <button
                         className="navbar-toggler"
                         type="button"
@@ -77,6 +81,9 @@ class NavBar extends React.Component<NavBarProps> {
                             {isAdmin && <AutoCollapseNavLink to={'/admin'}>Admin</AutoCollapseNavLink>}
                         </ul>
                         <ul className="navbar-nav ml-auto">
+                            <li className="d-none d-lg-block mr-2">
+                                <LightSwitch />
+                            </li>
                             {greeting &&
                                 <>
                                     <li className="d-none d-lg-block">

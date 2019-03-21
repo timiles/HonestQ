@@ -295,6 +295,30 @@ body.dark .question-search-results {
     background-color: #0E1F31;
 }
 
+.btn-group-light-switch .btn {
+    line-height: 1;
+    margin: auto;
+    min-width: 40px;
+}
+.btn-group-light-switch .btn.active {
+    line-height: 1.5;
+}
+.btn-group-light-switch .btn.btn-light-switch-light {
+    background-color: #DEF1FC;
+}
+.btn-group-light-switch .btn.btn-light-switch-light svg {
+    fill: #007BFF;
+}
+.btn-group-light-switch .btn.btn-light-switch-dark {
+    background-color: #007BFF;
+}
+.btn-group-light-switch .btn.btn-light-switch-dark svg {
+    fill: #DEF1FC;
+}
+.btn-group-light-switch .btn:focus {
+    box-shadow: none;
+}
+
 .avatar {
     background-color: white;
     border-radius: 50%;
