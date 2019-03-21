@@ -22,13 +22,13 @@ export default class LightSwitch extends React.Component<{}, State> {
         return (
             <div className="btn-group btn-group-light-switch">
                 <button
-                    className={`btn btn-light-switch-light ${!isDarkMode ? 'active' : ''}`}
+                    className={`btn ${!isDarkMode ? 'active' : ''}`}
                     onClick={this.toggleLightDarkMode}
                 >
                     <SunIcon width={16} height={16} />
                 </button>
                 <button
-                    className={`btn btn-light-switch-dark ${isDarkMode ? 'active' : ''}`}
+                    className={`btn ${isDarkMode ? 'active' : ''}`}
                     onClick={this.toggleLightDarkMode}
                 >
                     <MoonIcon width={16} height={16} />

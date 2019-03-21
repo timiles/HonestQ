@@ -296,23 +296,21 @@ body.dark .question-search-results {
 }
 
 .btn-group-light-switch .btn {
+    background-color: #DEF1FC;
     line-height: 1;
     margin: auto;
     min-width: 40px;
+    z-index: 1;
 }
-.btn-group-light-switch .btn.active {
-    line-height: 1.5;
-}
-.btn-group-light-switch .btn.btn-light-switch-light {
-    background-color: #DEF1FC;
-}
-.btn-group-light-switch .btn.btn-light-switch-light svg {
+.btn-group-light-switch .btn svg {
     fill: #007BFF;
 }
-.btn-group-light-switch .btn.btn-light-switch-dark {
+.btn-group-light-switch .btn.active {
     background-color: #007BFF;
+    line-height: 1.5;
+    z-index: 2;
 }
-.btn-group-light-switch .btn.btn-light-switch-dark svg {
+.btn-group-light-switch .btn.active svg {
     fill: #DEF1FC;
 }
 .btn-group-light-switch .btn:focus {
