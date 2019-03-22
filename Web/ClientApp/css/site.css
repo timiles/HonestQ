@@ -147,10 +147,10 @@ body.dark .navbar-text a:hover, body.dark .navbar-text a:focus {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Nexa Bold';
+    font-family: 'Nexa Bold', Sans-Serif;
 }
 label {
-    font-family: 'Nexa Bold';
+    font-family: 'Nexa Bold', Sans-Serif;
     margin-bottom: 0;
 }
 
