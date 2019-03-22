@@ -29,8 +29,7 @@ export function setDarkMode(isDarkMode = true) {
     }
     // Update mobile browser theme
     const headerColor = getBackgroundColor(isDarkMode);
-    Array.from(document.head.childNodes).forEach((x: ChildNode) => {
-        const meta = x as HTMLMetaElement;
+    Array.prototype.forEach((meta: HTMLMetaElement) => {
         switch (meta.name) {
             case 'msapplication-navbutton-color':
             case 'theme-color': {
@@ -38,5 +37,5 @@ export function setDarkMode(isDarkMode = true) {
                 break;
             }
         }
-    });
+    }, document.head.childNodes);
 }
