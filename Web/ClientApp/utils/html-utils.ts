@@ -33,7 +33,7 @@ export function setDarkMode(isDarkMode = true) {
         const meta = x as HTMLMetaElement;
         switch (meta.name) {
             case 'msapplication-navbutton-color':
-            case 'theme': {
+            case 'theme-color': {
                 meta.content = headerColor;
                 break;
             }
