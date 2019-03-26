@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { QuestionModel } from '../../server-models';
-import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
-import WatchControl from '../shared/WatchControl';
+import { CircleIconValue } from '../shared/CircleIcon';
+import Header from '../shared/Header';
 
 interface Props {
     question: QuestionModel;
@@ -10,66 +10,19 @@ interface Props {
 
 export default class QuestionHeader extends React.Component<Props> {
 
-    private static getAnswersHeader(answersCount: number): string {
-        switch (answersCount) {
-            case 0: {
-                return 'No answers yet';
-            }
-            case 1: {
-                return '1 answer';
-            }
-            default: {
-                return `${answersCount} answers`;
-            }
-        }
-    }
-
-    constructor(props: Props) {
-        super(props);
-
-        this.handleWatch = this.handleWatch.bind(this);
-    }
-
     public render() {
-        const { question } = this.props;
-
-        const answersHeader = QuestionHeader.getAnswersHeader(question.answers.length);
+        const { question, onWatch } = this.props;
 
         return (
-            <div className="header mb-3">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-12 pt-3">
-                            <div className="float-left mr-2">
-                                <div className="avatar"><img className="img-fluid" src="/assets/avatar.png" /></div>
-                            </div>
-                            <p className="float-left mr-3 mt-2">
-                                {question.postedBy}
-                            </p>
-                            <WatchControl
-                                onWatch={this.handleWatch}
-                                watching={question.watching}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <hr />
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <CircleIcon className="float-left" value={CircleIconValue.Question} />
-                            <div className="float-left ml-3">
-                                <h4><span className="post">{question.text}</span></h4>
-                                <p className="child-count">{answersHeader}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Header
+                circleIconValue={CircleIconValue.Question}
+                text={question.text}
+                childCount={question.answers.length}
+                childName="answer"
+                postedBy={question.postedBy}
+                watching={question.watching}
+                onWatch={onWatch}
+            />
         );
-    }
-
-    private handleWatch(on: boolean): void {
-        this.props.onWatch(on);
     }
 }
