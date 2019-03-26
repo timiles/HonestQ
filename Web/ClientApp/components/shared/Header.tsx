@@ -68,7 +68,7 @@ export default class Header extends React.Component<Props> {
                     <div className="row">
                         <div className="col-md-12">
                             <CircleIcon className="float-left" value={circleIconValue} />
-                            <div className="float-left ml-3">
+                            <div className="ml-5">
                                 <h4><span className="post">{text}</span></h4>
                                 <p className="child-count">{childHeader}</p>
                             </div>
