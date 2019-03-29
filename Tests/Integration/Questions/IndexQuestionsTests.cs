@@ -46,7 +46,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var response = await client.GetAsync(_buildUrl());
+                var response = await client.GetAsync(_buildUrl(pageSize: 9999));
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
