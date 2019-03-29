@@ -87,7 +87,6 @@ namespace Pobs.Tests.Integration.Questions
                     var responseAnswer = responseModel.Answers.Single(x => x.Id == answer.Id);
                     Assert.Equal(answer.Text, responseAnswer.Text);
                     Assert.Equal(answer.Slug, responseAnswer.Slug);
-                    Assert.Equal(answer.Source, responseAnswer.Source);
                     Assert.Equal(answer.PostedByUser.Username, responseAnswer.PostedBy);
                     Assert.Equal(2, responseAnswer.Comments.Length);
                 }

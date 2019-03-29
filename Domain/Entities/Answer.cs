@@ -30,9 +30,6 @@ namespace Pobs.Domain.Entities
         [Required, MaxLength(280)]
         public string Slug { get; set; }
 
-        [MaxLength(2000)]
-        public string Source { get; set; }
-
         [Required]
         public User PostedByUser { get; set; }
         public int PostedByUserId { get; set; }

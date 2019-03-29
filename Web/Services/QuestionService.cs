@@ -181,10 +181,7 @@ namespace Pobs.Web.Services
                 return null;
             }
 
-            var answer = new Answer(answerForm.Text, await postedByUserTask, DateTime.UtcNow)
-            {
-                Source = answerForm.Source
-            };
+            var answer = new Answer(answerForm.Text, await postedByUserTask, DateTime.UtcNow);
 
             question.Answers.Add(answer);
             await _context.SaveChangesAsync();
@@ -205,7 +202,6 @@ namespace Pobs.Web.Services
 
             answer.Text = answerForm.Text;
             answer.Slug = answerForm.Text.ToSlug();
-            answer.Source = answerForm.Source;
 
             await _context.SaveChangesAsync();
             return new AnswerModel(answer, loggedInUserId);

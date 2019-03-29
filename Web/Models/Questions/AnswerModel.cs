@@ -34,7 +34,6 @@ namespace Pobs.Web.Models.Questions
             this.Id = answer.Id;
             this.Text = answer.Text;
             this.Slug = answer.Slug;
-            this.Source = answer.Source;
             this.PostedAt = answer.PostedAt.UtcDateTime;
 
             this.PostedBy = answer.PostedByUser.Username;
@@ -60,8 +59,6 @@ namespace Pobs.Web.Models.Questions
 
         [Required]
         public string Slug { get; set; }
-
-        public string Source { get; set; }
 
         public DateTime PostedAt { get; set; }
 

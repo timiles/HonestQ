@@ -2,8 +2,6 @@ import * as React from 'react';
 import { AnswerModel } from '../../server-models';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
-import EmbeddedContent from '../shared/EmbeddedContent';
-import Source from '../shared/Source';
 import DiscussButton from './DiscussButton';
 import UpvoteButton from './UpvoteButton';
 
@@ -25,8 +23,6 @@ export default class AnswerSummary extends React.Component<Props> {
                     <blockquote className="blockquote mb-0">
                         <span className="post quote-marks">{answer.text}</span>
                     </blockquote>
-                    <Source value={answer.source} />
-                    <EmbeddedContent value={answer.source} />
                     <div className="mt-3">
                         <DiscussButton
                             linkToCommentsUrl={buildAnswerUrl(questionId, questionSlug, answer.id, answer.slug)}

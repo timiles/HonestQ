@@ -35,7 +35,6 @@ namespace Pobs.Tests.Integration.Questions
             {
                 // Include emoji in the Text, and white space around it
                 Text = "\nHere's a poop emoji: 💩\r\t\r",
-                Source = "https://example.com/💩",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -54,7 +53,6 @@ namespace Pobs.Tests.Integration.Questions
                         .First(x => x.Id == question.Id);
                     var answer = reloadedQuestion.Answers.Single();
                     Assert.Equal(payload.Text.CleanText(), answer.Text);
-                    Assert.Equal(payload.Source, answer.Source);
                     Assert.Equal(_user.Id, answer.PostedByUser.Id);
                     Assert.True(answer.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.NotEmpty(answer.Watches.Where(x => x.User.Id == _user.Id));
@@ -79,7 +77,6 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new AnswerFormModel
             {
                 Text = " ",
-                Source = "https://example.com/",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

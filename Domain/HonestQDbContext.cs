@@ -59,7 +59,6 @@ namespace Pobs.Domain
             modelBuilder.Entity<Answer>(x =>
             {
                 x.Property(p => p.Text).HasCharSetForEmoji();
-                x.Property(p => p.Source).HasCharSetForEmoji();
             });
             modelBuilder.Entity<Comment>(x =>
             {

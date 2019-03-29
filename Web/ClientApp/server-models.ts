@@ -97,14 +97,12 @@ export interface AdminQuestionModel {
 
 export interface AnswerFormModel {
     text: string;
-    source?: string;
 }
 
 export interface AnswerModel {
     id: number;
     text: string;
     slug: string;
-    source?: string;
     postedAt: string;
     postedBy: string;
     postedByUserPseudoId: number;

@@ -35,7 +35,6 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new AnswerFormModel
             {
                 Text = Utils.GenerateRandomString(10),
-                Source = Utils.GenerateRandomString(10),
             };
             var slug = payload.Text.ToSlug();
             using (var server = new IntegrationTestingServer())
@@ -63,7 +62,6 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(_answer.Id, answer.Id);
                 Assert.Equal(payload.Text, answer.Text);
                 Assert.Equal(slug, answer.Slug);
-                Assert.Equal(payload.Source, answer.Source);
             }
         }
 
@@ -73,7 +71,6 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new AnswerFormModel
             {
                 Text = " ",
-                Source = "http://blah",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

@@ -78,10 +78,7 @@ namespace Pobs.Tests.Integration.Helpers
                     {
                         // Stagger PostedAt times
                         var answerPostedAt = DateTime.UtcNow.AddHours(-1.0 * (answerIndex + 1) / numberOfAnswersPerQuestion);
-                        var answer = new Answer(Utils.GenerateRandomString(10), answerUser, answerPostedAt)
-                        {
-                            Source = Utils.GenerateRandomString(10)
-                        };
+                        var answer = new Answer(Utils.GenerateRandomString(10), answerUser, answerPostedAt);
                         question.Answers.Add(answer);
                     }
                 }

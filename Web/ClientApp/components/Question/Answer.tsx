@@ -5,8 +5,6 @@ import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
-import EmbeddedContent from '../shared/EmbeddedContent';
-import Source from '../shared/Source';
 import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
 import NewComment from './NewComment';
@@ -29,7 +27,7 @@ export default class Answer extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, id, text, source, postedBy, postedAt, comments } = this.props;
+        const { questionId, id, text, postedBy, postedAt, comments } = this.props;
         const { reactionCounts, myReactions, watching } = this.props;
 
         return (
@@ -53,8 +51,6 @@ export default class Answer extends React.Component<Props, {}> {
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                             </footer>
                         </blockquote>
-                        <Source value={source} />
-                        <EmbeddedContent value={source} />
                         <div>
                             <div className="float-right btn-container">
                                 <WatchControl

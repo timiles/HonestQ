@@ -22,9 +22,8 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
         this.state = (props.initialState) ?
             {
                 text: props.initialState.text,
-                source: props.initialState.source,
             } :
-            { text: '', source: '' };
+            { text: '' };
 
         this.answerTextInputRef = React.createRef<SuperTextArea>();
 
@@ -47,14 +46,19 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
 
     public render() {
         const { isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
-        const { text, source } = this.state;
+        const { text } = this.state;
 
         return (
             <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                 <div className={isModal ? 'modal-body' : ''}>
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className="form-group">
-                        <label htmlFor="answerText">Answer</label>
+                        <label htmlFor="answerText">
+                            Provide a short summary of your answer
+                        </label>
+                        <label id="textHelpBlock" className="form-text small text-muted mb-2">
+                            You can back up your answer with specific details and sources in the Comments section.
+                        </label>
                         <SuperTextArea
                             id="answerText"
                             ref={this.answerTextInputRef}
@@ -65,18 +69,7 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
                             submitted={submitted}
                             value={text}
                             onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="answerSource">Source (optional)</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="answerSource"
-                            name="source"
-                            value={source}
-                            maxLength={2000}
-                            onChange={this.handleChange}
+                            aria-describedby="textHelpBlock"
                         />
                     </div>
                 </div>
@@ -110,7 +103,7 @@ export default class AnswerForm extends React.Component<Props, AnswerFormModel> 
     }
 
     private shouldConfirmOnLeave(): boolean {
-        const { text, source } = this.state;
-        return (!!text || !!source);
+        const { text } = this.state;
+        return (!!text);
     }
 }
