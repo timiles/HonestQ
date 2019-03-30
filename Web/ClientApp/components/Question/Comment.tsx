@@ -44,9 +44,9 @@ export default class Comment extends React.Component<Props, {}> {
                             <footer className="blockquote-footer">
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                             </footer>
-                            <Source value={source} />
-                            <EmbeddedContent value={source} />
                         </blockquote>
+                        <Source value={source} />
+                        <EmbeddedContent value={source} />
                         <div className="float-right btn-container">
                             <WatchControl
                                 identifier={id}
