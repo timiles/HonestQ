@@ -163,16 +163,16 @@ class Container extends React.Component<ContainerProps> {
         const root = 'https://www.honestq.com';
         const helmetValues: HelmetValues = (answer) ?
             {
-                pageTitle: `HonestQ: ${question.text} » Ⓐ \u201C${answer.text}\u201D`,
+                pageTitle: `HonestQ: ${question.text} » \u201C${answer.text}\u201D`,
                 canonicalUrl: `${root}${buildAnswerUrl(questionId, question.slug, answer.id, answer.slug)}`,
                 ogTitle: `HonestQ: ${question.text}`,
-                ogDescription: `Ⓐ \u201C${answer.text}\u201D`,
+                ogDescription: `\u201C${answer.text}\u201D`,
             } :
             {
                 pageTitle: `HonestQ: ${question.text}`,
                 canonicalUrl: `${root}${buildQuestionUrl(questionId, question.slug)}`,
                 ogTitle: `HonestQ: ${question.text}`,
-                ogDescription: `Ⓠ ${question.text}`,
+                ogDescription: `${question.text}`,
             };
 
         return (
