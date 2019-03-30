@@ -128,9 +128,9 @@ namespace Pobs.Web.Services
 
             var originalStatus = question.Status;
 
-            question.Text = questionForm.Text;
+            question.Text = questionForm.Text.CleanText();
             question.Slug = questionForm.Text.ToSlug();
-            question.Context = questionForm.Context;
+            question.Context = questionForm.Context.CleanText();
             question.Status = questionForm.IsApproved ? PostStatus.OK : PostStatus.AwaitingApproval;
             question.Tags.Clear();
 
@@ -267,9 +267,9 @@ namespace Pobs.Web.Services
             }
 
             Enum.TryParse<AgreementRating>(commentForm.AgreementRating, out AgreementRating agreementRating);
-            var comment = new Comment(commentForm.Text, await postedByUserTask, DateTime.UtcNow, agreementRating, commentForm.ParentCommentId)
+            var comment = new Comment(commentForm.Text.CleanText(), await postedByUserTask, DateTime.UtcNow, agreementRating, commentForm.ParentCommentId)
             {
-                Source = commentForm.Source,
+                Source = commentForm.Source.CleanText(),
                 IsAnonymous = commentForm.IsAnonymous,
                 Status = commentForm.IsAnonymous ? PostStatus.AwaitingApproval : PostStatus.OK,
             };

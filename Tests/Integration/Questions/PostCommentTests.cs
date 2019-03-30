@@ -76,6 +76,39 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
+        public async Task WhiteSpaceInProperties_ShouldCleanText()
+        {
+            var answer = _question.Answers.First();
+            var payload = new CommentFormModel
+            {
+                Text = "    \tMy awesome comment\r\n   ",
+                Source = "   \t\r\n   ",
+                AgreementRating = AgreementRating.Agree.ToString(),
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_question.Id, answer.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Watches)
+                        .First(x => x.Id == _question.Id);
+                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
+                    var comment = reloadedAnswer.Comments.Single();
+                    Assert.Equal("My awesome comment", comment.Text);
+                    Assert.Null(comment.Source);
+                }
+            }
+        }
+
+        [Fact]
         public async Task IsAnonymous_ShouldAddAsAwaitingApproval()
         {
             var answer = _question.Answers.First();

@@ -78,6 +78,31 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
+        public async Task WhiteSpaceInProperties_ShouldCleanText()
+        {
+            var payload = new QuestionFormModel
+            {
+                Text = "    \tMy honest question\r\n   ",
+                Context = "   \t\r\n   ",
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId, Role.Admin);
+
+                var response = await client.PutAsync(_generateUrl(_question.Id), payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var question = dbContext.Questions.Single(x => x.PostedByUser.Id == _userId);
+                    Assert.Equal("My honest question", question.Text);
+                    Assert.Null(question.Context);
+                }
+            }
+        }
+
+        [Fact]
         public async Task NoText_ShouldGetBadRequest()
         {
             var payload = new QuestionFormModel
