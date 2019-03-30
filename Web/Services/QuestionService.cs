@@ -85,9 +85,9 @@ namespace Pobs.Web.Services
 
             var postedByUserTask = _context.Users.FindAsync(postedByUserId);
 
-            var question = new Question(questionForm.Text, await postedByUserTask, DateTime.UtcNow)
+            var question = new Question(questionForm.Text.CleanText(), await postedByUserTask, DateTime.UtcNow)
             {
-                Source = questionForm.Source,
+                Context = questionForm.Context.CleanText(),
                 Status = isAdmin ? PostStatus.OK : PostStatus.AwaitingApproval,
             };
 
@@ -130,7 +130,7 @@ namespace Pobs.Web.Services
 
             question.Text = questionForm.Text;
             question.Slug = questionForm.Text.ToSlug();
-            question.Source = questionForm.Source;
+            question.Context = questionForm.Context;
             question.Status = questionForm.IsApproved ? PostStatus.OK : PostStatus.AwaitingApproval;
             question.Tags.Clear();
 

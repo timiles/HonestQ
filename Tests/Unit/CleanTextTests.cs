@@ -7,6 +7,9 @@ namespace Pobs.Tests.Unit
     public class CleanTextTests
     {
         [Theory]
+        [InlineData(null, null)]
+        [InlineData("", null)]
+        [InlineData("  \t \r\n", null)]
         [InlineData("     Hello there!   ", "Hello there!")]
         [InlineData("\tHello there!\t\r\n", "Hello there!")]
         [InlineData(" \t \"Hello there!\" \t ", "\"Hello there!\"")]

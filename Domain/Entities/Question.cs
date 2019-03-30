@@ -35,6 +35,9 @@ namespace Pobs.Domain.Entities
         [MaxLength(2000)]
         public string Source { get; set; }
 
+        [MaxLength(2000)]
+        public string Context { get; set; }
+
         [Required]
         public virtual User PostedByUser { get; set; }
         public int PostedByUserId { get; set; }

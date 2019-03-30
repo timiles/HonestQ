@@ -12,7 +12,7 @@ namespace Pobs.Web.Models.Questions
         {
             this.Slug = question.Slug;
             this.Text = question.Text;
-            this.Source = question.Source;
+            this.Context = question.Context;
             this.Tags = question.Tags.Where(x => x.IsApproved).Select(x => new TagValueModel(x)).ToArray();
 
             this.PostedBy = question.PostedByUser.Username;
@@ -27,7 +27,7 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string Text { get; set; }
 
-        public string Source { get; set; }
+        public string Context { get; set; }
 
         [Required]
         public string PostedBy { get; set; }

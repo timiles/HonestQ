@@ -7,7 +7,7 @@ namespace Pobs.Web.Models.Questions
     {
         [Required]
         public string Text { get; set; }
-        public string Source { get; set; }
+        public string Context { get; set; }
         public TagValueFormModel[] Tags { get; set; }
 
 

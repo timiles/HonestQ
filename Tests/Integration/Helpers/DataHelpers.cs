@@ -69,7 +69,7 @@ namespace Pobs.Tests.Integration.Helpers
                 var questionText = $"{Utils.GenerateRandomString(4)} {Utils.GenerateRandomString(4)} {Utils.GenerateRandomString(4)}";
                 var question = new Question(questionText, questionUser, questionPostedAt)
                 {
-                    Source = Utils.GenerateRandomString(10),
+                    Context = Utils.GenerateRandomString(10),
                     Status = questionStatus,
                 };
                 if (answerUser != null)

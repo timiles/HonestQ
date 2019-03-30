@@ -38,7 +38,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new AdminQuestionFormModel
             {
                 Text = Utils.GenerateRandomString(10),
-                Source = Utils.GenerateRandomString(10),
+                Context = Utils.GenerateRandomString(10),
                 Tags = new[] { new QuestionFormModel.TagValueFormModel { Slug = _differentTag.Slug } },
                 IsApproved = true,
             };
@@ -69,7 +69,7 @@ namespace Pobs.Tests.Integration.Questions
                     .First(x => x.Id == _question.Id);
                 Assert.Equal(payload.Text, question.Text);
                 Assert.Equal(slug, question.Slug);
-                Assert.Equal(payload.Source, question.Source);
+                Assert.Equal(payload.Context, question.Context);
                 Assert.Equal(PostStatus.OK, question.Status);
 
                 Assert.Single(question.Tags);

@@ -43,7 +43,7 @@ namespace Pobs.Tests.Integration.Questions
                 var responseModel = JsonConvert.DeserializeObject<AdminQuestionModel>(responseContent);
                 Assert.Equal(_question.Slug, responseModel.Slug);
                 Assert.Equal(_question.Text, responseModel.Text);
-                Assert.Equal(_question.Source, responseModel.Source);
+                Assert.Equal(_question.Context, responseModel.Context);
                 Assert.Contains(_tag.Slug, responseModel.Tags.Select(x => x.Slug));
                 Assert.False(responseModel.IsApproved);
             }

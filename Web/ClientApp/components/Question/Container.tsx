@@ -10,13 +10,12 @@ import * as QuestionStore from '../../store/Question';
 import { isUserInRole } from '../../utils/auth-utils';
 import { buildAnswerUrl, buildQuestionUrl } from '../../utils/route-utils';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
-import EmbeddedContent from '../shared/EmbeddedContent';
 import RedirectWithStatusCode from '../shared/RedirectWithStatusCode';
-import Source from '../shared/Source';
 import TagsList from '../Tags/List';
 import Answer from './Answer';
 import AnswersList from './AnswersList';
 import BackToQuestionButton from './BackToQuestionButton';
+import Context from './Context';
 import QuestionHeader from './QuestionHeader';
 import QuestionTagsList from './QuestionTagsList';
 
@@ -88,14 +87,7 @@ class Container extends React.Component<ContainerProps> {
                                     <ActionStatusDisplay {...this.props.getQuestionStatus} />
                                     {!answerId &&
                                         <div>
-                                            {question.source &&
-                                                <div className="card mb-3">
-                                                    <div className="card-body px-5">
-                                                        <Source value={question.source} />
-                                                        <EmbeddedContent value={question.source} />
-                                                    </div>
-                                                </div>
-                                            }
+                                            <Context value={question.context} />
                                             <div className="d-lg-none mt-3">
                                                 <QuestionTagsList tags={question.tags} />
                                             </div>

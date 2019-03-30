@@ -80,7 +80,7 @@ export interface WatchResponseModel {
 export interface AdminQuestionFormModel {
     isApproved: boolean;
     text: string;
-    source?: string;
+    context?: string;
     tags: TagValueFormModel[];
 }
 
@@ -88,7 +88,7 @@ export interface AdminQuestionModel {
     isApproved: boolean;
     slug: string;
     text: string;
-    source?: string;
+    context?: string;
     postedBy: string;
     watching: boolean;
     tags: TagValueModel[];
@@ -141,7 +141,7 @@ export interface TagValueFormModel {
 
 export interface QuestionFormModel {
     text: string;
-    source?: string;
+    context?: string;
     tags: TagValueFormModel[];
 }
 
@@ -156,7 +156,7 @@ export interface QuestionListItemModel {
 export interface QuestionModel {
     slug: string;
     text: string;
-    source?: string;
+    context?: string;
     postedBy: string;
     watching: boolean;
     tags: TagValueModel[];

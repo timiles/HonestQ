@@ -47,6 +47,7 @@ namespace Pobs.Tests.Integration.Questions
                         .Include(x => x.Watches)
                         .Single(x => x.PostedByUser.Id == _userId);
                     Assert.Equal(payload.Text, question.Text);
+                    Assert.Null(question.Context);
                     Assert.True(question.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.Equal(PostStatus.OK, question.Status);
                     Assert.NotEmpty(question.Watches.Where(x => x.UserId == _userId));
@@ -62,13 +63,38 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
+        public async Task WhiteSpaceInProperties_ShouldCleanText()
+        {
+            var payload = new QuestionFormModel
+            {
+                Text = "    \tMy honest question\r\n   ",
+                Context = "   \t\r\n   ",
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId, Role.Admin);
+
+                var response = await client.PostAsync(_url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var question = dbContext.Questions.Single(x => x.PostedByUser.Id == _userId);
+                    Assert.Equal("My honest question", question.Text);
+                    Assert.Null(question.Context);
+                }
+            }
+        }
+
+        [Fact]
         public async Task AllProperties_ShouldPersist()
         {
             var payload = new QuestionFormModel
             {
                 // Include emoji in the Text
                 Text = "Here's a poop emoji: 💩",
-                Source = "https://example.com/💩",
+                Context = "https://example.com/💩",
                 Tags = new[] { new QuestionFormModel.TagValueFormModel { Slug = _tag.Slug } }
             };
             using (var server = new IntegrationTestingServer())
@@ -85,7 +111,7 @@ namespace Pobs.Tests.Integration.Questions
                         .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                         .Single(x => x.PostedByUser.Id == _userId);
                     Assert.Equal(payload.Text, question.Text);
-                    Assert.Equal(payload.Source, question.Source);
+                    Assert.Equal(payload.Context, question.Context);
                     Assert.Equal("heres_a_poop_emoji", question.Slug);
                     Assert.Equal(1, question.Tags.Count);
                     Assert.Equal(_tag.Id, question.Tags.Single().Id);

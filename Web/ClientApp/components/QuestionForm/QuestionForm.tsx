@@ -24,10 +24,10 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
         this.state = (props.initialState) ?
             {
                 text: props.initialState.text,
-                source: props.initialState.source,
+                context: props.initialState.context,
                 tags: props.initialState.tags,
             } :
-            { text: '', source: '', tags: props.initialTagValues || [] };
+            { text: '', context: '', tags: props.initialTagValues || [] };
 
         this.questionTextInputRef = React.createRef<SuperTextArea>();
 
@@ -51,7 +51,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
 
     public render() {
         const { isModal, onCloseModalRequested, error, submitting, submitted } = this.props;
-        const { text, source, tags } = this.state;
+        const { text, context, tags } = this.state;
 
         return (
             <form className="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
@@ -78,15 +78,19 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="questionSource">Source (optional)</label>
+                        <label htmlFor="questionContext">Context (optional)</label>
+                        <label id="contextHelpBlock" className="form-text small text-muted mb-2">
+                            Provide context if it would help people to understand why you are asking this question.
+                        </label>
                         <input
                             type="text"
                             className="form-control"
-                            id="questionSource"
-                            name="source"
-                            value={source}
+                            id="questionContext"
+                            name="context"
+                            value={context}
                             maxLength={2000}
                             onChange={this.handleChange}
+                            aria-describedby="contextHelpBlock"
                         />
                     </div>
                     <div className="form-group">
@@ -134,7 +138,7 @@ export default class QuestionForm extends React.Component<Props, QuestionFormMod
     }
 
     private shouldConfirmOnLeave(): boolean {
-        const { text, source } = this.state;
-        return (!!text || !!source);
+        const { text, context } = this.state;
+        return (!!text || !!context);
     }
 }

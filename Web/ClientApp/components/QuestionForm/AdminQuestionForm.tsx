@@ -18,11 +18,11 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
         this.state = (props.initialState) ?
             {
                 text: props.initialState.text,
-                source: props.initialState.source,
+                context: props.initialState.context,
                 tags: props.initialState.tags,
                 isApproved: props.initialState.isApproved,
             } :
-            { text: '', source: '', tags: [], isApproved: false };
+            { text: '', context: '', tags: [], isApproved: false };
 
         this.questionTextInputRef = React.createRef<SuperTextArea>();
 
@@ -38,7 +38,7 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
 
     public render() {
         const { error, submitting, submitted } = this.props;
-        const { text, source, tags, isApproved } = this.state;
+        const { text, context, tags, isApproved } = this.state;
 
         return (
             <form className="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
@@ -58,13 +58,13 @@ export default class AdminQuestionForm extends React.Component<Props, AdminQuest
                     />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="questionSource">Source (optional)</label>
+                    <label htmlFor="questionContext">Context (optional)</label>
                     <input
                         type="text"
                         className="form-control"
-                        id="questionSource"
-                        name="source"
-                        value={source}
+                        id="questionContext"
+                        name="context"
+                        value={context}
                         maxLength={2000}
                         onChange={this.handleChange}
                     />
