@@ -33,9 +33,6 @@ namespace Pobs.Domain.Entities
         public string Text { get; set; }
 
         [MaxLength(2000)]
-        public string Source { get; set; }
-
-        [MaxLength(2000)]
         public string Context { get; set; }
 
         [Required]
