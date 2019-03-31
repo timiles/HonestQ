@@ -32,7 +32,6 @@ export default class Tag extends React.Component<TagProps, {}> {
                         }
                     </div>
                 }
-                <hr />
                 {questions.length === 0 &&
                     <h2>Start the conversation</h2>
                 }
