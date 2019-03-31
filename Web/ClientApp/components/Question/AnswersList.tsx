@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { AnswerModel } from '../../server-models';
-import { countNestedComments } from '../../utils/model-utils';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
 import OrderByControl, { OrderByValue } from '../shared/OrderByControl';
 import AnswerSummary from './AnswerSummary';
@@ -26,15 +25,11 @@ export default class AnswersList extends React.Component<Props, State> {
         return (b.reactionCounts ? b.reactionCounts[UpvoteButton.ReactionType] || 0 : 0) -
             (a.reactionCounts ? a.reactionCounts[UpvoteButton.ReactionType] || 0 : 0);
     }
-    private static orderByComments(a: AnswerModel, b: AnswerModel): number {
-        return countNestedComments(b.comments) - countNestedComments(a.comments);
-    }
 
     private static switchOrderBy(orderBy: OrderByValue): (a: AnswerModel, b: AnswerModel) => number {
         switch (orderBy) {
             case OrderByValue.Newest: return this.orderByNewest;
             case OrderByValue.Upvotes: return this.orderByUpvotes;
-            case OrderByValue.Comments: return this.orderByComments;
             default: throw new Error(`Unexpected orderBy: ${orderBy}.`);
         }
     }

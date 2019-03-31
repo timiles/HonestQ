@@ -2,7 +2,6 @@ import * as React from 'react';
 import Icon, { IconValue } from './Icon';
 
 export enum OrderByValue {
-    Comments,
     Newest,
     Upvotes,
 }
@@ -47,7 +46,6 @@ export default class OrderByControl extends React.Component<Props, State> {
             <div className="btn-group" role="group">
                 {renderButton(OrderByValue.Upvotes, IconValue.Upvote)}
                 {renderButton(OrderByValue.Newest, IconValue.Recent)}
-                {renderButton(OrderByValue.Comments, IconValue.Discuss)}
             </div>
         );
     }
