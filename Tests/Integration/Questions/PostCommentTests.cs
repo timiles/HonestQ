@@ -60,7 +60,6 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.False(comment.IsAnonymous);
                     Assert.Equal(PostStatus.OK, comment.Status);
-                    Assert.NotEmpty(comment.Watches.Where(x => x.User.Id == _user.Id));
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
@@ -70,7 +69,6 @@ namespace Pobs.Tests.Integration.Questions
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal(_user.Username, responseModel.PostedBy);
                     Assert.Equal("OK", responseModel.Status);
-                    Assert.True(responseModel.Watching);
                 }
             }
         }

@@ -14,7 +14,7 @@ type Props = AnswerModel
     & {
         questionId: number,
         onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-        onWatch: (on: boolean, answerId: number, commentId?: number) => void,
+        onWatch: (on: boolean, answerId: number) => void,
     };
 
 export default class Answer extends React.Component<Props, {}> {
@@ -86,7 +86,6 @@ export default class Answer extends React.Component<Props, {}> {
                                 questionId={questionId}
                                 answerId={id}
                                 onReaction={this.handleReaction}
-                                onWatch={this.handleWatch}
                             />
                         </li>)}
                 </ol>
@@ -109,7 +108,7 @@ export default class Answer extends React.Component<Props, {}> {
         this.props.onReaction(reactionType, on, answerId, commentId);
     }
 
-    private handleWatch(on: boolean, identifier?: number): void {
-        this.props.onWatch(on, this.props.id, identifier);
+    private handleWatch(on: boolean): void {
+        this.props.onWatch(on, this.props.id);
     }
 }

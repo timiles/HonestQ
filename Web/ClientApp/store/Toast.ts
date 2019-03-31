@@ -63,14 +63,10 @@ export const reducer: Reducer<ToastState> = (state: ToastState, action: KnownAct
     const switchActionType = (): ToastModel | null => {
         switch (action.type) {
             case 'UPDATE_WATCH_SUCCESS':
-                const watchedObject =
-                    (action.payload.commentId) ? 'comment' :
-                        (action.payload.answerId) ? 'answer' : 'question';
+                const watchedObject = (action.payload.answerId) ? 'answer' : 'question';
 
                 if (action.payload.response.watching) {
-                    const newObject =
-                        (action.payload.commentId) ? 'reply to' :
-                            (action.payload.answerId) ? 'comment on' : 'answer to';
+                    const newObject = (action.payload.answerId) ? 'comment on' : 'answer to';
 
                     return {
                         title: 'Watching',

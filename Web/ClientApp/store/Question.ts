@@ -43,7 +43,6 @@ export interface UpdateWatchSuccessAction {
     type: 'UPDATE_WATCH_SUCCESS';
     payload: {
         answerId?: number;
-        commentId?: number;
         response: WatchResponseModel;
     };
 }
@@ -131,22 +130,20 @@ export const actionCreators = {
                     });
             })();
         },
-    updateWatch: (on: boolean, questionId: number, answerId?: number, commentId?: number):
+    updateWatch: (on: boolean, questionId: number, answerId?: number):
         AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
 
-                const url =
-                    commentId ? `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/watch` :
-                        answerId ? `/api/questions/${questionId}/answers/${answerId}/watch` :
-                            `/api/questions/${questionId}/watch`;
+                const url = answerId ? `/api/questions/${questionId}/answers/${answerId}/watch` :
+                    `/api/questions/${questionId}/watch`;
 
                 const method = on ? 'POST' : 'DELETE';
                 fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
                     .then((watchResponse) => {
                         dispatch({
                             type: 'UPDATE_WATCH_SUCCESS',
-                            payload: { answerId, commentId, response: watchResponse },
+                            payload: { answerId, response: watchResponse },
                         });
                     })
                     .catch((reason) => {
@@ -268,18 +265,13 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             };
         }
         case 'UPDATE_WATCH_SUCCESS': {
-            const { answerId, commentId, response } = action.payload;
+            const { answerId, response } = action.payload;
             const questionModel = state.question!;
             // Slice for immutability
             const answersNext = questionModel.answers;
             const answerModel = answersNext.filter((x) => x.id === answerId)[0];
 
-            if (commentId) {
-                const comment = findComment(answerModel.comments, commentId);
-                if (comment) {
-                    comment.watching = response.watching;
-                }
-            } else if (answerId) {
+            if (answerId) {
                 answerModel.watching = response.watching;
             } else {
                 questionModel.watching = response.watching;

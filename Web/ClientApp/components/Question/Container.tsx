@@ -198,8 +198,8 @@ class Container extends React.Component<ContainerProps> {
         }
     }
 
-    private handleWatch(on: boolean, answerId?: number, commentId?: number): void {
-        this.props.updateWatch(on, this.props.questionId, answerId, commentId);
+    private handleWatch(on: boolean, answerId?: number): void {
+        this.props.updateWatch(on, this.props.questionId, answerId);
     }
 }
 

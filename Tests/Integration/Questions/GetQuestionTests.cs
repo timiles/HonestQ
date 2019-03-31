@@ -175,10 +175,6 @@ namespace Pobs.Tests.Integration.Questions
             var watchedAnswer = watchedQuestion.Answers.First();
             DataHelpers.CreateWatch(_questionUserId, watchedAnswer);
 
-            // Watch a Comment
-            var watchedComment = watchedQuestion.Answers.First().Comments.First();
-            DataHelpers.CreateWatch(_questionUserId, watchedComment);
-
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
@@ -195,9 +191,6 @@ namespace Pobs.Tests.Integration.Questions
 
                 var responseWatchedAnswer = responseModel.Answers.Single(x => x.Id == watchedAnswer.Id);
                 Assert.True(responseWatchedAnswer.Watching);
-
-                var responseWatchedComment = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == watchedComment.Id);
-                Assert.True(responseWatchedComment.Watching);
             }
         }
 

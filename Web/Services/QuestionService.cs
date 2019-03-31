@@ -160,7 +160,6 @@ namespace Pobs.Web.Services
                 .Include(x => x.Answers).ThenInclude(x => x.Watches)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Reactions)
-                .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.Watches)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             if (question == null || (question.Status == PostStatus.AwaitingApproval && !isAdmin))
             {

@@ -323,9 +323,7 @@ namespace Pobs.Web.Controllers
                 var commentModel = await _questionService.SaveComment(questionId, answerId, payload, userId);
                 if (commentModel != null)
                 {
-                    await _notificationsService.AddWatchToComment(userId, questionId, answerId, commentModel.Id);
                     await _notificationsService.CreateNotificationsForComment(commentModel.Id);
-                    commentModel.Watching = true;
                     return Ok(commentModel);
                 }
                 return NotFound();

@@ -4,7 +4,6 @@ import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import Icon, { IconValue } from '../shared/Icon';
 import Source from '../shared/Source';
-import WatchControl from '../shared/WatchControl';
 import NewComment from './NewComment';
 import UpvoteButton from './UpvoteButton';
 
@@ -13,21 +12,13 @@ type Props = CommentModel
         questionId: number,
         answerId: number,
         onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
-        onWatch: (on: boolean, commentId: number) => void,
     };
 
 export default class Comment extends React.Component<Props, {}> {
 
-    constructor(props: Props) {
-        super(props);
-
-        this.handleWatch = this.handleWatch.bind(this);
-    }
-
     public render(): any {
         const { questionId, answerId } = this.props;
         const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
-        const { watching } = this.props;
         const { postedAt, postedBy } = this.props;
         const iconValue = IconValue[agreementRating as keyof typeof IconValue];
 
@@ -48,12 +39,6 @@ export default class Comment extends React.Component<Props, {}> {
                         <Source value={source} />
                         <EmbeddedContent value={source} />
                         <div className="float-right btn-container">
-                            <WatchControl
-                                identifier={id}
-                                onWatch={this.handleWatch}
-                                watching={watching}
-                                hideLabelOnMobile={true}
-                            />
                             <UpvoteButton
                                 answerId={answerId}
                                 commentId={id}
@@ -81,15 +66,10 @@ export default class Comment extends React.Component<Props, {}> {
                                     questionId={questionId}
                                     answerId={answerId}
                                     onReaction={this.props.onReaction}
-                                    onWatch={this.props.onWatch}
                                 />
                             </li>)}
                     </ol>}
             </>
         );
-    }
-
-    private handleWatch(on: boolean, identifier: number): void {
-        this.props.onWatch(on, identifier);
     }
 }

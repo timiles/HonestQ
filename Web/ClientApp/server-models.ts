@@ -132,7 +132,6 @@ export interface CommentModel {
     comments: CommentModel[];
     reactionCounts: { [key: string]: number };
     myReactions: string[];
-    watching: boolean;
 }
 
 export interface TagValueFormModel {
