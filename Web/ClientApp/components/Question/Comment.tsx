@@ -26,16 +26,21 @@ export default class Comment extends React.Component<Props, {}> {
             <>
                 <div className="card">
                     <div className="card-body">
-                        <blockquote className="blockquote">
-                            <span className="badge badge-pill badge-reaction float-left mr-2">
+                        <div className="mb-3">
+                            <span className="badge badge-pill badge-reaction mr-2">
                                 {iconValue >= 0 && <Icon value={iconValue} />}
                                 <label>{agreementRating.toSentenceCase()}</label>
                             </span>
-                            {text && <p>{text}</p>}
-                            <footer className="blockquote-footer">
-                                {postedBy}, <DateTimeTooltip dateTime={postedAt} />
-                            </footer>
-                        </blockquote>
+                            <span>
+                                {postedBy}, {}
+                            </span>
+                            <DateTimeTooltip dateTime={postedAt} />
+                        </div>
+                        {text &&
+                            <blockquote className="blockquote">
+                                <p>{text}</p>
+                            </blockquote>
+                        }
                         <Source value={source} />
                         <EmbeddedContent value={source} />
                         <div className="float-right btn-container">
