@@ -26,6 +26,10 @@ export default class Answer extends React.Component<Props, {}> {
         this.handleWatch = this.handleWatch.bind(this);
     }
 
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     public render() {
         const { questionId, id, text, postedBy, postedAt, comments } = this.props;
         const { reactionCounts, myReactions, watching } = this.props;
