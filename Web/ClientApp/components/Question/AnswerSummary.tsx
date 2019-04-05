@@ -19,7 +19,7 @@ export default class AnswerSummary extends React.Component<Props> {
         return (
             <div className="card">
                 <CircleIcon value={CircleIconValue.Answer} />
-                <div className="card-body px-5">
+                <div className="card-body px-sm-5">
                     <blockquote className="blockquote mb-0">
                         <span className="post quote-marks">{answer.text}</span>
                     </blockquote>
