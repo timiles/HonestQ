@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { CommentModel } from '../../server-models';
-import Icon, { IconValue } from '../shared/Icon';
+import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 
 interface Props {
     linkToCommentsUrl: string;

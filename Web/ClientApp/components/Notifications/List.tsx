@@ -9,7 +9,7 @@ import * as NotificationsStore from '../../store/Notifications';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
-import Icon, { IconValue } from '../shared/Icon';
+import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 import WatchControlDemo from '../shared/WatchControlDemo';
 
 type Props = NotificationsStore.ListState

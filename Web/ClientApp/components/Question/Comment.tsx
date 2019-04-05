@@ -2,8 +2,8 @@ import * as React from 'react';
 import { CommentModel } from '../../server-models';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
-import Icon, { IconValue } from '../shared/Icon';
 import Source from '../shared/Source';
+import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 import NewComment from './NewComment';
 import UpvoteButton from './UpvoteButton';
 

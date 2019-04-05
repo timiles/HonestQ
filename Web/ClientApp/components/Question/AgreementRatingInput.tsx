@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Icon, { IconValue } from '../shared/Icon';
+import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 
 interface Props {
     name?: string;

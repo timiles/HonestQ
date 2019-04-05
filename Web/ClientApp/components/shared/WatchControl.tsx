@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ButtonOrLogIn from './ButtonOrLogIn';
-import Icon, { IconValue } from './Icon';
+import Icon, { IconValue } from './SvgIcons/Icon';
 
 interface Props {
     identifier?: any;

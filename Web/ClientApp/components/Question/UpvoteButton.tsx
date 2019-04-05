@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
-import Icon, { IconValue } from '../shared/Icon';
+import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 
 interface Props {
     answerId: number;
