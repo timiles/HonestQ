@@ -32,7 +32,7 @@ export default class DateTimeTooltip extends React.Component<Props> {
         return (
             <LoggedInUserContext.Consumer>
                 {(user) => {
-                    const offsetHours = user ? user.timeZoneOffsetHours : 0;
+                    const offsetHours = new Date().getTimezoneOffset() / -60;
                     const dateTimeOffset = parseDateWithTimeZoneOffset(dateTime, offsetHours);
                     const dateTimeMoment = moment(dateTimeOffset);
                     const friendlyTime = dateTimeMoment.fromNow();
