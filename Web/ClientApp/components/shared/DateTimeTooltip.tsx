@@ -40,6 +40,7 @@ export default class DateTimeTooltip extends React.Component<Props> {
 
                     return (
                         <span
+                            className="text-nowrap"
                             ref={this.tooltipRef}
                             data-toggle="tooltip"
                             data-placement="top"
