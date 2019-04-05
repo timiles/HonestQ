@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly IEmailSender _emailSender;
         private readonly AppSettings _appSettings;
-        private readonly int[] _adminUserIds = new[] { 1, 2, 7, 8, 9, 10 };
+        private readonly int[] _adminUserIds = new[] { 1, 2 };
 
         public AccountController(IUserService userService, IEmailSender emailSender, IOptions<AppSettings> appSettings)
         {
