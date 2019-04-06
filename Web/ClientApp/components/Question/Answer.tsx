@@ -5,6 +5,7 @@ import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
+import QuotationMarks from '../shared/QuotationMarks';
 import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
 import NewComment from './NewComment';
@@ -50,7 +51,9 @@ export default class Answer extends React.Component<Props, {}> {
                                     </Link>
                                 }
                             </LoggedInUserContext.Consumer>
-                            <span className="post quote-marks">{text}</span>
+                            <QuotationMarks width={20}>
+                                <span className="mx-2 post">{text}</span>
+                            </QuotationMarks>
                             <footer className="blockquote-footer">
                                 {postedBy}, <DateTimeTooltip dateTime={postedAt} />
                             </footer>

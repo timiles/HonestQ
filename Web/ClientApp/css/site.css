@@ -540,60 +540,9 @@ ul.list-comma-separated li:not(:last-child):after {
     content: ',\0000a0';
 }
 
-.quote-marks {
-    quotes: "“" "”" "‘" "’";
-    text-align: left;
+.quotation-mark svg {
+    opacity: .4;
 }
-    .quote-marks:hover {
-        text-decoration: none;
-    }
-    .quote-marks:before, .quote-marks:after {
-        font-family: Georgia, serif;
-        line-height: 0;
-        position: relative;
-    }
-    .quote-marks:before {
-        content: open-quote;
-    }
-    .quote-marks:after {
-        content: close-quote;
-    }
-    .btn-lg .quote-marks:before, a.btn .quote-marks:after {
-        font-size: 3.3em;
-        opacity: 0.4;
-    }
-    .btn-lg .quote-marks:before {
-        margin-right: 6px;
-        top: 32px;
-    }
-    .btn-lg .quote-marks:after {
-        margin-left: 6px;
-        bottom: -32px;
-    }
-    blockquote .quote-marks:before, blockquote .quote-marks:after {
-        font-size: 3em;
-        opacity: 0.4;
-    }
-    blockquote .quote-marks:before {
-        margin-right: 3px;
-        top: 26px;
-    }
-    blockquote .quote-marks:after {
-        bottom: -26px;
-        margin-left: 3px;
-    }
-    small .quote-marks:before, small .quote-marks:after {
-        font-size: 1.5rem;
-        opacity: 0.8;
-    }
-    small .quote-marks:before {
-        margin-right: 1px;
-        top: 9px;
-    }
-    small .quote-marks:after {
-        bottom: -9px;
-        margin-left: 1px;
-    }
 
 dl.button-definitions {
     min-width: 165px;

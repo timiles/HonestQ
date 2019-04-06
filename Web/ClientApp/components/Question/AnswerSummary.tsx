@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AnswerModel } from '../../server-models';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
+import QuotationMarks from '../shared/QuotationMarks';
 import DiscussButton from './DiscussButton';
 import UpvoteButton from './UpvoteButton';
 
@@ -21,7 +22,9 @@ export default class AnswerSummary extends React.Component<Props> {
                 <CircleIcon value={CircleIconValue.Answer} />
                 <div className="card-body px-sm-5">
                     <blockquote className="blockquote mb-0">
-                        <span className="post quote-marks">{answer.text}</span>
+                        <QuotationMarks width={20}>
+                            <span className="mx-2 post">{answer.text}</span>
+                        </QuotationMarks>
                     </blockquote>
                     <div className="mt-3">
                         <DiscussButton

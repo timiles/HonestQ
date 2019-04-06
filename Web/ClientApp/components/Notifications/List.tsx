@@ -9,6 +9,7 @@ import * as NotificationsStore from '../../store/Notifications';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
+import QuotationMarks from '../shared/QuotationMarks';
 import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 import WatchControlDemo from '../shared/WatchControlDemo';
 
@@ -174,8 +175,10 @@ class NotificationList extends React.Component<Props> {
                                     <Icon value={IconValue.Watch} />
                                 </span>
                             }
-                            <CircleIcon className="float-left" value={CircleIconValue.Answer} />
-                            <span className="ml-2 answer quote-marks">{notification.answerText}</span>
+                            <CircleIcon className="float-left mr-2" value={CircleIconValue.Answer} />
+                            <QuotationMarks width={20}>
+                                <span className="mx-2 answer">{notification.answerText}</span>
+                            </QuotationMarks>
                         </Link>
                     </>
                 );
@@ -191,8 +194,10 @@ class NotificationList extends React.Component<Props> {
                                     <b>{notification.questionText}</b>
                                 </Link>
                                 {} » {}
-                                <Link to={answerUrl} className="answer quote-marks">
-                                    <b>{notification.answerText}</b>
+                                <Link to={answerUrl} className="answer">
+                                    <QuotationMarks width={10}>
+                                        <b>{notification.answerText}</b>
+                                    </QuotationMarks>
                                 </Link>
                                 , <DateTimeTooltip dateTime={notification.postedAt} />
                             </small>

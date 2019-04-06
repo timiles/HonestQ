@@ -2,6 +2,7 @@ import * as React from 'react';
 import { CommentFormModel } from '../../server-models';
 import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';
+import QuotationMarks from '../shared/QuotationMarks';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import AgreementRatingInput from './AgreementRatingInput';
@@ -62,7 +63,13 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                         <label>
                             Replying to
                         </label>
-                        <p className="quote-marks">{replyingToText}</p>
+                        <p>
+                            <QuotationMarks width={15}>
+                                <span className="mx-1">
+                                    {replyingToText}
+                                </span>
+                            </QuotationMarks>
+                        </p>
                     </div>
                     <div className="form-group">
                         <label htmlFor="agreementRating">
