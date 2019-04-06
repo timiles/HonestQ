@@ -13,7 +13,7 @@ namespace Pobs.Tests.Integration.Helpers
     {
         public static void AuthenticateAs(this HttpClient httpClient, int userId, params Role[] roles)
         {
-            var tokenString = AuthUtils.GenerateJwt(TestSetup.AppSettings.Secret, userId, roles);
+            var tokenString = AuthUtils.GenerateJwt(TestSetup.AppSettings.Secret, userId, null, roles);
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenString);
         }
 

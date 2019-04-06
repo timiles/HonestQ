@@ -69,10 +69,10 @@ namespace WebApi.Controllers
             {
                 roles.Add(Pobs.Domain.Role.Admin);
             }
-            var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, roles.ToArray());
+            var expiry = userModel.RememberMe ? DateTime.UtcNow.AddYears(5) : null as DateTime?;
+            var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, expiry, roles.ToArray());
 
             // Put token into Cookies to enable Server Side Rendering
-            var expiry = userModel.RememberMe ? DateTime.UtcNow.AddYears(5) : null as DateTime?;
             this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true, Expires = expiry });
 
             // Return basic user info and token to store client side

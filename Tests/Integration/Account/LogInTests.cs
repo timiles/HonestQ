@@ -62,6 +62,8 @@ namespace Pobs.Tests.Integration.Account
                 int.TryParse(identityClaim.Value, out int userId);
                 Assert.True(userId > 0);
 
+                Assert.Equal(7, Math.Round((decodedToken.ValidTo - DateTime.UtcNow).TotalDays));
+
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.NotNull(idTokenCookie);
                 Assert.Equal(responseModel.Token, idTokenCookie.Value);
@@ -157,6 +159,8 @@ namespace Pobs.Tests.Integration.Account
                 Assert.True(idTokenCookie.Expires.HasValue);
                 // Cookie should persist for at least a year, in reality it's even more
                 Assert.True((idTokenCookie.Expires.Value - DateTime.UtcNow).TotalDays > 365);
+                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
+                Assert.True((decodedToken.ValidTo - DateTime.UtcNow).TotalDays > 365);
             }
         }
 

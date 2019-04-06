@@ -39,7 +39,7 @@ namespace Pobs.Web.Helpers
             return true;
         }
 
-        public static string GenerateJwt(string secret, int userId, params Role[] roles)
+        public static string GenerateJwt(string secret, int userId, DateTime? expiry, params Role[] roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = System.Text.Encoding.ASCII.GetBytes(secret);
@@ -49,7 +49,7 @@ namespace Pobs.Web.Helpers
                 {
                     new Claim(ClaimTypes.Name, userId.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = expiry ?? DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             foreach (var role in roles)
