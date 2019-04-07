@@ -13,10 +13,10 @@ export default class WelcomeMessage extends React.Component {
                     </h1>
                     <p className="lead mb-0">
                         <b>
-                            HonestQ is a Q&amp;A site based on freedom of speech, critical
-                        <br />
-                            thinking, and citing your sources. Find out how people
-                        <br />
+                            HonestQ is a Q&amp;A site based on freedom of speech, critical {}
+                            <br className="d-none d-md-block" />
+                            thinking, and citing your sources. Find out how people {}
+                            <br className="d-none d-md-block" />
                             can disagree, honestly.
                         </b>
                     </p>
