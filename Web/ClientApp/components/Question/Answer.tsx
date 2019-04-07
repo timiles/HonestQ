@@ -39,7 +39,7 @@ export default class Answer extends React.Component<Props, {}> {
             <div>
                 <div className="card mt-4">
                     <CircleIcon value={CircleIconValue.Answer} />
-                    <div className="card-body">
+                    <div className="card-body px-sm-5">
                         <blockquote className="blockquote">
                             <LoggedInUserContext.Consumer>
                                 {(user) => isUserInRole(user, 'Admin') &&
