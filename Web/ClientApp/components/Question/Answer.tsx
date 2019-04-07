@@ -14,7 +14,7 @@ import UpvoteButton from './UpvoteButton';
 type Props = AnswerModel
     & {
         questionId: number,
-        onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+        onUpvote: (on: boolean, answerId: number, commentId?: number) => void,
         onWatch: (on: boolean, answerId: number) => void,
     };
 
@@ -33,7 +33,7 @@ export default class Answer extends React.Component<Props, {}> {
 
     public render() {
         const { questionId, id, text, postedBy, postedAt, comments } = this.props;
-        const { reactionCounts, myReactions, watching } = this.props;
+        const { upvotes, upvotedByMe, watching } = this.props;
 
         return (
             <div>
@@ -66,10 +66,9 @@ export default class Answer extends React.Component<Props, {}> {
                                 />
                                 <UpvoteButton
                                     answerId={id}
-                                    count={reactionCounts[UpvoteButton.ReactionType]}
-                                    isUpvotedByLoggedInUser={myReactions &&
-                                        myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
-                                    onReaction={this.handleReaction}
+                                    count={upvotes}
+                                    isUpvotedByLoggedInUser={upvotedByMe}
+                                    onUpvote={this.handleReaction}
                                 />
                             </div>
                         </div>
@@ -92,7 +91,7 @@ export default class Answer extends React.Component<Props, {}> {
                                 {...x}
                                 questionId={questionId}
                                 answerId={id}
-                                onReaction={this.handleReaction}
+                                onUpvote={this.handleReaction}
                             />
                         </li>)}
                 </ol>
@@ -111,8 +110,8 @@ export default class Answer extends React.Component<Props, {}> {
         );
     }
 
-    private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
-        this.props.onReaction(reactionType, on, answerId, commentId);
+    private handleReaction(on: boolean, answerId: number, commentId?: number): void {
+        this.props.onUpvote(on, answerId, commentId);
     }
 
     private handleWatch(on: boolean): void {

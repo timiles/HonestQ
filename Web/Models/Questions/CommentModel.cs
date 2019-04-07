@@ -33,10 +33,10 @@ namespace Pobs.Web.Models.Questions
             this.ParentCommentId = comment.ParentComment?.Id;
             this.Comments = comment.ChildComments.Where(x => x.Status == PostStatus.OK)
                 .Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
-            this.ReactionCounts = comment.Reactions.GroupBy(x => x.Type).ToDictionary(x => x.Key.ToString(), x => x.Count());
+            this.Upvotes = comment.Reactions.Count(x => x.Type == ReactionType.Upvote);
             if (loggedInUserId.HasValue)
             {
-                this.MyReactions = comment.Reactions.Where(x => x.PostedByUserId == loggedInUserId).Select(x => x.Type.ToString()).ToArray();
+                this.UpvotedByMe = comment.Reactions.Any(x => x.PostedByUserId == loggedInUserId && x.Type == ReactionType.Upvote);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Pobs.Web.Models.Questions
         public string Status { get; set; }
         public long? ParentCommentId { get; set; }
         public CommentModel[] Comments { get; set; }
-        public Dictionary<string, int> ReactionCounts { get; set; }
-        public string[] MyReactions { get; set; }
+        public int Upvotes { get; set; }
+        public bool UpvotedByMe { get; set; }
     }
 }

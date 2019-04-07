@@ -7,7 +7,7 @@ interface Props {
     commentId?: number;
     count: number;
     isUpvotedByLoggedInUser: boolean;
-    onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void;
+    onUpvote: (on: boolean, answerId: number, commentId?: number) => void;
     hideLabelOnMobile?: boolean;
 }
 
@@ -16,7 +16,6 @@ interface State {
 }
 
 export default class UpvoteButton extends React.Component<Props, State> {
-    public static ReactionType: string = 'Upvote';
 
     constructor(props: Props) {
         super(props);
@@ -59,6 +58,6 @@ export default class UpvoteButton extends React.Component<Props, State> {
     private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
         const { answerId, commentId, isUpvotedByLoggedInUser } = this.props;
         this.setState({ submitting: true },
-            () => this.props.onReaction(UpvoteButton.ReactionType, !isUpvotedByLoggedInUser, answerId, commentId));
+            () => this.props.onUpvote(!isUpvotedByLoggedInUser, answerId, commentId));
     }
 }

@@ -104,23 +104,21 @@ namespace Pobs.Tests.Integration.Questions
                 DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
             }
 
-            // Add a Reaction to an Answer
-            var answerWithReaction = question.Answers.First();
-            var answerReactionType = ReactionType.ThisMadeMeThink;
+            // Add an Upvote to an Answer
+            var answerWithUpvote = question.Answers.First();
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                dbContext.Attach(answerWithReaction);
-                answerWithReaction.Reactions.Add(new Reaction(answerReactionType, _questionUserId, DateTimeOffset.UtcNow));
+                dbContext.Attach(answerWithUpvote);
+                answerWithUpvote.Reactions.Add(new Reaction(ReactionType.Upvote, _questionUserId, DateTimeOffset.UtcNow));
                 dbContext.SaveChanges();
             }
 
-            // Add a Reaction to a Comment
-            var commentWithReaction = question.Answers.First().Comments.First();
-            var commentReactionType = ReactionType.YouBeTrolling;
+            // Add an Upvote to a Comment
+            var commentWithUpvote = question.Answers.First().Comments.First();
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                dbContext.Attach(commentWithReaction);
-                commentWithReaction.Reactions.Add(new Reaction(commentReactionType, _questionUserId, DateTimeOffset.UtcNow));
+                dbContext.Attach(commentWithUpvote);
+                commentWithUpvote.Reactions.Add(new Reaction(ReactionType.Upvote, _questionUserId, DateTimeOffset.UtcNow));
                 dbContext.SaveChanges();
             }
 
@@ -143,19 +141,13 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Single(responseModel.Tags);
                 Assert.Equal(3, question.Answers.Count);
 
-                var responseAnswerWithReaction = responseModel.Answers.Single(x => x.Id == answerWithReaction.Id);
-                Assert.Single(responseAnswerWithReaction.ReactionCounts);
-                Assert.Equal(answerReactionType.ToString(), responseAnswerWithReaction.ReactionCounts.Keys.Single());
-                Assert.Equal(1, responseAnswerWithReaction.ReactionCounts[answerReactionType.ToString()]);
-                Assert.Single(responseAnswerWithReaction.MyReactions);
-                Assert.Equal(answerReactionType.ToString(), responseAnswerWithReaction.MyReactions.Single());
+                var responseAnswerWithUpvote = responseModel.Answers.Single(x => x.Id == answerWithUpvote.Id);
+                Assert.Equal(1, responseAnswerWithUpvote.Upvotes);
+                Assert.True(responseAnswerWithUpvote.UpvotedByMe);
 
-                var responseCommentWithReaction = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == commentWithReaction.Id);
-                Assert.Single(responseCommentWithReaction.ReactionCounts);
-                Assert.Equal(commentReactionType.ToString(), responseCommentWithReaction.ReactionCounts.Keys.Single());
-                Assert.Equal(1, responseCommentWithReaction.ReactionCounts[commentReactionType.ToString()]);
-                Assert.Single(responseCommentWithReaction.MyReactions);
-                Assert.Equal(commentReactionType.ToString(), responseCommentWithReaction.MyReactions.Single());
+                var responseCommentWithUpvote = responseModel.Answers.SelectMany(x => x.Comments).Single(x => x.Id == commentWithUpvote.Id);
+                Assert.Equal(1, responseCommentWithUpvote.Upvotes);
+                Assert.True(responseCommentWithUpvote.UpvotedByMe);
             }
         }
 

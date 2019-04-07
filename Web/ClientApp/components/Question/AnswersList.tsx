@@ -2,7 +2,6 @@ import * as React from 'react';
 import { AnswerModel } from '../../server-models';
 import AnswerSummary from './AnswerSummary';
 import NewAnswer from './NewAnswer';
-import UpvoteButton from './UpvoteButton';
 
 interface Props {
     questionId: number;
@@ -12,15 +11,10 @@ interface Props {
 
 export default class AnswersList extends React.Component<Props> {
 
-    private static orderByUpvotes(a: AnswerModel, b: AnswerModel): number {
-        return (b.reactionCounts ? b.reactionCounts[UpvoteButton.ReactionType] || 0 : 0) -
-            (a.reactionCounts ? a.reactionCounts[UpvoteButton.ReactionType] || 0 : 0);
-    }
-
     public render() {
         const { questionId, questionSlug, answers } = this.props;
 
-        const orderedAnswers = answers.sort(AnswersList.orderByUpvotes);
+        const orderedAnswers = answers.sort((a, b) => b.upvotes - a.upvotes);
 
         return (
             <>

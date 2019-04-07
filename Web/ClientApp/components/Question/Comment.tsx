@@ -11,14 +11,14 @@ type Props = CommentModel
     & {
         questionId: number,
         answerId: number,
-        onReaction: (reactionType: string, on: boolean, answerId: number, commentId?: number) => void,
+        onUpvote: (on: boolean, answerId: number, commentId?: number) => void,
     };
 
 export default class Comment extends React.Component<Props, {}> {
 
     public render(): any {
         const { questionId, answerId } = this.props;
-        const { id, text, source, agreementRating, comments, reactionCounts, myReactions } = this.props;
+        const { id, text, source, agreementRating, comments, upvotes, upvotedByMe } = this.props;
         const { postedAt, postedBy } = this.props;
         const iconValue = IconValue[agreementRating as keyof typeof IconValue];
 
@@ -47,10 +47,9 @@ export default class Comment extends React.Component<Props, {}> {
                             <UpvoteButton
                                 answerId={answerId}
                                 commentId={id}
-                                count={reactionCounts[UpvoteButton.ReactionType]}
-                                isUpvotedByLoggedInUser={myReactions &&
-                                    myReactions.indexOf(UpvoteButton.ReactionType) >= 0}
-                                onReaction={this.props.onReaction}
+                                count={upvotes}
+                                isUpvotedByLoggedInUser={upvotedByMe}
+                                onUpvote={this.props.onUpvote}
                                 hideLabelOnMobile={true}
                             />
                         </div>
@@ -70,7 +69,7 @@ export default class Comment extends React.Component<Props, {}> {
                                     {...x}
                                     questionId={questionId}
                                     answerId={answerId}
-                                    onReaction={this.props.onReaction}
+                                    onUpvote={this.props.onUpvote}
                                 />
                             </li>)}
                     </ol>}

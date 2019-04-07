@@ -4,7 +4,6 @@ import { buildAnswerUrl } from '../../utils/route-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import QuotationMarks from '../shared/QuotationMarks';
 import DiscussButton from './DiscussButton';
-import UpvoteButton from './UpvoteButton';
 
 interface Props {
     questionId: number;
@@ -29,7 +28,7 @@ export default class AnswerSummary extends React.Component<Props> {
                     <div className="mt-3">
                         <DiscussButton
                             linkToCommentsUrl={buildAnswerUrl(questionId, questionSlug, answer.id, answer.slug)}
-                            upvotes={answer.reactionCounts ? answer.reactionCounts[UpvoteButton.ReactionType] : 0}
+                            upvotes={answer.upvotes}
                             comments={answer.comments}
                         />
                     </div>

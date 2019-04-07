@@ -87,14 +87,14 @@ export const actionCreators = {
                     });
             })();
         },
-    addReaction: (reactionType: string, questionId: number, answerId: number, commentId?: number):
+    addUpvote: (questionId: number, answerId: number, commentId?: number):
         AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
 
                 const url = commentId ?
-                    `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/${reactionType}` :
-                    `/api/questions/${questionId}/answers/${answerId}/reactions/${reactionType}`;
+                    `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/Upvote` :
+                    `/api/questions/${questionId}/answers/${answerId}/reactions/Upvote`;
                 postJson<ReactionModel>(url,
                     null,
                     getState().login.loggedInUser)
@@ -109,14 +109,14 @@ export const actionCreators = {
                     });
             })();
         },
-    removeReaction: (reactionType: string, questionId: number, answerId: number, commentId?: number):
+    removeUpvote: (questionId: number, answerId: number, commentId?: number):
         AppThunkAction<KnownAction> =>
         (dispatch, getState) => {
             return (async () => {
 
                 const url = commentId ?
-                    `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/${reactionType}` :
-                    `/api/questions/${questionId}/answers/${answerId}/reactions/${reactionType}`;
+                    `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/Upvote` :
+                    `/api/questions/${questionId}/answers/${answerId}/reactions/Upvote`;
                 deleteJson<ReactionModel>(url,
                     getState().login.loggedInUser)
                     .then((reactionResponse: ReactionModel) => {
@@ -218,16 +218,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             if (reaction.commentId) {
                 const comment = findComment(answerModel.comments, reaction.commentId);
                 if (comment) {
-                    comment.reactionCounts[reaction.type] = reaction.newCount;
-                    if (reaction.isMyReaction) {
-                        comment.myReactions.push(reaction.type);
-                    }
+                    comment.upvotes = reaction.newCount;
+                    comment.upvotedByMe = reaction.isMyReaction;
                 }
             } else {
-                answerModel.reactionCounts[reaction.type] = reaction.newCount;
-                if (reaction.isMyReaction) {
-                    answerModel.myReactions.push(reaction.type);
-                }
+                answerModel.upvotes = reaction.newCount;
+                answerModel.upvotedByMe = reaction.isMyReaction;
             }
 
             const questionNext = { ...questionModel, answers: answersNext };
@@ -245,18 +241,12 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             if (reaction.commentId) {
                 const comment = findComment(answerModel.comments, reaction.commentId);
                 if (comment) {
-                    comment.reactionCounts[reaction.type] = reaction.newCount;
-                    const indexOfReactionToRemove = comment.myReactions.indexOf(reaction.type);
-                    if (indexOfReactionToRemove >= 0) {
-                        comment.myReactions.splice(indexOfReactionToRemove, 1);
-                    }
+                    comment.upvotes = reaction.newCount;
+                    comment.upvotedByMe = reaction.isMyReaction;
                 }
             } else {
-                answerModel.reactionCounts[reaction.type] = reaction.newCount;
-                const indexOfReactionToRemove = answerModel.myReactions.indexOf(reaction.type);
-                if (indexOfReactionToRemove >= 0) {
-                    answerModel.myReactions.splice(indexOfReactionToRemove, 1);
-                }
+                answerModel.upvotes = reaction.newCount;
+                answerModel.upvotedByMe = reaction.isMyReaction;
             }
 
             const questionNext = { ...questionModel, answers: answersNext };

@@ -107,8 +107,8 @@ export interface AnswerModel {
     postedBy: string;
     postedByUserPseudoId: number;
     comments: CommentModel[];
-    reactionCounts: { [key: string]: number };
-    myReactions: string[];
+    upvotes: number;
+    upvotedByMe: boolean;
     watching: boolean;
 }
 
@@ -130,8 +130,8 @@ export interface CommentModel {
     status: string;
     parentCommentId?: number;
     comments: CommentModel[];
-    reactionCounts: { [key: string]: number };
-    myReactions: string[];
+    upvotes: number;
+    upvotedByMe: boolean;
 }
 
 export interface TagValueFormModel {

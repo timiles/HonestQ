@@ -107,7 +107,7 @@ class Container extends React.Component<ContainerProps> {
                                             <Answer
                                                 {...answer}
                                                 questionId={questionId}
-                                                onReaction={this.handleReaction}
+                                                onUpvote={this.handleReaction}
                                                 onWatch={this.handleWatch}
                                             />
                                         </>
@@ -189,12 +189,12 @@ class Container extends React.Component<ContainerProps> {
         );
     }
 
-    private handleReaction(reactionType: string, on: boolean, answerId: number, commentId?: number): void {
+    private handleReaction(on: boolean, answerId: number, commentId?: number): void {
         const { questionId } = this.props;
         if (on) {
-            this.props.addReaction(reactionType, questionId, answerId, commentId);
+            this.props.addUpvote(questionId, answerId, commentId);
         } else {
-            this.props.removeReaction(reactionType, questionId, answerId, commentId);
+            this.props.removeUpvote(questionId, answerId, commentId);
         }
     }
 
