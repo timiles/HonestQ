@@ -11,7 +11,7 @@ export default class QuotationMarkCloseIcon extends React.Component<Props> {
         const { width } = this.props;
 
         return (
-            <svg viewBox="59 0 201 360" width={width} height={width * 2}>
+            <svg viewBox="59 78 201 180" width={width} height={width}>
                 <path
                     d="M79.171,231.401c-1.746,1.182-6.129,2.222-8.693-0.625l-4.731-5.95c-2.288-3.869,0.483-7.457,2.277-8.945
                     c8.529-7.075,14.731-12.548,18.601-16.419c7.589-7.981,13.199-15.97,16.903-23.935c0.847-1.821-1.315-2.977-2.438-3.345
