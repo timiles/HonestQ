@@ -8,6 +8,7 @@ namespace Pobs.Tests.Unit
     {
         [Theory]
         [InlineData("hello", "hello")]
+        [InlineData("hello/there", "hello_there")]
         [InlineData("\"Hello there!\"", "hello_there")]
         [InlineData(" _- Hello there! -_ ", "hello_there")]
         [InlineData("Hello,there...good-bye -- forever!", "hello_there_good_bye_forever")]

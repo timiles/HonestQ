@@ -17,7 +17,7 @@ namespace Pobs.Domain.Utils
          */
 
         // White space, full-stop, comma, colon, semicolon, em-dash, en-dash, hyphen, underscore, ellipsis
-        private static readonly Regex s_wordDelimiters = new Regex(@"[\s\.,:;—–\-_…]", RegexOptions.Compiled);
+        private static readonly Regex s_wordDelimiters = new Regex(@"[\s\.,:;—–/\-_…]", RegexOptions.Compiled);
         private static readonly Regex s_lowerCaseInvalidChars = new Regex(@"[^a-z0-9\-_]", RegexOptions.Compiled);
         private static readonly Regex s_anyCaseInvalidChars = new Regex(@"[^a-zA-Z0-9\-_]", RegexOptions.Compiled);
         private static readonly Regex s_multipleUnderscores = new Regex(@"_{2,}", RegexOptions.Compiled);
