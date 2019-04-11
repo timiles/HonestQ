@@ -119,6 +119,9 @@ class Container extends React.Component<ContainerProps> {
                                 </div>
                             </div>
                         </div>
+                        {question.answers.length === 0 &&
+                            <div className="tumbleweed" />
+                        }
                     </div>
                     ||
                     <div className="container">

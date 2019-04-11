@@ -30,6 +30,11 @@ export default class AnswersList extends React.Component<Props> {
                         </li>)
                     }
                 </ul>
+                {answers.length === 0 &&
+                    <div className="text-center">
+                        <label>No answers yet...</label>
+                    </div>
+                }
                 {answers.length >= 5 &&
                     <div className="clearfix">
                         <div className="float-right">

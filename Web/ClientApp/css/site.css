@@ -277,7 +277,7 @@ body.dark .cityscape-background {
     height: 86px;
     width: 86px;
     top: -8px;
-    right: -38px;
+   right: -38px;
 }
 
 .question-search-results {
@@ -713,7 +713,7 @@ body.dark .modal-header .close, body.dark .modal-header .close:hover {
 /* Bootstrap Toast overrides */
 #toastsContainer{
     position: fixed;
-    right: 20px;
+   right: 20px;
     top: 20px;
     width: 100%;
     z-index: 99999;
@@ -721,7 +721,7 @@ body.dark .modal-header .close, body.dark .modal-header .close:hover {
     /* Small devices (landscape phones), Extra small devices (portrait phones) */
     @media (max-width: 767.98px) {
         #toastsContainer{
-            right: 8px;
+           right: 8px;
         }    
     }
 
@@ -745,4 +745,108 @@ body.dark .modal-header .close, body.dark .modal-header .close:hover {
 .loading-spinner {
     position: absolute;
     color: #FF5A00;
+}
+
+/* Tumbleweed */
+.tumbleweed {
+    position: absolute;
+    top: 75vh;
+    width: 70px;
+    height: 70px;
+    background: url('/assets/tumbleweed.png') no-repeat;
+    background-size: 100%;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+.tumbleweed {
+    animation-name: tumbleweed-1;
+    animation-duration: 4s;
+}
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .tumbleweed {
+        animation-name: tumbleweed-1;
+        animation-duration: 5s;
+    }
+}
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .tumbleweed {
+        animation-name: tumbleweed-2;
+        animation-duration: 7s;    
+    }
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .tumbleweed {
+        animation-name: tumbleweed-2;
+        animation-duration: 9s;    
+    }
+}
+
+@keyframes tumbleweed-1 {
+    0% {
+        transform: translate(-70px, 45px) rotate(0deg);
+    }
+    18% {
+        transform: translate(8vw, 5px) rotate(130deg);
+    }
+    34% {
+        transform: translate(26vw, 45px) rotate(250deg);
+    }
+    52% {
+        transform: translate(46vw, 15px) rotate(360deg);
+    }
+    68% {
+        transform: translate(64vw, 45px) rotate(490deg);
+    }
+    84% {
+        transform: translate(82vw, 30px) rotate(600deg);
+    }
+    100% {
+        transform: translate(100vw, 45px) rotate(720deg);
+    }
+}
+@keyframes tumbleweed-2 {
+    0% {
+        transform: translate(-70px, 45px) rotate(0deg);
+    }
+    9% {
+        transform: translate(4vw, 5px) rotate(130deg);
+    }
+    17% {
+        transform: translate(13vw, 45px) rotate(250deg);
+    }
+    26% {
+        transform: translate(23vw, 15px) rotate(360deg);
+    }
+    34% {
+        transform: translate(32vw, 45px) rotate(490deg);
+    }
+    42% {
+        transform: translate(41vw, 30px) rotate(600deg);
+    }
+    50% {
+        transform: translate(50vw, 45px) rotate(720deg);
+    }
+    59% {
+        transform: translate(59vw, 5px) rotate(850deg);
+    }
+    67% {
+        transform: translate(67vw, 45px) rotate(970deg);
+    }
+    76% {
+        transform: translate(76vw, 15px) rotate(1080deg);
+    }
+    84% {
+        transform: translate(84vw, 45px) rotate(1210deg);
+    }
+    92% {
+        transform: translate(92vw, 30px) rotate(1320deg);
+    }
+    100% {
+        transform: translate(100vw, 45px) rotate(1440deg);
+    }
 }
