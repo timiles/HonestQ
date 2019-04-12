@@ -98,7 +98,7 @@ class QuestionList extends React.Component<Props> {
                     to={buildQuestionUrl(question.id, question.slug)}
                     className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
                 >
-                    <CircleIcon className="float-left mr-2" value={CircleIconValue.Question} />
+                    <CircleIcon className="float-left mr-3" value={CircleIconValue.Question} />
                     <span className="question">{question.text}</span>
                     <small className="ml-1">
                         <span className="badge badge-info">{question.answersCount}</span>

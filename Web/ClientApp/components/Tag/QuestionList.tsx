@@ -21,7 +21,7 @@ export default class QuestionList extends React.Component<Props, {}> {
                             to={buildQuestionUrl(x.id, x.slug)}
                             className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
                         >
-                            <CircleIcon className="float-left mr-2" value={CircleIconValue.Question} />
+                            <CircleIcon className="float-left mr-3" value={CircleIconValue.Question} />
                             <span>{x.text}</span>
                         </Link>
                     </li>)}

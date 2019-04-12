@@ -146,8 +146,8 @@ class NotificationList extends React.Component<Props> {
                                     <Icon value={IconValue.Watch} />
                                 </span>
                             }
-                            <CircleIcon className="float-left" value={CircleIconValue.Question} />
-                            <span className="ml-2 question">{notification.questionText}</span>
+                            <CircleIcon className="float-left mr-3" value={CircleIconValue.Question} />
+                            <span className="question">{notification.questionText}</span>
                         </Link>
                     </>
                 );
@@ -175,7 +175,7 @@ class NotificationList extends React.Component<Props> {
                                     <Icon value={IconValue.Watch} />
                                 </span>
                             }
-                            <CircleIcon className="float-left mr-2" value={CircleIconValue.Answer} />
+                            <CircleIcon className="float-left mr-3" value={CircleIconValue.Answer} />
                             <QuotationMarks width={20}>
                                 <span className="mx-2 answer">{notification.answerText}</span>
                             </QuotationMarks>
