@@ -44,7 +44,7 @@ class Index extends React.Component<Props> {
         );
     }
 
-    private handleScroll(event: UIEvent) {
+    private handleScroll(event: Event) {
         if (!document.documentElement) {
             return;
         }
