@@ -11,6 +11,10 @@ interface Props { loggedInUser: LoggedInUserModel; }
 
 class Index extends React.Component<Props> {
 
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     public render() {
         return (
             <LoggedInUserContext.Provider value={this.props.loggedInUser}>

@@ -20,6 +20,7 @@ class Index extends React.Component<Props> {
     }
 
     public componentDidMount() {
+        window.scrollTo(0, 0);
         window.addEventListener('scroll', this.handleScroll);
     }
 

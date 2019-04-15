@@ -45,6 +45,10 @@ class Container extends React.Component<ContainerProps> {
         this.props.getQuestion(this.props.questionId);
     }
 
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     public componentWillUnmount() {
         this.props.reset();
     }

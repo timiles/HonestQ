@@ -27,6 +27,10 @@ class LogIn extends React.Component<LogInProps> {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     public render() {
         if (this.props.loggedInUser) {
             return <Redirect to="/" />;

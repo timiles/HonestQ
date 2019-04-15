@@ -10,6 +10,10 @@ interface TagProps {
 
 export default class Tag extends React.Component<TagProps, {}> {
 
+    public componentDidMount() {
+        window.scrollTo(0, 0);
+    }
+
     public render() {
         const { tag } = this.props;
         const { slug, name, description, moreInfoUrl, questions } = tag;
