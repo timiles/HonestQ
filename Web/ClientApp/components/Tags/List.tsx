@@ -36,10 +36,15 @@ class TagsList extends React.Component<TagsListProps> {
             return <ActionStatusDisplay {...this.props.getTagsListStatus} />;
         }
 
-        const tagsToShow = (numberOfTagsToShow! > 0) ?
+        let tagsToShow: TagListItemModel[];
+        if (numberOfTagsToShow! > 0) {
             // TODO: order by most recent activity? Certainly not this random method anyway.
-            tagsList.tags.sort((a, b) => Math.random() - .5).slice(0, numberOfTagsToShow) :
-            tagsList.tags.sort((a, b) => (a.slug.localeCompare(b.slug)));
+            const randomSubset = tagsList.tags.sort(() => Math.random() - .5).slice(0, numberOfTagsToShow);
+            // Now put smallest(?) first, to make it more likely to create a tapering effect downwards.
+            tagsToShow = randomSubset.sort((a, b) => (b.name.length - a.name.length));
+        } else {
+            tagsToShow = tagsList.tags.sort((a, b) => (a.slug.localeCompare(b.slug)));
+        }
 
         const showMoreTagsButton = numberOfTagsToShow! > 0;
         const isActive = (tag: TagListItemModel) => selectedTagSlugs.indexOf(tag.slug) >= 0;
