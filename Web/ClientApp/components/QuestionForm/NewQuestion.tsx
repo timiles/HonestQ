@@ -60,30 +60,15 @@ class NewQuestion extends React.Component<Props, State> {
                         ||
                         <>
                             <div className="modal-body">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <h3>Thank you for your question!</h3>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-9">
-                                        <p>
-                                            HonestQ is still in its early stages.
-                                            We will be adding new questions slowly,
-                                            to ensure that we're building a quality system.
-                                        </p>
-                                        <p>
-                                            We will notify you by email when your question gets approved.
-                                        </p>
-                                    </div>
-                                    <div className="col-md-3 text-center">
-                                        <img
-                                            className="img-fluid"
-                                            src="/android-chrome-256x256.png"
-                                            alt="The HonestQ logo: a white Q in a red circle."
-                                        />
-                                    </div>
-                                </div>
+                                <h3>Thank you for your question!</h3>
+                                <p>
+                                    HonestQ is still in its early stages.
+                                    We will be adding new questions slowly,
+                                    to ensure that we're building a quality system.
+                                </p>
+                                <p>
+                                    We will notify you by email when your question gets approved.
+                                </p>
                             </div>
                             <div className="modal-footer">
                                 <button
