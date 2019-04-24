@@ -103,9 +103,6 @@ export interface AnswerModel {
     id: number;
     text: string;
     slug: string;
-    postedAt: string;
-    postedBy: string;
-    postedByUserPseudoId: number;
     comments: CommentModel[];
     upvotes: number;
     upvotedByMe: boolean;

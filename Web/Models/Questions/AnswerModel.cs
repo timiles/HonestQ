@@ -34,12 +34,8 @@ namespace Pobs.Web.Models.Questions
             this.Id = answer.Id;
             this.Text = answer.Text;
             this.Slug = answer.Slug;
-            this.PostedAt = answer.PostedAt.UtcDateTime;
-
-            this.PostedBy = answer.PostedByUser.Username;
 
             var userPseudoIds = PseudonymiseUserIds(answer);
-            this.PostedByUserPseudoId = userPseudoIds?[answer.PostedByUserId] ?? 0;
             var topLevelComments = answer.Comments.Where(x => x.Status == PostStatus.OK && x.ParentComment == null);
             this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
 
@@ -59,12 +55,6 @@ namespace Pobs.Web.Models.Questions
 
         [Required]
         public string Slug { get; set; }
-
-        public DateTime PostedAt { get; set; }
-
-        [Required]
-        public string PostedBy { get; set; }
-        public int PostedByUserPseudoId { get; set; }
 
         public CommentModel[] Comments { get; set; }
         public int Upvotes { get; set; }

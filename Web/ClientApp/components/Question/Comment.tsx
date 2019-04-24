@@ -37,9 +37,7 @@ export default class Comment extends React.Component<Props, {}> {
                             <DateTimeTooltip dateTime={postedAt} />
                         </div>
                         {text &&
-                            <blockquote className="blockquote">
-                                <p>{text}</p>
-                            </blockquote>
+                            <p className="post">{text}</p>
                         }
                         <Source value={source} />
                         <EmbeddedContent value={source} />

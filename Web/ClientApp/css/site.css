@@ -367,10 +367,6 @@ body.dark .card {
     border: 1px solid #394D67;
 }
 
-blockquote p {
-    white-space: pre-wrap;
-}
-
 a.no-underline {
     text-decoration: none;
 }
@@ -564,7 +560,6 @@ p.small .icon, small .icon {
     max-width: 23px;
     margin-right: 6px;
 }
-
 
 .post {
     font-family: 'lineto-circular-book', Sans-Serif;

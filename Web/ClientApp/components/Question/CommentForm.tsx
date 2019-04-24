@@ -65,7 +65,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                         </label>
                         <p>
                             <QuotationMarks width={15}>
-                                <span className="mx-1">
+                                <span className="post mx-1">
                                     {replyingToText}
                                 </span>
                             </QuotationMarks>

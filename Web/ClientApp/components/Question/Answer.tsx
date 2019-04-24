@@ -4,7 +4,6 @@ import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
-import DateTimeTooltip from '../shared/DateTimeTooltip';
 import QuotationMarks from '../shared/QuotationMarks';
 import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
@@ -32,7 +31,7 @@ export default class Answer extends React.Component<Props, {}> {
     }
 
     public render() {
-        const { questionId, id, text, postedBy, postedAt, comments } = this.props;
+        const { questionId, id, text, comments } = this.props;
         const { upvotes, upvotedByMe, watching } = this.props;
 
         return (
@@ -40,24 +39,21 @@ export default class Answer extends React.Component<Props, {}> {
                 <div className="card mt-4">
                     <CircleIcon value={CircleIconValue.Answer} />
                     <div className="card-body px-sm-5">
-                        <blockquote className="blockquote">
-                            <LoggedInUserContext.Consumer>
-                                {(user) => isUserInRole(user, 'Admin') &&
-                                    <Link
-                                        to={`/admin/edit/questions/${questionId}/answers/${id}`}
-                                        className="btn btn-danger float-right"
-                                    >
-                                        Edit
+                        <LoggedInUserContext.Consumer>
+                            {(user) => isUserInRole(user, 'Admin') &&
+                                <Link
+                                    to={`/admin/edit/questions/${questionId}/answers/${id}`}
+                                    className="btn btn-danger float-right"
+                                >
+                                    Edit
                                     </Link>
-                                }
-                            </LoggedInUserContext.Consumer>
+                            }
+                        </LoggedInUserContext.Consumer>
+                        <h5>
                             <QuotationMarks width={20}>
                                 <span className="mx-2 post">{text}</span>
                             </QuotationMarks>
-                            <footer className="blockquote-footer">
-                                {postedBy}, <DateTimeTooltip dateTime={postedAt} />
-                            </footer>
-                        </blockquote>
+                        </h5>
                         <div>
                             <div className="float-right btn-container">
                                 <WatchControl

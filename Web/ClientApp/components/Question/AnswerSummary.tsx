@@ -20,11 +20,11 @@ export default class AnswerSummary extends React.Component<Props> {
             <div className="card">
                 <CircleIcon value={CircleIconValue.Answer} />
                 <div className="card-body px-sm-5">
-                    <blockquote className="blockquote mb-0">
+                    <h5 className="mb-0">
                         <QuotationMarks width={20}>
                             <span className="mx-2 post">{answer.text}</span>
                         </QuotationMarks>
-                    </blockquote>
+                    </h5>
                     <div className="mt-3">
                         <DiscussButton
                             linkToCommentsUrl={buildAnswerUrl(questionId, questionSlug, answer.id, answer.slug)}

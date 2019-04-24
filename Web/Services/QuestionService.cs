@@ -155,7 +155,6 @@ namespace Pobs.Web.Services
                 .Include(x => x.PostedByUser)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Include(x => x.Watches)
-                .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
                 .Include(x => x.Answers).ThenInclude(x => x.Reactions)
                 .Include(x => x.Answers).ThenInclude(x => x.Watches)
                 .Include(x => x.Answers).ThenInclude(x => x.Comments).ThenInclude(x => x.PostedByUser)
@@ -191,7 +190,7 @@ namespace Pobs.Web.Services
         public async Task<AnswerModel> UpdateAnswer(int questionId, int answerId, AnswerFormModel answerForm, int? loggedInUserId)
         {
             var question = await _context.Questions
-                .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
+                .Include(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == questionId);
             var answer = question?.Answers?.FirstOrDefault(x => x.Id == answerId);
             if (answer == null)

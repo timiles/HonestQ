@@ -50,7 +50,6 @@ namespace Pobs.Tests.Integration.Questions
                 var responseModel = JsonConvert.DeserializeObject<AnswerModel>(responseContent);
                 Assert.Equal(payload.Text, responseModel.Text);
                 Assert.Equal(slug, responseModel.Slug);
-                Assert.Equal(_answer.PostedByUser.Username, responseModel.PostedBy);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
