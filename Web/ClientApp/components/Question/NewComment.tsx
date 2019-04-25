@@ -5,6 +5,7 @@ import { ApplicationState } from '../../store';
 import * as NewCommentStore from '../../store/NewComment';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Modal from '../shared/Modal';
+import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 import CommentForm from './CommentForm';
 
 interface OwnProps {
@@ -19,6 +20,7 @@ type Props = NewCommentStore.NewCommentState
 
 interface State {
     isModalOpen: boolean;
+    agreementRating?: string;
 }
 
 class NewComment extends React.Component<Props, State> {
@@ -28,7 +30,9 @@ class NewComment extends React.Component<Props, State> {
 
         this.state = { isModalOpen: false };
 
-        this.handleOpen = this.handleOpen.bind(this);
+        this.handleOpenAgree = this.handleOpenAgree.bind(this);
+        this.handleOpenDisagree = this.handleOpenDisagree.bind(this);
+        this.handleOpenNeutral = this.handleOpenNeutral.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -42,7 +46,7 @@ class NewComment extends React.Component<Props, State> {
 
     public render() {
         const { commentForm, replyingToText, parentCommentId } = this.props;
-        const { isModalOpen } = this.state;
+        const { isModalOpen, agreementRating } = this.state;
         const headerText = parentCommentId ? 'Reply' : 'Add a new comment';
         const btnClass = parentCommentId ? 'btn btn-outline-secondary' : 'btn btn-lg btn-primary shadow-lg';
 
@@ -50,14 +54,32 @@ class NewComment extends React.Component<Props, State> {
             <>
                 <ButtonOrLogIn
                     type="button"
-                    className={btnClass}
-                    onClick={this.handleOpen}
+                    className={`${btnClass} mr-2`}
+                    onClick={this.handleOpenAgree}
                 >
-                    {headerText}
+                    <Icon value={IconValue.Agree} />
+                    Agree
+                </ButtonOrLogIn>
+                <ButtonOrLogIn
+                    type="button"
+                    className={`${btnClass} mr-2`}
+                    onClick={this.handleOpenDisagree}
+                >
+                    <Icon value={IconValue.Disagree} />
+                    Disagree
+                </ButtonOrLogIn>
+                <ButtonOrLogIn
+                    type="button"
+                    className={btnClass}
+                    onClick={this.handleOpenNeutral}
+                >
+                    <Icon value={IconValue.Neutral} />
+                    Neutral
                 </ButtonOrLogIn>
                 <Modal title={headerText} isOpen={isModalOpen} onRequestClose={this.handleClose}>
                     <CommentForm
                         {...commentForm}
+                        agreementRating={agreementRating}
                         replyingToText={replyingToText}
                         parentCommentId={parentCommentId}
                         isModal={true}
@@ -69,8 +91,16 @@ class NewComment extends React.Component<Props, State> {
         );
     }
 
-    private handleOpen() {
-        this.setState({ isModalOpen: true });
+    private handleOpenAgree() {
+        this.setState({ agreementRating: 'Agree', isModalOpen: true });
+    }
+
+    private handleOpenDisagree() {
+        this.setState({ agreementRating: 'Disagree', isModalOpen: true });
+    }
+
+    private handleOpenNeutral() {
+        this.setState({ agreementRating: 'Neutral', isModalOpen: true });
     }
 
     private handleClose() {

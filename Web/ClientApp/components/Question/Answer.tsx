@@ -46,7 +46,7 @@ export default class Answer extends React.Component<Props, {}> {
                                     className="btn btn-danger float-right"
                                 >
                                     Edit
-                                    </Link>
+                                </Link>
                             }
                         </LoggedInUserContext.Consumer>
                         <h5>

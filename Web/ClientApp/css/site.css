@@ -619,10 +619,14 @@ p.small .icon, small .icon {
     fill: #5EC7D7 !important;
 }
 
-.btn-outline-secondary svg {
+.btn-primary svg, body.dark .btn-primary svg {
+    fill: #FFF;
+}
+.btn-outline-secondary svg, body.dark .btn-outline-secondary svg {
     fill: #6C757D;
 }
-.btn-outline-secondary:not(:disabled):not(.disabled):active svg, .btn-outline-secondary:not(:disabled):not(.disabled).active svg, .btn-outline-secondary:hover svg {
+.btn-outline-secondary:not(:disabled):not(.disabled):active svg, .btn-outline-secondary:not(:disabled):not(.disabled).active svg, .btn-outline-secondary:hover svg,
+    body.dark .btn-outline-secondary:not(:disabled):not(.disabled):active svg, body.dark .btn-outline-secondary:not(:disabled):not(.disabled).active svg, body.dark .btn-outline-secondary:hover svg {
     fill: #FFF;
 }
 

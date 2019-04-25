@@ -3,7 +3,7 @@ import { CommentModel } from '../../server-models';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
-import Icon, { IconValue } from '../shared/SvgIcons/Icon';
+import AgreementRatingLabel from './AgreementRatingLabel';
 import NewComment from './NewComment';
 import UpvoteButton from './UpvoteButton';
 
@@ -20,18 +20,14 @@ export default class Comment extends React.Component<Props, {}> {
         const { questionId, answerId } = this.props;
         const { id, text, source, agreementRating, comments, upvotes, upvotedByMe } = this.props;
         const { postedAt, postedBy } = this.props;
-        const iconValue = IconValue[agreementRating as keyof typeof IconValue];
 
         return (
             <>
                 <div className="card light-dark-bg">
                     <div className="card-body">
                         <div className="mb-3">
-                            <span className="badge badge-pill badge-reaction mr-2">
-                                {iconValue >= 0 && <Icon value={iconValue} />}
-                                <label>{agreementRating.toSentenceCase()}</label>
-                            </span>
-                            <span>
+                            <AgreementRatingLabel value={agreementRating} />
+                            <span className="ml-2">
                                 {postedBy}, {}
                             </span>
                             <DateTimeTooltip dateTime={postedAt} />

@@ -5,13 +5,14 @@ import { FormProps } from '../shared/FormProps';
 import QuotationMarks from '../shared/QuotationMarks';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import AgreementRatingInput from './AgreementRatingInput';
+import AgreementRatingLabel from './AgreementRatingLabel';
 
 type Props = FormProps<CommentFormModel>
     & CommentFormProps;
 
 interface CommentFormProps {
     isModal?: boolean;
+    agreementRating?: string;
     onCloseModalRequested?: () => void;
     replyingToText: string;
     parentCommentId?: number;
@@ -27,7 +28,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         this.state = {
             text: '',
             source: '',
-            agreementRating: 'Neutral',
+            agreementRating: this.props.agreementRating || 'Neutral',
             parentCommentId: this.props.parentCommentId,
             isAnonymous: false,
         };
@@ -72,16 +73,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
                         </p>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="agreementRating">
-                            Do you...
-                        </label>
-                        <div>
-                            <AgreementRatingInput
-                                name="agreementRating"
-                                value={agreementRating}
-                                onChange={this.handleChange}
-                            />
-                        </div>
+                        <AgreementRatingLabel value={agreementRating} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="commentText">Comment</label>
