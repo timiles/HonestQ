@@ -17,7 +17,7 @@ export default class AnswerSummary extends React.Component<Props> {
         const { questionId, questionSlug, answer } = this.props;
 
         return (
-            <div className="card">
+            <div className="card light-dark-bg">
                 <CircleIcon value={CircleIconValue.Answer} />
                 <div className="card-body px-sm-5">
                     <h5 className="mb-0">

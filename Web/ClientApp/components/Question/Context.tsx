@@ -15,7 +15,7 @@ export default class Context extends React.Component<Props, {}> {
         }
 
         return (
-            <div className="bs-callout bs-callout-info">
+            <div className="bs-callout bs-callout-info light-dark-bg">
                 <h4>Context</h4>
                 <TextWithShortLinks value={value} />
                 <EmbeddedContent value={value} />

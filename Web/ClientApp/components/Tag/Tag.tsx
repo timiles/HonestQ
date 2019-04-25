@@ -21,7 +21,7 @@ export default class Tag extends React.Component<TagProps, {}> {
         return (
             <>
                 {(description || moreInfoUrl) &&
-                    <div className="bs-callout bs-callout-info">
+                    <div className="bs-callout bs-callout-info light-dark-bg">
                         {description &&
                             <>
                                 <h4>Description</h4>

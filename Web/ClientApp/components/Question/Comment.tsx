@@ -24,7 +24,7 @@ export default class Comment extends React.Component<Props, {}> {
 
         return (
             <>
-                <div className="card">
+                <div className="card light-dark-bg">
                     <div className="card-body">
                         <div className="mb-3">
                             <span className="badge badge-pill badge-reaction mr-2">

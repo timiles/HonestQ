@@ -36,7 +36,7 @@ export default class Answer extends React.Component<Props, {}> {
 
         return (
             <div>
-                <div className="card mt-4">
+                <div className="card light-dark-bg mt-4">
                     <CircleIcon value={CircleIconValue.Answer} />
                     <div className="card-body px-sm-5">
                         <LoggedInUserContext.Consumer>

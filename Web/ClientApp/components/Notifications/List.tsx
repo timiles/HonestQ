@@ -137,7 +137,7 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={questionUrl}
-                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
+                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color light-dark-bg"
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
@@ -166,7 +166,7 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={answerUrl}
-                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
+                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color light-dark-bg"
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >
@@ -204,7 +204,7 @@ class NotificationList extends React.Component<Props> {
                         </div>
                         <Link
                             to={answerUrl}
-                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color"
+                            className="btn btn-lg btn-outline-secondary post-list-item brand-font-color light-dark-bg"
                             data-id={notification.id}
                             onClick={this.handleMarkAsSeen}
                         >

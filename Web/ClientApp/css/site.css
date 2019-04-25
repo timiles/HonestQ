@@ -43,6 +43,13 @@ body.dark {
     background-color: #28374B;
 }
 
+.light-dark-bg {
+    background-color: #fff; /* #fff = lighten(#EDF6FB, 5%) */
+}
+body.dark .light-dark-bg {
+    background-color: #1f2b3a; /* #1f2b3a = darken(#28374B, 5%) */
+}
+
 /* Copy .navbar-light and .navbar-dark out of bootstrap and toggle it on body.dark */
 .navbar-brand {
     color: rgba(0, 0, 0, 0.9);
@@ -354,17 +361,15 @@ body.dark .question-search-results {
 }
 
 .card {
-    background-color: transparent;
     border: 1px solid #C9D4DD;
+}
+body.dark .card {
+    border: 1px solid #394D67;
 }
 .card .circle-icon {
     position: absolute;
     top: -16px;
     left: 5px;
-}
-
-body.dark .card {
-    border: 1px solid #394D67;
 }
 
 a.no-underline {
@@ -634,7 +639,7 @@ p.small .icon, small .icon {
 
 body.dark .badge-reaction {
     background-color: #202C3C;
-    border: 1px solid #202C3C;
+    border: 1px solid #2293A5;
     color: #2293A5;
 }
 body.dark .badge-reaction svg {
