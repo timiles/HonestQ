@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { CommentModel } from '../../server-models';
+import AgreementRatingLabel from '../shared/AgreementRatingLabel';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
-import AgreementRatingLabel from './AgreementRatingLabel';
+import UpvoteButton from '../shared/UpvoteButton';
 import NewComment from './NewComment';
 import NewCommentButtons from './NewCommentButtons';
-import UpvoteButton from './UpvoteButton';
 
 type Props = CommentModel
     & {

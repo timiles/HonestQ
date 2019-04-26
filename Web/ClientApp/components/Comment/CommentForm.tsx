@@ -2,10 +2,10 @@ import * as React from 'react';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { CommentFormModel } from '../../server-models';
 import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
+import AgreementRatingLabel from '../shared/AgreementRatingLabel';
 import { FormProps } from '../shared/FormProps';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
-import AgreementRatingLabel from './AgreementRatingLabel';
 
 type Props = FormProps<CommentFormModel>
     & CommentFormProps;

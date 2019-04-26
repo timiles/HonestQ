@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
+import Comment from '../Comment/Comment';
+import NewComment from '../Comment/NewComment';
+import NewCommentButtons from '../Comment/NewCommentButtons';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import QuotationMarks from '../shared/QuotationMarks';
+import UpvoteButton from '../shared/UpvoteButton';
 import WatchControl from '../shared/WatchControl';
-import Comment from './Comment';
-import NewComment from './NewComment';
-import NewCommentButtons from './NewCommentButtons';
-import UpvoteButton from './UpvoteButton';
 
 type Props = AnswerModel
     & {
