@@ -12,7 +12,6 @@ interface Props {
 
 export enum IconValue {
     Agree,
-    Neutral,
     Disagree,
     Upvote,
     ThisMadeMeThink,
@@ -33,7 +32,6 @@ export default class Icon extends React.Component<Props, {}> {
     public static getIcon(value: IconValue): string | JSX.Element {
         switch (value) {
             case IconValue.Agree: return <AgreeIcon width={21} height={16} />;
-            case IconValue.Neutral: return <CommentIcon width={16} height={16} />;
             case IconValue.Disagree: return <DisagreeIcon width={16} height={16} />;
             case IconValue.Upvote: return <UpvoteIcon width={18} height={16} />;
             case IconValue.ThisMadeMeThink: return '🤔';

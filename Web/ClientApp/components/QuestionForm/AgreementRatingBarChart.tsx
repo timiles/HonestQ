@@ -2,7 +2,7 @@ import * as React from 'react';
 
 export default class AgreementRatingBarChart extends React.Component<{ [key: string]: number }, {}> {
 
-    private readonly agreementRatingValues = ['Disagree', 'Neutral', 'Agree'];
+    private readonly agreementRatingValues = ['Disagree', 'Agree'];
     private readonly agreementRatingColors = ['red', 'gold', 'seagreen'];
 
     constructor(props: { [key: string]: number }) {

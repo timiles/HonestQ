@@ -32,7 +32,7 @@ namespace Pobs.Tests.Integration.Notifications
             var payload = new CommentFormModel
             {
                 Text = "My honest comment",
-                AgreementRating = AgreementRating.Neutral.ToString(),
+                AgreementRating = AgreementRating.Agree.ToString(),
                 ParentCommentId = _parentComment.Id,
             };
             using (var server = new IntegrationTestingServer())

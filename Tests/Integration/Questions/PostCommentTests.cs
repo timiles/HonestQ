@@ -160,7 +160,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(answer);
-                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Neutral, null);
+                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Agree, null);
                 answer.Comments.Add(comment);
                 dbContext.SaveChanges();
             }
@@ -214,7 +214,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = " ",
                 Source = "https://www.example.com",
-                AgreementRating = AgreementRating.Neutral.ToString(),
+                AgreementRating = AgreementRating.Agree.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -286,7 +286,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
-                AgreementRating = AgreementRating.Neutral.ToString(),
+                AgreementRating = AgreementRating.Agree.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -306,7 +306,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
-                AgreementRating = AgreementRating.Neutral.ToString(),
+                AgreementRating = AgreementRating.Agree.ToString(),
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

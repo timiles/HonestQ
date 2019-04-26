@@ -14,7 +14,6 @@ export default class NewCommentButtons extends React.Component<Props> {
 
         this.handleOpenAgree = this.handleOpenAgree.bind(this);
         this.handleOpenDisagree = this.handleOpenDisagree.bind(this);
-        this.handleOpenNeutral = this.handleOpenNeutral.bind(this);
     }
 
     public render() {
@@ -32,19 +31,11 @@ export default class NewCommentButtons extends React.Component<Props> {
                 </ButtonOrLogIn>
                 <ButtonOrLogIn
                     type="button"
-                    className={`${className} mr-2`}
+                    className={className}
                     onClick={this.handleOpenDisagree}
                 >
                     <Icon value={IconValue.Disagree} />
                     Disagree
-                </ButtonOrLogIn>
-                <ButtonOrLogIn
-                    type="button"
-                    className={className}
-                    onClick={this.handleOpenNeutral}
-                >
-                    <Icon value={IconValue.Neutral} />
-                    Neutral
                 </ButtonOrLogIn>
             </div>
         );
@@ -56,9 +47,5 @@ export default class NewCommentButtons extends React.Component<Props> {
 
     private handleOpenDisagree() {
         this.props.onClick('Disagree');
-    }
-
-    private handleOpenNeutral() {
-        this.props.onClick('Neutral');
     }
 }

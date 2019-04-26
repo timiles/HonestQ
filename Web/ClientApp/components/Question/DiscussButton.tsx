@@ -15,14 +15,10 @@ export default class DiscussButton extends React.Component<Props> {
         const { linkToCommentsUrl, comments, upvotes } = this.props;
 
         let agreeCount = 0;
-        let neutralCount = 0;
         let disagreeCount = 0;
         for (const comment of comments) {
             if (comment.agreementRating === 'Agree') {
                 agreeCount++;
-            }
-            if (comment.agreementRating === 'Neutral') {
-                neutralCount++;
             }
             if (comment.agreementRating === 'Disagree') {
                 disagreeCount++;
@@ -52,15 +48,6 @@ export default class DiscussButton extends React.Component<Props> {
                         <label>
                             {agreeCount}
                             <span className="sr-only">agree</span>
-                        </label>
-                    </span>
-                }
-                {neutralCount > 0 &&
-                    <span className="badge badge-pill badge-reaction ml-1">
-                        <Icon value={IconValue.Discuss} />
-                        <label>
-                            {neutralCount}
-                            <span className="sr-only">neutral</span>
                         </label>
                     </span>
                 }
