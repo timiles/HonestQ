@@ -741,6 +741,18 @@ body.dark .modal-header .close, body.dark .modal-header .close:hover {
     background-color: #fff;
 }
 
+/* Slide down */
+@keyframes slide-down-animation {
+    from {
+        max-height: 0;
+        overflow-y: hidden;
+    }
+}
+.slide-down {
+    max-height: 500px;
+    animation: slide-down-animation .5s linear;
+}
+
 /* Loading spinner to float above content */
 .loading-spinner-container {
     position: relative;

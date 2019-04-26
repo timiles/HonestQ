@@ -1,8 +1,8 @@
 import * as React from 'react';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { CommentFormModel } from '../../server-models';
 import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';
-import QuotationMarks from '../shared/QuotationMarks';
 import SubmitButton from '../shared/SubmitButton';
 import SuperTextArea from '../shared/SuperTextArea';
 import AgreementRatingLabel from './AgreementRatingLabel';
@@ -11,10 +11,8 @@ type Props = FormProps<CommentFormModel>
     & CommentFormProps;
 
 interface CommentFormProps {
-    isModal?: boolean;
-    agreementRating?: string;
-    onCloseModalRequested?: () => void;
-    replyingToText: string;
+    agreementRating: string;
+    onCancel?: () => void;
     parentCommentId?: number;
 }
 
@@ -28,7 +26,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         this.state = {
             text: '',
             source: '',
-            agreementRating: this.props.agreementRating || 'Neutral',
+            agreementRating: this.props.agreementRating,
             parentCommentId: this.props.parentCommentId,
             isAnonymous: false,
         };
@@ -40,7 +38,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     }
 
     public componentDidMount() {
-        this.commentTextInputRef.current!.focus();
+        // Allow the .slide-down animation to finish
+        setTimeout(() => {
+            this.commentTextInputRef.current!.focus();
+        }, 500);
         onCtrlEnter('form', () => this.submit());
     }
 
@@ -48,84 +49,82 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         enableConfirmOnLeave(false);
     }
 
-    public componentDidUpdate() {
+    public componentDidUpdate(prevProps: Props) {
         enableConfirmOnLeave(this.shouldConfirmOnLeave());
+        if (prevProps.agreementRating !== this.props.agreementRating) {
+            this.setState({ agreementRating: this.props.agreementRating });
+        }
     }
 
     public render() {
-        const { replyingToText, isModal, onCloseModalRequested, submitting, submitted, error } = this.props;
-        const { text, source, agreementRating, isAnonymous } = this.state;
+        const { onCancel, submitting, submitted, error } = this.props;
+        const { text, source, agreementRating } = this.state;
 
         return (
-            <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
-                <div className={isModal ? 'modal-body' : ''}>
-                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className="form-group">
-                        <label>
-                            Replying to
-                        </label>
-                        <p>
-                            <QuotationMarks width={15}>
-                                <span className="post mx-1">
-                                    {replyingToText}
-                                </span>
-                            </QuotationMarks>
-                        </p>
-                    </div>
-                    <div className="form-group">
-                        <AgreementRatingLabel value={agreementRating} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="commentText">Comment</label>
-                        <SuperTextArea
-                            id="commentText"
-                            ref={this.commentTextInputRef}
-                            name="text"
-                            className="form-control"
-                            maxLength={280}
-                            required={true}
-                            submitted={submitted}
-                            value={text}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="commentSource">Source (optional)</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="commentSource"
-                            name="source"
-                            value={source}
-                            maxLength={2000}
-                            onChange={this.handleChange}
-                        />
-                    </div>
-                    {/* <div className="form-group">
-                        <div className="checkbox">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    name="isAnonymous"
-                                    checked={isAnonymous}
-                                    onChange={this.handleChange}
-                                /> Post anonymously (may take 48 hours to approve)
-                            </label>
+            <div className="card light-dark-bg slide-down">
+                <div className="card-body">
+                    <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
+                        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                        <div className="form-group">
+                            <AgreementRatingLabel value={agreementRating} />
+                            <LoggedInUserContext.Consumer>
+                                {(user) => user && <span className="ml-2">{user.username}</span>}
+                            </LoggedInUserContext.Consumer>
                         </div>
-                    </div> */}
+                        <div className="form-group">
+                            <label htmlFor="commentText">Comment</label>
+                            <SuperTextArea
+                                id="commentText"
+                                ref={this.commentTextInputRef}
+                                name="text"
+                                className="form-control"
+                                maxLength={280}
+                                required={true}
+                                submitted={submitted}
+                                value={text}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="commentSource">Source (optional)</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="commentSource"
+                                name="source"
+                                value={source}
+                                maxLength={2000}
+                                onChange={this.handleChange}
+                            />
+                        </div>
+                        {/* <div className="form-group">
+                                <div className="checkbox">
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="isAnonymous"
+                                            checked={isAnonymous}
+                                            onChange={this.handleChange}
+                                        /> Post anonymously (may take 48 hours to approve)
+                                    </label>
+                                </div>
+                            </div> */}
+                        <div className="form-group">
+                            <div className="float-right">
+                                {onCancel &&
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary mr-2"
+                                        onClick={onCancel}
+                                    >
+                                        Cancel
+                                    </button>}
+                                <SubmitButton submitting={submitting} />
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <div className={isModal ? 'modal-footer' : 'form-group'}>
-                    {isModal && onCloseModalRequested &&
-                        <button
-                            type="button"
-                            className="btn btn-secondary"
-                            onClick={onCloseModalRequested}
-                        >
-                            Close
-                        </button>}
-                    <SubmitButton submitting={submitting} />
-                </div>
-            </form>
+            </div>
         );
     }
 

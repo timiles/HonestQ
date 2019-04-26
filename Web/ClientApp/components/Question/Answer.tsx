@@ -8,6 +8,7 @@ import QuotationMarks from '../shared/QuotationMarks';
 import WatchControl from '../shared/WatchControl';
 import Comment from './Comment';
 import NewComment from './NewComment';
+import NewCommentButtons from './NewCommentButtons';
 import UpvoteButton from './UpvoteButton';
 
 type Props = AnswerModel
@@ -17,13 +18,21 @@ type Props = AnswerModel
         onWatch: (on: boolean, answerId: number) => void,
     };
 
-export default class Answer extends React.Component<Props, {}> {
+interface State {
+    replyWithAgreementRating?: string;
+}
+
+export default class Answer extends React.Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
 
+        this.state = {};
+
         this.handleReaction = this.handleReaction.bind(this);
         this.handleWatch = this.handleWatch.bind(this);
+        this.handleNewCommentButtonClick = this.handleNewCommentButtonClick.bind(this);
+        this.handleNewCommentClose = this.handleNewCommentClose.bind(this);
     }
 
     public componentDidMount() {
@@ -33,6 +42,7 @@ export default class Answer extends React.Component<Props, {}> {
     public render() {
         const { questionId, id, text, comments } = this.props;
         const { upvotes, upvotedByMe, watching } = this.props;
+        const { replyWithAgreementRating } = this.state;
 
         return (
             <div>
@@ -73,14 +83,23 @@ export default class Answer extends React.Component<Props, {}> {
                 <hr />
                 <div className="mb-3 clearfix">
                     <div className="float-right">
-                        <NewComment
-                            questionId={questionId}
-                            answerId={id}
-                            replyingToText={text}
+                        <NewCommentButtons
+                            className="btn btn-lg btn-primary shadow-lg"
+                            onClick={this.handleNewCommentButtonClick}
                         />
                     </div>
                 </div>
                 <ol className="list-unstyled mb-3">
+                    {replyWithAgreementRating &&
+                        <li className="mb-2">
+                            <NewComment
+                                questionId={questionId}
+                                answerId={id}
+                                agreementRating={replyWithAgreementRating}
+                                onCancel={this.handleNewCommentClose}
+                            />
+                        </li>
+                    }
                     {comments.map((x: CommentModel, i: number) =>
                         <li key={i} className="mb-2">
                             <Comment
@@ -91,17 +110,6 @@ export default class Answer extends React.Component<Props, {}> {
                             />
                         </li>)}
                 </ol>
-                {comments.length > 3 &&
-                    <div className="mb-3 clearfix">
-                        <div className="float-right">
-                            <NewComment
-                                questionId={questionId}
-                                answerId={id}
-                                replyingToText={text}
-                            />
-                        </div>
-                    </div>
-                }
             </div>
         );
     }
@@ -112,5 +120,13 @@ export default class Answer extends React.Component<Props, {}> {
 
     private handleWatch(on: boolean): void {
         this.props.onWatch(on, this.props.id);
+    }
+
+    private handleNewCommentButtonClick(agreementRating: string) {
+        this.setState({ replyWithAgreementRating: agreementRating });
+    }
+
+    private handleNewCommentClose() {
+        this.setState({ replyWithAgreementRating: undefined });
     }
 }

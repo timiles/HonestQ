@@ -5,6 +5,7 @@ import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
 import AgreementRatingLabel from './AgreementRatingLabel';
 import NewComment from './NewComment';
+import NewCommentButtons from './NewCommentButtons';
 import UpvoteButton from './UpvoteButton';
 
 type Props = CommentModel
@@ -14,12 +15,26 @@ type Props = CommentModel
         onUpvote: (on: boolean, answerId: number, commentId?: number) => void,
     };
 
-export default class Comment extends React.Component<Props, {}> {
+interface State {
+    replyWithAgreementRating?: string;
+}
+
+export default class Comment extends React.Component<Props, State> {
+
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {};
+
+        this.handleNewCommentButtonClick = this.handleNewCommentButtonClick.bind(this);
+        this.handleNewCommentClose = this.handleNewCommentClose.bind(this);
+    }
 
     public render(): any {
         const { questionId, answerId } = this.props;
         const { id, text, source, agreementRating, comments, upvotes, upvotedByMe } = this.props;
         const { postedAt, postedBy } = this.props;
+        const { replyWithAgreementRating } = this.state;
 
         return (
             <>
@@ -47,17 +62,26 @@ export default class Comment extends React.Component<Props, {}> {
                                 hideLabelOnMobile={true}
                             />
                         </div>
-                        <NewComment
-                            questionId={questionId}
-                            answerId={answerId}
-                            replyingToText={text}
-                            parentCommentId={id}
+                        <NewCommentButtons
+                            className="btn btn-outline-secondary"
+                            onClick={this.handleNewCommentButtonClick}
                         />
                     </div>
                 </div>
-                {comments && comments.length > 0 &&
+                {((comments && comments.length > 0) || replyWithAgreementRating) &&
                     <ol className="list-unstyled list-comments-nested">
-                        {comments.map((x: CommentModel, i: number) =>
+                        {replyWithAgreementRating &&
+                            <li className="mb-2">
+                                <NewComment
+                                    questionId={questionId}
+                                    answerId={answerId}
+                                    agreementRating={replyWithAgreementRating}
+                                    parentCommentId={id}
+                                    onCancel={this.handleNewCommentClose}
+                                />
+                            </li>
+                        }
+                        {comments && comments.map((x: CommentModel, i: number) =>
                             <li key={i}>
                                 <Comment
                                     {...x}
@@ -69,5 +93,13 @@ export default class Comment extends React.Component<Props, {}> {
                     </ol>}
             </>
         );
+    }
+
+    private handleNewCommentButtonClick(agreementRating: string) {
+        this.setState({ replyWithAgreementRating: agreementRating });
+    }
+
+    private handleNewCommentClose() {
+        this.setState({ replyWithAgreementRating: undefined });
     }
 }

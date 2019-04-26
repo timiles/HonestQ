@@ -197,11 +197,11 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
             if (action.payload.comment.parentCommentId) {
                 const parentComment = findComment(answerModel.comments, action.payload.comment.parentCommentId);
                 if (parentComment) {
-                    parentComment.comments.push(action.payload.comment);
+                    parentComment.comments.unshift(action.payload.comment);
                 }
                 // Else?
             } else {
-                answerModel.comments.push(action.payload.comment);
+                answerModel.comments.unshift(action.payload.comment);
             }
             const questionNext = { ...questionModel, answers: answersNext };
             return {
