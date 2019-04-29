@@ -19,6 +19,7 @@ interface CommentFormProps {
 export default class CommentForm extends React.Component<Props, CommentFormModel> {
 
     private readonly commentTextInputRef: React.RefObject<SuperTextArea>;
+    private readonly containerDivRef: React.RefObject<HTMLDivElement>;
 
     constructor(props: Props) {
         super(props);
@@ -32,6 +33,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         };
 
         this.commentTextInputRef = React.createRef<SuperTextArea>();
+        this.containerDivRef = React.createRef<HTMLDivElement>();
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -41,6 +43,8 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         // Allow the .slide-down animation to finish
         setTimeout(() => {
             this.commentTextInputRef.current!.focus();
+            // Undo the max-height used for the animation
+            this.containerDivRef.current!.classList.remove('slide-down');
         }, 500);
         onCtrlEnter('form', () => this.submit());
     }
@@ -61,7 +65,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         const { text, source, agreementRating } = this.state;
 
         return (
-            <div className="card light-dark-bg slide-down">
+            <div className="card light-dark-bg slide-down" ref={this.containerDivRef}>
                 <div className="card-body">
                     <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
                         {error && <div className="alert alert-danger" role="alert">{error}</div>}
