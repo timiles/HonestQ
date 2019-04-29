@@ -41,7 +41,7 @@ class TagsList extends React.Component<TagsListProps> {
             // TODO: order by most recent activity? Certainly not this random method anyway.
             const randomSubset = tagsList.tags.sort(() => Math.random() - .5).slice(0, numberOfTagsToShow);
             // Now put smallest(?) first, to make it more likely to create a tapering effect downwards.
-            tagsToShow = randomSubset.sort((a, b) => (b.name.length - a.name.length));
+            tagsToShow = randomSubset.sort((a, b) => (a.name.length - b.name.length));
         } else {
             tagsToShow = tagsList.tags.sort((a, b) => (a.slug.localeCompare(b.slug)));
         }
