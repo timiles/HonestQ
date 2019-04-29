@@ -4,6 +4,7 @@ import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 
 interface Props {
     className?: string;
+    hideLabelOnMobile?: boolean;
     onClick: (agreementRating: string) => void;
 }
 
@@ -17,27 +18,31 @@ export default class NewCommentButtons extends React.Component<Props> {
     }
 
     public render() {
-        const { className = '' } = this.props;
+        const { className = '', hideLabelOnMobile } = this.props;
 
         return (
-            <div>
+            <>
                 <ButtonOrLogIn
                     type="button"
                     className={`${className} mr-2`}
                     onClick={this.handleOpenAgree}
                 >
+                    <span className={`mr-2 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
+                        Agree
+                    </span>
                     <Icon value={IconValue.Agree} />
-                    Agree
                 </ButtonOrLogIn>
                 <ButtonOrLogIn
                     type="button"
                     className={className}
                     onClick={this.handleOpenDisagree}
                 >
+                    <span className={`mr-2 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
+                        Disagree
+                    </span>
                     <Icon value={IconValue.Disagree} />
-                    Disagree
                 </ButtonOrLogIn>
-            </div>
+            </>
         );
     }
 

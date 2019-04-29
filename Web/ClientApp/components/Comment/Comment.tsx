@@ -62,10 +62,14 @@ export default class Comment extends React.Component<Props, State> {
                                 hideLabelOnMobile={true}
                             />
                         </div>
-                        <NewCommentButtons
-                            className="btn btn-outline-secondary"
-                            onClick={this.handleNewCommentButtonClick}
-                        />
+                        <div>
+                            <label className="mr-2">Reply:</label>
+                            <NewCommentButtons
+                                className="btn btn-outline-secondary"
+                                hideLabelOnMobile={true}
+                                onClick={this.handleNewCommentButtonClick}
+                            />
+                        </div>
                     </div>
                 </div>
                 {((comments && comments.length > 0) || replyWithAgreementRating) &&
