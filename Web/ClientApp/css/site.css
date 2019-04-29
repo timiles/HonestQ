@@ -1,19 +1,7 @@
 /* Fonts */
 @font-face {
-    font-family: 'lineto-circular-black';
-    src: url('/assets/lineto-circular-black.ttf') format('truetype');
-}
-@font-face {
-    font-family: 'lineto-circular-bold';
-    src: url('/assets/lineto-circular-bold.ttf') format('truetype');
-}
-@font-face {
     font-family: 'lineto-circular-book';
     src: url('/assets/lineto-circular-book.ttf') format('truetype');
-}
-@font-face {
-    font-family: 'lineto-circular-medium';
-    src: url('/assets/lineto-circular-medium.ttf') format('truetype');
 }
 @font-face {
     font-family: 'Nexa Bold';
