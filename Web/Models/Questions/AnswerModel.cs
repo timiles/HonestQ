@@ -37,7 +37,10 @@ namespace Pobs.Web.Models.Questions
 
             var userPseudoIds = PseudonymiseUserIds(answer);
             var topLevelComments = answer.Comments.Where(x => x.Status == PostStatus.OK && x.ParentComment == null);
-            this.Comments = topLevelComments.Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
+            this.Comments = topLevelComments
+                .Select(x => new CommentModel(x, loggedInUserId, userPseudoIds))
+                .OrderByDescending(x => x.Upvotes).ThenByDescending(x => x.PostedAt)
+                .ToArray();
 
             this.Upvotes = answer.Reactions.Count(x => x.Type == ReactionType.Upvote);
             if (loggedInUserId.HasValue)

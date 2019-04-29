@@ -3,6 +3,7 @@ using Xunit;
 using Pobs.Domain.Utils;
 using Pobs.Domain.Entities;
 using Pobs.Web.Models.Questions;
+using System.Linq;
 
 namespace Pobs.Tests.Unit
 {
@@ -52,13 +53,16 @@ namespace Pobs.Tests.Unit
 
             // Pseudo Ids should be 0 for the original poster of the Answer, then incrementing in order of time of first Comment
             var answerModel = new AnswerModel(answer, null);
-            Assert.Equal("Thread user #1", answerModel.Comments[0].PostedBy);
-            Assert.Equal("Thread user #0", answerModel.Comments[0].Comments[0].PostedBy);
-            Assert.Equal("Thread user #0", answerModel.Comments[1].PostedBy);
-            Assert.Equal("Bobby", answerModel.Comments[2].PostedBy);
-            Assert.Equal("Thread user #2", answerModel.Comments[3].PostedBy);
-            Assert.Equal("Thread user #0", answerModel.Comments[3].Comments[0].PostedBy);
-            Assert.Equal("Thread user #1", answerModel.Comments[3].Comments[1].PostedBy);
+            var commentsOrderedByPostedAt = answerModel.Comments.OrderBy(x => x.PostedAt).ToArray();
+            Assert.Equal("Thread user #1", commentsOrderedByPostedAt[0].PostedBy);
+            Assert.Equal("Thread user #0", commentsOrderedByPostedAt[0].Comments[0].PostedBy);
+            Assert.Equal("Thread user #0", commentsOrderedByPostedAt[1].PostedBy);
+            Assert.Equal("Bobby", commentsOrderedByPostedAt[2].PostedBy);
+            Assert.Equal("Thread user #2", commentsOrderedByPostedAt[3].PostedBy);
+
+            var childCommentsOrderedByPostedAt = commentsOrderedByPostedAt[3].Comments.OrderBy(x => x.PostedAt).ToArray();
+            Assert.Equal("Thread user #0", childCommentsOrderedByPostedAt[0].PostedBy);
+            Assert.Equal("Thread user #1", childCommentsOrderedByPostedAt[1].PostedBy);
         }
     }
 }

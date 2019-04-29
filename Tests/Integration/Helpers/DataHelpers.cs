@@ -218,6 +218,21 @@ namespace Pobs.Tests.Integration.Helpers
             return notifications;
         }
 
+        public static Comment UpvoteComment(Comment comment, int postedByUserId)
+        {
+            if (!comment.Reactions.Any(x => x.PostedByUserId == postedByUserId && x.Type == ReactionType.Upvote))
+            {
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    dbContext.Attach(comment);
+                    comment.Reactions.Add(new Reaction(ReactionType.Upvote, postedByUserId, DateTimeOffset.UtcNow));
+                    dbContext.SaveChanges();
+                }
+            }
+
+            return comment;
+        }
+
         public static bool DeleteUser(int id)
         {
             using (var dbContext = TestSetup.CreateDbContext())

@@ -186,6 +186,72 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
+        public async Task CommentsShouldBeReturnedInOrderOfUpvotes()
+        {
+            var question = _tag.Questions.First();
+            var answer = question.Answers.First();
+
+            // Add 2 comments
+            var comments = DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
+            // Add another 2 more recent comments
+            var mostRecentComments = DataHelpers.CreateComments(answer, answer.PostedByUser, 2);
+
+            var upvotedComment = DataHelpers.UpvoteComment(comments.First(), _questionUserId);
+            var upvotedMostRecentComment = DataHelpers.UpvoteComment(mostRecentComments.First(), _questionUserId);
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var url = _generateUrl(question.Id);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
+                var responseAnswer = responseModel.Answers.Single(x => x.Id == answer.Id);
+
+                Assert.Equal(4, responseAnswer.Comments.Length);
+                // Should be ordered by upvotes descending, then most recent within those upvotes
+                Assert.Equal(upvotedMostRecentComment.Id, responseAnswer.Comments[0].Id);
+                Assert.Equal(upvotedComment.Id, responseAnswer.Comments[1].Id);
+            }
+        }
+
+        [Fact]
+        public async Task ChildCommentsShouldBeReturnedInOrderOfUpvotes()
+        {
+            var question = _tag.Questions.First();
+            var answer = question.Answers.First();
+
+            // Add a comment
+            var comment = DataHelpers.CreateComments(answer, answer.PostedByUser, 1).Single();
+            // Add 2 child comments
+            var childComments = DataHelpers.CreateChildComments(comment, answer.PostedByUser, 2);
+            // Add another 2 more recent child comments
+            var mostRecentChildComments = DataHelpers.CreateChildComments(comment, answer.PostedByUser, 2);
+
+            var upvotedChildComment = DataHelpers.UpvoteComment(childComments.First(), _questionUserId);
+            var upvotedMostRecentChildComment = DataHelpers.UpvoteComment(mostRecentChildComments.First(), _questionUserId);
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var url = _generateUrl(question.Id);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
+                var responseComment = responseModel.Answers.Single(x => x.Id == answer.Id).Comments.Single(x => x.Id == comment.Id);
+
+                Assert.Equal(4, responseComment.Comments.Length);
+                // Should be ordered by upvotes descending, then most recent within those upvotes
+                Assert.Equal(upvotedMostRecentChildComment.Id, responseComment.Comments[0].Id);
+                Assert.Equal(upvotedChildComment.Id, responseComment.Comments[1].Id);
+            }
+        }
+
+        [Fact]
         public async Task AuthenticatedAsAdmin_ShouldGetIsApprovedProperty()
         {
             var question = _tag.Questions.First();

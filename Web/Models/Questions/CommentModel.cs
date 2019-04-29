@@ -32,7 +32,9 @@ namespace Pobs.Web.Models.Questions
             this.Status = comment.Status.ToString();
             this.ParentCommentId = comment.ParentComment?.Id;
             this.Comments = comment.ChildComments.Where(x => x.Status == PostStatus.OK)
-                .Select(x => new CommentModel(x, loggedInUserId, userPseudoIds)).ToArray();
+                .Select(x => new CommentModel(x, loggedInUserId, userPseudoIds))
+                .OrderByDescending(x => x.Upvotes).ThenByDescending(x => x.PostedAt)
+                .ToArray();
             this.Upvotes = comment.Reactions.Count(x => x.Type == ReactionType.Upvote);
             if (loggedInUserId.HasValue)
             {
