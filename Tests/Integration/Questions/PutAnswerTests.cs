@@ -17,14 +17,12 @@ namespace Pobs.Tests.Integration.Questions
     public class PutAnswerTests : IDisposable
     {
         private string _generateUrl(int questionId, int answerId) => $"/api/questions/{questionId}/answers/{answerId}";
-        private readonly int _userId;
         private readonly Question _question;
         private readonly Answer _answer;
 
         public PutAnswerTests()
         {
             var user = DataHelpers.CreateUser();
-            _userId = user.Id;
             _question = DataHelpers.CreateQuestions(user, 1, user, 1).Single();
             _answer = _question.Answers.First();
         }
@@ -40,7 +38,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId, Role.Admin);
+                client.AuthenticateAs(1, Role.Admin);
 
                 var url = _generateUrl(_question.Id, _answer.Id);
                 var response = await client.PutAsync(url, payload.ToJsonContent());
@@ -74,7 +72,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId, Role.Admin);
+                client.AuthenticateAs(1, Role.Admin);
 
                 var url = _generateUrl(_question.Id, _answer.Id);
                 var response = await client.PutAsync(url, payload.ToJsonContent());
@@ -90,12 +88,12 @@ namespace Pobs.Tests.Integration.Questions
         {
             var payload = new AnswerFormModel
             {
-                Text = "My honest question",
+                Text = "My honest answer",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId, Role.Admin);
+                client.AuthenticateAs(1, Role.Admin);
 
                 var url = _generateUrl(0, _answer.Id);
                 var response = await client.PutAsync(url, payload.ToJsonContent());
@@ -108,12 +106,12 @@ namespace Pobs.Tests.Integration.Questions
         {
             var payload = new AnswerFormModel
             {
-                Text = "My honest question",
+                Text = "My honest answer",
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId, Role.Admin);
+                client.AuthenticateAs(1, Role.Admin);
 
                 var url = _generateUrl(_question.Id, 0);
                 var response = await client.PutAsync(url, payload.ToJsonContent());
@@ -122,7 +120,7 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
+        public async Task AuthenticatedAsNonAdminPostedByUser_ShouldBeDenied()
         {
             var payload = new AnswerFormModel
             {
@@ -131,7 +129,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_userId);
+                client.AuthenticateAs(_answer.PostedByUserId);
 
                 var url = _generateUrl(_question.Id, _answer.Id);
                 var response = await client.PutAsync(url, payload.ToJsonContent());
@@ -148,7 +146,7 @@ namespace Pobs.Tests.Integration.Questions
 
         public void Dispose()
         {
-            DataHelpers.DeleteUser(_userId);
+            DataHelpers.DeleteUser(_question.PostedByUserId);
         }
     }
 }
