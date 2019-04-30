@@ -86,6 +86,7 @@ export interface AdminQuestionFormModel {
 
 export interface AdminQuestionModel {
     isApproved: boolean;
+    id: number;
     slug: string;
     text: string;
     context?: string;
@@ -150,6 +151,7 @@ export interface QuestionListItemModel {
 }
 
 export interface QuestionModel {
+    id: number;
     slug: string;
     text: string;
     context?: string;

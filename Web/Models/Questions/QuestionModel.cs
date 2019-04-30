@@ -10,6 +10,7 @@ namespace Pobs.Web.Models.Questions
         public QuestionModel() { }
         public QuestionModel(Question question, int? loggedInUserId)
         {
+            this.Id = question.Id;
             this.Slug = question.Slug;
             this.Text = question.Text;
             this.Context = question.Context;
@@ -20,6 +21,8 @@ namespace Pobs.Web.Models.Questions
 
             this.Answers = question.Answers.Select(x => new AnswerModel(x, loggedInUserId)).ToArray();
         }
+
+        public int Id { get; set; }
 
         [Required]
         public string Slug { get; set; }

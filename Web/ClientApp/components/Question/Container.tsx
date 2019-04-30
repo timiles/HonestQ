@@ -42,7 +42,9 @@ class Container extends React.Component<ContainerProps> {
         this.handleWatch = this.handleWatch.bind(this);
 
         // This will also run on server side render
-        this.props.getQuestion(this.props.questionId);
+        if (!props.question || props.question.id !== props.questionId) {
+            this.props.getQuestion(this.props.questionId);
+        }
     }
 
     public componentDidMount() {

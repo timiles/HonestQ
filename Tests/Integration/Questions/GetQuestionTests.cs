@@ -60,6 +60,7 @@ namespace Pobs.Tests.Integration.Questions
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
+                Assert.Equal(question.Id, responseModel.Id);
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Context, responseModel.Context);
@@ -132,6 +133,7 @@ namespace Pobs.Tests.Integration.Questions
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<QuestionModel>(responseContent);
+                Assert.Equal(question.Id, responseModel.Id);
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Context, responseModel.Context);

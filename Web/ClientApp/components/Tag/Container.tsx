@@ -30,7 +30,9 @@ class Container extends React.Component<ContainerProps, {}> {
         this.handleWatch = this.handleWatch.bind(this);
 
         // This will also run on server side render
-        props.getTag(props.tagSlug);
+        if (!props.tag || props.tag.slug !== props.tagSlug) {
+            props.getTag(props.tagSlug);
+        }
     }
 
     public render() {
