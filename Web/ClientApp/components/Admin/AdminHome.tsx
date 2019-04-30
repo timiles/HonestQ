@@ -54,7 +54,8 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
                                         <li key={i} className="mr-2 mb-2 list-inline-item">
                                             <Link
                                                 to={`/admin/edit/tags/${x.slug}`}
-                                                className="btn btn-lg btn-outline-secondary"
+                                                className={'btn btn-lg btn-outline-secondary ' +
+                                                    'brand-font-color light-dark-bg'}
                                             >
                                                 {x.name}
                                             </Link>
@@ -72,12 +73,13 @@ class AdminHome extends React.Component<AdminHomeProps, {}> {
                             (unapprovedQuestionsList.questions.length === 0 ?
                                 <p>All done!</p>
                                 :
-                                <ul className="list-inline">
+                                <ul className="list-unstyled">
                                     {unapprovedQuestionsList.questions.map((x, i) =>
-                                        <li key={i} className="mr-2 mb-2 list-inline-item">
+                                        <li key={i} className="mb-2">
                                             <Link
                                                 to={`/admin/edit/questions/${x.id}`}
-                                                className="btn btn-lg btn-outline-secondary"
+                                                className={'btn btn-lg btn-outline-secondary ' +
+                                                    'post-list-item brand-font-color light-dark-bg'}
                                             >
                                                 {x.text}
                                             </Link>
