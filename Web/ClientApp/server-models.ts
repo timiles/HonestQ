@@ -125,6 +125,7 @@ export interface CommentModel {
     agreementRating: string;
     postedAt: string;
     postedBy: string;
+    isAnonymous: boolean;
     status: string;
     parentCommentId?: number;
     comments: CommentModel[];

@@ -28,6 +28,7 @@ namespace Pobs.Web.Models.Questions
             {
                 this.PostedBy = comment.PostedByUser.Username;
             }
+            this.IsAnonymous = comment.IsAnonymous;
 
             this.Status = comment.Status.ToString();
             this.ParentCommentId = comment.ParentComment?.Id;
@@ -51,6 +52,7 @@ namespace Pobs.Web.Models.Questions
         public DateTime PostedAt { get; set; }
         [Required]
         public string PostedBy { get; set; }
+        public bool IsAnonymous { get; set; }
         [Required]
         public string Status { get; set; }
         public long? ParentCommentId { get; set; }

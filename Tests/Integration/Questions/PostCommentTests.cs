@@ -68,6 +68,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(comment.Text, responseModel.Text);
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal(_user.Username, responseModel.PostedBy);
+                    Assert.False(responseModel.IsAnonymous);
                     Assert.Equal("OK", responseModel.Status);
                 }
             }
@@ -140,7 +141,6 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.True(comment.IsAnonymous);
                     Assert.Equal(PostStatus.AwaitingApproval, comment.Status);
 
-
                     var responseContent = await response.Content.ReadAsStringAsync();
                     var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
 
@@ -148,6 +148,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(comment.Text, responseModel.Text);
                     AssertHelpers.Equal(comment.PostedAt, responseModel.PostedAt, 10);
                     Assert.Equal("Thread user #0 (you)", responseModel.PostedBy);
+                    Assert.True(responseModel.IsAnonymous);
                     Assert.Equal("AwaitingApproval", responseModel.Status);
                 }
             }

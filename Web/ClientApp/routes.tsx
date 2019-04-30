@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import AdminHome from './components/Admin/AdminHome';
 import EditAnswer from './components/Admin/EditAnswer';
+import EditComment from './components/Admin/EditComment';
 import EditQuestion from './components/Admin/EditQuestion';
 import EditTag from './components/Admin/EditTag';
 import { Layout } from './components/Layout';
@@ -18,6 +19,7 @@ import Question from './screens/Questions/Item';
 import Tags from './screens/Tags';
 import Tag from './screens/Tags/Item';
 
+// tslint:disable:max-line-length
 export const routes = (
     <Layout>
         <Switch>
@@ -26,6 +28,7 @@ export const routes = (
             <Route exact={true} path="/admin/throwerror" component={ThrowError} />
             <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
             <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
+            <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId/comments/:commentId" component={EditComment} />
             <Route exact={true} path="/admin/edit/tags/:tagSlug" component={EditTag} />
             <Route exact={true} path="/notifications" component={Notifications} />
             <Route exact={true} path="/questions" component={Questions} />

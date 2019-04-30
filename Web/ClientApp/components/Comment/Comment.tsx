@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { CommentModel } from '../../server-models';
+import { isUserInRole } from '../../utils/auth-utils';
 import AgreementRatingLabel from '../shared/AgreementRatingLabel';
 import DateTimeTooltip from '../shared/DateTimeTooltip';
 import EmbeddedContent from '../shared/EmbeddedContent';
@@ -40,6 +43,16 @@ export default class Comment extends React.Component<Props, State> {
             <>
                 <div className="card light-dark-bg">
                     <div className="card-body">
+                        <LoggedInUserContext.Consumer>
+                            {(user) => isUserInRole(user, 'Admin') &&
+                                <Link
+                                    to={`/admin/edit/questions/${questionId}/answers/${answerId}/comments/${id}`}
+                                    className="btn btn-danger float-right"
+                                >
+                                    Edit
+                                </Link>
+                            }
+                        </LoggedInUserContext.Consumer>
                         <div className="mb-3">
                             <AgreementRatingLabel value={agreementRating} />
                             <span className="ml-2">

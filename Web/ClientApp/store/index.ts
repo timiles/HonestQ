@@ -1,6 +1,7 @@
 import * as ActionStatuses from './ActionStatuses';
 import * as AdminHome from './AdminHome';
 import * as EditAnswer from './EditAnswer';
+import * as EditComment from './EditComment';
 import * as EditQuestion from './EditQuestion';
 import * as EditTag from './EditTag';
 import * as Login from './Login';
@@ -25,6 +26,7 @@ export interface ApplicationState {
     actionStatuses: ActionStatuses.ActionStatusesState;
     adminHome: AdminHome.AdminHomeState;
     editAnswer: EditAnswer.EditAnswerState;
+    editComment: EditComment.EditCommentState;
     editQuestion: EditQuestion.EditQuestionState;
     editTag: EditTag.EditTagState;
     login: Login.LoginState;
@@ -52,6 +54,7 @@ export const reducers = {
     actionStatuses: ActionStatuses.reducer,
     adminHome: AdminHome.reducer,
     editAnswer: EditAnswer.reducer,
+    editComment: EditComment.reducer,
     editQuestion: EditQuestion.reducer,
     editTag: EditTag.reducer,
     login: Login.reducer,

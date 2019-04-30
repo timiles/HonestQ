@@ -334,6 +334,40 @@ namespace Pobs.Web.Controllers
             }
         }
 
+        [HttpPut, Route("{questionId}/answers/{answerId}/comments/{commentId}"), Authorize]
+        public async Task<IActionResult> UpdateComment(int questionId, int answerId, long commentId, [FromBody] CommentFormModel payload)
+        {
+            if (!User.IsInRole(Role.Admin))
+            {
+                return Forbid();
+            }
+
+            if (string.IsNullOrWhiteSpace(payload.Text))
+            {
+                return BadRequest($"Comment {nameof(payload.Text)} is required.");
+            }
+            if (string.IsNullOrEmpty(payload.AgreementRating) ||
+                !Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
+            {
+                return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}.");
+            }
+
+            try
+            {
+                var userId = User.Identity.ParseUserId();
+                var commentModel = await _questionService.UpdateComment(questionId, answerId, commentId, payload, userId);
+                if (commentModel != null)
+                {
+                    return Ok(commentModel);
+                }
+                return NotFound();
+            }
+            catch (AppException e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPost, Route("{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}"), Authorize]
         public async Task<IActionResult> AddCommentReaction(int questionId, int answerId, long commentId, string reactionType)
         {

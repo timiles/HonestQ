@@ -23,6 +23,7 @@ namespace Pobs.Web.Services
         Task<ReactionModel> SaveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
         Task<ReactionModel> RemoveAnswerReaction(int questionId, int answerId, ReactionType reactionType, int postedByUserId);
         Task<CommentModel> SaveComment(int questionId, int answerId, CommentFormModel commentForm, int postedByUserId);
+        Task<CommentModel> UpdateComment(int questionId, int answerId, long commentId, CommentFormModel commentForm, int? loggedInUserId);
         Task<ReactionModel> SaveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
         Task<ReactionModel> RemoveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId);
     }
@@ -276,6 +277,27 @@ namespace Pobs.Web.Services
             await _context.SaveChangesAsync();
 
             return new CommentModel(comment, postedByUserId);
+        }
+
+        public async Task<CommentModel> UpdateComment(int questionId, int answerId, long commentId, CommentFormModel commentForm, int? loggedInUserId)
+        {
+            var comment = await _context.Questions
+                .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
+                .Include(x => x.PostedByUser)
+                .Include(x => x.Reactions)
+                .FirstOrDefaultAsync(x => x.Id == commentId && x.Answer.Id == answerId && x.Answer.Question.Id == questionId);
+            if (comment == null)
+            {
+                return null;
+            }
+
+            comment.Text = commentForm.Text.CleanText();
+            comment.Source = commentForm.Source.CleanText();
+            Enum.TryParse<AgreementRating>(commentForm.AgreementRating, out AgreementRating agreementRating);
+            comment.AgreementRating = agreementRating;
+
+            await _context.SaveChangesAsync();
+            return new CommentModel(comment, loggedInUserId);
         }
 
         public async Task<ReactionModel> SaveCommentReaction(int questionId, int answerId, long commentId, ReactionType reactionType, int postedByUserId)

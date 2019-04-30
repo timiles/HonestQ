@@ -24,13 +24,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     constructor(props: Props) {
         super(props);
 
-        this.state = {
-            text: '',
-            source: '',
-            agreementRating: this.props.agreementRating,
-            parentCommentId: this.props.parentCommentId,
-            isAnonymous: false,
-        };
+        this.state = (props.initialState) ? props.initialState
+            : {
+                text: '',
+                source: '',
+                agreementRating: this.props.agreementRating,
+                parentCommentId: this.props.parentCommentId,
+                isAnonymous: false,
+            };
 
         this.commentTextInputRef = React.createRef<SuperTextArea>();
         this.containerDivRef = React.createRef<HTMLDivElement>();
