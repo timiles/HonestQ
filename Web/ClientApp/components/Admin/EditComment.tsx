@@ -45,9 +45,7 @@ class EditComment extends React.Component<EditCommentProps, {}> {
     public render() {
         const { savedSuccessfully } = this.props;
         const { initialState } = this.props.editCommentForm;
-        const successUrl = (savedSuccessfully) ?
-            buildAnswerUrl(this.props.match.params.questionId, 'todo', this.props.match.params.answerId, 'todo') :
-            null;
+        const successUrl = (savedSuccessfully) ? buildAnswerUrl(this.questionId, 'todo', this.answerId, 'todo') : null;
 
         return (
             <div className="container">
