@@ -263,8 +263,7 @@ body.dark .cityscape-background {
     position: relative;
 }
 .question-search-control input {
-    padding-top: 34px;
-    padding-bottom: 34px;
+    height: 70px;
 }
 .question-search-control .search-icon {
     background-image: url('/assets/search-icon.png');
