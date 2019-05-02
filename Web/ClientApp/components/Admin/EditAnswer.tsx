@@ -5,7 +5,7 @@ import { AnswerFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as EditAnswerStore from '../../store/EditAnswer';
-import { buildQuestionUrl } from '../../utils/route-utils';
+import { buildAnswerUrl } from '../../utils/route-utils';
 import AnswerForm from '../Question/AnswerForm';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 
@@ -18,15 +18,21 @@ type EditAnswerProps = EditAnswerStore.EditAnswerState
 
 class EditAnswer extends React.Component<EditAnswerProps, {}> {
 
+    private readonly questionId: number;
+    private readonly answerId: number;
+
     constructor(props: EditAnswerProps) {
         super(props);
+
+        this.questionId = Number(props.match.params.questionId);
+        this.answerId = Number(props.match.params.answerId);
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     public componentDidMount() {
         if (this.shouldGetAnswer()) {
-            this.props.getAnswer(Number(this.props.match.params.questionId), Number(this.props.match.params.answerId));
+            this.props.getAnswer(this.questionId, this.answerId);
         }
     }
 
@@ -37,7 +43,7 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
     public render() {
         const { savedSuccessfully } = this.props;
         const { initialState } = this.props.editAnswerForm;
-        const successUrl = (savedSuccessfully) ? buildQuestionUrl(this.props.match.params.questionId, 'todo') : null;
+        const successUrl = (savedSuccessfully) ? buildAnswerUrl(this.questionId, 'todo', this.answerId, 'todo') : null;
 
         return (
             <div className="container">
@@ -67,7 +73,7 @@ class EditAnswer extends React.Component<EditAnswerProps, {}> {
     }
 
     private handleSubmit(form: AnswerFormModel): void {
-        this.props.submit(Number(this.props.match.params.questionId), Number(this.props.match.params.answerId), form);
+        this.props.submit(this.questionId, this.answerId, form);
     }
 }
 
