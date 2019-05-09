@@ -7,7 +7,6 @@ interface Props {
     text: string;
     childCount: number;
     childName: string;
-    postedBy?: string;
     watching: boolean;
     onWatch: (on: boolean) => void;
 }
@@ -35,7 +34,7 @@ export default class Header extends React.Component<Props> {
     }
 
     public render() {
-        const { postedBy, circleIconValue, text, childCount, childName, watching } = this.props;
+        const { circleIconValue, text, childCount, childName, watching } = this.props;
 
         const childHeader = Header.getChildHeader(childCount, childName);
 
@@ -44,18 +43,6 @@ export default class Header extends React.Component<Props> {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12 pt-3">
-                            {postedBy &&
-                                <>
-                                    <div className="float-left mr-2">
-                                        <div className="avatar">
-                                            <img className="img-fluid" src="/assets/avatar.png" />
-                                        </div>
-                                    </div>
-                                    <p className="float-left mr-3 mt-2">
-                                        {postedBy}
-                                    </p>
-                                </>
-                            }
                             <WatchControl
                                 onWatch={this.handleWatch}
                                 watching={watching}

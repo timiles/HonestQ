@@ -64,7 +64,6 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Context, responseModel.Context);
-                Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
 
                 Assert.DoesNotContain(_unapprovedTag.Slug, responseModel.Tags.Select(x => x.Slug));
 
@@ -137,7 +136,6 @@ namespace Pobs.Tests.Integration.Questions
                 Assert.Equal(question.Slug, responseModel.Slug);
                 Assert.Equal(question.Text, responseModel.Text);
                 Assert.Equal(question.Context, responseModel.Context);
-                Assert.Equal(question.PostedByUser.Username, responseModel.PostedBy);
 
                 Assert.Single(responseModel.Tags);
                 Assert.Equal(3, question.Answers.Count);

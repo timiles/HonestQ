@@ -19,7 +19,6 @@ export default class QuestionHeader extends React.Component<Props> {
                 text={question.text}
                 childCount={question.answers.length}
                 childName="answer"
-                postedBy={question.postedBy}
                 watching={question.watching}
                 onWatch={onWatch}
             />

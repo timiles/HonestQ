@@ -90,7 +90,6 @@ export interface AdminQuestionModel {
     slug: string;
     text: string;
     context?: string;
-    postedBy: string;
     watching: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];
@@ -156,7 +155,6 @@ export interface QuestionModel {
     slug: string;
     text: string;
     context?: string;
-    postedBy: string;
     watching: boolean;
     tags: TagValueModel[];
     answers: AnswerModel[];

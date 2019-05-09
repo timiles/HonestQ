@@ -153,7 +153,6 @@ namespace Pobs.Web.Services
         public async Task<QuestionModel> GetQuestion(int questionId, int? loggedInUserId, bool isAdmin)
         {
             var question = await _context.Questions
-                .Include(x => x.PostedByUser)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Include(x => x.Watches)
                 .Include(x => x.Answers).ThenInclude(x => x.Reactions)
