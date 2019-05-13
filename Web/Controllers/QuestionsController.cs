@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pobs.Comms;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
 using Pobs.Web.Models.Questions;
@@ -15,11 +16,15 @@ namespace Pobs.Web.Controllers
     {
         private readonly IQuestionService _questionService;
         private readonly INotificationsService _notificationsService;
+        private readonly IEmailSender _emailSender;
 
-        public QuestionsController(IQuestionService questionService, INotificationsService notificationsService)
+        public QuestionsController(IQuestionService questionService,
+            INotificationsService notificationsService,
+            IEmailSender emailSender)
         {
             _questionService = questionService;
             _notificationsService = notificationsService;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -73,6 +78,17 @@ namespace Pobs.Web.Controllers
                 {
                     await _notificationsService.CreateNotificationsForQuestion(questionModel.Id);
                     return Ok(questionModel);
+                }
+                else
+                {
+                    try
+                    {
+                        // Email admin to say a new question has been posted
+                        _emailSender.SendQuestionAwaitingApprovalEmail("honestq@pm.me", questionModel.Id, questionModel.Text);
+                    }
+                    catch
+                    {
+                    }
                 }
                 return Ok();
             }

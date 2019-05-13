@@ -3,7 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Newtonsoft.Json;
+using Pobs.Comms;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
@@ -33,7 +35,9 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = "My honest question",
             };
-            using (var server = new IntegrationTestingServer())
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_userId, Role.Admin);
@@ -60,6 +64,9 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(question.Text, responseModel.Text);
                 }
             }
+            emailSenderMock.Verify(
+                x => x.SendQuestionAwaitingApprovalEmail(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()),
+                Times.Never);
         }
 
         [Fact]
@@ -136,7 +143,9 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = "My honest question",
             };
-            using (var server = new IntegrationTestingServer())
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_userId);
@@ -153,6 +162,10 @@ namespace Pobs.Tests.Integration.Questions
 
                     var responseContent = await response.Content.ReadAsStringAsync();
                     Assert.Empty(responseContent);
+
+                    emailSenderMock.Verify(
+                        x => x.SendQuestionAwaitingApprovalEmail("honestq@pm.me", question.Id, question.Text),
+                        Times.Once);
                 }
             }
         }
