@@ -3,6 +3,7 @@ import { AppThunkAction } from '.';
 import { FormProps } from '../components/shared/FormProps';
 import { CommentFormModel, CommentModel, QuestionModel } from '../server-models';
 import { getJson, putJson } from '../utils/http-utils';
+import { findComment } from '../utils/model-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -67,9 +68,8 @@ export const actionCreators = {
 
                 getJson<QuestionModel>(`/api/questions/${questionId}`, getState().login.loggedInUser)
                     .then((questionResponse: QuestionModel) => {
-                        const commentResponse = questionResponse
-                            .answers.filter((x) => x.id === answerId)[0]
-                            .comments.filter((x) => x.id === commentId)[0];
+                        const answerResponse = questionResponse.answers.filter((x) => x.id === answerId)[0];
+                        const commentResponse = findComment(answerResponse.comments, commentId)!;
                         dispatch({
                             type: 'GET_EDIT_COMMENT_SUCCESS',
                             payload: { commentId, comment: commentResponse },

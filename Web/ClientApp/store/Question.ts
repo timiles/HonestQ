@@ -1,7 +1,8 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
-import { CommentModel, QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
+import { findComment } from '../utils/model-utils';
+import { QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewCommentFormSuccessAction } from './NewComment';
 
@@ -284,16 +285,3 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
     //  (or default initial state if none was supplied)
     return state || defaultState;
 };
-
-function findComment(comments: CommentModel[], commentId: number): CommentModel | null {
-    for (const comment of comments) {
-        if (comment.id === commentId) {
-            return comment;
-        }
-        const childComment = findComment(comment.comments, commentId);
-        if (childComment) {
-            return childComment;
-        }
-    }
-    return null;
-}

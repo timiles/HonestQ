@@ -10,3 +10,16 @@ export function countNestedComments(comments: CommentModel[]): number {
     }
     return total;
 }
+
+export function findComment(comments: CommentModel[], commentId: number): CommentModel | null {
+    for (const comment of comments) {
+        if (comment.id === commentId) {
+            return comment;
+        }
+        const childComment = findComment(comment.comments, commentId);
+        if (childComment) {
+            return childComment;
+        }
+    }
+    return null;
+}
