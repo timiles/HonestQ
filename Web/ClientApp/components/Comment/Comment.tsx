@@ -98,8 +98,8 @@ export default class Comment extends React.Component<Props, State> {
                                 />
                             </li>
                         }
-                        {comments && comments.map((x: CommentModel, i: number) =>
-                            <li key={i}>
+                        {comments && comments.map((x: CommentModel) =>
+                            <li key={x.id}>
                                 <Comment
                                     {...x}
                                     questionId={questionId}

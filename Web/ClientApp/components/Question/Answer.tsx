@@ -100,8 +100,8 @@ export default class Answer extends React.Component<Props, State> {
                             />
                         </li>
                     }
-                    {comments.map((x: CommentModel, i: number) =>
-                        <li key={i} className="mb-2">
+                    {comments.map((x: CommentModel) =>
+                        <li key={x.id} className="mb-2">
                             <Comment
                                 {...x}
                                 questionId={questionId}
