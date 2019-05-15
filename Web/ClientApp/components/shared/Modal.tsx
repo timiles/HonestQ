@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as ReactGA from 'react-ga';
 import * as ReactModal from 'react-modal';
 
 interface Props {
@@ -9,6 +10,12 @@ interface Props {
 
 export default class Modal extends React.Component<Props, {}> {
 
+    constructor(props: Props) {
+        super(props);
+
+        this.handleAfterOpen = this.handleAfterOpen.bind(this);
+    }
+
     public render() {
         const { title, isOpen, onRequestClose } = this.props;
 
@@ -18,6 +25,7 @@ export default class Modal extends React.Component<Props, {}> {
                 closeTimeoutMS={150}
                 isOpen={isOpen}
                 onRequestClose={onRequestClose}
+                onAfterOpen={this.handleAfterOpen}
             >
                 <div className="modal-content">
                     <div className="modal-header">
@@ -31,5 +39,13 @@ export default class Modal extends React.Component<Props, {}> {
                 </div>
             </ReactModal>
         );
+    }
+
+    private handleAfterOpen() {
+        const { title } = this.props;
+        ReactGA.event({
+            category: 'User',
+            action: `Modal: ${title}`,
+        });
     }
 }
