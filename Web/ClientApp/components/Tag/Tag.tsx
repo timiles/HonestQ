@@ -25,7 +25,7 @@ export default class Tag extends React.Component<TagProps, {}> {
                         {description &&
                             <>
                                 <h4>Description</h4>
-                                <p>{description}</p>
+                                <p className="post">{description}</p>
                             </>
                         }
                         {moreInfoUrl &&
