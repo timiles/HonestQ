@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { getItemCountText } from '../../utils/string-utils';
 import CircleIcon, { CircleIconValue } from './CircleIcon';
 import WatchControl from './WatchControl';
 
@@ -13,20 +14,6 @@ interface Props {
 
 export default class Header extends React.Component<Props> {
 
-    private static getChildHeader(childCount: number, childName: string): string {
-        switch (childCount) {
-            case 0: {
-                return `No ${childName}s yet`;
-            }
-            case 1: {
-                return `1 ${childName}`;
-            }
-            default: {
-                return `${childCount} ${childName}s`;
-            }
-        }
-    }
-
     constructor(props: Props) {
         super(props);
 
@@ -36,7 +23,7 @@ export default class Header extends React.Component<Props> {
     public render() {
         const { circleIconValue, text, childCount, childName, watching } = this.props;
 
-        const childHeader = Header.getChildHeader(childCount, childName);
+        const childHeader = getItemCountText(childName, childCount);
 
         return (
             <div className="header mb-3">

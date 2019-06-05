@@ -60,3 +60,17 @@ export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: num
     }
     return date;
 }
+
+export function getItemCountText(itemName: string, count: number): string {
+    switch (count) {
+        case 0: {
+            return `No ${itemName}s yet`;
+        }
+        case 1: {
+            return `1 ${itemName}`;
+        }
+        default: {
+            return `${count} ${itemName}s`;
+        }
+    }
+}
