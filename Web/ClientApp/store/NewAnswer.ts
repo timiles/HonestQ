@@ -21,7 +21,7 @@ interface NewAnswerFormRequestAction {
 }
 export interface NewAnswerFormSuccessAction {
     type: 'NEW_ANSWER_FORM_SUCCESS';
-    payload: { answer: AnswerModel; };
+    payload: { questionId: number; answer: AnswerModel; };
 }
 interface NewAnswerFormFailureAction {
     type: 'NEW_ANSWER_FORM_FAILURE';
@@ -56,7 +56,7 @@ export const actionCreators = {
                     .then((responseModel: AnswerModel) => {
                         dispatch({
                             type: 'NEW_ANSWER_FORM_SUCCESS',
-                            payload: { answer: responseModel },
+                            payload: { questionId, answer: responseModel },
                         });
                     })
                     .catch((reason: string) => {

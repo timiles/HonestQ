@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { QuestionListItemModel, QuestionsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
+import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewQuestionFormSuccessAction } from './NewQuestion';
 
 // -----------------
@@ -27,6 +28,7 @@ type KnownAction =
     | GetQuestionsListSuccessAction
     | GetQuestionsListFailureAction
     | NewQuestionFormSuccessAction
+    | NewAnswerFormSuccessAction
     ;
 
 // ----------------
@@ -87,7 +89,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
         }
         case 'NEW_QUESTION_FORM_SUCCESS': {
             if (!state.questionsList) {
-                // We could be posting a question from the tags page
+                // In case the Questions page hasn't been loaded yet (quite likely).
                 return state;
             }
             const questionListModel = state.questionsList;
@@ -101,6 +103,23 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                 tags: action.payload.questionListItem.tags,
             };
             questionItemsNext.unshift(newQuestionItem);
+            const questionListNext = { ...questionListModel, questions: questionItemsNext };
+            return {
+                questionsList: questionListNext,
+            };
+        }
+        case 'NEW_ANSWER_FORM_SUCCESS': {
+            if (!state.questionsList) {
+                // In case the Questions page hasn't been loaded yet (quite likely).
+                return state;
+            }
+            const questionListModel = state.questionsList;
+            // Slice for immutability
+            const questionItemsNext = questionListModel.questions.slice();
+            const question = questionItemsNext.filter((x) => x.id === action.payload.questionId)[0];
+            if (question) {
+                question.answersCount++;
+            }
             const questionListNext = { ...questionListModel, questions: questionItemsNext };
             return {
                 questionsList: questionListNext,
