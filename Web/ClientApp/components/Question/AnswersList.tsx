@@ -1,5 +1,6 @@
 import React from 'react';
 import { AnswerModel } from '../../server-models';
+import { getCommentScores } from '../../utils/model-utils';
 import AnswerSummary from './AnswerSummary';
 import NewAnswer from './NewAnswer';
 
@@ -11,10 +12,15 @@ interface Props {
 
 export default class AnswersList extends React.Component<Props> {
 
+    private static getScore(answer: AnswerModel): number {
+        const [agreeCount, disagreeCount] = getCommentScores(answer.comments);
+        return answer.upvotes + agreeCount - disagreeCount;
+    }
+
     public render() {
         const { questionId, questionSlug, answers } = this.props;
 
-        const orderedAnswers = answers.sort((a, b) => b.upvotes - a.upvotes);
+        const orderedAnswers = answers.sort((a, b) => AnswersList.getScore(b) - AnswersList.getScore(a));
 
         return (
             <>

@@ -11,6 +11,20 @@ export function countNestedComments(comments: CommentModel[]): number {
     return total;
 }
 
+export function getCommentScores(comments: CommentModel[]): [number, number] {
+    let agreeCount = 0;
+    let disagreeCount = 0;
+    for (const comment of comments) {
+        if (comment.agreementRating === 'Agree') {
+            agreeCount++;
+        }
+        if (comment.agreementRating === 'Disagree') {
+            disagreeCount++;
+        }
+    }
+    return [agreeCount, disagreeCount];
+}
+
 export function findComment(comments: CommentModel[], commentId: number): CommentModel | null {
     for (const comment of comments) {
         if (comment.id === commentId) {

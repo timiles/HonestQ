@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CommentModel } from '../../server-models';
+import { getCommentScores } from '../../utils/model-utils';
 import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 
 interface Props {
@@ -13,17 +14,7 @@ export default class DiscussButton extends React.Component<Props> {
 
     public render() {
         const { linkToCommentsUrl, comments, upvotes } = this.props;
-
-        let agreeCount = 0;
-        let disagreeCount = 0;
-        for (const comment of comments) {
-            if (comment.agreementRating === 'Agree') {
-                agreeCount++;
-            }
-            if (comment.agreementRating === 'Disagree') {
-                disagreeCount++;
-            }
-        }
+        const [agreeCount, disagreeCount] = getCommentScores(comments);
 
         return (
             <>
