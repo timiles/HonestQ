@@ -1,7 +1,7 @@
 import 'bootstrap';
 import { createBrowserHistory } from 'history';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import * as ReactGA from 'react-ga';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';

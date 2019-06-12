@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import AgreeIcon from './AgreeIcon';
 import CommentIcon from './CommentIcon';
 import DisagreeIcon from './DisagreeIcon';

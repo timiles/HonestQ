@@ -1,6 +1,6 @@
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 import { createMemoryHistory } from 'history';
-import * as React from 'react';
+import React from 'react';
 // tslint:disable-next-line:no-submodule-imports
 import { renderToStaticMarkup, renderToString } from 'react-dom/server';
 import Helmet, { HelmetData } from 'react-helmet';

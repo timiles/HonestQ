@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AnswerModel } from '../../server-models';
 import AnswerSummary from './AnswerSummary';
 import NewAnswer from './NewAnswer';

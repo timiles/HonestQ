@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AdminQuestionFormModel, TagValueModel } from '../../server-models';
 import { onCtrlEnter } from '../../utils/html-utils';
 import { FormProps } from '../shared/FormProps';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { QuestionFormModel, TagValueModel } from '../../server-models';
 import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
 import QuestionSearchResults from '../QuestionSearch/QuestionSearchResults';

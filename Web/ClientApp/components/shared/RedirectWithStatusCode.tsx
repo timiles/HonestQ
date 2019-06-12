@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Redirect, RedirectProps, Route, RouteComponentProps } from 'react-router';
 
 type RedirectWithStatusCodeProps = RedirectProps & { statusCode: number };

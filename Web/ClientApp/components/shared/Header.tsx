@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { getItemCountText } from '../../utils/string-utils';
 import CircleIcon, { CircleIconValue } from './CircleIcon';
 import WatchControl from './WatchControl';

@@ -1,4 +1,4 @@
-import * as jwt_decode from 'jwt-decode';
+import jwt_decode from 'jwt-decode';
 import { LoggedInUserModel } from '../server-models';
 
 export function isUserInRole(loggedInUser: LoggedInUserModel | undefined, role: string): boolean {

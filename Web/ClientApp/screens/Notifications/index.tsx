@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import * as React from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import NotificationList from '../../components/Notifications/List';

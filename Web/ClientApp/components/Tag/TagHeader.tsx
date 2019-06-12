@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TagModel } from '../../server-models';
 import { CircleIconValue } from '../shared/CircleIcon';
 import Header from '../shared/Header';

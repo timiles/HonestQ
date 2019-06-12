@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { TagModel } from '../../server-models';
 import NewQuestion from '../QuestionForm/NewQuestion';
 import TextWithShortLinks from '../shared/TextWithShortLinks';

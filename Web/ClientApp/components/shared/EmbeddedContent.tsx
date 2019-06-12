@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { extractUrlsFromText } from '../../utils/string-utils';
 import EmbeddedContentCard from './EmbeddedContentCard';
 

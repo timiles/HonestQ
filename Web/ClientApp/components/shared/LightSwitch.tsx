@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { setDarkMode } from '../../utils/html-utils';
 import MoonIcon from './SvgIcons/MoonIcon';
 import SunIcon from './SvgIcons/SunIcon';

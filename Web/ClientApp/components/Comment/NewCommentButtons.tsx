@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import ButtonOrLogIn from '../shared/ButtonOrLogIn';
 import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 

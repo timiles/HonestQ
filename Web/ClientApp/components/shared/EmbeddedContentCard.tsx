@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { extractDomainFromUrl, extractExtensionFromUrl } from '../../utils/string-utils';
 
 interface Props {

@@ -1,7 +1,7 @@
-import * as $ from 'jquery';
-import * as moment from 'moment';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import $ from 'jquery';
+import moment from 'moment';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
 

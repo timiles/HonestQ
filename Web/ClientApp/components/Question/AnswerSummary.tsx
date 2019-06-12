@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { AnswerModel } from '../../server-models';
 import { buildAnswerUrl } from '../../utils/route-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';

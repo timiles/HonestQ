@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import EmbeddedContent from '../shared/EmbeddedContent';
 import TextWithShortLinks from '../shared/TextWithShortLinks';
 

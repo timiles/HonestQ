@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { ActionStatus } from '../../store/ActionStatuses';
 
 export default class ActionStatusDisplay extends React.Component<ActionStatus> {

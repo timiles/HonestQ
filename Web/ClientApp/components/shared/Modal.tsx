@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import * as ReactGA from 'react-ga';
-import * as ReactModal from 'react-modal';
+import ReactModal from 'react-modal';
 
 interface Props {
     title: string;

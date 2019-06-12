@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React from 'react';
 import Helmet from 'react-helmet';
-import * as ReactModal from 'react-modal';
+import ReactModal from 'react-modal';
 // Import prototypes globally so they're available in every component
 import '../prototypes';
 import NavBar from './NavBar';

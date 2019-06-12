@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { LoggedInUserContext } from '../../LoggedInUserContext';
 import { CommentFormModel } from '../../server-models';
 import { enableConfirmOnLeave, onCtrlEnter } from '../../utils/html-utils';
