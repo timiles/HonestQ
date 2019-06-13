@@ -100,6 +100,7 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                 slug: action.payload.questionListItem.slug,
                 text: action.payload.questionListItem.text,
                 answersCount: action.payload.questionListItem.answersCount,
+                mostRecentActivityPostedAt: action.payload.questionListItem.mostRecentActivityPostedAt,
                 tags: action.payload.questionListItem.tags,
             };
             questionItemsNext.unshift(newQuestionItem);

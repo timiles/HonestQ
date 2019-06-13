@@ -98,6 +98,7 @@ namespace Pobs.Web.Services
                 .Include(x => x.Watches)
                 // TODO: This could be more efficient if we aggregated Answer counts in SQL
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.Answers)
+                .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.Answers).ThenInclude(x => x.Comments)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTags)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Question).ThenInclude(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .FirstOrDefaultAsync(x => x.Slug == tagSlug);

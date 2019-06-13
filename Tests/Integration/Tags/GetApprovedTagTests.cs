@@ -119,6 +119,97 @@ namespace Pobs.Tests.Integration.Tags
         }
 
         [Fact]
+        public async Task QuestionShouldHaveMostRecentActivityFromQuestionWhenNoAnswers()
+        {
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var url = _generateTagUrl(_tag.Slug);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TagModel>(responseContent);
+
+                foreach (var question in _tag.Questions.Where(x => x.Status == PostStatus.OK))
+                {
+                    var questionResponseModel = responseModel.Questions.Single(x => x.Id == question.Id);
+                    AssertHelpers.Equal(question.PostedAt, questionResponseModel.MostRecentActivityPostedAt, 10);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task QuestionShouldHaveMostRecentActivityFromAnswerWhenMostRecent()
+        {
+            var answerPostedAt = DateTime.UtcNow.AddHours(1);
+            var commentPostedAt = DateTime.UtcNow;
+
+            // Add an Answer to the middle Question
+            var question = _tag.Questions.Skip(1).First();
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(_user);
+                dbContext.Attach(question);
+                // An Answer with a Comment
+                var answer = new Answer(Utils.GenerateRandomString(10), _user, commentPostedAt);
+                answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, commentPostedAt, AgreementRating.Agree, null));
+                question.Answers.Add(answer);
+                // A more recent Answer
+                question.Answers.Add(new Answer(Utils.GenerateRandomString(10), _user, answerPostedAt));
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var url = _generateTagUrl(_tag.Slug);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TagModel>(responseContent);
+                var questionResponseModel = responseModel.Questions.Single(x => x.Id == question.Id);
+
+                AssertHelpers.Equal(answerPostedAt, questionResponseModel.MostRecentActivityPostedAt, 10);
+            }
+        }
+
+        [Fact]
+        public async Task QuestionShouldHaveMostRecentActivityFromCommentWhenMostRecent()
+        {
+            var answerPostedAt = DateTime.UtcNow;
+            var commentPostedAt = DateTime.UtcNow.AddHours(1);
+
+            // Add an Answer to the middle Question
+            var question = _tag.Questions.Skip(1).First();
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.Attach(_user);
+                dbContext.Attach(question);
+                // An Answer with a more recent Comment
+                var answer = new Answer(Utils.GenerateRandomString(10), _user, answerPostedAt);
+                answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, commentPostedAt, AgreementRating.Agree, null));
+                question.Answers.Add(answer);
+                dbContext.SaveChanges();
+            }
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                var url = _generateTagUrl(_tag.Slug);
+                var response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TagModel>(responseContent);
+                var questionResponseModel = responseModel.Questions.Single(x => x.Id == question.Id);
+
+                AssertHelpers.Equal(commentPostedAt, questionResponseModel.MostRecentActivityPostedAt, 10);
+            }
+        }
+
+        [Fact]
         public async Task AuthenticatedAsAdmin_ShouldGetIsApprovedProperty()
         {
             using (var server = new IntegrationTestingServer())

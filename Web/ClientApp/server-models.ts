@@ -148,6 +148,7 @@ export interface QuestionListItemModel {
     text: string;
     tags: TagValueModel[];
     answersCount: number;
+    mostRecentActivityPostedAt: string;
 }
 
 export interface QuestionModel {
