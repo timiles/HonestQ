@@ -13,10 +13,14 @@ import QuotationMarks from '../shared/QuotationMarks';
 import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 import WatchControlDemo from '../shared/WatchControlDemo';
 
+interface OwnProps {
+    windowScrollEventEmitter: EventEmitter;
+    onAllNotificationsLoaded: () => void;
+}
 type Props = NotificationsStore.ListState
     & typeof NotificationsStore.actionCreators
+    & OwnProps
     & {
-        windowScrollEventEmitter: EventEmitter, onAllNotificationsLoaded: () => void,
         getNotificationsListStatus: ActionStatus,
     };
 
@@ -241,7 +245,7 @@ class NotificationList extends React.Component<Props> {
 }
 
 export default connect(
-    (state: ApplicationState) => ({
+    (state: ApplicationState, ownProps: OwnProps) => ({
         ...state.notifications,
         getNotificationsListStatus: getActionStatus(state, 'GET_NOTIFICATIONS_LIST'),
     }),

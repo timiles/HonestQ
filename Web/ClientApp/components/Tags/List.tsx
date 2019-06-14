@@ -8,13 +8,16 @@ import { ActionStatus, getActionStatus } from '../../store/ActionStatuses';
 import * as TagsStore from '../../store/Tags';
 import ActionStatusDisplay from '../shared/ActionStatusDisplay';
 
+interface OwnProps {
+    buttonSize?: string;
+    selectedTagSlugs?: string[];
+    numberOfTagsToShow?: number;
+    showNewTagButton?: boolean;
+}
 type TagsListProps = TagsStore.ListState
     & typeof TagsStore.actionCreators
+    & OwnProps
     & {
-        buttonSize?: string,
-        selectedTagSlugs?: string[],
-        numberOfTagsToShow?: number,
-        showNewTagButton?: boolean,
         getTagsListStatus: ActionStatus,
     };
 
@@ -88,7 +91,7 @@ class TagsList extends React.Component<TagsListProps> {
 }
 
 export default connect(
-    (state: ApplicationState) => ({
+    (state: ApplicationState, ownProps: OwnProps) => ({
         ...state.tags,
         getTagsListStatus: getActionStatus(state, 'GET_TAGS_LIST'),
     }),
