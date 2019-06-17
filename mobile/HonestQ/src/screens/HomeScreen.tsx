@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import TagsList from '../components/TagsList';
 import { TagNavigationProps } from './TagScreen';
 
 interface Props {
@@ -12,17 +13,16 @@ export default class HomeScreen extends React.Component<Props> {
     title: 'Welcome',
   };
 
+  public constructor(props: Props) {
+    super(props);
+
+    this.navigateToTag = this.navigateToTag.bind(this);
+  }
+
   public render() {
     return (
       <View style={styles.container}>
-        {['a', 'b', 'c'].map((x) =>
-          <Button
-            key={x}
-            title={`Tag ${x}`}
-            data-id={x}
-            onPress={this.navigateToTag.bind(this, x)}
-          />,
-        )}
+        <TagsList navigateToTagScreen={this.navigateToTag} />
       </View>
     );
   }
