@@ -12,7 +12,6 @@ const store = createStore(combineReducers(Store.reducers), applyMiddleware(thunk
 
 export default class App extends React.Component {
   public render() {
-    console.log(store);
     return (
       <Provider store={store}>
         <Navigation />
