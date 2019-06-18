@@ -1,6 +1,7 @@
 import { LoggedInUserModel } from '../server-models';
+import { getApiHost } from './api-host';
 
-const apiHost = 'https://www.honestq.com';
+const apiHost = getApiHost();
 
 export function getJson<T>(url: string, loggedInUser: LoggedInUserModel | null | undefined): Promise<T> {
   return fetchJson<T>('GET', url, null, loggedInUser, false);
