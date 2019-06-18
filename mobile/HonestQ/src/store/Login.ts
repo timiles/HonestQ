@@ -19,7 +19,7 @@ export interface LoginState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface LogInRequestAction { type: 'LOGIN_REQUEST'; }
-interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
+export interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
 interface LogInFailureAction { type: 'LOGIN_FAILURE'; payload: { error: string | null; }; }
 interface LogOutRequestAction { type: 'LOGOUT_REQUEST'; }
 export interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
