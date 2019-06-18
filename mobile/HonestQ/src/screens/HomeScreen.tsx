@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import LoggedInUserInfo from '../components/LoggedInUserInfo';
 import TagsList from '../components/TagsList';
 import { TagNavigationProps } from './TagScreen';
 
@@ -22,6 +23,7 @@ export default class HomeScreen extends React.Component<Props> {
   public render() {
     return (
       <View style={styles.container}>
+        <LoggedInUserInfo navigation={this.props.navigation} />
         <TagsList navigateToTagScreen={this.navigateToTag} />
       </View>
     );
