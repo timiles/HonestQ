@@ -1,10 +1,11 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { FlatList, NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
+import { QuestionNavigationProps } from './QuestionScreen';
 
 export interface TagNavigationProps {
   tagSlug: string;
@@ -59,10 +60,23 @@ class TagScreen extends React.Component<Props> {
         <FlatList
           data={orderedQuestions}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Text>{item.text}</Text>}
+          renderItem={({ item }) => (
+            <>
+              <Text>{item.text}</Text>
+              <Button
+                title={getItemCountText('Answer', item.answersCount)}
+                onPress={() => this.navigateToQuestion(item.id)}
+              />
+            </>
+          )}
         />
       </View>
     );
+  }
+
+  private navigateToQuestion(questionId: number): void {
+    const navProps: QuestionNavigationProps = { questionId };
+    this.props.navigation.navigate('Question', navProps);
   }
 }
 
