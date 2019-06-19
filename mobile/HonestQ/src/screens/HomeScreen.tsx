@@ -30,7 +30,7 @@ export default class HomeScreen extends React.Component<Props> {
   }
 
   private navigateToTag(tagSlug: string): void {
-    const navProps: TagNavigationProps = { slug: tagSlug };
+    const navProps: TagNavigationProps = { tagSlug };
     this.props.navigation.navigate('Tag', navProps);
   }
 }
