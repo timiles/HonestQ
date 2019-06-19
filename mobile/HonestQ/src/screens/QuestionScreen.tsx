@@ -1,11 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Button, Text } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import { getItemCountText } from '../utils/string-utils';
+import { AnswerNavigationProps } from './AnswerScreen';
 
 export interface QuestionNavigationProps {
   questionId: number;
@@ -56,10 +57,24 @@ class QuestionScreen extends React.Component<Props> {
         <FlatList
           data={answers}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Text>{item.text}</Text>}
+          renderItem={({ item }) => (
+            <>
+              <Text>{item.text}</Text>
+              <Button
+                title={`Discuss (${getItemCountText('Comment', item.comments.length)})`}
+                onPress={() => this.navigateToAnswer(item.id)}
+              />
+            </>
+          )}
         />
       </>
     );
+  }
+
+  private navigateToAnswer(answerId: number): void {
+    const { questionId } = this.props.navigation.state.params;
+    const navProps: AnswerNavigationProps = { questionId, answerId };
+    this.props.navigation.navigate('Answer', navProps);
   }
 }
 
