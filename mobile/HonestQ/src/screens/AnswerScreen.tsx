@@ -3,6 +3,7 @@ import { Text } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
+import Comment from '../components/Comment';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 
@@ -48,9 +49,9 @@ class AnswerScreen extends React.Component<Props> {
         <Text>{questionText}</Text>
         <Text>{text}</Text>
         <FlatList
-          data={comments}
+          data={comments.filter((x) => !x.parentCommentId)}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <Text>{item.text}</Text>}
+          renderItem={({ item }) => <Comment comment={item} />}
         />
       </>
     );
