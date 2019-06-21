@@ -1,6 +1,7 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { HQText } from '../hq-components';
 import { CommentModel } from '../server-models';
 
 interface Props {
@@ -15,10 +16,10 @@ export default class Comment extends React.Component<Props> {
 
     return (
       <View style={{ paddingLeft: 10 }}>
-        <Text>{agreementRating}</Text>
-        <Text>{postedAt}</Text>
-        <Text>{postedBy}</Text>
-        <Text>{text}</Text>
+        <HQText>{agreementRating}</HQText>
+        <HQText>{postedAt}</HQText>
+        <HQText>{postedBy}</HQText>
+        <HQText>{text}</HQText>
         {(comments && comments.length > 0) &&
           <FlatList
             data={comment.comments}

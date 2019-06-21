@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
 import { connect } from 'react-redux';
+import { HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as LoginStore from '../store/Login';
 import LogOutButton from './LogOutButton';
@@ -26,7 +27,7 @@ class LoggedInUserInfo extends React.Component<Props> {
     if (!loggedInUser) {
       return (
         <View>
-          <Text>Not logged in.</Text>
+          <HQText>Not logged in.</HQText>
           <Button title="Log in" onPress={this.navigateToLogIn} />
         </View>
       );
@@ -34,7 +35,7 @@ class LoggedInUserInfo extends React.Component<Props> {
 
     return (
       <View>
-        <Text>Hello, {loggedInUser.username}.</Text>
+        <HQText>Hello, {loggedInUser.username}.</HQText>
         <LogOutButton />
       </View>
     );

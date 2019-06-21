@@ -5,7 +5,7 @@ import { ApplicationState } from '../store';
 import * as TagsStore from '../store/Tags';
 
 interface OwnProps {
-  navigateToTagScreen: (tagSlug: string) => void;
+  navigateToTagScreen: (tagSlug: string, tagName: string) => void;
 }
 
 type TagsListProps = TagsStore.ListState
@@ -39,7 +39,7 @@ class TagsList extends React.Component<TagsListProps> {
           <Button
             title={item.name}
             testID={item.slug}
-            onPress={() => this.props.navigateToTagScreen(item.slug)}
+            onPress={() => this.props.navigateToTagScreen(item.slug, item.name)}
           />
         }
       />

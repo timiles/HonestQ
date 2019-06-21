@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, NativeSyntheticEvent, NativeTouchEvent, Text, TextInput, View } from 'react-native';
+import { Button, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
+import { HQContentView, HQText, HQTextInput } from '../../hq-components';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
@@ -36,23 +37,23 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     const { username, password } = this.state;
 
     return (
-      <View>
-        <Text>Log in</Text>
-        <Text>Username or email</Text>
-        <TextInput
+      <HQContentView>
+        <HQText>Log in</HQText>
+        <HQText>Username or email</HQText>
+        <HQTextInput
           autoCapitalize="none"
           autoFocus={true}
           value={username}
           onChangeText={(text) => this.setState({ username: text })}
         />
-        <Text>Password</Text>
-        <TextInput
+        <HQText>Password</HQText>
+        <HQTextInput
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => this.setState({ password: text })}
         />
         <Button title="Log in" onPress={this.handleSubmit} />
-      </View>
+      </HQContentView>
     );
   }
 

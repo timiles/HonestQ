@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Text } from 'react-native';
+import { Button } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { NavigationScreenProp } from 'react-navigation';
+import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
+import { HQContentView, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import { getItemCountText } from '../utils/string-utils';
@@ -12,15 +13,15 @@ export interface QuestionNavigationProps {
   questionId: number;
 }
 
-interface NavProps {
-  navigation: NavigationScreenProp<{}, QuestionNavigationProps>;
-}
-
 type Props = QuestionStore.QuestionState
   & typeof QuestionStore.actionCreators
-  & NavProps;
+  & NavigationScreenProps<QuestionNavigationProps>;
 
 class QuestionScreen extends React.Component<Props> {
+
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Question',
+  };
 
   public constructor(props: Props) {
     super(props);
@@ -36,30 +37,30 @@ class QuestionScreen extends React.Component<Props> {
     const { questionId } = this.props.navigation.state.params;
 
     if (!question || question.id !== questionId) {
-      return <Text>Loading</Text>;
+      return <HQContentView><HQText>Loading</HQText></HQContentView>;
     }
 
     const { text, context, tags, answers } = question;
     const answersCountText = getItemCountText('Answers', answers.length);
 
     return (
-      <>
-        <Text>{text}</Text>
-        <Text>{answersCountText}</Text>
-        <Text>{context}</Text>
-        <Text>Tags:</Text>
+      <HQContentView>
+        <HQText>{text}</HQText>
+        <HQText>{answersCountText}</HQText>
+        <HQText>{context}</HQText>
+        <HQText>Tags:</HQText>
         <FlatList
           data={tags}
           keyExtractor={(item) => item.slug}
-          renderItem={({ item }) => <Text>{item.name}</Text>}
+          renderItem={({ item }) => <HQText>{item.name}</HQText>}
         />
-        <Text>Answers:</Text>
+        <HQText>Answers:</HQText>
         <FlatList
           data={answers}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <>
-              <Text>{item.text}</Text>
+              <HQText>{item.text}</HQText>
               <Button
                 title={`Discuss (${getItemCountText('Comment', item.comments.length)})`}
                 onPress={() => this.navigateToAnswer(item.id)}
@@ -67,7 +68,7 @@ class QuestionScreen extends React.Component<Props> {
             </>
           )}
         />
-      </>
+      </HQContentView>
     );
   }
 

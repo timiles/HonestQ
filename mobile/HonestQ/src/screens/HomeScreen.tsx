@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { NavigationScreenOptions } from 'react-navigation';
 import LoggedInUserInfo from '../components/LoggedInUserInfo';
 import TagsList from '../components/TagsList';
+import { HQContentView } from '../hq-components';
 import { TagNavigationProps } from './TagScreen';
 
 interface Props {
@@ -10,8 +11,8 @@ interface Props {
 
 export default class HomeScreen extends React.Component<Props> {
 
-  protected static navigationOptions = {
-    title: 'Welcome',
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Welcome to HonestQ',
   };
 
   public constructor(props: Props) {
@@ -22,23 +23,15 @@ export default class HomeScreen extends React.Component<Props> {
 
   public render() {
     return (
-      <View style={styles.container}>
+      <HQContentView>
         <LoggedInUserInfo navigation={this.props.navigation} />
         <TagsList navigateToTagScreen={this.navigateToTag} />
-      </View>
+      </HQContentView>
     );
   }
 
-  private navigateToTag(tagSlug: string): void {
-    const navProps: TagNavigationProps = { tagSlug };
+  private navigateToTag(tagSlug: string, tagName: string): void {
+    const navProps: TagNavigationProps = { tagSlug, tagName };
     this.props.navigation.navigate('Tag', navProps);
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-});

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Text } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { NavigationScreenProp } from 'react-navigation';
+import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import Comment from '../components/Comment';
+import { HQContentView, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 
@@ -12,15 +12,15 @@ export interface AnswerNavigationProps {
   answerId: number;
 }
 
-interface NavProps {
-  navigation: NavigationScreenProp<{}, AnswerNavigationProps>;
-}
-
 type Props = QuestionStore.QuestionState
   & typeof QuestionStore.actionCreators
-  & NavProps;
+  & NavigationScreenProps<AnswerNavigationProps>;
 
 class AnswerScreen extends React.Component<Props> {
+
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Answer',
+  };
 
   public constructor(props: Props) {
     super(props);
@@ -36,7 +36,7 @@ class AnswerScreen extends React.Component<Props> {
     const { questionId, answerId } = this.props.navigation.state.params;
 
     if (!question || question.id !== questionId) {
-      return <Text>Loading</Text>;
+      return <HQContentView><HQText>Loading</HQText></HQContentView>;
     }
 
     const answer = question.answers.filter((x) => x.id === answerId)[0];
@@ -45,15 +45,15 @@ class AnswerScreen extends React.Component<Props> {
     const { text, comments } = answer;
 
     return (
-      <>
-        <Text>{questionText}</Text>
-        <Text>{text}</Text>
+      <HQContentView>
+        <HQText>{questionText}</HQText>
+        <HQText>{text}</HQText>
         <FlatList
           data={comments.filter((x) => !x.parentCommentId)}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <Comment comment={item} />}
         />
-      </>
+      </HQContentView>
     );
   }
 }

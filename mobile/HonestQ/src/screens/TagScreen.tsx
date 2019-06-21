@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
-import { FlatList, NavigationScreenProp } from 'react-navigation';
+import { Button } from 'react-native';
+import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
+import { HQContentView, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
@@ -9,17 +10,21 @@ import { QuestionNavigationProps } from './QuestionScreen';
 
 export interface TagNavigationProps {
   tagSlug: string;
-}
-
-interface NavProps {
-  navigation: NavigationScreenProp<{}, TagNavigationProps>;
+  tagName: string;
 }
 
 type Props = TagStore.TagState
   & typeof TagStore.actionCreators
-  & NavProps;
+  & NavigationScreenProps<TagNavigationProps>;
 
 class TagScreen extends React.Component<Props> {
+
+  protected static navigationOptions =
+    ({ navigation }: NavigationScreenProps<TagNavigationProps>): NavigationScreenOptions => {
+      return {
+        title: navigation.getParam('tagName'),
+      };
+    }
 
   public constructor(props: Props) {
     super(props);
@@ -35,7 +40,7 @@ class TagScreen extends React.Component<Props> {
     const { tagSlug } = this.props.navigation.state.params;
 
     if (!tag || tag.slug !== tagSlug) {
-      return <Text>Loading</Text>;
+      return <HQContentView><HQText>Loading</HQText></HQContentView>;
     }
 
     const { name, description, moreInfoUrl, questions } = tag;
@@ -47,22 +52,22 @@ class TagScreen extends React.Component<Props> {
     const questionsCountText = getItemCountText('Question', questions.length);
 
     return (
-      <View>
-        <Text>{name}</Text>
-        <Text>{questionsCountText}</Text>
-        <Text>Description</Text>
-        <Text>{description}</Text>
-        <Text>More info</Text>
-        <Text>{moreInfoUrl}</Text>
+      <HQContentView>
+        <HQText>{name}</HQText>
+        <HQText>{questionsCountText}</HQText>
+        <HQText>Description</HQText>
+        <HQText>{description}</HQText>
+        <HQText>More info</HQText>
+        <HQText>{moreInfoUrl}</HQText>
         {questions.length === 0 &&
-          <Text>Start the conversation</Text>
+          <HQText>Start the conversation</HQText>
         }
         <FlatList
           data={orderedQuestions}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <>
-              <Text>{item.text}</Text>
+              <HQText>{item.text}</HQText>
               <Button
                 title={getItemCountText('Answer', item.answersCount)}
                 onPress={() => this.navigateToQuestion(item.id)}
@@ -70,7 +75,7 @@ class TagScreen extends React.Component<Props> {
             </>
           )}
         />
-      </View>
+      </HQContentView>
     );
   }
 
