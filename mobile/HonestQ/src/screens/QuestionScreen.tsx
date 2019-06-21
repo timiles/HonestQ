@@ -41,7 +41,7 @@ class QuestionScreen extends React.Component<Props> {
     }
 
     const { text, context, tags, answers } = question;
-    const answersCountText = getItemCountText('Answers', answers.length);
+    const answersCountText = getItemCountText('Answer', answers.length);
 
     return (
       <HQContentView>
