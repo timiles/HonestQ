@@ -1,11 +1,11 @@
-import { createStackNavigator } from 'react-navigation';
+import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import LogInScreen from './screens/Account/LogInScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import TagScreen from './screens/TagScreen';
 
-const MainNavigator = createStackNavigator({
+const AppStack = createStackNavigator({
   Answer: { screen: AnswerScreen },
   Home: { screen: HomeScreen },
   LogIn: { screen: LogInScreen },
@@ -25,4 +25,18 @@ const MainNavigator = createStackNavigator({
     },
   });
 
-export default MainNavigator;
+const DrawerNavigator = createDrawerNavigator(
+  {
+    Home: { screen: AppStack },
+    LogIn: { screen: LogInScreen, navigationOptions: { drawerLabel: 'Log in' } },
+  },
+  {
+    drawerBackgroundColor: '#28374B',
+    contentOptions: {
+      activeTintColor: '#FFFFFF',
+      inactiveTintColor: '#FFFFFF',
+    },
+  },
+);
+
+export default DrawerNavigator;

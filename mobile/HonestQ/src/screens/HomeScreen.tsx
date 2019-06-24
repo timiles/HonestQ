@@ -1,5 +1,6 @@
 import React from 'react';
-import { NavigationScreenOptions } from 'react-navigation';
+import { Text } from 'react-native';
+import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import LoggedInUserInfo from '../components/LoggedInUserInfo';
 import TagsList from '../components/TagsList';
 import { HQContentView } from '../hq-components';
@@ -11,9 +12,15 @@ interface Props {
 
 export default class HomeScreen extends React.Component<Props> {
 
-  protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Welcome to HonestQ',
-  };
+  protected static navigationOptions =
+    ({ navigation }: NavigationScreenProps): NavigationScreenOptions => {
+      return {
+        title: 'Welcome to HonestQ',
+        headerLeft: ({ tintColor }) => (
+          <Text style={{ color: tintColor }} onPress={() => navigation.openDrawer()}>Menu</Text>
+        ),
+      };
+    }
 
   public constructor(props: Props) {
     super(props);
