@@ -1,15 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, TextInputProps, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native';
 
-const styles = StyleSheet.create({
-  contentView: {
+function createStyleSheet() {
+  const contentView: StyleProp<ViewStyle> = {
     flex: 1,
     backgroundColor: '#28374B',
-  },
-  text: {
+  };
+  const text: StyleProp<TextStyle> = {
     color: '#FFFFFF',
-  },
-});
+  };
+  return StyleSheet.create({ contentView, text });
+}
+
+const styles = createStyleSheet();
 
 // tslint:disable:max-classes-per-file
 
