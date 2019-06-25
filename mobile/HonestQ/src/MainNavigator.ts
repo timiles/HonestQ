@@ -1,4 +1,5 @@
 import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
+import CustomDrawer from './CustomDrawer';
 import LogInScreen from './screens/Account/LogInScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -31,6 +32,7 @@ const DrawerNavigator = createDrawerNavigator(
     LogIn: { screen: LogInScreen, navigationOptions: { drawerLabel: 'Log in' } },
   },
   {
+    contentComponent: CustomDrawer,
     drawerBackgroundColor: '#28374B',
     contentOptions: {
       activeTintColor: '#FFFFFF',
