@@ -1,4 +1,4 @@
-import { Font } from 'expo';
+import * as Font from 'expo-font';
 import React from 'react';
 import { View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
@@ -26,15 +26,11 @@ export default class App extends React.Component<{}, State> {
   }
 
   public async componentDidMount() {
-    const loadTask1 = Font.loadAsync({
+    await Font.loadAsync({
       'lineto-circular-book': require('./assets/fonts/lineto-circular-book.ttf'),
-    });
-    const loadTask2 = Font.loadAsync({
       'Nexa Bold': require('./assets/fonts/Nexa_Bold.otf'),
     });
 
-    await loadTask1;
-    await loadTask2;
     this.setState({ assetsLoaded: true });
   }
 
