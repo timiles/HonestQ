@@ -1,9 +1,10 @@
 import React from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import MoreInfoCard from '../components/MoreInfoCard';
 import QuestionCard from '../components/QuestionCard';
-import { HQContentView, HQLabel, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQLabel, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
@@ -43,7 +44,7 @@ class TagScreen extends React.Component<Props> {
       return <HQContentView><HQText>Loading</HQText></HQContentView>;
     }
 
-    const { name, description, moreInfoUrl, questions } = tag;
+    const { description, moreInfoUrl, questions } = tag;
 
     const orderedQuestions = questions.sort((a, b) =>
       parseDateWithTimeZoneOffset(b.mostRecentActivityPostedAt).getTime() -
@@ -53,23 +54,35 @@ class TagScreen extends React.Component<Props> {
 
     return (
       <HQContentView>
-        <HQText>{name}</HQText>
-        <HQText>{questionsCountText}</HQText>
-        <MoreInfoCard description={description} moreInfoUrl={moreInfoUrl} />
-        {questions.length === 0 &&
-          <HQLabel>Start the conversation</HQLabel>
-        }
         <FlatList
+          ListHeaderComponent={
+            <View style={styles.itemContainerStyle}>
+              <MoreInfoCard description={description} moreInfoUrl={moreInfoUrl} />
+              <View style={{ marginTop: 10 }}>
+                <HQHeader>{questionsCountText}</HQHeader>
+                {questions.length === 0 &&
+                  <HQLabel>Start the conversation</HQLabel>
+                }
+              </View>
+            </View>
+          }
           data={orderedQuestions}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <QuestionCard question={item} navigation={this.props.navigation} />
+            <View style={styles.itemContainerStyle}>
+              <QuestionCard question={item} navigation={this.props.navigation} />
+            </View>
           )}
         />
       </HQContentView>
     );
   }
 }
+
+const itemContainerStyle: StyleProp<ViewStyle> = {
+  margin: 10,
+};
+const styles = StyleSheet.create({ itemContainerStyle });
 
 const mapStateToProps = (state: ApplicationState) => (state.tag);
 export default connect(mapStateToProps, TagStore.actionCreators)(TagScreen);

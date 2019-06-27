@@ -41,8 +41,7 @@ export default class QuestionCard extends React.Component<Props> {
 
 const cardStyle: StyleProp<ViewStyle> = {
   flex: 1,
-  marginHorizontal: 10,
-  marginTop: 20,
+  marginTop: 10,
   backgroundColor: '#1f2b3a',
   borderColor: '#394D67',
   borderWidth: 1,

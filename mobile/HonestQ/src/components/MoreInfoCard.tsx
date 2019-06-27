@@ -40,8 +40,6 @@ export default class MoreInfoCard extends React.Component<Props> {
 }
 
 const containerStyle: StyleProp<ViewStyle> = {
-  marginVertical: 20,
-  marginHorizontal: 10,
   padding: 20,
   borderWidth: 1,
   borderLeftWidth: 5,
