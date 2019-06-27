@@ -1,13 +1,14 @@
 import React from 'react';
-import { Button } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQLabel, HQText } from '../hq-components';
+import AnswerCard from '../components/AnswerCard';
+import TextWithShortLinks from '../components/TextWithShortLinks';
+import { HQContentView, HQHeader, HQInfoCard, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import { getItemCountText } from '../utils/string-utils';
-import { AnswerNavigationProps } from './AnswerScreen';
 
 export interface QuestionNavigationProps {
   questionId: number;
@@ -45,39 +46,48 @@ class QuestionScreen extends React.Component<Props> {
 
     return (
       <HQContentView>
-        <HQText>{text}</HQText>
-        <HQText>{answersCountText}</HQText>
-        <HQText>{context}</HQText>
-        <HQLabel>Tags:</HQLabel>
+        <View style={styles.itemContainerStyle}>
+          <HQHeader>{text}</HQHeader>
+        </View>
         <FlatList
-          data={tags}
-          keyExtractor={(item) => item.slug}
-          renderItem={({ item }) => <HQText>{item.name}</HQText>}
-        />
-        <HQLabel>Answers:</HQLabel>
-        <FlatList
+          ListHeaderComponent={(
+            <View style={styles.itemContainerStyle}>
+              {context &&
+                <HQInfoCard>
+                  <HQHeader>Context</HQHeader>
+                  <TextWithShortLinks value={context} />
+                </HQInfoCard>
+              }
+              <HQHeader>Tags</HQHeader>
+              <FlatList
+                data={tags}
+                keyExtractor={(item) => item.slug}
+                renderItem={({ item }) => (
+                  <HQText>{item.name}</HQText>
+                )}
+              />
+              <View style={{ marginTop: 10 }}>
+                <HQHeader>{answersCountText}</HQHeader>
+              </View>
+            </View>
+          )}
           data={answers}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <>
-              <HQText>{item.text}</HQText>
-              <Button
-                title={`Discuss (${getItemCountText('Comment', item.comments.length)})`}
-                onPress={() => this.navigateToAnswer(item.id)}
-              />
-            </>
+            <View style={styles.itemContainerStyle}>
+              <AnswerCard answer={item} navigation={this.props.navigation} />
+            </View>
           )}
         />
       </HQContentView>
     );
   }
-
-  private navigateToAnswer(answerId: number): void {
-    const { questionId } = this.props.navigation.state.params;
-    const navProps: AnswerNavigationProps = { questionId, answerId };
-    this.props.navigation.navigate('Answer', navProps);
-  }
 }
+
+const itemContainerStyle: StyleProp<ViewStyle> = {
+  margin: 10,
+};
+const styles = StyleSheet.create({ itemContainerStyle });
 
 const mapStateToProps = (state: ApplicationState) => (state.question);
 export default connect(mapStateToProps, QuestionStore.actionCreators)(QuestionScreen);

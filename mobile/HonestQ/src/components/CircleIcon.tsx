@@ -9,9 +9,10 @@ export default class CircleIcon extends React.Component<OwnProps> {
 
   public render() {
     const { type } = this.props;
+    const backgroundColor = type === 'Q' ? '#FF5A00' : '#12BC62';
 
     return (
-      <View style={styles.circleIcon}>
+      <View style={{ ...styles.circleIcon, backgroundColor }}>
         <Text style={styles.circleText}>{type}</Text>
       </View>
     );
@@ -19,7 +20,6 @@ export default class CircleIcon extends React.Component<OwnProps> {
 }
 
 const circleIcon: StyleProp<ViewStyle> = {
-  backgroundColor: '#FF5A00',
   width: 36,
   height: 36,
   borderRadius: 18,
