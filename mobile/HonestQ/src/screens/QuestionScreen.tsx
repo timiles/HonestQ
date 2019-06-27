@@ -3,7 +3,7 @@ import { Button } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQText } from '../hq-components';
+import { HQContentView, HQLabel, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import { getItemCountText } from '../utils/string-utils';
@@ -48,13 +48,13 @@ class QuestionScreen extends React.Component<Props> {
         <HQText>{text}</HQText>
         <HQText>{answersCountText}</HQText>
         <HQText>{context}</HQText>
-        <HQText>Tags:</HQText>
+        <HQLabel>Tags:</HQLabel>
         <FlatList
           data={tags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) => <HQText>{item.name}</HQText>}
         />
-        <HQText>Answers:</HQText>
+        <HQLabel>Answers:</HQLabel>
         <FlatList
           data={answers}
           keyExtractor={(item) => item.id.toString()}

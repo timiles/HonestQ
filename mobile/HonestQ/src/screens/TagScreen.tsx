@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQText } from '../hq-components';
+import { HQContentView, HQLabel, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
@@ -55,12 +55,12 @@ class TagScreen extends React.Component<Props> {
       <HQContentView>
         <HQText>{name}</HQText>
         <HQText>{questionsCountText}</HQText>
-        <HQText>Description</HQText>
+        <HQLabel>Description</HQLabel>
         <HQText>{description}</HQText>
-        <HQText>More info</HQText>
+        <HQLabel>More info</HQLabel>
         <HQText>{moreInfoUrl}</HQText>
         {questions.length === 0 &&
-          <HQText>Start the conversation</HQText>
+          <HQLabel>Start the conversation</HQLabel>
         }
         <FlatList
           data={orderedQuestions}
