@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextStyle, View, ViewStyle } from 'react-native';
+// tslint:disable-next-line:max-line-length
+import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, View, ViewStyle } from 'react-native';
 
 function createStyleSheet() {
   const contentView: StyleProp<ViewStyle> = {
@@ -7,11 +8,11 @@ function createStyleSheet() {
     backgroundColor: '#28374B',
   };
   const label: StyleProp<TextStyle> = {
-    color: '#FFFFFF',
+    color: '#AECCF5',
     fontFamily: 'Nexa Bold',
   };
   const text: StyleProp<TextStyle> = {
-    color: '#FFFFFF',
+    color: '#AECCF5',
     fontFamily: 'lineto-circular-book',
   };
   return StyleSheet.create({ contentView, label, text });
@@ -33,9 +34,10 @@ export class HQLabel extends React.Component {
   }
 }
 
-export class HQText extends React.Component {
+export class HQText extends React.Component<TextProps> {
   public render() {
-    return <Text style={styles.text}>{this.props.children}</Text>;
+    const mergedStyle = { ...styles.text, ...this.props.style as object };
+    return <Text {...this.props} style={mergedStyle}>{this.props.children}</Text>;
   }
 }
 
