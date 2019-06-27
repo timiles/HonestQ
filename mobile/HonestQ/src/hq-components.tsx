@@ -7,6 +7,17 @@ function createStyleSheet() {
     flex: 1,
     backgroundColor: '#28374B',
   };
+  const infoCard: StyleProp<ViewStyle> = {
+    padding: 20,
+    borderWidth: 1,
+    borderLeftWidth: 5,
+    borderRadius: 5,
+    backgroundColor: '#1f2b3a',
+    borderTopColor: '#394D67',
+    borderRightColor: '#394D67',
+    borderBottomColor: '#394D67',
+    borderLeftColor: '#5bc0de',
+  };
   const header: StyleProp<TextStyle> = {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
@@ -22,7 +33,7 @@ function createStyleSheet() {
     fontFamily: 'lineto-circular-book',
     fontSize: 14,
   };
-  return StyleSheet.create({ contentView, header, label, text });
+  return StyleSheet.create({ contentView, infoCard, header, label, text });
 }
 
 const styles = createStyleSheet();
@@ -32,6 +43,12 @@ const styles = createStyleSheet();
 export class HQContentView extends React.Component {
   public render() {
     return <View style={styles.contentView}>{this.props.children}</View>;
+  }
+}
+
+export class HQInfoCard extends React.Component {
+  public render() {
+    return <View style={styles.infoCard}>{this.props.children}</View>;
   }
 }
 

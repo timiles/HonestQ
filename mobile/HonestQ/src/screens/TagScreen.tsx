@@ -2,9 +2,9 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import MoreInfoCard from '../components/MoreInfoCard';
 import QuestionCard from '../components/QuestionCard';
-import { HQContentView, HQHeader, HQLabel, HQText } from '../hq-components';
+import TextWithShortLinks from '../components/TextWithShortLinks';
+import { HQContentView, HQHeader, HQInfoCard, HQLabel, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
@@ -57,7 +57,28 @@ class TagScreen extends React.Component<Props> {
         <FlatList
           ListHeaderComponent={
             <View style={styles.itemContainerStyle}>
-              <MoreInfoCard description={description} moreInfoUrl={moreInfoUrl} />
+              {(description || moreInfoUrl) ?
+                <HQInfoCard>
+                  {description ?
+                    <>
+                      <HQHeader>Description</HQHeader>
+                      <TextWithShortLinks value={description} />
+                    </>
+                    : null
+                  }
+                  {(description && moreInfoUrl) ?
+                    <View style={{ height: 10 }} />
+                    : null
+                  }
+                  {moreInfoUrl ?
+                    <>
+                      <HQHeader>More info</HQHeader>
+                      <TextWithShortLinks value={moreInfoUrl} />
+                    </>
+                    : null}
+                </HQInfoCard>
+                : null
+              }
               <View style={{ marginTop: 10 }}>
                 <HQHeader>{questionsCountText}</HQHeader>
                 {questions.length === 0 &&
