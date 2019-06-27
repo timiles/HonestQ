@@ -15,10 +15,12 @@ function createStyleSheet() {
   const label: StyleProp<TextStyle> = {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
+    fontSize: 14,
   };
   const text: StyleProp<TextStyle> = {
     color: '#AECCF5',
     fontFamily: 'lineto-circular-book',
+    fontSize: 14,
   };
   return StyleSheet.create({ contentView, header, label, text });
 }

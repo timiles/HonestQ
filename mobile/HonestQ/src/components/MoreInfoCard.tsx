@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { HQHeader, HQText } from '../hq-components';
+import { HQHeader } from '../hq-components';
+import TextWithShortLinks from './TextWithShortLinks';
 
 interface Props {
   description?: string;
@@ -21,7 +22,7 @@ export default class MoreInfoCard extends React.Component<Props> {
         {description ?
           <>
             <HQHeader>Description</HQHeader>
-            <HQText>{description}</HQText>
+            <TextWithShortLinks value={description} />
           </>
           : null
         }
@@ -31,7 +32,7 @@ export default class MoreInfoCard extends React.Component<Props> {
         {moreInfoUrl ?
           <>
             <HQHeader>More info</HQHeader>
-            <HQText>{moreInfoUrl}</HQText>
+            <TextWithShortLinks value={moreInfoUrl} />
           </>
           : null}
       </View>
