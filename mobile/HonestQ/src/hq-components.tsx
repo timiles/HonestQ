@@ -7,6 +7,11 @@ function createStyleSheet() {
     flex: 1,
     backgroundColor: '#28374B',
   };
+  const header: StyleProp<TextStyle> = {
+    color: '#AECCF5',
+    fontFamily: 'Nexa Bold',
+    fontSize: 20,
+  };
   const label: StyleProp<TextStyle> = {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
@@ -15,7 +20,7 @@ function createStyleSheet() {
     color: '#AECCF5',
     fontFamily: 'lineto-circular-book',
   };
-  return StyleSheet.create({ contentView, label, text });
+  return StyleSheet.create({ contentView, header, label, text });
 }
 
 const styles = createStyleSheet();
@@ -25,6 +30,12 @@ const styles = createStyleSheet();
 export class HQContentView extends React.Component {
   public render() {
     return <View style={styles.contentView}>{this.props.children}</View>;
+  }
+}
+
+export class HQHeader extends React.Component {
+  public render() {
+    return <Text style={styles.header}>{this.props.children}</Text>;
   }
 }
 

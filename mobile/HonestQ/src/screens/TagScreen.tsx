@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
+import MoreInfoCard from '../components/MoreInfoCard';
 import QuestionCard from '../components/QuestionCard';
 import { HQContentView, HQLabel, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
@@ -54,10 +55,7 @@ class TagScreen extends React.Component<Props> {
       <HQContentView>
         <HQText>{name}</HQText>
         <HQText>{questionsCountText}</HQText>
-        <HQLabel>Description</HQLabel>
-        <HQText>{description}</HQText>
-        <HQLabel>More info</HQLabel>
-        <HQText>{moreInfoUrl}</HQText>
+        <MoreInfoCard description={description} moreInfoUrl={moreInfoUrl} />
         {questions.length === 0 &&
           <HQLabel>Start the conversation</HQLabel>
         }
