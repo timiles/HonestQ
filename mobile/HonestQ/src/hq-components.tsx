@@ -52,8 +52,7 @@ export class HQContentView extends React.Component {
 
 export class HQCard extends React.Component<ViewProps> {
   public render() {
-    const mergedStyle = { ...styles.card, ...this.props.style as object };
-    return <View {...this.props} style={mergedStyle}>{this.props.children}</View>;
+    return <View {...this.props} style={[styles.card, this.props.style]}>{this.props.children}</View>;
   }
 }
 
@@ -77,8 +76,7 @@ export class HQLabel extends React.Component {
 
 export class HQText extends React.Component<TextProps> {
   public render() {
-    const mergedStyle = { ...styles.text, ...this.props.style as object };
-    return <Text {...this.props} style={mergedStyle}>{this.props.children}</Text>;
+    return <Text {...this.props} style={[styles.text, this.props.style]}>{this.props.children}</Text>;
   }
 }
 
