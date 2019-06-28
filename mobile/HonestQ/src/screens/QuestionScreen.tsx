@@ -5,8 +5,9 @@ import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation
 import { connect } from 'react-redux';
 import AnswerCard from '../components/AnswerCard';
 import CircleIconCard from '../components/CircleIconCard';
+import { InfoCard } from '../components/InfoCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
-import { HQContentView, HQHeader, HQInfoCard, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
@@ -55,10 +56,10 @@ class QuestionScreen extends React.Component<Props> {
                 <HQHeader>{text}</HQHeader>
               </CircleIconCard>
               {context &&
-                <HQInfoCard style={hqStyles.mb1}>
+                <InfoCard style={hqStyles.mb1}>
                   <HQHeader>Context</HQHeader>
                   <TextWithShortLinks value={context} />
-                </HQInfoCard>
+                </InfoCard>
               }
               <View style={hqStyles.mb1}>
                 <HQHeader>Tags</HQHeader>

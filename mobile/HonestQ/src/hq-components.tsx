@@ -16,12 +16,6 @@ function createStyleSheet() {
     borderLeftColor: '#394D67',
     borderWidth: 1,
   };
-  const infoCard: StyleProp<ViewStyle> = {
-    padding: 20,
-    borderLeftWidth: 5,
-    borderRadius: 5,
-    borderLeftColor: '#5bc0de',
-  };
   const header: StyleProp<TextStyle> = {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
@@ -37,7 +31,7 @@ function createStyleSheet() {
     fontFamily: 'lineto-circular-book',
     fontSize: 14,
   };
-  return StyleSheet.create({ contentView, card, infoCard, header, label, text });
+  return StyleSheet.create({ contentView, card, header, label, text });
 }
 
 const styles = createStyleSheet();
@@ -53,12 +47,6 @@ export class HQContentView extends React.Component {
 export class HQCard extends React.Component<ViewProps> {
   public render() {
     return <View {...this.props} style={[styles.card, this.props.style]}>{this.props.children}</View>;
-  }
-}
-
-export class HQInfoCard extends React.Component<ViewProps> {
-  public render() {
-    return <HQCard {...this.props} style={[styles.infoCard, this.props.style]}>{this.props.children}</HQCard>;
   }
 }
 

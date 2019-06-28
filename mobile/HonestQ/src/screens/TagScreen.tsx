@@ -2,9 +2,10 @@ import React from 'react';
 import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
+import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
-import { HQContentView, HQHeader, HQInfoCard, HQLabel, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
@@ -60,7 +61,7 @@ class TagScreen extends React.Component<Props> {
             <View style={hqStyles.mh1}>
               <View style={hqStyles.mb1}>
                 {(description || moreInfoUrl) ?
-                  <HQInfoCard>
+                  <InfoCard>
                     {description ?
                       <>
                         <HQHeader>Description</HQHeader>
@@ -78,7 +79,7 @@ class TagScreen extends React.Component<Props> {
                         <TextWithShortLinks value={moreInfoUrl} />
                       </>
                       : null}
-                  </HQInfoCard>
+                  </InfoCard>
                   : null
                 }
               </View>
