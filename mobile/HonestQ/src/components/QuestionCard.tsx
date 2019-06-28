@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
+import { Button, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
-import { HQCard, HQText } from '../hq-components';
+import { HQText } from '../hq-components';
 import { QuestionNavigationProps } from '../screens/QuestionScreen';
 import { QuestionListItemModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
-import CircleIcon from './CircleIcon';
+import CircleIconCard from './CircleIconCard';
 
 interface OwnProps {
   question: QuestionListItemModel;
@@ -20,18 +20,15 @@ export default class QuestionCard extends React.Component<Props> {
     const { id, text, answersCount } = question;
 
     return (
-      <HQCard style={styles.cardStyle}>
-        <CircleIcon type="Q" />
-        <View style={styles.contentStyle}>
-          <View style={styles.textContainerStyle}>
-            <HQText>{text}</HQText>
-          </View>
-          <Button
-            title={getItemCountText('Answer', answersCount)}
-            onPress={() => this.navigateToQuestion(id)}
-          />
+      <CircleIconCard type="Q">
+        <View style={styles.textContainerStyle}>
+          <HQText>{text}</HQText>
         </View>
-      </HQCard>
+        <Button
+          title={getItemCountText('Answer', answersCount)}
+          onPress={() => this.navigateToQuestion(id)}
+        />
+      </CircleIconCard>
     );
   }
 
@@ -41,14 +38,7 @@ export default class QuestionCard extends React.Component<Props> {
   }
 }
 
-const cardStyle: StyleProp<ViewStyle> = {
-  marginTop: 10,
-};
-const contentStyle: StyleProp<ViewStyle> = {
-  paddingHorizontal: 40,
-  paddingBottom: 10,
-};
 const textContainerStyle: StyleProp<TextStyle> = {
   marginBottom: 10,
 };
-const styles = StyleSheet.create({ cardStyle, contentStyle, textContainerStyle });
+const styles = StyleSheet.create({ textContainerStyle });

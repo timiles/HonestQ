@@ -102,6 +102,7 @@ class TagScreen extends React.Component<Props> {
 
 const itemContainerStyle: StyleProp<ViewStyle> = {
   margin: 10,
+  marginTop: 0,
 };
 const styles = StyleSheet.create({ itemContainerStyle });
 
