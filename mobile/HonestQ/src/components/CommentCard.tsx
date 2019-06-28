@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { HQCard, HQText } from '../hq-components';
+import hqStyles from '../hq-styles';
 import { CommentModel } from '../server-models';
 
 interface Props {
@@ -15,7 +16,7 @@ export default class CommentCard extends React.Component<Props> {
     const { agreementRating, text, postedBy, postedAt, comments } = comment;
 
     return (
-      <View style={styles.indentStyle}>
+      <View style={hqStyles.ml1}>
         <HQCard style={styles.commentCardStyle}>
           <HQText>{agreementRating}</HQText>
           <HQText>{postedAt}</HQText>
@@ -34,10 +35,7 @@ export default class CommentCard extends React.Component<Props> {
   }
 }
 
-const indentStyle: StyleProp<ViewStyle> = {
-  marginLeft: 10,
-};
 const commentCardStyle: StyleProp<ViewStyle> = {
   padding: 10,
 };
-const styles = StyleSheet.create({ indentStyle, commentCardStyle });
+const styles = StyleSheet.create({ commentCardStyle });

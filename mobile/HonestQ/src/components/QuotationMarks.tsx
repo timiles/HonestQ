@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import hqStyles from '../hq-styles';
 import QuotationMarkCloseIcon from '../svg-icons/QuotationMarkCloseIcon';
 import QuotationMarkOpenIcon from '../svg-icons/QuotationMarkOpenIcon';
 
@@ -14,7 +15,7 @@ export default class QuotationMarks extends React.Component<Props> {
     const fill = '#AECCF5';
 
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={hqStyles.flexRow}>
         <QuotationMarkOpenIcon width={width} fill={fill} />
         <View style={styles.childrenContainerStyle}>
           {this.props.children}

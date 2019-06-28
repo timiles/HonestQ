@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import { HQContentView, HQHeader, HQInfoCard, HQLabel, HQText } from '../hq-components';
+import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
@@ -56,41 +57,41 @@ class TagScreen extends React.Component<Props> {
       <HQContentView>
         <FlatList
           ListHeaderComponent={
-            <View style={styles.itemContainerStyle}>
-              {(description || moreInfoUrl) ?
-                <HQInfoCard>
-                  {description ?
-                    <>
-                      <HQHeader>Description</HQHeader>
-                      <TextWithShortLinks value={description} />
-                    </>
-                    : null
-                  }
-                  {(description && moreInfoUrl) ?
-                    <View style={{ height: 10 }} />
-                    : null
-                  }
-                  {moreInfoUrl ?
-                    <>
-                      <HQHeader>More info</HQHeader>
-                      <TextWithShortLinks value={moreInfoUrl} />
-                    </>
-                    : null}
-                </HQInfoCard>
-                : null
-              }
-              <View style={{ marginTop: 10 }}>
-                <HQHeader>{questionsCountText}</HQHeader>
-                {questions.length === 0 &&
-                  <HQLabel>Start the conversation</HQLabel>
+            <View style={hqStyles.mh1}>
+              <View style={hqStyles.mb1}>
+                {(description || moreInfoUrl) ?
+                  <HQInfoCard>
+                    {description ?
+                      <>
+                        <HQHeader>Description</HQHeader>
+                        <TextWithShortLinks value={description} />
+                      </>
+                      : null
+                    }
+                    {(description && moreInfoUrl) ?
+                      <View style={hqStyles.mb1} />
+                      : null
+                    }
+                    {moreInfoUrl ?
+                      <>
+                        <HQHeader>More info</HQHeader>
+                        <TextWithShortLinks value={moreInfoUrl} />
+                      </>
+                      : null}
+                  </HQInfoCard>
+                  : null
                 }
               </View>
+              <HQHeader>{questionsCountText}</HQHeader>
+              {questions.length === 0 &&
+                <HQLabel>Start the conversation</HQLabel>
+              }
             </View>
           }
           data={orderedQuestions}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={styles.itemContainerStyle}>
+            <View style={[hqStyles.mb1, hqStyles.mh1]}>
               <QuestionCard question={item} navigation={this.props.navigation} />
             </View>
           )}
@@ -99,12 +100,6 @@ class TagScreen extends React.Component<Props> {
     );
   }
 }
-
-const itemContainerStyle: StyleProp<ViewStyle> = {
-  margin: 10,
-  marginTop: 0,
-};
-const styles = StyleSheet.create({ itemContainerStyle });
 
 const mapStateToProps = (state: ApplicationState) => (state.tag);
 export default connect(mapStateToProps, TagStore.actionCreators)(TagScreen);

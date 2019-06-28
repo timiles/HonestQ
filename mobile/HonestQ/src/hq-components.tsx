@@ -56,9 +56,9 @@ export class HQCard extends React.Component<ViewProps> {
   }
 }
 
-export class HQInfoCard extends React.Component {
+export class HQInfoCard extends React.Component<ViewProps> {
   public render() {
-    return <HQCard style={styles.infoCard}>{this.props.children}</HQCard>;
+    return <HQCard {...this.props} style={[styles.infoCard, this.props.style]}>{this.props.children}</HQCard>;
   }
 }
 

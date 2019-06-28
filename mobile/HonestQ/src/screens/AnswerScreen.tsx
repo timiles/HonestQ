@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -7,6 +7,7 @@ import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import QuotationMarks from '../components/QuotationMarks';
 import { HQContentView, HQHeader, HQText } from '../hq-components';
+import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 
@@ -51,7 +52,7 @@ class AnswerScreen extends React.Component<Props> {
       <HQContentView>
         <FlatList
           ListHeaderComponent={(
-            <View style={styles.itemContainerStyle}>
+            <View style={[hqStyles.mb1, hqStyles.mh1]}>
               <CircleIconCard type="Q">
                 <HQHeader>{questionText}</HQHeader>
               </CircleIconCard>
@@ -65,7 +66,7 @@ class AnswerScreen extends React.Component<Props> {
           data={comments.filter((x) => !x.parentCommentId)}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={styles.commentListItemStyle}>
+            <View style={[hqStyles.mb1, hqStyles.mr1]}>
               <CommentCard comment={item} />
             </View>
           )}
@@ -74,16 +75,6 @@ class AnswerScreen extends React.Component<Props> {
     );
   }
 }
-
-const itemContainerStyle: StyleProp<ViewStyle> = {
-  marginHorizontal: 10,
-  marginBottom: 10,
-};
-const commentListItemStyle: StyleProp<ViewStyle> = {
-  marginRight: 10,
-  marginBottom: 10,
-};
-const styles = StyleSheet.create({ itemContainerStyle, commentListItemStyle });
 
 const mapStateToProps = (state: ApplicationState) => (state.question);
 export default connect(mapStateToProps, QuestionStore.actionCreators)(AnswerScreen);

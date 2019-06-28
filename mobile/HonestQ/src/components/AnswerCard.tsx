@@ -1,7 +1,8 @@
 import React from 'react';
-import { Button, StyleProp, StyleSheet, TextStyle, View } from 'react-native';
+import { Button, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 import { HQText } from '../hq-components';
+import hqStyles from '../hq-styles';
 import { AnswerNavigationProps } from '../screens/AnswerScreen';
 import { AnswerModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
@@ -22,7 +23,7 @@ export default class AnswerCard extends React.Component<Props> {
 
     return (
       <CircleIconCard type="A">
-        <View style={styles.textContainerStyle}>
+        <View style={hqStyles.mb1}>
           <QuotationMarks width={16}>
             <HQText>{text}</HQText>
           </QuotationMarks>
@@ -41,8 +42,3 @@ export default class AnswerCard extends React.Component<Props> {
     this.props.navigation.navigate('Answer', navProps);
   }
 }
-
-const textContainerStyle: StyleProp<TextStyle> = {
-  marginBottom: 10,
-};
-const styles = StyleSheet.create({ textContainerStyle });

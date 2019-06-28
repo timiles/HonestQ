@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { HQText } from '../hq-components';
+import hqStyles from '../hq-styles';
 import { splitIntoAlternatingTextFragmentsAndUrls } from '../utils/string-utils';
 import ShortLink from './ShortLink';
 
@@ -16,7 +17,7 @@ export default class TextWithShortLinks extends React.Component<Props, {}> {
     // Even indexes are text fragments, odd indexes are urls
     const textFragmentsAndUrls = splitIntoAlternatingTextFragmentsAndUrls(value);
     return (
-      <View style={{ flexDirection: 'row' }}>
+      <View style={hqStyles.flexRow}>
         {textFragmentsAndUrls.map((x, i) =>
           // Use {x + i} for unique key as React gets confused with other nodes on page when e.g. re-ordering answers
           (!x) ? null : (i % 2 === 0) ? <HQText key={x + i}>{x}</HQText> : <ShortLink key={x + i} to={x} />)}

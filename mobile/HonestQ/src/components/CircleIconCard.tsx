@@ -1,20 +1,22 @@
 import React from 'react';
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
 import { HQCard } from '../hq-components';
 
 interface OwnProps {
   type: 'Q' | 'A';
 }
+type Props = OwnProps
+  & ViewProps;
 
-export default class CircleIconCard extends React.Component<OwnProps> {
+export default class CircleIconCard extends React.Component<Props> {
 
   public render() {
     const { type } = this.props;
     const backgroundColor = type === 'Q' ? '#FF5A00' : '#12BC62';
 
     return (
-      <HQCard style={styles.cardStyle}>
-        <View style={{ ...styles.circleIconStyle, backgroundColor }}>
+      <HQCard style={[styles.cardStyle, this.props.style]}>
+        <View style={[styles.circleIconStyle, { backgroundColor }]}>
           <Text style={styles.circleTextStyle}>{type}</Text>
         </View>
         <View style={styles.contentStyle}>

@@ -4,6 +4,7 @@ import { DrawerItems, DrawerItemsProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import LogOutButton from './components/LogOutButton';
 import { HQText } from './hq-components';
+import hqStyles from './hq-styles';
 import { ApplicationState } from './store';
 import * as LoginStore from './store/Login';
 
@@ -17,7 +18,7 @@ class CustomDrawer extends React.Component<Props> {
     const itemsToDisplay = items.filter((x) => x.routeName !== (loggedInUser ? 'LogIn' : 'LogOut'));
 
     return (
-      <View style={{ paddingTop: 30 }}>
+      <View style={hqStyles.mt3}>
         {loggedInUser &&
           <HQText>Hello, {loggedInUser.username}</HQText>
           ||
