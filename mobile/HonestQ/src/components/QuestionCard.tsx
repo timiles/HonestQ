@@ -23,7 +23,9 @@ export default class QuestionCard extends React.Component<Props> {
       <HQCard style={styles.cardStyle}>
         <CircleIcon type="Q" />
         <View style={styles.contentStyle}>
-          <HQText style={styles.textStyle}>{text}</HQText>
+          <View style={styles.textContainerStyle}>
+            <HQText>{text}</HQText>
+          </View>
           <Button
             title={getItemCountText('Answer', answersCount)}
             onPress={() => this.navigateToQuestion(id)}
@@ -46,7 +48,7 @@ const contentStyle: StyleProp<ViewStyle> = {
   paddingHorizontal: 40,
   paddingBottom: 10,
 };
-const textStyle: StyleProp<TextStyle> = {
-  paddingBottom: 10,
+const textContainerStyle: StyleProp<TextStyle> = {
+  marginBottom: 10,
 };
-const styles = StyleSheet.create({ cardStyle, contentStyle, textStyle });
+const styles = StyleSheet.create({ cardStyle, contentStyle, textContainerStyle });

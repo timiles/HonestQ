@@ -24,9 +24,11 @@ export default class AnswerCard extends React.Component<Props> {
       <HQCard style={styles.cardStyle}>
         <CircleIcon type="A" />
         <View style={styles.contentStyle}>
-          <QuotationMarks width={16}>
-            <HQText style={styles.textStyle}>{text}</HQText>
-          </QuotationMarks>
+          <View style={styles.textContainerStyle}>
+            <QuotationMarks width={16}>
+              <HQText>{text}</HQText>
+            </QuotationMarks>
+          </View>
           <Button
             title={`Discuss (${getItemCountText('Comment', comments.length)})`}
             onPress={() => this.navigateToAnswer(id)}
@@ -50,8 +52,7 @@ const contentStyle: StyleProp<ViewStyle> = {
   paddingHorizontal: 40,
   paddingBottom: 10,
 };
-const textStyle: StyleProp<TextStyle> = {
-  paddingBottom: 10,
-  marginHorizontal: 8,
+const textContainerStyle: StyleProp<TextStyle> = {
+  marginBottom: 10,
 };
-const styles = StyleSheet.create({ cardStyle, contentStyle, textStyle });
+const styles = StyleSheet.create({ cardStyle, contentStyle, textContainerStyle });
