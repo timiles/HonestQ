@@ -1,9 +1,12 @@
 import React from 'react';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
+import CircleIconCard from '../components/CircleIconCard';
 import Comment from '../components/Comment';
-import { HQContentView, HQText } from '../hq-components';
+import QuotationMarks from '../components/QuotationMarks';
+import { HQContentView, HQHeader, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 
@@ -46,9 +49,19 @@ class AnswerScreen extends React.Component<Props> {
 
     return (
       <HQContentView>
-        <HQText>{questionText}</HQText>
-        <HQText>{text}</HQText>
         <FlatList
+          ListHeaderComponent={(
+            <View style={styles.itemContainerStyle}>
+              <CircleIconCard type="Q">
+                <HQHeader>{questionText}</HQHeader>
+              </CircleIconCard>
+              <CircleIconCard type="A">
+                <QuotationMarks width={20}>
+                  <HQHeader>{text}</HQHeader>
+                </QuotationMarks>
+              </CircleIconCard>
+            </View>
+          )}
           data={comments.filter((x) => !x.parentCommentId)}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => <Comment comment={item} />}
@@ -57,6 +70,12 @@ class AnswerScreen extends React.Component<Props> {
     );
   }
 }
+
+const itemContainerStyle: StyleProp<ViewStyle> = {
+  margin: 10,
+  marginTop: 0,
+};
+const styles = StyleSheet.create({ itemContainerStyle });
 
 const mapStateToProps = (state: ApplicationState) => (state.question);
 export default connect(mapStateToProps, QuestionStore.actionCreators)(AnswerScreen);

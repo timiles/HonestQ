@@ -4,6 +4,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import AnswerCard from '../components/AnswerCard';
+import CircleIconCard from '../components/CircleIconCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import { HQContentView, HQHeader, HQInfoCard, HQText } from '../hq-components';
 import { ApplicationState } from '../store';
@@ -46,30 +47,36 @@ class QuestionScreen extends React.Component<Props> {
 
     return (
       <HQContentView>
-        <View style={styles.itemContainerStyle}>
-          <HQHeader>{text}</HQHeader>
-        </View>
         <FlatList
           ListHeaderComponent={(
-            <View style={styles.itemContainerStyle}>
-              {context &&
-                <HQInfoCard>
-                  <HQHeader>Context</HQHeader>
-                  <TextWithShortLinks value={context} />
-                </HQInfoCard>
-              }
-              <HQHeader>Tags</HQHeader>
-              <FlatList
-                data={tags}
-                keyExtractor={(item) => item.slug}
-                renderItem={({ item }) => (
-                  <HQText>{item.name}</HQText>
-                )}
-              />
-              <View style={{ marginTop: 10 }}>
-                <HQHeader>{answersCountText}</HQHeader>
+            <>
+              <View style={styles.itemContainerStyle}>
+                <CircleIconCard type="Q">
+                  <HQHeader>{text}</HQHeader>
+                </CircleIconCard>
               </View>
-            </View>
+              <View style={styles.itemContainerStyle}>
+                {context &&
+                  <HQInfoCard>
+                    <HQHeader>Context</HQHeader>
+                    <TextWithShortLinks value={context} />
+                  </HQInfoCard>
+                }
+              </View>
+              <View style={styles.itemContainerStyle}>
+                <HQHeader>Tags</HQHeader>
+                <FlatList
+                  data={tags}
+                  keyExtractor={(item) => item.slug}
+                  renderItem={({ item }) => (
+                    <HQText>{item.name}</HQText>
+                  )}
+                />
+                <View style={{ marginTop: 10 }}>
+                  <HQHeader>{answersCountText}</HQHeader>
+                </View>
+              </View>
+            </>
           )}
           data={answers}
           keyExtractor={(item) => item.id.toString()}
@@ -86,6 +93,7 @@ class QuestionScreen extends React.Component<Props> {
 
 const itemContainerStyle: StyleProp<ViewStyle> = {
   margin: 10,
+  marginTop: 0,
 };
 const styles = StyleSheet.create({ itemContainerStyle });
 
