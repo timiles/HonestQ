@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
-import { HQText } from '../hq-components';
+import { HQCard, HQText } from '../hq-components';
 import { AnswerNavigationProps } from '../screens/AnswerScreen';
 import { AnswerModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
@@ -21,7 +21,7 @@ export default class AnswerCard extends React.Component<Props> {
     const { id, text, comments } = answer;
 
     return (
-      <View style={styles.cardStyle}>
+      <HQCard style={styles.cardStyle}>
         <CircleIcon type="A" />
         <View style={styles.contentStyle}>
           <QuotationMarks width={16}>
@@ -32,7 +32,7 @@ export default class AnswerCard extends React.Component<Props> {
             onPress={() => this.navigateToAnswer(id)}
           />
         </View>
-      </View>
+      </HQCard>
     );
   }
 
@@ -44,11 +44,7 @@ export default class AnswerCard extends React.Component<Props> {
 }
 
 const cardStyle: StyleProp<ViewStyle> = {
-  flex: 1,
   marginTop: 10,
-  backgroundColor: '#1f2b3a',
-  borderColor: '#394D67',
-  borderWidth: 1,
 };
 const contentStyle: StyleProp<ViewStyle> = {
   paddingHorizontal: 40,
