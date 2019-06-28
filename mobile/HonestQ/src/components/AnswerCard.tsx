@@ -6,6 +6,7 @@ import { AnswerNavigationProps } from '../screens/AnswerScreen';
 import { AnswerModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
 import CircleIcon from './CircleIcon';
+import QuotationMarks from './QuotationMarks';
 
 interface OwnProps {
   answer: AnswerModel;
@@ -23,7 +24,9 @@ export default class AnswerCard extends React.Component<Props> {
       <View style={styles.cardStyle}>
         <CircleIcon type="A" />
         <View style={styles.contentStyle}>
-          <HQText style={styles.textStyle}>{text}</HQText>
+          <QuotationMarks width={16}>
+            <HQText style={styles.textStyle}>{text}</HQText>
+          </QuotationMarks>
           <Button
             title={`Discuss (${getItemCountText('Comment', comments.length)})`}
             onPress={() => this.navigateToAnswer(id)}
@@ -53,5 +56,6 @@ const contentStyle: StyleProp<ViewStyle> = {
 };
 const textStyle: StyleProp<TextStyle> = {
   paddingBottom: 10,
+  marginHorizontal: 8,
 };
 const styles = StyleSheet.create({ cardStyle, contentStyle, textStyle });
