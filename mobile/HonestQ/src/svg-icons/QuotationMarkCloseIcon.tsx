@@ -10,7 +10,7 @@ interface Props {
 export default class QuotationMarkCloseIcon extends React.Component<Props> {
 
   public render() {
-    const { width , fill} = this.props;
+    const { width, fill } = this.props;
 
     return (
       <Svg viewBox="59 78 201 180" width={width} height={width} fill={fill}>
