@@ -5,6 +5,7 @@ import { HQCard, HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { CommentModel } from '../server-models';
 import AgreementLabel from './AgreementLabel';
+import FriendlyDateTime from './FriendlyDateTime';
 import TextWithShortLinks from './TextWithShortLinks';
 
 interface Props {
@@ -22,7 +23,8 @@ export default class CommentCard extends React.Component<Props> {
         <HQCard style={styles.commentCardStyle}>
           <View style={[hqStyles.flexRow, hqStyles.mb1]}>
             <AgreementLabel isAgree={agreementRating === 'Agree'} />
-            <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, {postedAt}</HQText>
+            <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, </HQText>
+            <FriendlyDateTime style={hqStyles.vAlignCenter} value={postedAt} />
           </View>
           <HQText style={hqStyles.mb1}>{text}</HQText>
           {source ?
