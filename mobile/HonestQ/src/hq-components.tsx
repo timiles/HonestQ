@@ -56,9 +56,9 @@ export class HQHeader extends React.Component {
   }
 }
 
-export class HQLabel extends React.Component {
+export class HQLabel extends React.Component<TextProps> {
   public render() {
-    return <Text style={styles.label}>{this.props.children}</Text>;
+    return <Text {...this.props} style={[styles.label, this.props.style]}>{this.props.children}</Text>;
   }
 }
 

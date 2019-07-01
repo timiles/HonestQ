@@ -18,4 +18,7 @@ const mr1: StyleProp<TextStyle> = {
 const mt3: StyleProp<TextStyle> = {
   marginTop: 30,
 };
-export default StyleSheet.create({ flexRow, mb1, mh1, ml1, mr1, mt3 });
+const vAlignCenter: StyleProp<TextStyle> = {
+  textAlignVertical: 'center',
+};
+export default StyleSheet.create({ flexRow, mb1, mh1, ml1, mr1, mt3, vAlignCenter });

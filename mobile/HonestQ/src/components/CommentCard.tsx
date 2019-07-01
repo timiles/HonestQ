@@ -4,6 +4,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { HQCard, HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { CommentModel } from '../server-models';
+import AgreementLabel from './AgreementLabel';
 import TextWithShortLinks from './TextWithShortLinks';
 
 interface Props {
@@ -20,8 +21,8 @@ export default class CommentCard extends React.Component<Props> {
       <View style={hqStyles.ml1}>
         <HQCard style={styles.commentCardStyle}>
           <View style={[hqStyles.flexRow, hqStyles.mb1]}>
-            <HQText>{agreementRating}</HQText>
-            <HQText style={hqStyles.ml1}>{postedBy}, {postedAt}</HQText>
+            <AgreementLabel isAgree={agreementRating === 'Agree'} />
+            <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, {postedAt}</HQText>
           </View>
           <HQText style={hqStyles.mb1}>{text}</HQText>
           {source ?
