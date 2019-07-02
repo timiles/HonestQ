@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, NativeSyntheticEvent, NativeTouchEvent, Text } from 'react-native';
+import { NativeSyntheticEvent, NativeTouchEvent, Text } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQTextInput } from '../../hq-components';
+import { HQContentView, HQHeader, HQSubmitButton, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
@@ -35,7 +35,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
   }
 
   public render() {
-    const { submitted, error } = this.props;
+    const { submitting = false, submitted, error } = this.props;
     const { username, password } = this.state;
 
     return (
@@ -61,7 +61,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
           submitted={submitted && !error}
           error={!password ? 'Password is required' : null}
         />
-        <Button title="Log in" onPress={this.handleSubmit} />
+        <HQSubmitButton title="Log in" onPress={this.handleSubmit} submitting={submitting} />
       </HQContentView>
     );
   }

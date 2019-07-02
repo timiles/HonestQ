@@ -1,6 +1,6 @@
 import React from 'react';
 // tslint:disable-next-line:max-line-length
-import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
 import hqStyles from './hq-styles';
 
 // tslint:disable:no-object-literal-type-assertion
@@ -37,6 +37,21 @@ const styles = StyleSheet.create({
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
     fontSize: 14,
+  } as TextStyle,
+
+  submitButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 4,
+    borderWidth: 1,
+    flexDirection: 'row',
+    height: 45,
+    padding: 12,
+  } as ViewStyle,
+
+  submitButtonText: {
+    color: '#fff',
+    fontFamily: 'lineto-circular-book',
+    textAlignVertical: 'center',
   } as TextStyle,
 
   text: {
@@ -87,6 +102,23 @@ export class HQHeader extends React.Component<ViewProps> {
 export class HQLabel extends React.Component<TextProps> {
   public render() {
     return <Text {...this.props} style={[styles.label, this.props.style]}>{this.props.children}</Text>;
+  }
+}
+
+interface HQSubmitButtonProps {
+  title?: string;
+  submitting?: boolean;
+}
+export class HQSubmitButton extends React.Component<TouchableOpacityProps & HQSubmitButtonProps> {
+  public render() {
+    const { title, submitting = false } = this.props;
+
+    return (
+      <TouchableOpacity {...this.props} style={[styles.submitButton, this.props.style]}>
+        {title ? <HQText style={styles.submitButtonText}>{title}</HQText> : this.props.children}
+        {submitting && <ActivityIndicator animating={true} color="#fff" style={hqStyles.ml1} />}
+      </TouchableOpacity>
+    );
   }
 }
 
