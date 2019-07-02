@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
-import { HQButton, HQText } from '../hq-components';
+import { HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { AnswerNavigationProps } from '../screens/AnswerScreen';
 import { AnswerModel } from '../server-models';
@@ -28,7 +28,7 @@ export default class AnswerCard extends React.Component<Props> {
             <HQText>{text}</HQText>
           </QuotationMarks>
         </View>
-        <HQButton
+        <HQNavigationButton
           title={`Discuss (${getItemCountText('comment', comments.length)})`}
           onPress={() => this.navigateToAnswer(id)}
         />

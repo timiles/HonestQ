@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
-import { HQButton, HQText } from '../hq-components';
+import { HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { QuestionNavigationProps } from '../screens/QuestionScreen';
 import { QuestionListItemModel } from '../server-models';
@@ -25,7 +25,7 @@ export default class QuestionCard extends React.Component<Props> {
         <View style={hqStyles.mb1}>
           <HQText>{text}</HQText>
         </View>
-        <HQButton
+        <HQNavigationButton
           title={getItemCountText('answer', answersCount)}
           onPress={() => this.navigateToQuestion(id)}
         />

@@ -5,13 +5,6 @@ import hqStyles from './hq-styles';
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
-  button: {
-    borderColor: '#6c757d',
-    borderRadius: 4,
-    borderWidth: 1,
-    padding: 12,
-  } as ViewStyle,
-
   contentView: {
     flex: 1,
     backgroundColor: '#28374B',
@@ -38,6 +31,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Nexa Bold',
     fontSize: 14,
   } as TextStyle,
+
+  navigationButton: {
+    borderColor: '#6c757d',
+    borderRadius: 4,
+    borderWidth: 1,
+    padding: 12,
+  } as ViewStyle,
 
   submitButton: {
     backgroundColor: '#007bff',
@@ -70,17 +70,6 @@ const styles = StyleSheet.create({
 
 // tslint:disable:max-classes-per-file
 
-export class HQButton extends React.Component<TouchableOpacityProps & { title?: string }> {
-  public render() {
-    const { title } = this.props;
-    return (
-      <TouchableOpacity {...this.props} style={[styles.button, this.props.style]}>
-        {title ? <HQText>{title}</HQText> : this.props.children}
-      </TouchableOpacity>
-    );
-  }
-}
-
 export class HQContentView extends React.Component<ViewProps> {
   public render() {
     return <View {...this.props} style={[styles.contentView, this.props.style]}>{this.props.children}</View>;
@@ -102,6 +91,17 @@ export class HQHeader extends React.Component<ViewProps> {
 export class HQLabel extends React.Component<TextProps> {
   public render() {
     return <Text {...this.props} style={[styles.label, this.props.style]}>{this.props.children}</Text>;
+  }
+}
+
+export class HQNavigationButton extends React.Component<TouchableOpacityProps & { title?: string }> {
+  public render() {
+    const { title } = this.props;
+    return (
+      <TouchableOpacity {...this.props} style={[styles.navigationButton, this.props.style]}>
+        {title ? <HQText>{title}</HQText> : this.props.children}
+      </TouchableOpacity>
+    );
   }
 }
 
