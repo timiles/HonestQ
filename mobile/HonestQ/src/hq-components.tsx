@@ -5,11 +5,6 @@ import hqStyles from './hq-styles';
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
-  contentView: {
-    flex: 1,
-    backgroundColor: '#28374B',
-  } as ViewStyle,
-
   card: {
     backgroundColor: '#1F2B3A',
     // Necessary to enable overriding each individually
@@ -18,6 +13,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#394D67',
     borderLeftColor: '#394D67',
     borderWidth: 1,
+  } as ViewStyle,
+
+  contentView: {
+    flex: 1,
+    backgroundColor: '#28374B',
   } as ViewStyle,
 
   header: {
@@ -70,15 +70,15 @@ const styles = StyleSheet.create({
 
 // tslint:disable:max-classes-per-file
 
-export class HQContentView extends React.Component<ViewProps> {
-  public render() {
-    return <View {...this.props} style={[styles.contentView, this.props.style]}>{this.props.children}</View>;
-  }
-}
-
 export class HQCard extends React.Component<ViewProps> {
   public render() {
     return <View {...this.props} style={[styles.card, this.props.style]}>{this.props.children}</View>;
+  }
+}
+
+export class HQContentView extends React.Component<ViewProps> {
+  public render() {
+    return <View {...this.props} style={[styles.contentView, this.props.style]}>{this.props.children}</View>;
   }
 }
 
