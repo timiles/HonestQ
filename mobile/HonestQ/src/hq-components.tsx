@@ -1,8 +1,14 @@
 import React from 'react';
 // tslint:disable-next-line:max-line-length
-import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
 
 function createStyleSheet() {
+  const button: StyleProp<ViewStyle> = {
+    borderColor: '#6c757d',
+    borderRadius: 4,
+    borderWidth: 1,
+    padding: 12,
+  };
   const contentView: StyleProp<ViewStyle> = {
     flex: 1,
     backgroundColor: '#28374B',
@@ -31,12 +37,23 @@ function createStyleSheet() {
     fontFamily: 'lineto-circular-book',
     fontSize: 14,
   };
-  return StyleSheet.create({ contentView, card, header, label, text });
+  return StyleSheet.create({ button, contentView, card, header, label, text });
 }
 
 const styles = createStyleSheet();
 
 // tslint:disable:max-classes-per-file
+
+export class HQButton extends React.Component<TouchableOpacityProps & { title?: string }> {
+  public render() {
+    const { title } = this.props;
+    return (
+      <TouchableOpacity {...this.props} style={[styles.button, this.props.style]}>
+        {title ? <HQText>{title}</HQText> : this.props.children}
+      </TouchableOpacity>
+    );
+  }
+}
 
 export class HQContentView extends React.Component {
   public render() {

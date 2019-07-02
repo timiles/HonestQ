@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
+import { HQButton } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as TagsStore from '../store/Tags';
 
@@ -36,9 +37,8 @@ class TagsList extends React.Component<TagsListProps> {
         data={orderedTags}
         keyExtractor={(item) => item.slug}
         renderItem={({ item }) =>
-          <Button
+          <HQButton
             title={item.name}
-            testID={item.slug}
             onPress={() => this.props.navigateToTagScreen(item.slug, item.name)}
           />
         }
