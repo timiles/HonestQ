@@ -1,6 +1,7 @@
 import React from 'react';
 // tslint:disable-next-line:max-line-length
-import { StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
+import hqStyles from './hq-styles';
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
@@ -43,6 +44,13 @@ const styles = StyleSheet.create({
     fontFamily: 'lineto-circular-book',
     fontSize: 14,
   } as TextStyle,
+
+  textInput: {
+    borderColor: '#AECCF5',
+    borderRadius: 30,
+    borderWidth: 1,
+    padding: 10,
+  } as TextStyle,
 });
 
 // tslint:disable:max-classes-per-file
@@ -58,9 +66,9 @@ export class HQButton extends React.Component<TouchableOpacityProps & { title?: 
   }
 }
 
-export class HQContentView extends React.Component {
+export class HQContentView extends React.Component<ViewProps> {
   public render() {
-    return <View style={styles.contentView}>{this.props.children}</View>;
+    return <View {...this.props} style={[styles.contentView, this.props.style]}>{this.props.children}</View>;
   }
 }
 
@@ -70,9 +78,9 @@ export class HQCard extends React.Component<ViewProps> {
   }
 }
 
-export class HQHeader extends React.Component {
+export class HQHeader extends React.Component<ViewProps> {
   public render() {
-    return <Text style={styles.header}>{this.props.children}</Text>;
+    return <Text {...this.props} style={[styles.header, this.props.style]}>{this.props.children}</Text>;
   }
 }
 
@@ -88,8 +96,27 @@ export class HQText extends React.Component<TextProps> {
   }
 }
 
-export class HQTextInput extends React.Component<TextInputProps> {
+interface HQTextInputProps {
+  containerStyle?: StyleProp<ViewStyle>;
+  error?: string;
+  submitted?: boolean;
+}
+export class HQTextInput extends React.Component<TextInputProps & HQTextInputProps> {
   public render() {
-    return <TextInput style={styles.text} {...this.props}>{this.props.children}</TextInput>;
+    const { containerStyle, error, submitted } = this.props;
+    const errorStyle: StyleProp<TextStyle> = submitted ? { borderColor: error ? 'red' : 'green' } : null;
+
+    return (
+      <View style={containerStyle}>
+        <TextInput
+          placeholderTextColor="#AECCF5"
+          {...this.props}
+          style={[styles.text, styles.textInput, this.props.style, errorStyle]}
+        >
+          {this.props.children}
+        </TextInput>
+        {submitted && error && <Text style={hqStyles.error}>{error}</Text>}
+      </View>
+    );
   }
 }

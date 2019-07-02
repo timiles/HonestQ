@@ -2,6 +2,10 @@ import { StyleSheet, TextStyle } from 'react-native';
 
 // tslint:disable:no-object-literal-type-assertion
 export default StyleSheet.create({
+  error: {
+    color: 'red',
+  } as TextStyle,
+
   flexRow: {
     flexDirection: 'row',
   } as TextStyle,
@@ -24,6 +28,10 @@ export default StyleSheet.create({
 
   mt3: {
     marginTop: 30,
+  } as TextStyle,
+
+  p1: {
+    padding: 10,
   } as TextStyle,
 
   vAlignCenter: {

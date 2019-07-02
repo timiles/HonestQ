@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
+import { Button, NativeSyntheticEvent, NativeTouchEvent, Text } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQLabel, HQTextInput } from '../../hq-components';
+import { HQContentView, HQHeader, HQTextInput } from '../../hq-components';
+import hqStyles from '../../hq-styles';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
@@ -34,23 +35,31 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
   }
 
   public render() {
+    const { submitted, error } = this.props;
     const { username, password } = this.state;
 
     return (
-      <HQContentView>
-        <HQLabel>Log in</HQLabel>
-        <HQLabel>Username or email</HQLabel>
+      <HQContentView style={hqStyles.p1}>
+        <HQHeader style={hqStyles.mb1}>Log in</HQHeader>
+        {error && <Text style={hqStyles.error}>{error}</Text>}
         <HQTextInput
+          containerStyle={hqStyles.mb1}
           autoCapitalize="none"
           autoFocus={true}
+          placeholder="Username or email"
           value={username}
           onChangeText={(text) => this.setState({ username: text })}
+          submitted={submitted && !error}
+          error={!username ? 'Username is required' : null}
         />
-        <HQLabel>Password</HQLabel>
         <HQTextInput
+          containerStyle={hqStyles.mb1}
+          placeholder="Password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => this.setState({ password: text })}
+          submitted={submitted && !error}
+          error={!password ? 'Password is required' : null}
         />
         <Button title="Log in" onPress={this.handleSubmit} />
       </HQContentView>
