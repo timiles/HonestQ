@@ -1,19 +1,22 @@
 import React from 'react';
 // tslint:disable-next-line:max-line-length
-import { StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
 
-function createStyleSheet() {
-  const button: StyleProp<ViewStyle> = {
+// tslint:disable:no-object-literal-type-assertion
+const styles = StyleSheet.create({
+  button: {
     borderColor: '#6c757d',
     borderRadius: 4,
     borderWidth: 1,
     padding: 12,
-  };
-  const contentView: StyleProp<ViewStyle> = {
+  } as ViewStyle,
+
+  contentView: {
     flex: 1,
     backgroundColor: '#28374B',
-  };
-  const card: StyleProp<ViewStyle> = {
+  } as ViewStyle,
+
+  card: {
     backgroundColor: '#1F2B3A',
     // Necessary to enable overriding each individually
     borderTopColor: '#394D67',
@@ -21,26 +24,26 @@ function createStyleSheet() {
     borderBottomColor: '#394D67',
     borderLeftColor: '#394D67',
     borderWidth: 1,
-  };
-  const header: StyleProp<TextStyle> = {
+  } as ViewStyle,
+
+  header: {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
     fontSize: 20,
-  };
-  const label: StyleProp<TextStyle> = {
+  } as TextStyle,
+
+  label: {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
     fontSize: 14,
-  };
-  const text: StyleProp<TextStyle> = {
+  } as TextStyle,
+
+  text: {
     color: '#AECCF5',
     fontFamily: 'lineto-circular-book',
     fontSize: 14,
-  };
-  return StyleSheet.create({ button, contentView, card, header, label, text });
-}
-
-const styles = createStyleSheet();
+  } as TextStyle,
+});
 
 // tslint:disable:max-classes-per-file
 

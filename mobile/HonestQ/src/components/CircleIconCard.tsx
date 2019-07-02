@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, StyleSheet, Text, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
+import { StyleSheet, Text, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
 import { HQCard } from '../hq-components';
 
 interface OwnProps {
@@ -15,11 +15,11 @@ export default class CircleIconCard extends React.Component<Props> {
     const backgroundColor = type === 'Q' ? '#FF5A00' : '#12BC62';
 
     return (
-      <HQCard style={[styles.cardStyle, this.props.style]}>
-        <View style={[styles.circleIconStyle, { backgroundColor }]}>
-          <Text style={styles.circleTextStyle}>{type}</Text>
+      <HQCard style={[styles.card, this.props.style]}>
+        <View style={[styles.circleIcon, { backgroundColor }]}>
+          <Text style={styles.circleText}>{type}</Text>
         </View>
-        <View style={styles.contentStyle}>
+        <View style={styles.content}>
           {this.props.children}
         </View>
       </HQCard>
@@ -27,26 +27,31 @@ export default class CircleIconCard extends React.Component<Props> {
   }
 }
 
-const cardStyle: StyleProp<ViewStyle> = {
-  marginTop: 20,
-};
-const circleIconStyle: StyleProp<ViewStyle> = {
-  width: 36,
-  height: 36,
-  borderRadius: 18,
-  top: -18,
-  marginBottom: -18,
-  left: 5,
-  alignItems: 'center',
-  justifyContent: 'center',
-};
-const circleTextStyle: StyleProp<TextStyle> = {
-  color: '#FFFFFF',
-  fontSize: 24,
-  fontFamily: 'lineto-circular-book',
-};
-const contentStyle: StyleProp<ViewStyle> = {
-  paddingHorizontal: 40,
-  paddingBottom: 10,
-};
-const styles = StyleSheet.create({ cardStyle, circleIconStyle, circleTextStyle, contentStyle });
+// tslint:disable:no-object-literal-type-assertion
+const styles = StyleSheet.create({
+  card: {
+    marginTop: 20,
+  } as ViewStyle,
+
+  circleIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    top: -18,
+    marginBottom: -18,
+    left: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  } as ViewStyle,
+
+  circleText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontFamily: 'lineto-circular-book',
+  } as TextStyle,
+
+  content: {
+    paddingHorizontal: 40,
+    paddingBottom: 10,
+  } as ViewStyle,
+});

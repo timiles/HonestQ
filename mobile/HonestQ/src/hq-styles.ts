@@ -1,24 +1,32 @@
-import { StyleProp, StyleSheet, TextStyle } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 
-const flexRow: StyleProp<TextStyle> = {
-  flexDirection: 'row',
-};
-const mb1: StyleProp<TextStyle> = {
-  marginBottom: 10,
-};
-const mh1: StyleProp<TextStyle> = {
-  marginHorizontal: 10,
-};
-const ml1: StyleProp<TextStyle> = {
-  marginLeft: 10,
-};
-const mr1: StyleProp<TextStyle> = {
-  marginRight: 10,
-};
-const mt3: StyleProp<TextStyle> = {
-  marginTop: 30,
-};
-const vAlignCenter: StyleProp<TextStyle> = {
-  textAlignVertical: 'center',
-};
-export default StyleSheet.create({ flexRow, mb1, mh1, ml1, mr1, mt3, vAlignCenter });
+// tslint:disable:no-object-literal-type-assertion
+export default StyleSheet.create({
+  flexRow: {
+    flexDirection: 'row',
+  } as TextStyle,
+
+  mb1: {
+    marginBottom: 10,
+  } as TextStyle,
+
+  mh1: {
+    marginHorizontal: 10,
+  } as TextStyle,
+
+  ml1: {
+    marginLeft: 10,
+  } as TextStyle,
+
+  mr1: {
+    marginRight: 10,
+  } as TextStyle,
+
+  mt3: {
+    marginTop: 30,
+  } as TextStyle,
+
+  vAlignCenter: {
+    textAlignVertical: 'center',
+  } as TextStyle,
+});

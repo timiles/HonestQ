@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import hqStyles from '../hq-styles';
 import QuotationMarkCloseIcon from '../svg-icons/QuotationMarkCloseIcon';
 import QuotationMarkOpenIcon from '../svg-icons/QuotationMarkOpenIcon';
@@ -17,7 +17,7 @@ export default class QuotationMarks extends React.Component<Props> {
     return (
       <View style={hqStyles.flexRow}>
         <QuotationMarkOpenIcon width={width} fill={fill} />
-        <View style={styles.childrenContainerStyle}>
+        <View style={styles.childrenContainer}>
           {this.props.children}
         </View>
         <QuotationMarkCloseIcon width={width} fill={fill} />
@@ -26,7 +26,9 @@ export default class QuotationMarks extends React.Component<Props> {
   }
 }
 
-const childrenContainerStyle: StyleProp<ViewStyle> = {
-  paddingHorizontal: 8,
-};
-const styles = StyleSheet.create({ childrenContainerStyle });
+// tslint:disable:no-object-literal-type-assertion
+const styles = StyleSheet.create({
+  childrenContainer: {
+    paddingHorizontal: 8,
+  } as ViewStyle,
+});
