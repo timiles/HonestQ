@@ -93,7 +93,7 @@ class TagScreen extends React.Component<Props> {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={[hqStyles.mb1, hqStyles.mh1]}>
-              <QuestionCard question={item} navigation={this.props.navigation} />
+              <QuestionCard question={item} />
             </View>
           )}
         />
