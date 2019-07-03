@@ -34,6 +34,10 @@ export default StyleSheet.create({
     padding: 10,
   } as TextStyle,
 
+  small: {
+    fontSize: 11,
+  } as TextStyle,
+
   vAlignCenter: {
     textAlignVertical: 'center',
   } as TextStyle,

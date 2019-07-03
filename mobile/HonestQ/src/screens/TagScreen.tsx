@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
-import { HQContentView, HQHeader, HQLabel, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQLabel, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
+import { NewQuestionNavigationProps } from './NewQuestionScreen';
 
 export interface TagNavigationProps {
   tagSlug: string;
@@ -36,6 +38,8 @@ class TagScreen extends React.Component<Props> {
     if (!props.tag || props.tag.slug !== tagSlug) {
       props.getTag(tagSlug);
     }
+
+    this.navigateToNewQuestion = this.navigateToNewQuestion.bind(this);
   }
 
   public render() {
@@ -53,6 +57,13 @@ class TagScreen extends React.Component<Props> {
       parseDateWithTimeZoneOffset(a.mostRecentActivityPostedAt).getTime());
 
     const questionsCountText = getItemCountText('Question', questions.length);
+    const newQuestionButton = (
+      <HQPrimaryButton
+        title="Ask a question"
+        style={hqStyles.mb1}
+        onPress={this.navigateToNewQuestion}
+      />
+    );
 
     return (
       <HQContentView>
@@ -87,6 +98,7 @@ class TagScreen extends React.Component<Props> {
               {questions.length === 0 &&
                 <HQLabel>Start the conversation</HQLabel>
               }
+              {newQuestionButton}
             </View>
           }
           data={orderedQuestions}
@@ -96,9 +108,20 @@ class TagScreen extends React.Component<Props> {
               <QuestionCard question={item} />
             </View>
           )}
+          ListFooterComponent={
+            orderedQuestions.length >= 5 &&
+            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+              {newQuestionButton}
+            </View>
+          }
         />
       </HQContentView>
     );
+  }
+
+  private navigateToNewQuestion() {
+    const navProps: NewQuestionNavigationProps = { initialTagValues: [this.props.tag] };
+    NavigationService.navigate('NewQuestion', navProps);
   }
 }
 

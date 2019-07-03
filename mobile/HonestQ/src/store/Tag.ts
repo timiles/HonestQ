@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { TagModel, WatchResponseModel } from '../server-models';
 import { fetchJson, getJson } from '../utils/http-utils';
+import { NewQuestionFormSuccessAction } from './NewQuestion';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -40,6 +41,7 @@ type KnownAction =
   | GetTagRequestAction
   | GetTagSuccessAction
   | GetTagFailureAction
+  | NewQuestionFormSuccessAction
   | UpdateWatchTagSuccessAction
   ;
 
@@ -104,6 +106,20 @@ export const reducer: Reducer<TagState> = (state: TagState, action: KnownAction)
       return {
         tag: action.payload.tag,
       };
+    case 'NEW_QUESTION_FORM_SUCCESS': {
+      if (!state.tag) {
+        // We could be posting a Question from the home page
+        return state;
+      }
+      const tagModel = state.tag;
+      // Slice for immutability
+      const questionsNext = tagModel.questions.slice();
+      questionsNext.push(action.payload.questionListItem);
+      const tagNext = { ...tagModel, questions: questionsNext };
+      return {
+        tag: tagNext,
+      };
+    }
     case 'UPDATE_WATCH_TAG_SUCCESS': {
       const { response } = action.payload;
       const tagNext = {

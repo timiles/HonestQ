@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
   primaryButton: {
     backgroundColor: '#007bff',
     borderRadius: 4,
-    borderWidth: 1,
     padding: 12,
   } as ViewStyle,
 
@@ -148,16 +147,18 @@ export class HQText extends React.Component<TextProps> {
 
 interface HQTextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
+  helpText?: string;
   error?: string;
   submitted?: boolean;
 }
 export class HQTextInput extends React.Component<TextInputProps & HQTextInputProps> {
   public render() {
-    const { containerStyle, error, submitted } = this.props;
+    const { containerStyle, helpText, error, submitted } = this.props;
     const errorStyle: StyleProp<TextStyle> = submitted ? { borderColor: error ? 'red' : 'green' } : null;
 
     return (
       <View style={containerStyle}>
+        {helpText && <HQText style={[hqStyles.small, hqStyles.ml1]}>{helpText}</HQText>}
         <TextInput
           placeholderTextColor="#AECCF5"
           {...this.props}
@@ -165,7 +166,7 @@ export class HQTextInput extends React.Component<TextInputProps & HQTextInputPro
         >
           {this.props.children}
         </TextInput>
-        {submitted && error && <Text style={hqStyles.error}>{error}</Text>}
+        {submitted && error && <HQText style={[hqStyles.error, hqStyles.ml1]}>{error}</HQText>}
       </View>
     );
   }
