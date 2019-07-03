@@ -30,7 +30,7 @@ class TagsList extends React.Component<TagsListProps> {
       return null;
     }
 
-    const orderedTags = tagsList.tags.sort((a, b) => (a.slug.localeCompare(b.slug)));
+    const orderedTags = tagsList.tags.sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
 
     return (
       <FlatList
