@@ -1,7 +1,7 @@
 import React from 'react';
-import { NativeSyntheticEvent, NativeTouchEvent, Text } from 'react-native';
+import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQTextInput } from '../../hq-components';
+import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { LogInFormModel } from '../../server-models';
@@ -38,7 +38,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     return (
       <HQContentView style={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Log in</HQHeader>
-        {error && <Text style={hqStyles.error}>{error}</Text>}
+        {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
           containerStyle={hqStyles.mb1}
           autoCapitalize="none"
