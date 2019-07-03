@@ -1,7 +1,9 @@
 import React from 'react';
+import { showMessage } from 'react-native-flash-message';
 import { connect } from 'react-redux';
 import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { TagFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewTagStore from '../store/NewTag';
@@ -25,28 +27,28 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
 
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.submitted && !this.props.submitted) {
-      // Reset the form when a tag has been successfully submitted
-      this.setState({
-        name: '',
-        description: '',
-        moreInfoUrl: '',
+      const submittedTagName = this.props.previouslySubmittedTagFormModel.name;
+      showMessage({
+        message: 'Success',
+        description: `Your tag "${submittedTagName}" has been created and is awaiting approval!`,
+        type: 'success',
+        icon: 'success',
+        floating: true,
+        duration: 3000,
       });
+
+      NavigationService.goBack();
     }
   }
 
   public render() {
     const { name, description, moreInfoUrl } = this.state;
     const { submitting, submitted, error } = this.props;
-    const previous = this.props.previouslySubmittedTagFormModel;
+
     return (
       <HQContentView style={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Suggest a new tag</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
-        {previous && (
-          <HQText>
-            Your tag "{previous.name}" has been created and is awaiting approval!
-          </HQText>
-        )}
         <HQTextInput
           containerStyle={hqStyles.mb1}
           autoFocus={true}

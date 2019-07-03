@@ -1,10 +1,11 @@
 import * as Font from 'expo-font';
 import React from 'react';
-import { View } from 'react-native';
+import FlashMessage from 'react-native-flash-message';
 import { createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
+import { HQContentView } from './src/hq-components';
 import { localStoreMiddleware } from './src/localStoreMiddleware';
 import MainNavigator from './src/MainNavigator';
 import NavigationService from './src/NavigationService';
@@ -37,12 +38,15 @@ export default class App extends React.Component<{}, State> {
 
   public render() {
     if (!this.state.assetsLoaded) {
-      return <View style={{ flex: 1, backgroundColor: '#28374B' }} />;
+      return <HQContentView />;
     }
     return (
-      <Provider store={store}>
-        <Navigation ref={(navigatorRef) => { NavigationService.setTopLevelNavigator(navigatorRef); }} />
-      </Provider>
+      <HQContentView>
+        <Provider store={store}>
+          <Navigation ref={(navigatorRef) => { NavigationService.setTopLevelNavigator(navigatorRef); }} />
+        </Provider>
+        <FlashMessage position="top" />
+      </HQContentView>
     );
   }
 }
