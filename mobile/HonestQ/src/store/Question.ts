@@ -3,6 +3,7 @@ import { AppThunkAction } from '.';
 import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
 import { findComment } from '../utils/model-utils';
 import { QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
+import { NewAnswerFormSuccessAction } from './NewAnswer';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -53,6 +54,7 @@ type KnownAction =
   | GetQuestionSuccessAction
   | GetQuestionFailureAction
   | GetQuestionResetAction
+  | NewAnswerFormSuccessAction
   | AddReactionSuccessAction
   | RemoveReactionSuccessAction
   | UpdateWatchSuccessAction
@@ -173,6 +175,16 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
         questionId: action.payload.questionId,
         question: action.payload.question,
       };
+    case 'NEW_ANSWER_FORM_SUCCESS': {
+      const questionModel = state.question!;
+      // Slice for immutability
+      const answersNext = questionModel.answers.slice();
+      answersNext.push(action.payload.answer);
+      const questionNext = { ...questionModel, answers: answersNext };
+      return {
+        question: questionNext,
+      };
+    }
     case 'ADD_REACTION_SUCCESS': {
       const reaction = action.payload.reaction;
       const questionModel = state.question!;

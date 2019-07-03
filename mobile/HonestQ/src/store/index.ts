@@ -1,4 +1,5 @@
 import * as Login from './Login';
+import * as NewAnswer from './NewAnswer';
 import * as NewQuestion from './NewQuestion';
 import * as NewTag from './NewTag';
 import * as Question from './Question';
@@ -8,6 +9,7 @@ import * as Tags from './Tags';
 // The top-level state object
 export interface ApplicationState {
   login: Login.LoginState;
+  newAnswer: NewAnswer.NewAnswerState;
   newQuestion: NewQuestion.NewQuestionState;
   newTag: NewTag.NewTagState;
   question: Question.QuestionState;
@@ -20,6 +22,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
   login: Login.reducer,
+  newAnswer: NewAnswer.reducer,
   newQuestion: NewQuestion.reducer,
   newTag: NewTag.reducer,
   question: Question.reducer,

@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { TagModel, WatchResponseModel } from '../server-models';
 import { fetchJson, getJson } from '../utils/http-utils';
+import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewQuestionFormSuccessAction } from './NewQuestion';
 
 // -----------------
@@ -42,6 +43,7 @@ type KnownAction =
   | GetTagSuccessAction
   | GetTagFailureAction
   | NewQuestionFormSuccessAction
+  | NewAnswerFormSuccessAction
   | UpdateWatchTagSuccessAction
   ;
 
@@ -115,6 +117,23 @@ export const reducer: Reducer<TagState> = (state: TagState, action: KnownAction)
       // Slice for immutability
       const questionsNext = tagModel.questions.slice();
       questionsNext.push(action.payload.questionListItem);
+      const tagNext = { ...tagModel, questions: questionsNext };
+      return {
+        tag: tagNext,
+      };
+    }
+    case 'NEW_ANSWER_FORM_SUCCESS': {
+      if (!state.tag) {
+        // We could be posting a Question from the home page
+        return state;
+      }
+      const tagModel = state.tag;
+      // Slice for immutability
+      const questionsNext = tagModel.questions.slice();
+      const question = questionsNext.filter((x) => x.id === action.payload.questionId)[0];
+      if (question) {
+        question.answersCount++;
+      }
       const tagNext = { ...tagModel, questions: questionsNext };
       return {
         tag: tagNext,

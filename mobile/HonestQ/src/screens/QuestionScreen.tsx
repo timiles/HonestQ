@@ -7,11 +7,13 @@ import AnswerCard from '../components/AnswerCard';
 import CircleIconCard from '../components/CircleIconCard';
 import { InfoCard } from '../components/InfoCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
-import { HQContentView, HQHeader, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import { getItemCountText } from '../utils/string-utils';
+import { NewAnswerNavigationProps } from './NewAnswerScreen';
 
 export interface QuestionNavigationProps {
   questionId: number;
@@ -34,6 +36,8 @@ class QuestionScreen extends React.Component<Props> {
     if (!props.question || props.question.id !== questionId) {
       this.props.getQuestion(questionId);
     }
+
+    this.navigateToNewAnswer = this.navigateToNewAnswer.bind(this);
   }
 
   public render() {
@@ -46,6 +50,13 @@ class QuestionScreen extends React.Component<Props> {
 
     const { text, context, tags, answers } = question;
     const answersCountText = getItemCountText('Answer', answers.length);
+    const newAnswerButton = (
+      <HQPrimaryButton
+        title="Got an answer?"
+        style={hqStyles.mb1}
+        onPress={this.navigateToNewAnswer}
+      />
+    );
 
     return (
       <HQContentView>
@@ -72,6 +83,7 @@ class QuestionScreen extends React.Component<Props> {
                 />
               </View>
               <HQHeader>{answersCountText}</HQHeader>
+              {newAnswerButton}
             </View>
           )}
           data={answers}
@@ -81,9 +93,21 @@ class QuestionScreen extends React.Component<Props> {
               <AnswerCard questionId={questionId} answer={item} />
             </View>
           )}
+          ListFooterComponent={
+            answers.length >= 5 &&
+            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+              {newAnswerButton}
+            </View>
+          }
         />
       </HQContentView>
     );
+  }
+
+  private navigateToNewAnswer() {
+    const { questionId } = this.props.navigation.state.params;
+    const navProps: NewAnswerNavigationProps = { questionId };
+    NavigationService.navigate('NewAnswer', navProps);
   }
 }
 
