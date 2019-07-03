@@ -2,16 +2,13 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { HQNavigationButton } from '../hq-components';
+import NavigationService from '../NavigationService';
+import { TagNavigationProps } from '../screens/TagScreen';
 import { ApplicationState } from '../store';
 import * as TagsStore from '../store/Tags';
 
-interface OwnProps {
-  navigateToTagScreen: (tagSlug: string, tagName: string) => void;
-}
-
 type TagsListProps = TagsStore.ListState
-  & typeof TagsStore.actionCreators
-  & OwnProps;
+  & typeof TagsStore.actionCreators;
 
 class TagsList extends React.Component<TagsListProps> {
 
@@ -39,13 +36,18 @@ class TagsList extends React.Component<TagsListProps> {
         renderItem={({ item }) =>
           <HQNavigationButton
             title={item.name}
-            onPress={() => this.props.navigateToTagScreen(item.slug, item.name)}
+            onPress={() => this.navigateToTag(item.slug, item.name)}
           />
         }
       />
     );
   }
+
+  private navigateToTag(tagSlug: string, tagName: string): void {
+    const navProps: TagNavigationProps = { tagSlug, tagName };
+    NavigationService.navigate('Tag', navProps);
+  }
 }
 
-const mapStateToProps = (state: ApplicationState, ownProps: OwnProps) => ({ ...state.tags, ...ownProps });
+const mapStateToProps = (state: ApplicationState) => (state.tags);
 export default connect(mapStateToProps, TagsStore.actionCreators)(TagsList);

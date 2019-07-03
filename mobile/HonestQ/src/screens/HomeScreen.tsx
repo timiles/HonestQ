@@ -3,7 +3,6 @@ import { Text } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import TagsList from '../components/TagsList';
 import { HQContentView } from '../hq-components';
-import { TagNavigationProps } from './TagScreen';
 
 interface Props {
   navigation: any;
@@ -21,22 +20,11 @@ export default class HomeScreen extends React.Component<Props> {
       };
     }
 
-  public constructor(props: Props) {
-    super(props);
-
-    this.navigateToTag = this.navigateToTag.bind(this);
-  }
-
   public render() {
     return (
       <HQContentView>
-        <TagsList navigateToTagScreen={this.navigateToTag} />
+        <TagsList />
       </HQContentView>
     );
-  }
-
-  private navigateToTag(tagSlug: string, tagName: string): void {
-    const navProps: TagNavigationProps = { tagSlug, tagName };
-    this.props.navigation.navigate('Tag', navProps);
   }
 }

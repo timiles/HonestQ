@@ -78,7 +78,7 @@ class QuestionScreen extends React.Component<Props> {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={[hqStyles.mb1, hqStyles.mh1]}>
-              <AnswerCard answer={item} navigation={this.props.navigation} />
+              <AnswerCard questionId={questionId} answer={item} />
             </View>
           )}
         />

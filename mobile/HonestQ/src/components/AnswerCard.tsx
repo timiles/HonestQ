@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import { NavigationScreenProps } from 'react-navigation';
 import { HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { AnswerNavigationProps } from '../screens/AnswerScreen';
 import { AnswerModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
@@ -10,12 +10,11 @@ import CircleIconCard from './CircleIconCard';
 import QuotationMarks from './QuotationMarks';
 
 interface OwnProps {
+  questionId: number;
   answer: AnswerModel;
 }
-type Props = OwnProps &
-  NavigationScreenProps;
 
-export default class AnswerCard extends React.Component<Props> {
+export default class AnswerCard extends React.Component<OwnProps> {
 
   public render() {
     const { answer } = this.props;
@@ -37,8 +36,8 @@ export default class AnswerCard extends React.Component<Props> {
   }
 
   private navigateToAnswer(answerId: number): void {
-    const { questionId } = this.props.navigation.state.params;
+    const { questionId } = this.props;
     const navProps: AnswerNavigationProps = { questionId, answerId };
-    this.props.navigation.navigate('Answer', navProps);
+    NavigationService.navigate('Answer', navProps);
   }
 }

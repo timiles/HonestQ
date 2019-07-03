@@ -7,6 +7,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { localStoreMiddleware } from './src/localStoreMiddleware';
 import MainNavigator from './src/MainNavigator';
+import NavigationService from './src/NavigationService';
 import * as Store from './src/store';
 
 const Navigation = createAppContainer(MainNavigator);
@@ -40,7 +41,7 @@ export default class App extends React.Component<{}, State> {
     }
     return (
       <Provider store={store}>
-        <Navigation />
+        <Navigation ref={(navigatorRef) => { NavigationService.setTopLevelNavigator(navigatorRef); }} />
       </Provider>
     );
   }

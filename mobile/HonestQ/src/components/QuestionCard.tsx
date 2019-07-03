@@ -1,18 +1,16 @@
 import React from 'react';
 import { View } from 'react-native';
-import { NavigationScreenProps } from 'react-navigation';
 import { HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { QuestionNavigationProps } from '../screens/QuestionScreen';
 import { QuestionListItemModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
 import CircleIconCard from './CircleIconCard';
 
-interface OwnProps {
+interface Props {
   question: QuestionListItemModel;
 }
-type Props = OwnProps &
-  NavigationScreenProps;
 
 export default class QuestionCard extends React.Component<Props> {
 
@@ -35,6 +33,6 @@ export default class QuestionCard extends React.Component<Props> {
 
   private navigateToQuestion(questionId: number): void {
     const navProps: QuestionNavigationProps = { questionId };
-    this.props.navigation.navigate('Question', navProps);
+    NavigationService.navigate('Question', navProps);
   }
 }

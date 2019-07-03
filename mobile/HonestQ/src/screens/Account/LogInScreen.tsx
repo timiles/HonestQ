@@ -1,18 +1,15 @@
 import React from 'react';
 import { NativeSyntheticEvent, NativeTouchEvent, Text } from 'react-native';
-import { NavigationScreenProp } from 'react-navigation';
 import { connect } from 'react-redux';
 import { HQContentView, HQHeader, HQSubmitButton, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
+import NavigationService from '../../NavigationService';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
 
 type LogInProps = LoginStore.LoginState
-  & typeof LoginStore.actionCreators
-  & {
-    navigation: NavigationScreenProp<{}, {}>;
-  };
+  & typeof LoginStore.actionCreators;
 
 class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
 
@@ -30,7 +27,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
 
   public componentDidUpdate() {
     if (this.props.loggedInUser) {
-      this.props.navigation.goBack();
+      NavigationService.goBack();
     }
   }
 
