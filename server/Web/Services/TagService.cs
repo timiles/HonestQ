@@ -42,7 +42,7 @@ namespace Pobs.Web.Services
             {
                 if (tagWithSameSlug.IsApproved)
                 {
-                    throw new AppException($"A tag already exists at /{slug}.");
+                    throw new AppException($"Tag \"{tagWithSameSlug.Name}\" already exists.");
                 }
                 // If it's not yet approved, no-one needs to know?
                 return null;
@@ -74,7 +74,7 @@ namespace Pobs.Web.Services
                 {
                     if (tagWithSameSlug.IsApproved)
                     {
-                        throw new AppException($"A tag already exists at /{newSlug}.");
+                        throw new AppException($"Tag \"{tagWithSameSlug.Name}\" already exists.");
                     }
                     else
                     {

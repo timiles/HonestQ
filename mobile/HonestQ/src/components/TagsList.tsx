@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { HQNavigationButton } from '../hq-components';
+import { HQNavigationButton, HQPrimaryButton } from '../hq-components';
 import NavigationService from '../NavigationService';
 import { TagNavigationProps } from '../screens/TagScreen';
 import { ApplicationState } from '../store';
@@ -39,6 +39,9 @@ class TagsList extends React.Component<TagsListProps> {
             onPress={() => this.navigateToTag(item.slug, item.name)}
           />
         }
+        ListFooterComponent={
+          <HQPrimaryButton title="Suggest a new tag" onPress={this.navigateToNewTag} />
+        }
       />
     );
   }
@@ -46,6 +49,10 @@ class TagsList extends React.Component<TagsListProps> {
   private navigateToTag(tagSlug: string, tagName: string): void {
     const navProps: TagNavigationProps = { tagSlug, tagName };
     NavigationService.navigate('Tag', navProps);
+  }
+
+  private navigateToNewTag(): void {
+    NavigationService.navigate('NewTag');
   }
 }
 

@@ -3,6 +3,7 @@ import CustomDrawer from './CustomDrawer';
 import LogInScreen from './screens/Account/LogInScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
+import NewTagScreen from './screens/NewTagScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import TagScreen from './screens/TagScreen';
 
@@ -10,6 +11,7 @@ const AppStack = createStackNavigator({
   Answer: { screen: AnswerScreen },
   Home: { screen: HomeScreen },
   LogIn: { screen: LogInScreen },
+  NewTag: { screen: NewTagScreen },
   Question: { screen: QuestionScreen },
   Tag: { screen: TagScreen },
 },

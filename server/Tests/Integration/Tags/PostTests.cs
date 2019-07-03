@@ -111,7 +111,7 @@ namespace Pobs.Tests.Integration.Tags
 
             var payload = new TagFormModel
             {
-                Name = tag.Name
+                Name = tag.Name + " 💩", // Extra chars that aren't included in slug
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -122,7 +122,7 @@ namespace Pobs.Tests.Integration.Tags
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"A tag already exists at /{tag.Slug}.", responseContent);
+                Assert.Equal($"Tag \"{tag.Slug}\" already exists.", responseContent);
             }
         }
 

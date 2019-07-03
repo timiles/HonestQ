@@ -39,6 +39,13 @@ const styles = StyleSheet.create({
     padding: 12,
   } as ViewStyle,
 
+  primaryButton: {
+    backgroundColor: '#007bff',
+    borderRadius: 4,
+    borderWidth: 1,
+    padding: 12,
+  } as ViewStyle,
+
   submitButton: {
     backgroundColor: '#007bff',
     borderRadius: 4,
@@ -99,6 +106,17 @@ export class HQNavigationButton extends React.Component<TouchableOpacityProps & 
     const { title } = this.props;
     return (
       <TouchableOpacity {...this.props} style={[styles.navigationButton, this.props.style]}>
+        {title ? <HQText>{title}</HQText> : this.props.children}
+      </TouchableOpacity>
+    );
+  }
+}
+
+export class HQPrimaryButton extends React.Component<TouchableOpacityProps & { title?: string }> {
+  public render() {
+    const { title } = this.props;
+    return (
+      <TouchableOpacity {...this.props} style={[styles.primaryButton, this.props.style]}>
         {title ? <HQText>{title}</HQText> : this.props.children}
       </TouchableOpacity>
     );

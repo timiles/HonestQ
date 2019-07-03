@@ -84,7 +84,7 @@ namespace Pobs.Tests.Integration.Tags
 
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
                 var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"A tag already exists at /{tagWithSameSlug.Slug}.", responseContent);
+                Assert.Equal($"Tag \"{tagWithSameSlug.Slug}\" already exists.", responseContent);
             }
         }
 
