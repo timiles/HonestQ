@@ -1,4 +1,5 @@
 import React from 'react';
+import { showMessage } from 'react-native-flash-message';
 import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../hq-components';
@@ -28,6 +29,16 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
 
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.submitted && !this.props.submitted) {
+      if (this.props.awaitingApproval) {
+        showMessage({
+          message: 'Success',
+          description: 'Your question has been created and is awaiting approval!',
+          type: 'success',
+          icon: 'success',
+          floating: true,
+          duration: 3000,
+        });
+      }
       NavigationService.goBack();
     }
   }
