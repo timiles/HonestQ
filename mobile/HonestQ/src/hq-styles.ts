@@ -1,4 +1,4 @@
-import { StyleSheet, TextStyle } from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 // tslint:disable:no-object-literal-type-assertion
 export default StyleSheet.create({
@@ -8,31 +8,31 @@ export default StyleSheet.create({
 
   flexRow: {
     flexDirection: 'row',
-  } as TextStyle,
+  } as ViewStyle,
 
   mb1: {
     marginBottom: 10,
-  } as TextStyle,
+  } as ViewStyle,
 
   mh1: {
     marginHorizontal: 10,
-  } as TextStyle,
+  } as ViewStyle,
 
   ml1: {
     marginLeft: 10,
-  } as TextStyle,
+  } as ViewStyle,
 
   mr1: {
     marginRight: 10,
-  } as TextStyle,
+  } as ViewStyle,
 
   mt3: {
     marginTop: 30,
-  } as TextStyle,
+  } as ViewStyle,
 
   p1: {
     padding: 10,
-  } as TextStyle,
+  } as ViewStyle,
 
   small: {
     fontSize: 11,
