@@ -45,11 +45,6 @@ const styles = StyleSheet.create({
     padding: 12,
   } as ViewStyle,
 
-  primaryButtonText: {
-    color: '#fff',
-    textAlignVertical: 'center',
-  } as TextStyle,
-
   submitButton: {
     backgroundColor: '#007bff',
     borderRadius: 4,
@@ -120,7 +115,7 @@ export class HQPrimaryButton extends React.Component<TouchableOpacityProps & { t
     const { title } = this.props;
     return (
       <TouchableOpacity {...this.props} style={[styles.primaryButton, this.props.style]}>
-        {title ? <HQText style={styles.primaryButtonText}>{title}</HQText> : this.props.children}
+        {title ? <HQText style={hqStyles.primaryButtonText}>{title}</HQText> : this.props.children}
       </TouchableOpacity>
     );
   }

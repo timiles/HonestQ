@@ -34,6 +34,11 @@ export default StyleSheet.create({
     padding: 10,
   } as ViewStyle,
 
+  primaryButtonText: {
+    color: '#fff',
+    textAlignVertical: 'center',
+  } as TextStyle,
+
   small: {
     fontSize: 11,
   } as TextStyle,
