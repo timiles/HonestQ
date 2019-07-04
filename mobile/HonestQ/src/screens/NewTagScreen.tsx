@@ -1,7 +1,7 @@
 import React from 'react';
 import { showMessage } from 'react-native-flash-message';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../hq-components';
+import { HQContentView, HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { TagFormModel } from '../server-models';
@@ -59,7 +59,7 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
           submitted={submitted && !error}
           error={!name ? 'Tag name is required' : null}
         />
-        <HQTextInput
+        <HQSuperTextInput
           containerStyle={hqStyles.mb1}
           placeholder="Description (optional)"
           maxLength={280}

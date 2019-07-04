@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { HQCard, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../hq-components';
+import { HQCard, HQNavigationButton, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import { CommentFormModel } from '../server-models';
@@ -62,7 +62,7 @@ class NewCommentCard extends React.Component<Props, CommentFormModel> {
           </LoggedInUserContext.Consumer>
         </View>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
-        <HQTextInput
+        <HQSuperTextInput
           containerStyle={hqStyles.mb1}
           autoFocus={true}
           placeholder="Comment"

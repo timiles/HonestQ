@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../hq-components';
+import { HQContentView, HQHeader, HQSubmitButton, HQSuperTextInput, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { AnswerFormModel } from '../server-models';
@@ -39,7 +39,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
       <HQContentView style={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Got an answer?</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
-        <HQTextInput
+        <HQSuperTextInput
           containerStyle={hqStyles.mb1}
           autoFocus={true}
           placeholder="Provide a short summary of your answer"
