@@ -10,6 +10,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
   } as ViewStyle,
 
+  flexRowPullRight: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  } as ViewStyle,
+
   mb1: {
     marginBottom: 10,
   } as ViewStyle,

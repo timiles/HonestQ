@@ -1,5 +1,6 @@
 import * as Login from './Login';
 import * as NewAnswer from './NewAnswer';
+import * as NewComment from './NewComment';
 import * as NewQuestion from './NewQuestion';
 import * as NewTag from './NewTag';
 import * as Question from './Question';
@@ -10,6 +11,7 @@ import * as Tags from './Tags';
 export interface ApplicationState {
   login: Login.LoginState;
   newAnswer: NewAnswer.NewAnswerState;
+  newComment: NewComment.NewCommentState;
   newQuestion: NewQuestion.NewQuestionState;
   newTag: NewTag.NewTagState;
   question: Question.QuestionState;
@@ -23,6 +25,7 @@ export interface ApplicationState {
 export const reducers = {
   login: Login.reducer,
   newAnswer: NewAnswer.reducer,
+  newComment: NewComment.reducer,
   newQuestion: NewQuestion.reducer,
   newTag: NewTag.reducer,
   question: Question.reducer,

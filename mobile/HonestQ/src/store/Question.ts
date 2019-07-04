@@ -4,6 +4,7 @@ import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
 import { findComment } from '../utils/model-utils';
 import { QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
+import { NewCommentFormSuccessAction } from './NewComment';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -55,6 +56,7 @@ type KnownAction =
   | GetQuestionFailureAction
   | GetQuestionResetAction
   | NewAnswerFormSuccessAction
+  | NewCommentFormSuccessAction
   | AddReactionSuccessAction
   | RemoveReactionSuccessAction
   | UpdateWatchSuccessAction
@@ -180,6 +182,28 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
       // Slice for immutability
       const answersNext = questionModel.answers.slice();
       answersNext.push(action.payload.answer);
+      const questionNext = { ...questionModel, answers: answersNext };
+      return {
+        question: questionNext,
+      };
+    }
+    case 'NEW_COMMENT_FORM_SUCCESS': {
+      if (action.payload.comment.status !== 'OK') {
+        return state;
+      }
+      const questionModel = state.question!;
+      // Slice for immutability
+      const answersNext = questionModel.answers;
+      const answerModel = answersNext.filter((x) => x.id === action.payload.answerId)[0];
+      if (action.payload.comment.parentCommentId) {
+        const parentComment = findComment(answerModel.comments, action.payload.comment.parentCommentId);
+        if (parentComment) {
+          parentComment.comments.unshift(action.payload.comment);
+        }
+        // Else?
+      } else {
+        answerModel.comments.unshift(action.payload.comment);
+      }
       const questionNext = { ...questionModel, answers: answersNext };
       return {
         question: questionNext,
