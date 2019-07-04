@@ -144,28 +144,10 @@ interface HQSuperTextInputProps {
   error?: string;
   submitted?: boolean;
 }
-interface HQSuperTextInputState {
-  widthForCopyPasteHackFix: string;
-}
-export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTextInputProps, HQSuperTextInputState> {
-
-  constructor(props: TextInputProps & HQSuperTextInputProps) {
-    super(props);
-
-    this.state = { widthForCopyPasteHackFix: '99%' };
-  }
-
-  public componentDidMount() {
-    // BUG: https://github.com/facebook/react-native/issues/23653
-    // HACKY FIX: https://gist.github.com/ilya-uryupov/7bc9515c6d315d4919ff56ebf4e20411
-    setTimeout(() => {
-      this.setState({ widthForCopyPasteHackFix: '100%' });
-    }, 1);
-  }
+export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTextInputProps> {
 
   public render() {
     const { containerStyle, helpText, error, submitted, maxLength, value } = this.props;
-    const { widthForCopyPasteHackFix: widthHack } = this.state;
 
     const exceededCharacterCount = value && value.length > maxLength;
     const remainingCharacterCountStyle: StyleProp<TextStyle> =
@@ -187,7 +169,7 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
           textAlignVertical="top"
           {...this.props}
           maxLength={undefined} // Must be after {...this.props} to override
-          style={[styles.text, styles.textInput, this.props.style, errorStyle, { width: widthHack }]}
+          style={[styles.text, styles.textInput, this.props.style, errorStyle]}
         >
           {this.props.children}
         </TextInput>
