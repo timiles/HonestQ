@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#2293A5',
     borderRadius: 10,
+    height: 30,
     padding: 5,
   } as ViewStyle,
 
