@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { connect } from 'react-redux';
 import { HQCard, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 import { CommentFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewCommentStore from '../store/NewComment';
@@ -54,7 +55,11 @@ class NewCommentCard extends React.Component<Props, CommentFormModel> {
       <HQCard style={[hqStyles.mb1, hqStyles.p1]}>
         <View style={[hqStyles.flexRow, hqStyles.mb1]}>
           <AgreementLabel isAgree={agreementRating === 'Agree'} />
-          <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>todo_username</HQText>
+          <LoggedInUserContext.Consumer>
+            {(user) =>
+              <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{user.username}</HQText>
+            }
+          </LoggedInUserContext.Consumer>
         </View>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
