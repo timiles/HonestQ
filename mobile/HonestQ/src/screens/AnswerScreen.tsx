@@ -109,7 +109,7 @@ class AnswerScreen extends React.Component<Props, State> {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View style={[hqStyles.mb1, hqStyles.mr1]}>
-                <CommentCard comment={item} />
+                <CommentCard questionId={questionId} answerId={answerId} comment={item} />
               </View>
             )}
           />

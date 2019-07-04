@@ -15,6 +15,11 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
   } as ViewStyle,
 
+  icon: {
+    alignItems: 'center',
+    width: 25,
+  } as ViewStyle,
+
   mb1: {
     marginBottom: 10,
   } as ViewStyle,
