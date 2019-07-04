@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { HQCard, HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
@@ -20,7 +20,7 @@ export default class CommentCard extends React.Component<Props> {
 
     return (
       <View style={hqStyles.ml1}>
-        <HQCard style={styles.commentCard}>
+        <HQCard style={hqStyles.p1}>
           <View style={[hqStyles.flexRow, hqStyles.mb1]}>
             <AgreementLabel isAgree={agreementRating === 'Agree'} />
             <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, </HQText>
@@ -46,10 +46,3 @@ export default class CommentCard extends React.Component<Props> {
     );
   }
 }
-
-// tslint:disable:no-object-literal-type-assertion
-const styles = StyleSheet.create({
-  commentCard: {
-    padding: 10,
-  } as ViewStyle,
-});
