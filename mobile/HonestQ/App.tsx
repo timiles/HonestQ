@@ -1,11 +1,12 @@
 import * as Font from 'expo-font';
 import React from 'react';
-import FlashMessage from 'react-native-flash-message';
+import FlashMessage, { DefaultFlash, MessageComponentProps } from 'react-native-flash-message';
 import { createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import { HQContentView } from './src/hq-components';
+import hqStyles from './src/hq-styles';
 import { localStoreMiddleware } from './src/localStoreMiddleware';
 import MainNavigator from './src/MainNavigator';
 import NavigationService from './src/NavigationService';
@@ -40,12 +41,16 @@ export default class App extends React.Component<{}, State> {
     if (!this.state.assetsLoaded) {
       return <HQContentView />;
     }
+
+    const hqFlashMessageComponent: React.SFC<MessageComponentProps> = (props) =>
+      <DefaultFlash {...props} titleStyle={hqStyles.pr1} textStyle={hqStyles.pr1} />;
+
     return (
       <HQContentView>
         <Provider store={store}>
           <Navigation ref={(navigatorRef) => { NavigationService.setTopLevelNavigator(navigatorRef); }} />
         </Provider>
-        <FlashMessage position="top" />
+        <FlashMessage position="top" MessageComponent={hqFlashMessageComponent} />
       </HQContentView>
     );
   }

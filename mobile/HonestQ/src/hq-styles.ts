@@ -44,6 +44,10 @@ export default StyleSheet.create({
     padding: 10,
   } as ViewStyle,
 
+  pr1: {
+    paddingRight: 10,
+  } as ViewStyle,
+
   primaryButtonText: {
     color: '#fff',
     textAlignVertical: 'center',
