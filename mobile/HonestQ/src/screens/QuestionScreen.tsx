@@ -38,6 +38,7 @@ class QuestionScreen extends React.Component<Props> {
     }
 
     this.navigateToNewAnswer = this.navigateToNewAnswer.bind(this);
+    this.handleUpvote = this.handleUpvote.bind(this);
   }
 
   public render() {
@@ -90,7 +91,7 @@ class QuestionScreen extends React.Component<Props> {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={[hqStyles.mb1, hqStyles.mh1]}>
-              <AnswerCard questionId={questionId} answer={item} />
+              <AnswerCard questionId={questionId} answer={item} onUpvote={this.handleUpvote} />
             </View>
           )}
           ListFooterComponent={
@@ -108,6 +109,15 @@ class QuestionScreen extends React.Component<Props> {
     const { questionId } = this.props.navigation.state.params;
     const navProps: NewAnswerNavigationProps = { questionId };
     NavigationService.navigate('NewAnswer', navProps);
+  }
+
+  private handleUpvote(on: boolean, answerId: number): void {
+    const { questionId } = this.props.navigation.state.params;
+    if (on) {
+      this.props.addUpvote(questionId, answerId);
+    } else {
+      this.props.removeUpvote(questionId, answerId);
+    }
   }
 }
 

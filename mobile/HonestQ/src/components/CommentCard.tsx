@@ -10,11 +10,13 @@ import AgreementLabel from './AgreementLabel';
 import FriendlyDateTime from './FriendlyDateTime';
 import NewCommentCard from './NewCommentCard';
 import TextWithShortLinks from './TextWithShortLinks';
+import UpvoteButton from './UpvoteButton';
 
 interface Props {
   questionId: number;
   answerId: number;
   comment: CommentModel;
+  onUpvote(on: boolean, answerId: number, commentId: number): void;
 }
 
 interface State {
@@ -34,8 +36,9 @@ export default class CommentCard extends React.Component<Props, State> {
   }
 
   public render() {
-    const { questionId, answerId, comment } = this.props;
+    const { questionId, answerId, comment, onUpvote } = this.props;
     const { id: commentId, agreementRating, text, source, postedBy, postedAt, comments } = comment;
+    const { upvotes, upvotedByMe } = comment;
     const { replyWithAgreementRating } = this.state;
 
     return (
@@ -55,7 +58,14 @@ export default class CommentCard extends React.Component<Props, State> {
             : null
           }
           <View style={hqStyles.flexRow}>
-            <HQLabel style={[hqStyles.vAlignCenter, hqStyles.mr1]}>Reply:</HQLabel>
+            <UpvoteButton
+              answerId={answerId}
+              commentId={commentId}
+              count={upvotes}
+              isUpvotedByLoggedInUser={upvotedByMe}
+              onUpvote={onUpvote}
+            />
+            <HQLabel style={[hqStyles.vAlignCenter, hqStyles.ml1, hqStyles.mr1]}>Reply:</HQLabel>
             <HQPrimaryButton
               style={[hqStyles.flexRow, hqStyles.mr1]}
               onPress={this.handleNewCommentAgree}
@@ -70,7 +80,8 @@ export default class CommentCard extends React.Component<Props, State> {
             </HQPrimaryButton>
           </View>
         </HQCard>
-        {replyWithAgreementRating &&
+        {
+          replyWithAgreementRating &&
           <View style={hqStyles.ml1}>
             <NewCommentCard
               questionId={questionId}
@@ -81,11 +92,19 @@ export default class CommentCard extends React.Component<Props, State> {
             />
           </View>
         }
-        {(comments && comments.length > 0) &&
+        {
+          (comments && comments.length > 0) &&
           <FlatList
             data={comment.comments}
             keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => <CommentCard questionId={questionId} answerId={answerId} comment={item} />}
+            renderItem={({ item }) => (
+              <CommentCard
+                questionId={questionId}
+                answerId={answerId}
+                comment={item}
+                onUpvote={onUpvote}
+              />
+            )}
           />
         }
       </View>

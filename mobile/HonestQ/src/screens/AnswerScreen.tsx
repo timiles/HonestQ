@@ -49,6 +49,8 @@ class AnswerScreen extends React.Component<Props, State> {
     this.handleNewCommentAgree = this.handleNewCommentAgree.bind(this);
     this.handleNewCommentDisagree = this.handleNewCommentDisagree.bind(this);
     this.handleNewCommentCancel = this.handleNewCommentCancel.bind(this);
+
+    this.handleUpvote = this.handleUpvote.bind(this);
   }
 
   public render() {
@@ -109,7 +111,7 @@ class AnswerScreen extends React.Component<Props, State> {
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <View style={[hqStyles.mb1, hqStyles.mr1]}>
-                <CommentCard questionId={questionId} answerId={answerId} comment={item} />
+                <CommentCard questionId={questionId} answerId={answerId} comment={item} onUpvote={this.handleUpvote} />
               </View>
             )}
           />
@@ -126,6 +128,15 @@ class AnswerScreen extends React.Component<Props, State> {
   }
   private handleNewCommentCancel() {
     this.setState({ replyWithAgreementRating: undefined });
+  }
+
+  private handleUpvote(on: boolean, answerId: number, commentId: number): void {
+    const { questionId } = this.props.navigation.state.params;
+    if (on) {
+      this.props.addUpvote(questionId, answerId, commentId);
+    } else {
+      this.props.removeUpvote(questionId, answerId, commentId);
+    }
   }
 }
 

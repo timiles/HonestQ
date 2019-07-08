@@ -8,17 +8,19 @@ import { AnswerModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
 import CircleIconCard from './CircleIconCard';
 import QuotationMarks from './QuotationMarks';
+import UpvoteButton from './UpvoteButton';
 
 interface OwnProps {
   questionId: number;
   answer: AnswerModel;
+  onUpvote(on: boolean, answerId: number): void;
 }
 
 export default class AnswerCard extends React.Component<OwnProps> {
 
   public render() {
-    const { answer } = this.props;
-    const { id, text, comments } = answer;
+    const { answer, onUpvote } = this.props;
+    const { id, text, comments, upvotes, upvotedByMe } = answer;
 
     return (
       <CircleIconCard type="A">
@@ -27,10 +29,19 @@ export default class AnswerCard extends React.Component<OwnProps> {
             <HQText>{text}</HQText>
           </QuotationMarks>
         </View>
-        <HQNavigationButton
-          title={`Discuss (${getItemCountText('comment', comments.length)})`}
-          onPress={() => this.navigateToAnswer(id)}
-        />
+        <View style={hqStyles.flexRow}>
+          <UpvoteButton
+            answerId={id}
+            count={upvotes}
+            isUpvotedByLoggedInUser={upvotedByMe}
+            onUpvote={onUpvote}
+          />
+          <HQNavigationButton
+            style={hqStyles.ml1}
+            title={`Discuss (${getItemCountText('comment', comments.length)})`}
+            onPress={() => this.navigateToAnswer(id)}
+          />
+        </View>
       </CircleIconCard>
     );
   }
