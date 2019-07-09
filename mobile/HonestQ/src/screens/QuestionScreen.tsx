@@ -7,6 +7,7 @@ import AnswerCard from '../components/AnswerCard';
 import CircleIconCard from '../components/CircleIconCard';
 import { InfoCard } from '../components/InfoCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
+import WatchButton from '../components/WatchButton';
 import { HQContentView, HQHeader, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
@@ -39,6 +40,7 @@ class QuestionScreen extends React.Component<Props> {
 
     this.navigateToNewAnswer = this.navigateToNewAnswer.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
+    this.handleWatch = this.handleWatch.bind(this);
   }
 
   public render() {
@@ -49,7 +51,7 @@ class QuestionScreen extends React.Component<Props> {
       return <HQContentView><HQText>Loading</HQText></HQContentView>;
     }
 
-    const { text, context, tags, answers } = question;
+    const { text, context, tags, answers, watching } = question;
     const answersCountText = getItemCountText('Answer', answers.length);
     const newAnswerButton = (
       <HQPrimaryButton
@@ -67,6 +69,12 @@ class QuestionScreen extends React.Component<Props> {
               <CircleIconCard type="Q" style={hqStyles.mb1}>
                 <HQHeader>{text}</HQHeader>
               </CircleIconCard>
+              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
+                <WatchButton
+                  onWatch={this.handleWatch}
+                  watching={watching}
+                />
+              </View>
               {context &&
                 <InfoCard style={hqStyles.mb1}>
                   <HQHeader>Context</HQHeader>
@@ -118,6 +126,11 @@ class QuestionScreen extends React.Component<Props> {
     } else {
       this.props.removeUpvote(questionId, answerId);
     }
+  }
+
+  private handleWatch(on: boolean): void {
+    const { questionId } = this.props.navigation.state.params;
+    this.props.updateWatch(on, questionId);
   }
 }
 

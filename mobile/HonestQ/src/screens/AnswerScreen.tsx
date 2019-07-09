@@ -7,6 +7,7 @@ import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import NewCommentCard from '../components/NewCommentCard';
 import QuotationMarks from '../components/QuotationMarks';
+import WatchButton from '../components/WatchButton';
 import { HQContentView, HQHeader, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { LoggedInUserContext } from '../LoggedInUserContext';
@@ -51,6 +52,7 @@ class AnswerScreen extends React.Component<Props, State> {
     this.handleNewCommentCancel = this.handleNewCommentCancel.bind(this);
 
     this.handleUpvote = this.handleUpvote.bind(this);
+    this.handleWatch = this.handleWatch.bind(this);
   }
 
   public render() {
@@ -64,7 +66,7 @@ class AnswerScreen extends React.Component<Props, State> {
     const answer = question.answers.filter((x) => x.id === answerId)[0];
 
     const { text: questionText } = question;
-    const { text, comments } = answer;
+    const { text, comments, watching } = answer;
     const { replyWithAgreementRating } = this.state;
 
     return (
@@ -82,6 +84,10 @@ class AnswerScreen extends React.Component<Props, State> {
                   </QuotationMarks>
                 </CircleIconCard>
                 <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
+                  <WatchButton
+                    onWatch={this.handleWatch}
+                    watching={watching}
+                  />
                   <HQPrimaryButton
                     style={[hqStyles.flexRow, hqStyles.mr1]}
                     onPress={this.handleNewCommentAgree}
@@ -137,6 +143,11 @@ class AnswerScreen extends React.Component<Props, State> {
     } else {
       this.props.removeUpvote(questionId, answerId, commentId);
     }
+  }
+
+  private handleWatch(on: boolean): void {
+    const { questionId, answerId } = this.props.navigation.state.params;
+    this.props.updateWatch(on, questionId, answerId);
   }
 }
 

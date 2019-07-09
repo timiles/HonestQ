@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
+import WatchButton from '../components/WatchButton';
 import { HQContentView, HQHeader, HQLabel, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
@@ -40,6 +41,7 @@ class TagScreen extends React.Component<Props> {
     }
 
     this.navigateToNewQuestion = this.navigateToNewQuestion.bind(this);
+    this.handleWatch = this.handleWatch.bind(this);
   }
 
   public render() {
@@ -50,7 +52,7 @@ class TagScreen extends React.Component<Props> {
       return <HQContentView><HQText>Loading</HQText></HQContentView>;
     }
 
-    const { description, moreInfoUrl, questions } = tag;
+    const { description, moreInfoUrl, questions, watching } = tag;
 
     const orderedQuestions = questions.sort((a, b) =>
       parseDateWithTimeZoneOffset(b.mostRecentActivityPostedAt).getTime() -
@@ -94,6 +96,12 @@ class TagScreen extends React.Component<Props> {
                   : null
                 }
               </View>
+              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
+                <WatchButton
+                  onWatch={this.handleWatch}
+                  watching={watching}
+                />
+              </View>
               <HQHeader>{questionsCountText}</HQHeader>
               {questions.length === 0 &&
                 <HQLabel>Start the conversation</HQLabel>
@@ -122,6 +130,11 @@ class TagScreen extends React.Component<Props> {
   private navigateToNewQuestion() {
     const navProps: NewQuestionNavigationProps = { initialTagValues: [this.props.tag] };
     NavigationService.navigate('NewQuestion', navProps);
+  }
+
+  private handleWatch(on: boolean): void {
+    const { tagSlug } = this.props.navigation.state.params;
+    this.props.updateWatch(on, tagSlug);
   }
 }
 
