@@ -22,7 +22,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
 
         this.state = { submitting: false };
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     public componentDidUpdate(prevProps: Props) {
@@ -39,7 +39,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
             <ButtonOrLogIn
                 type="button"
                 className={`btn btn-outline-secondary ${isUpvotedByLoggedInUser ? 'active btn-primary-brand' : ''}`}
-                onClick={this.handleChange}
+                onClick={this.handleClick}
                 submitting={submitting}
             >
                 <span className={`mr-2 ${hideLabelOnMobile ? 'd-none d-md-inline-block' : ''}`}>
@@ -55,7 +55,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
         );
     }
 
-    private handleChange(event: React.FormEvent<HTMLButtonElement>): void {
+    private handleClick(): void {
         const { answerId, commentId, isUpvotedByLoggedInUser } = this.props;
         this.setState({ submitting: true },
             () => this.props.onUpvote(!isUpvotedByLoggedInUser, answerId, commentId));
