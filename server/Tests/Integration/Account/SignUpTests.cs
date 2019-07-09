@@ -4,7 +4,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Moq;
 using Pobs.Comms;
-using Pobs.Domain;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Helpers;
 using Pobs.Web.Models.Account;
@@ -22,7 +21,6 @@ namespace Pobs.Tests.Integration.Account
         {
             var payload = new SignUpFormModel
             {
-                Email = Utils.GenerateRandomString(10) + "💩@example.com",
                 Username = _username,
                 Password = "Password1",
             };
@@ -40,9 +38,38 @@ namespace Pobs.Tests.Integration.Account
                 var user = dbContext.Users.FirstOrDefault(x => x.Username == payload.Username);
                 Assert.NotNull(user);
 
-                Assert.Equal(payload.Email, user.Email);
                 Assert.Equal(payload.Username, user.Username);
                 Assert.True(user.CreatedAt > DateTime.UtcNow.AddMinutes(-1));
+
+                Assert.Null(user.Email);
+                Assert.Null(user.EmailVerificationToken);
+            }
+        }
+
+        [Fact]
+        public async Task EmailIncluded_ShouldCreateUser()
+        {
+            var payload = new SignUpFormModel
+            {
+                Username = _username,
+                Password = "Password1",
+                Email = Utils.GenerateRandomString(10) + "💩@example.com",
+            };
+
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
+            using (var client = server.CreateClient())
+            {
+                var response = await client.PostAsync(Url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+            }
+
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var user = dbContext.Users.FirstOrDefault(x => x.Username == payload.Username);
+                Assert.NotNull(user);
+
+                Assert.Equal(payload.Email, user.Email);
                 Assert.NotNull(user.EmailVerificationToken);
 
                 Assert.True(AuthUtils.VerifyPasswordHash(payload.Password, user.PasswordHash, user.PasswordSalt));

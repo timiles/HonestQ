@@ -8,16 +8,15 @@ namespace Pobs.Domain.Entities
     public class User
     {
         public User() { }
-        public User(string email, string username, DateTimeOffset createdAt)
+        public User(string username, DateTimeOffset createdAt)
         {
-            Email = email;
             Username = username;
             CreatedAt = createdAt;
         }
 
         public int Id { get; set; }
 
-        [Required, MaxLength(100)]
+        [MaxLength(100)]
         public string Email { get; set; }
 
         [Required, MaxLength(100)]

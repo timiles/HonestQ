@@ -89,17 +89,6 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult SignUp([FromBody]SignUpFormModel signUpFormModel)
         {
-            string validatedEmail;
-            try
-            {
-                var validEmail = new MailAddress(signUpFormModel.Email);
-                validatedEmail = validEmail.Address.ToLowerInvariant();
-            }
-            catch (FormatException)
-            {
-                return BadRequest($"Invalid Email address: '{signUpFormModel.Email}'.");
-            }
-
             if (signUpFormModel.Username.Contains('@'))
             {
                 return BadRequest($"Invalid Username, must not contain '@': '{signUpFormModel.Username}'.");
@@ -110,18 +99,34 @@ namespace WebApi.Controllers
                 return BadRequest("Password must be at least 7 characters.");
             }
 
-            var user = new User(validatedEmail, signUpFormModel.Username, DateTimeOffset.UtcNow)
+            var user = new User(signUpFormModel.Username, DateTimeOffset.UtcNow);
+
+            if (!string.IsNullOrWhiteSpace(signUpFormModel.Email))
             {
-                EmailVerificationToken = GenerateRandomString()
-            };
+                try
+                {
+                    var validEmail = new MailAddress(signUpFormModel.Email);
+                    user.Email = validEmail.Address.ToLowerInvariant();
+                    user.EmailVerificationToken = GenerateRandomString();
+                }
+                catch (FormatException)
+                {
+                    return BadRequest($"Invalid Email address: '{signUpFormModel.Email}'.");
+                }
+            }
 
             try
             {
                 // Save
                 _userService.Create(user, signUpFormModel.Password);
-                var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
-                var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
-                _emailSender.SendEmailVerification(validatedEmail, signUpFormModel.Username, verifyEmailUrl);
+
+                if (user.Email != null)
+                {
+                    var urlEncodedToken = WebUtility.UrlEncode($"{user.Id}-{user.EmailVerificationToken}");
+                    var verifyEmailUrl = $"{this._appSettings.Domain}/account/verifyemail?token={urlEncodedToken}";
+                    _emailSender.SendEmailVerification(user.Email, signUpFormModel.Username, verifyEmailUrl);
+                }
+
                 try
                 {
                     _emailSender.SendNewUserSignedUpNotification("honestq@pm.me", signUpFormModel.Username);
