@@ -138,11 +138,7 @@ class AnswerScreen extends React.Component<Props, State> {
 
   private handleUpvote(on: boolean, answerId: number, commentId: number): void {
     const { questionId } = this.props.navigation.state.params;
-    if (on) {
-      this.props.addUpvote(questionId, answerId, commentId);
-    } else {
-      this.props.removeUpvote(questionId, answerId, commentId);
-    }
+    this.props.updateUpvote(on, questionId, answerId, commentId);
   }
 
   private handleWatch(on: boolean): void {

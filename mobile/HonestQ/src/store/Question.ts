@@ -1,6 +1,6 @@
 ﻿import { AnyAction, Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
+import { fetchJson, getJson } from '../utils/http-utils';
 import { findComment } from '../utils/model-utils';
 import { QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
@@ -88,7 +88,7 @@ export const actionCreators = {
           });
       })();
     },
-  addUpvote: (questionId: number, answerId: number, commentId?: number):
+  updateUpvote: (on: boolean, questionId: number, answerId: number, commentId?: number):
     AppThunkAction<KnownAction> =>
     (dispatch, getState) => {
       return (async () => {
@@ -96,33 +96,12 @@ export const actionCreators = {
         const url = commentId ?
           `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/Upvote` :
           `/api/questions/${questionId}/answers/${answerId}/reactions/Upvote`;
-        postJson<ReactionModel>(url,
-          null,
-          getState().login.loggedInUser)
+
+        const method = on ? 'POST' : 'DELETE';
+        fetchJson<ReactionModel>(method, url, null, getState().login.loggedInUser)
           .then((reactionResponse: ReactionModel) => {
             dispatch({
               type: 'ADD_REACTION_SUCCESS',
-              payload: { reaction: reactionResponse },
-            });
-          })
-          .catch((reason) => {
-            // TODO: Toast?
-          });
-      })();
-    },
-  removeUpvote: (questionId: number, answerId: number, commentId?: number):
-    AppThunkAction<KnownAction> =>
-    (dispatch, getState) => {
-      return (async () => {
-
-        const url = commentId ?
-          `/api/questions/${questionId}/answers/${answerId}/comments/${commentId}/reactions/Upvote` :
-          `/api/questions/${questionId}/answers/${answerId}/reactions/Upvote`;
-        deleteJson<ReactionModel>(url,
-          getState().login.loggedInUser)
-          .then((reactionResponse: ReactionModel) => {
-            dispatch({
-              type: 'REMOVE_REACTION_SUCCESS',
               payload: { reaction: reactionResponse },
             });
           })

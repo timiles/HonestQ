@@ -121,11 +121,7 @@ class QuestionScreen extends React.Component<Props> {
 
   private handleUpvote(on: boolean, answerId: number): void {
     const { questionId } = this.props.navigation.state.params;
-    if (on) {
-      this.props.addUpvote(questionId, answerId);
-    } else {
-      this.props.removeUpvote(questionId, answerId);
-    }
+    this.props.updateUpvote(on, questionId, answerId);
   }
 
   private handleWatch(on: boolean): void {
