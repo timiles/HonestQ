@@ -1,7 +1,7 @@
 import React from 'react';
 import { showMessage } from 'react-native-flash-message';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
+import { HQContentView, HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { SignUpFormModel } from '../../server-models';
@@ -44,7 +44,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
 
     return (
       <HQContentView style={hqStyles.p1}>
-        <HQHeader style={hqStyles.mb1}>Sign up</HQHeader>
+        <HQHeader style={hqStyles.mb1}>Sign up to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
           containerStyle={hqStyles.mb1}
@@ -86,8 +86,13 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
           submitted={submitted && !error}
         />
         <HQSubmitButton title="Sign up" onPress={this.handleSubmit} submitting={submitting} />
+        <HQNavigationButton title="Already have an account? Log in" onPress={this.navigateToLogIn} />
       </HQContentView>
     );
+  }
+
+  private navigateToLogIn() {
+    NavigationService.navigate('LogIn');
   }
 
   private handleSubmit(): void {

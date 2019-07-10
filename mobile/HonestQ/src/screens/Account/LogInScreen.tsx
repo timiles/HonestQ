@@ -1,7 +1,7 @@
 import React from 'react';
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
+import { HQContentView, HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { LogInFormModel } from '../../server-models';
@@ -37,7 +37,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
 
     return (
       <HQContentView style={hqStyles.p1}>
-        <HQHeader style={hqStyles.mb1}>Log in</HQHeader>
+        <HQHeader style={hqStyles.mb1}>Log in to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
           containerStyle={hqStyles.mb1}
@@ -59,8 +59,13 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
           error={!password ? 'Password is required' : null}
         />
         <HQSubmitButton title="Log in" onPress={this.handleSubmit} submitting={submitting} />
+        <HQNavigationButton title="Or create a new account" onPress={this.navigateToSignUp} />
       </HQContentView>
     );
+  }
+
+  private navigateToSignUp() {
+    NavigationService.navigate('SignUp');
   }
 
   private handleSubmit(ev: NativeSyntheticEvent<NativeTouchEvent>): void {
