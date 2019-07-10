@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Moq;
+using Newtonsoft.Json;
 using Pobs.Comms;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Helpers;
@@ -17,7 +19,7 @@ namespace Pobs.Tests.Integration.Account
         private readonly string _username = "mary_coffeemug_" + Utils.GenerateRandomString(10);
 
         [Fact]
-        public async Task ValidInputs_ShouldCreateUser()
+        public async Task ValidInputs_ShouldCreateUserAndGetToken()
         {
             var payload = new SignUpFormModel
             {
@@ -25,12 +27,32 @@ namespace Pobs.Tests.Integration.Account
                 Password = "Password1",
             };
 
+            LoggedInUserModel responseModel;
+
             var emailSenderMock = new Mock<IEmailSender>();
             using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                responseModel = JsonConvert.DeserializeObject<LoggedInUserModel>(responseContent);
+
+                var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
+                var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
+                int.TryParse(identityClaim.Value, out int userId);
+                Assert.Equal(responseModel.Id, userId);
+
+                Assert.True((decodedToken.ValidTo - DateTime.UtcNow).TotalDays > 365);
+
+                var idTokenCookie = response.Headers.GetIdTokenCookie();
+                Assert.NotNull(idTokenCookie);
+                Assert.Equal(responseModel.Token, idTokenCookie.Value);
+                Assert.Equal("/", idTokenCookie.Path);
+                Assert.True(idTokenCookie.HttpOnly);
+                Assert.True(idTokenCookie.Expires.HasValue);
+                Assert.True((idTokenCookie.Expires.Value - DateTime.UtcNow).TotalDays > 365);
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
@@ -43,6 +65,10 @@ namespace Pobs.Tests.Integration.Account
 
                 Assert.Null(user.Email);
                 Assert.Null(user.EmailVerificationToken);
+
+                // Also check responseModel
+                Assert.Equal(user.Id, responseModel.Id);
+                Assert.Equal(user.Username, responseModel.Username);
             }
         }
 

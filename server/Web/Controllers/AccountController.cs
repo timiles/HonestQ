@@ -33,6 +33,24 @@ namespace WebApi.Controllers
             _appSettings = appSettings.Value;
         }
 
+        private IActionResult OkWithCookie(User user, bool rememberMe)
+        {
+            var roles = new List<Pobs.Domain.Role>();
+            // TODO: proper roles in the database, this is a poor hack for now.
+            if (_adminUserIds.Contains(user.Id))
+            {
+                roles.Add(Pobs.Domain.Role.Admin);
+            }
+            var expiry = rememberMe ? DateTime.UtcNow.AddYears(5) : null as DateTime?;
+            var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, expiry, roles.ToArray());
+
+            // Put token into Cookies to enable Server Side Rendering
+            this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true, Expires = expiry });
+
+            // Return basic user info and token to store client side
+            return Ok(new LoggedInUserModel(user, token));
+        }
+
         [HttpPost]
         public IActionResult LogIn([FromBody]LogInFormModel userModel)
         {
@@ -63,20 +81,7 @@ namespace WebApi.Controllers
                 return BadRequest("Please verify your account first.");
             }
 
-            var roles = new List<Pobs.Domain.Role>();
-            // TODO: proper roles in the database, this is a poor hack for now.
-            if (_adminUserIds.Contains(user.Id))
-            {
-                roles.Add(Pobs.Domain.Role.Admin);
-            }
-            var expiry = userModel.RememberMe ? DateTime.UtcNow.AddYears(5) : null as DateTime?;
-            var token = AuthUtils.GenerateJwt(_appSettings.Secret, user.Id, expiry, roles.ToArray());
-
-            // Put token into Cookies to enable Server Side Rendering
-            this.Response.Cookies.Append("id_token", token, new CookieOptions { Path = "/", HttpOnly = true, Expires = expiry });
-
-            // Return basic user info and token to store client side
-            return Ok(new LoggedInUserModel(user, token));
+            return OkWithCookie(user, userModel.RememberMe);
         }
 
         [HttpPost]
@@ -135,7 +140,7 @@ namespace WebApi.Controllers
                 {
                     // Ignore, it's only me.
                 }
-                return Ok();
+                return OkWithCookie(user, true);
             }
             catch (AppException ex)
             {
