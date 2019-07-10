@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoggedInUserModel, LogInFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
+import { SignUpSuccessAction } from './SignUp';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -32,7 +33,9 @@ type KnownAction = LogInRequestAction
   | LogInFailureAction
   | LogOutRequestAction
   | LogOutSuccessAction
-  | LogOutFailureAction;
+  | LogOutFailureAction
+  | SignUpSuccessAction
+  ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -98,6 +101,8 @@ export const reducer: Reducer<LoginState> = (state: LoginState, action: KnownAct
       return defaultState;
     case 'LOGOUT_FAILURE':
       return { loggedInUser: state.loggedInUser };
+    case 'SIGNUP_SUCCESS':
+      return { loggedInUser: action.payload };
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

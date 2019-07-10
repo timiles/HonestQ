@@ -1,6 +1,7 @@
 import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import CustomDrawer from './CustomDrawer';
 import LogInScreen from './screens/Account/LogInScreen';
+import SignUpScreen from './screens/Account/SignUpScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
 import NewAnswerScreen from './screens/NewAnswerScreen';
@@ -17,6 +18,7 @@ const AppStack = createStackNavigator({
   NewQuestion: { screen: NewQuestionScreen },
   NewTag: { screen: NewTagScreen },
   Question: { screen: QuestionScreen },
+  SignUp: { screen: SignUpScreen },
   Tag: { screen: TagScreen },
 },
   {
@@ -36,6 +38,7 @@ const DrawerNavigator = createDrawerNavigator(
   {
     Home: { screen: AppStack },
     LogIn: { screen: LogInScreen, navigationOptions: { drawerLabel: 'Log in' } },
+    SignUp: { screen: SignUpScreen, navigationOptions: { drawerLabel: 'Sign up' } },
   },
   {
     contentComponent: CustomDrawer,

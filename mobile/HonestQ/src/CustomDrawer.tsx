@@ -15,7 +15,11 @@ class CustomDrawer extends React.Component<Props> {
 
   public render() {
     const { loggedInUser, items } = this.props;
-    const itemsToDisplay = items.filter((x) => x.routeName !== (loggedInUser ? 'LogIn' : 'LogOut'));
+    let itemsToDisplay = items;
+
+    if (loggedInUser) {
+      itemsToDisplay = items.filter((x) => x.routeName !== 'LogIn' && x.routeName !== 'SignUp');
+    }
 
     return (
       <View style={hqStyles.mt3}>
