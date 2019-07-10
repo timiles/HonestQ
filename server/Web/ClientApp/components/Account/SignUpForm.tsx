@@ -75,7 +75,7 @@ export default class SignUpForm extends React.Component<Props, SignUpFormModel> 
                             aria-describedby="usernameHelpBlock"
                         />
                         <small id="usernameHelpBlock" className="form-text text-muted">
-                            Your username will be displayed next to any Questions, Answers or Comments you post.
+                            Your username will be displayed next to any Comments you post.
                             </small>
                         <div className="invalid-feedback">Username is required</div>
                     </div>
