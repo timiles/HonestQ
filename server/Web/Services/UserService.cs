@@ -63,7 +63,7 @@ namespace Pobs.Web.Services
             if (_context.Users.Any(x => x.Username == user.Username))
                 throw new AppException($"Username '{user.Username}' is already taken.");
 
-            if (_context.Users.Any(x => x.Email == user.Email))
+            if (!string.IsNullOrWhiteSpace(user.Email) && _context.Users.Any(x => x.Email == user.Email))
                 throw new AppException($"An account already exists for '{user.Email}'.");
 
             (byte[] passwordSalt, byte[] passwordHash) = AuthUtils.CreatePasswordHash(password);
