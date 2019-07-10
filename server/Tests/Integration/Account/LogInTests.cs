@@ -60,7 +60,7 @@ namespace Pobs.Tests.Integration.Account
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 int.TryParse(identityClaim.Value, out int userId);
-                Assert.True(userId > 0);
+                Assert.Equal(_user.Id, userId);
 
                 Assert.Equal(7, Math.Round((decodedToken.ValidTo - DateTime.UtcNow).TotalDays));
 
@@ -95,7 +95,7 @@ namespace Pobs.Tests.Integration.Account
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 int.TryParse(identityClaim.Value, out int userId);
-                Assert.True(userId > 0);
+                Assert.Equal(_user.Id, userId);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.NotNull(idTokenCookie);
@@ -126,7 +126,7 @@ namespace Pobs.Tests.Integration.Account
                 var decodedToken = new JwtSecurityTokenHandler().ReadJwtToken(responseModel.Token);
                 var identityClaim = decodedToken.Claims.Single(x => x.Type == "unique_name");
                 int.TryParse(identityClaim.Value, out int userId);
-                Assert.True(userId > 0);
+                Assert.Equal(_user.Id, userId);
 
                 var idTokenCookie = response.Headers.GetIdTokenCookie();
                 Assert.NotNull(idTokenCookie);
