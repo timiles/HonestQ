@@ -35,7 +35,7 @@ export const actionCreators = {
     return (async () => {
       dispatch({ type: 'GET_TAGS_LIST_REQUEST' });
 
-      getJson<TagsListModel>('/api/tags', getState().login.loggedInUser)
+      getJson<TagsListModel>('/api/tags', getState().auth.loggedInUser)
         .then((tagsListResponse: TagsListModel) => {
           dispatch({ type: 'GET_TAGS_LIST_SUCCESS', payload: tagsListResponse });
         })

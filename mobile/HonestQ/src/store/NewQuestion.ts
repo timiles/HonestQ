@@ -59,7 +59,7 @@ export const actionCreators = {
         }
 
         postJson<QuestionListItemModel>(
-          `/api/questions`, questionForm, getState().login.loggedInUser!)
+          `/api/questions`, questionForm, getState().auth.loggedInUser!)
           .then((responseModel: QuestionListItemModel) => {
             if (responseModel) {
               dispatch({

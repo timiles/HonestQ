@@ -1,3 +1,4 @@
+import * as Auth from './Auth';
 import * as Login from './Login';
 import * as NewAnswer from './NewAnswer';
 import * as NewComment from './NewComment';
@@ -10,6 +11,7 @@ import * as Tags from './Tags';
 
 // The top-level state object
 export interface ApplicationState {
+  auth: Auth.AuthState;
   login: Login.LoginState;
   newAnswer: NewAnswer.NewAnswerState;
   newComment: NewComment.NewCommentState;
@@ -25,6 +27,7 @@ export interface ApplicationState {
 // the reducer with the matching name. It's important that the names match exactly, and that the reducer
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
+  auth: Auth.reducer,
   login: Login.reducer,
   newAnswer: NewAnswer.reducer,
   newComment: NewComment.reducer,

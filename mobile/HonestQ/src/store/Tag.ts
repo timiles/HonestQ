@@ -56,7 +56,7 @@ export const actionCreators = {
     return (async () => {
       dispatch({ type: 'GET_TAG_REQUEST' });
 
-      getJson<TagModel>(`/api/tags/${tagSlug}`, getState().login.loggedInUser)
+      getJson<TagModel>(`/api/tags/${tagSlug}`, getState().auth.loggedInUser)
         .then((tagResponse: TagModel) => {
           dispatch({
             type: 'GET_TAG_SUCCESS',
@@ -79,7 +79,7 @@ export const actionCreators = {
         const url = `/api/tags/${tagSlug}/watch`;
 
         const method = on ? 'POST' : 'DELETE';
-        fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
+        fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
           .then((watchResponse) => {
             dispatch({
               type: 'UPDATE_WATCH_TAG_SUCCESS',

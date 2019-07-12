@@ -3,13 +3,11 @@ import { AppThunkAction } from '.';
 import { LoggedInUserModel, LogInFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
 import { registerForPushNotificationsAsync } from '../utils/notification-utils';
-import { SignUpSuccessAction } from './SignUp';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface LoginState {
-  loggedInUser?: LoggedInUserModel;
   submitting?: boolean;
   submitted?: boolean;
   error?: string | null;
@@ -35,7 +33,6 @@ type KnownAction = LogInRequestAction
   | LogOutRequestAction
   | LogOutSuccessAction
   | LogOutFailureAction
-  | SignUpSuccessAction
   ;
 
 // ----------------
@@ -96,17 +93,14 @@ export const reducer: Reducer<LoginState> = (state: LoginState, action: KnownAct
     case 'LOGIN_REQUEST':
       return { submitting: true, submitted: true };
     case 'LOGIN_SUCCESS':
-      return { submitting: false, submitted: true, loggedInUser: action.payload };
+      return { submitting: false, submitted: true };
     case 'LOGIN_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
     case 'LOGOUT_REQUEST':
-      return { loggedInUser: state.loggedInUser };
+    case 'LOGOUT_FAILURE':
+      return state || defaultState;
     case 'LOGOUT_SUCCESS':
       return defaultState;
-    case 'LOGOUT_FAILURE':
-      return { loggedInUser: state.loggedInUser };
-    case 'SIGNUP_SUCCESS':
-      return { loggedInUser: action.payload };
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

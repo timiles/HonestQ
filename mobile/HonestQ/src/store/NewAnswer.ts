@@ -53,7 +53,7 @@ export const actionCreators = {
 
         postJson<AnswerModel>(
           `/api/questions/${questionId}/answers`,
-          answerForm, getState().login.loggedInUser!)
+          answerForm, getState().auth.loggedInUser!)
           .then((responseModel: AnswerModel) => {
             dispatch({
               type: 'NEW_ANSWER_FORM_SUCCESS',

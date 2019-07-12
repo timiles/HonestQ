@@ -73,7 +73,7 @@ export const actionCreators = {
         dispatch({ type: 'GET_QUESTION_REQUEST' });
 
         getJson<QuestionModel>(`/api/questions/${questionId}`,
-          getState().login.loggedInUser)
+          getState().auth.loggedInUser)
           .then((questionResponse: QuestionModel) => {
             dispatch({
               type: 'GET_QUESTION_SUCCESS',
@@ -98,7 +98,7 @@ export const actionCreators = {
           `/api/questions/${questionId}/answers/${answerId}/reactions/Upvote`;
 
         const method = on ? 'POST' : 'DELETE';
-        fetchJson<ReactionModel>(method, url, null, getState().login.loggedInUser)
+        fetchJson<ReactionModel>(method, url, null, getState().auth.loggedInUser)
           .then((reactionResponse: ReactionModel) => {
             dispatch({
               type: 'ADD_REACTION_SUCCESS',
@@ -119,7 +119,7 @@ export const actionCreators = {
           `/api/questions/${questionId}/watch`;
 
         const method = on ? 'POST' : 'DELETE';
-        fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
+        fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
           .then((watchResponse) => {
             dispatch({
               type: 'UPDATE_WATCH_SUCCESS',

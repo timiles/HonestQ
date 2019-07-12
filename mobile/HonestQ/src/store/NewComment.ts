@@ -53,7 +53,7 @@ export const actionCreators = {
 
         postJson<CommentModel>(
           `/api/questions/${questionId}/answers/${answerId}/comments`,
-          commentForm, getState().login.loggedInUser!)
+          commentForm, getState().auth.loggedInUser!)
           .then((responseModel: CommentModel) => {
             dispatch({
               type: 'NEW_COMMENT_FORM_SUCCESS',

@@ -43,7 +43,7 @@ export const actionCreators = {
         return;
       }
 
-      postJson('/api/tags', tagForm, getState().login.loggedInUser!)
+      postJson('/api/tags', tagForm, getState().auth.loggedInUser!)
         .then(() => {
           dispatch({ type: 'TAG_FORM_SUCCESS', payload: { tag: tagForm } });
         })

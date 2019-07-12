@@ -5,12 +5,12 @@ import { getData, removeData, storeData } from './utils/storage-utils';
 
 export const localStoreMiddleware: Middleware = (store) => (next) => (action) => {
 
-  const loggedInUserStorageKey = '@login.loggedInUser';
+  const loggedInUserStorageKey = '@auth.loggedInUser';
   const state: Store.ApplicationState = store.getState();
-  if (!state.login.loggedInUser) {
+  if (!state.auth.loggedInUser) {
     getData(loggedInUserStorageKey,
       (login) => {
-        if (login && !state.login.loggedInUser) {
+        if (login && !state.auth.loggedInUser) {
           const logInSuccessAction: LogInSuccessAction = { type: 'LOGIN_SUCCESS', payload: login };
           store.dispatch(logInSuccessAction);
         }

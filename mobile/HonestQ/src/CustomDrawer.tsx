@@ -6,9 +6,9 @@ import LogOutButton from './components/LogOutButton';
 import { HQText } from './hq-components';
 import hqStyles from './hq-styles';
 import { ApplicationState } from './store';
-import * as LoginStore from './store/Login';
+import * as AuthStore from './store/Auth';
 
-type Props = LoginStore.LoginState
+type Props = AuthStore.AuthState
   & DrawerItemsProps;
 
 class CustomDrawer extends React.Component<Props> {
@@ -37,5 +37,5 @@ class CustomDrawer extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.login);
+const mapStateToProps = (state: ApplicationState) => (state.auth);
 export default connect(mapStateToProps)(CustomDrawer);

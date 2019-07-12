@@ -147,5 +147,5 @@ class AnswerScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({ ...state.question, loggedInUser: state.login.loggedInUser });
+const mapStateToProps = (state: ApplicationState) => ({ ...state.question, loggedInUser: state.auth.loggedInUser });
 export default connect(mapStateToProps, QuestionStore.actionCreators)(AnswerScreen);

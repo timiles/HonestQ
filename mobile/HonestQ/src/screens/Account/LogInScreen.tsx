@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import { HQContentView, HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
-import { LogInFormModel } from '../../server-models';
+import { LoggedInUserModel, LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LoginStore from '../../store/Login';
 
 type LogInProps = LoginStore.LoginState
-  & typeof LoginStore.actionCreators;
+  & typeof LoginStore.actionCreators
+  & { loggedInUser?: LoggedInUserModel };
 
 class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
 
@@ -74,6 +75,6 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
 }
 
 export default connect(
-  (state: ApplicationState, ownProps: any) => (state.login),
+  (state: ApplicationState, ownProps: any) => ({ ...state.login, loggedInUser: state.auth.loggedInUser }),
   LoginStore.actionCreators,
 )(LogInScreen);
