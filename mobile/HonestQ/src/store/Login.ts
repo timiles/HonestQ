@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoggedInUserModel, LogInFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
+import { registerForPushNotificationsAsync } from '../utils/notification-utils';
 import { SignUpSuccessAction } from './SignUp';
 
 // -----------------
@@ -56,6 +57,9 @@ export const actionCreators = {
         .then((logInResponse: LoggedInUserModel) => {
           // Log in successful if there's a jwt token in the response
           if (logInResponse && logInResponse.token) {
+            // Re-register push token for this user account
+            registerForPushNotificationsAsync(logInResponse);
+
             dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
           } else {
             dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'An error occurred, please try again' } });

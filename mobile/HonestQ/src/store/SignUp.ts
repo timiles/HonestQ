@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { LoggedInUserModel, SignUpFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
+import { registerForPushNotificationsAsync } from '../utils/notification-utils';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -49,6 +50,9 @@ export const actionCreators = {
 
         postJson<LoggedInUserModel>('/api/account/signup', form, null)
           .then((response) => {
+            // Re-register push token for this user account
+            registerForPushNotificationsAsync(response);
+
             dispatch({ type: 'SIGNUP_SUCCESS', payload: response });
           })
           .catch((reason) => {

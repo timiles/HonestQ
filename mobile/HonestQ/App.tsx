@@ -1,4 +1,6 @@
+import { Notifications } from 'expo';
 import * as Font from 'expo-font';
+import { EventSubscription } from 'fbemitter';
 import React from 'react';
 import FlashMessage, { DefaultFlash, MessageComponentProps } from 'react-native-flash-message';
 import { createAppContainer } from 'react-navigation';
@@ -11,6 +13,7 @@ import { localStoreMiddleware } from './src/localStoreMiddleware';
 import MainNavigator from './src/MainNavigator';
 import NavigationService from './src/NavigationService';
 import * as Store from './src/store';
+import { handleNotification, registerForPushNotificationsAsync } from './src/utils/notification-utils';
 
 const Navigation = createAppContainer(MainNavigator);
 
@@ -22,6 +25,8 @@ interface State {
 
 export default class App extends React.Component<{}, State> {
 
+  private handleNotification: EventSubscription;
+
   public constructor(props: {}) {
     super(props);
 
@@ -29,6 +34,12 @@ export default class App extends React.Component<{}, State> {
   }
 
   public async componentDidMount() {
+    registerForPushNotificationsAsync();
+
+    if (!this.handleNotification) {
+      this.handleNotification = Notifications.addListener(handleNotification);
+    }
+
     await Font.loadAsync({
       'lineto-circular-book': require('./assets/fonts/lineto-circular-book.ttf'),
       'Nexa Bold': require('./assets/fonts/Nexa_Bold.otf'),

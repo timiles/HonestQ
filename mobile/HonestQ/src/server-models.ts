@@ -73,6 +73,10 @@ export interface NotificationsListModel {
   lastId: number;
 }
 
+export interface PushTokenModel {
+  pushToken: string;
+}
+
 export interface WatchResponseModel {
   watching: boolean;
 }
