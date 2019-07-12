@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import * as Store from './store';
-import { LogInSuccessAction } from './store/LogInn';
+import { LogInSuccessAction } from './store/LogIn';
 import { getData, removeData, storeData } from './utils/storage-utils';
 
 export const localStoreMiddleware: Middleware = (store) => (next) => (action) => {

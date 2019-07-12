@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, View } from 'react-native';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
-import * as LoginStore from '../store/LogInn';
+import * as LogInStore from '../store/LogIn';
 
-type Props = typeof LoginStore.actionCreators;
+type Props = typeof LogInStore.actionCreators;
 
 class LoggedInUserInfo extends React.Component<Props> {
 
@@ -28,5 +28,5 @@ class LoggedInUserInfo extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.login);
-export default connect(mapStateToProps, LoginStore.actionCreators)(LoggedInUserInfo);
+const mapStateToProps = (state: ApplicationState) => (state.logIn);
+export default connect(mapStateToProps, LogInStore.actionCreators)(LoggedInUserInfo);

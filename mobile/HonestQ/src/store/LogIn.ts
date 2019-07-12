@@ -7,7 +7,7 @@ import { registerForPushNotificationsAsync } from '../utils/notification-utils';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
-export interface LoginState {
+export interface LogInState {
   submitting?: boolean;
   submitted?: boolean;
   error?: string | null;
@@ -86,9 +86,9 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state.
 // To support time travel, this must not mutate the old state.
 
-const defaultState: LoginState = {};
+const defaultState: LogInState = {};
 
-export const reducer: Reducer<LoginState> = (state: LoginState, action: KnownAction) => {
+export const reducer: Reducer<LogInState> = (state: LogInState, action: KnownAction) => {
   switch (action.type) {
     case 'LOGIN_REQUEST':
       return { submitting: true, submitted: true };

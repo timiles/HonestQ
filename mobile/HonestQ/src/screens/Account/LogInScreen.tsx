@@ -6,10 +6,10 @@ import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { LoggedInUserModel, LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
-import * as LoginStore from '../../store/LogInn';
+import * as LogInStore from '../../store/LogIn';
 
-type LogInProps = LoginStore.LoginState
-  & typeof LoginStore.actionCreators
+type LogInProps = LogInStore.LogInState
+  & typeof LogInStore.actionCreators
   & { loggedInUser?: LoggedInUserModel };
 
 class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
@@ -75,6 +75,6 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
 }
 
 export default connect(
-  (state: ApplicationState, ownProps: any) => ({ ...state.login, loggedInUser: state.auth.loggedInUser }),
-  LoginStore.actionCreators,
+  (state: ApplicationState, ownProps: any) => ({ ...state.logIn, loggedInUser: state.auth.loggedInUser }),
+  LogInStore.actionCreators,
 )(LogInScreen);
