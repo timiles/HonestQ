@@ -1,8 +1,6 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using MySql.Data.MySqlClient;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Web.Helpers;
@@ -27,6 +25,7 @@ namespace Pobs.Web.Services
         Task CreateNotificationsForComment(long commentId);
         Task<bool> MarkAsSeen(int loggedInUserId, long notificationId);
         Task MarkAllAsSeen(int loggedInUserId);
+        Task AddPushToken(string token, int? loggedInUserId);
     }
 
     public class NotificationsService : INotificationsService
@@ -273,6 +272,28 @@ namespace Pobs.Web.Services
                 notification.Seen = true;
             }
             await _context.SaveChangesAsync();
+        }
+
+        public async Task AddPushToken(string token, int? loggedInUserId)
+        {
+            var existing = await _context.PushTokens.FindAsync(token);
+            if (existing != null)
+            {
+                if (loggedInUserId.HasValue && existing.UserId != loggedInUserId.Value)
+                {
+                    existing.UserId = loggedInUserId.Value;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                var pushToken = new PushToken(token)
+                {
+                    UserId = loggedInUserId,
+                };
+                await _context.PushTokens.AddAsync(pushToken);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

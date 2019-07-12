@@ -14,6 +14,8 @@ namespace Pobs.Domain
         // Entities
         public DbSet<Notification> Notifications { get; set; }
 
+        public DbSet<PushToken> PushTokens { get; set; }
+
         public DbSet<Question> Questions { get; set; }
 
         public DbSet<Tag> Tags { get; set; }

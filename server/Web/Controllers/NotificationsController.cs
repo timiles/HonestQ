@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Pobs.Web.Helpers;
+using Pobs.Web.Models.Notifications;
 using Pobs.Web.Services;
 
 namespace Pobs.Web.Controllers
@@ -47,6 +48,18 @@ namespace Pobs.Web.Controllers
         public async Task<IActionResult> MarkAllAsSeen()
         {
             await _notificationsService.MarkAllAsSeen(User.Identity.ParseUserId());
+            return Ok();
+        }
+
+        [HttpPost, AllowAnonymous, Route("pushtoken")]
+        public async Task<IActionResult> PushToken([FromBody]PushTokenModel model)
+        {
+            int? loggedInUserId = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                loggedInUserId = User.Identity.ParseUserId();
+            }
+            await _notificationsService.AddPushToken(model.Token, loggedInUserId);
             return Ok();
         }
     }

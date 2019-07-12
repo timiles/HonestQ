@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 
@@ -97,6 +96,15 @@ namespace Pobs.Tests.Integration.Helpers
             }
 
             return questions;
+        }
+
+        public static void CreatePushToken(string token, int? userId)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                dbContext.PushTokens.Add(new PushToken(token) { UserId = userId });
+                dbContext.SaveChanges();
+            }
         }
 
         public static IEnumerable<Comment> CreateComments(
@@ -241,6 +249,21 @@ namespace Pobs.Tests.Integration.Helpers
                 if (user != null)
                 {
                     dbContext.Users.Remove(user);
+                    dbContext.SaveChanges();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static bool DeletePushToken(string token)
+        {
+            using (var dbContext = TestSetup.CreateDbContext())
+            {
+                var pushToken = dbContext.PushTokens.Find(token);
+                if (pushToken != null)
+                {
+                    dbContext.PushTokens.Remove(pushToken);
                     dbContext.SaveChanges();
                     return true;
                 }
