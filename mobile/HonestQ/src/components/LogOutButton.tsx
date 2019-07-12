@@ -1,12 +1,14 @@
 import React from 'react';
-import { Button, View } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+import { HQSubmitButton } from '../hq-components';
 import { ApplicationState } from '../store';
-import * as LogInStore from '../store/LogIn';
+import * as LogOutStore from '../store/LogOut';
 
-type Props = typeof LogInStore.actionCreators;
+type Props = LogOutStore.LogOutState
+  & typeof LogOutStore.actionCreators;
 
-class LoggedInUserInfo extends React.Component<Props> {
+class LogOutButton extends React.Component<Props> {
 
   public constructor(props: Props) {
     super(props);
@@ -15,10 +17,11 @@ class LoggedInUserInfo extends React.Component<Props> {
   }
 
   public render() {
+    const { submitting } = this.props;
 
     return (
       <View>
-        <Button title="Log out" onPress={this.handleLogOut} />
+        <HQSubmitButton title="Log out" onPress={this.handleLogOut} submitting={submitting} />
       </View>
     );
   }
@@ -28,5 +31,5 @@ class LoggedInUserInfo extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.logIn);
-export default connect(mapStateToProps, LogInStore.actionCreators)(LoggedInUserInfo);
+const mapStateToProps = (state: ApplicationState) => (state.logOut);
+export default connect(mapStateToProps, LogOutStore.actionCreators)(LogOutButton);

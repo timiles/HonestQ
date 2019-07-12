@@ -21,18 +21,13 @@ export interface LogInState {
 interface LogInRequestAction { type: 'LOGIN_REQUEST'; }
 export interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
 interface LogInFailureAction { type: 'LOGIN_FAILURE'; payload: { error: string | null; }; }
-interface LogOutRequestAction { type: 'LOGOUT_REQUEST'; }
-export interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
-interface LogOutFailureAction { type: 'LOGOUT_FAILURE'; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = LogInRequestAction
+type KnownAction =
+  | LogInRequestAction
   | LogInSuccessAction
   | LogInFailureAction
-  | LogOutRequestAction
-  | LogOutSuccessAction
-  | LogOutFailureAction
   ;
 
 // ----------------
@@ -67,19 +62,6 @@ export const actionCreators = {
         });
     })();
   },
-  logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-    return (async () => {
-      dispatch({ type: 'LOGOUT_REQUEST' });
-
-      postJson('/api/account/logout', null, null, true)
-        .then(() => {
-          dispatch({ type: 'LOGOUT_SUCCESS' });
-        })
-        .catch(() => {
-          dispatch({ type: 'LOGOUT_FAILURE' });
-        });
-    })();
-  },
 };
 
 // ----------------
@@ -96,11 +78,6 @@ export const reducer: Reducer<LogInState> = (state: LogInState, action: KnownAct
       return { submitting: false, submitted: true };
     case 'LOGIN_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
-    case 'LOGOUT_REQUEST':
-    case 'LOGOUT_FAILURE':
-      return state || defaultState;
-    case 'LOGOUT_SUCCESS':
-      return defaultState;
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above
