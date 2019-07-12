@@ -6,7 +6,7 @@ import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { LoggedInUserModel, LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
-import * as LoginStore from '../../store/Login';
+import * as LoginStore from '../../store/LogInn';
 
 type LogInProps = LoginStore.LoginState
   & typeof LoginStore.actionCreators

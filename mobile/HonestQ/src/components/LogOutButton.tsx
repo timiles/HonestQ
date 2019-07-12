@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, View } from 'react-native';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../store';
-import * as LoginStore from '../store/Login';
+import * as LoginStore from '../store/LogInn';
 
 type Props = typeof LoginStore.actionCreators;
 
