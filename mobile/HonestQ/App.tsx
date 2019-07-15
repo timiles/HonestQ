@@ -1,6 +1,5 @@
-import { Notifications } from 'expo';
+import { Notifications, SplashScreen } from 'expo';
 import * as Font from 'expo-font';
-import { EventSubscription } from 'fbemitter';
 import React from 'react';
 import FlashMessage, { DefaultFlash, MessageComponentProps } from 'react-native-flash-message';
 import { Provider } from 'react-redux';
@@ -16,57 +15,55 @@ import { handleNotification, registerForPushNotificationsAsync } from './src/uti
 import { getData } from './src/utils/storage-utils';
 
 interface State {
-  assetsLoaded: boolean;
-  authLoaded: boolean;
-  loggedInUser?: LoggedInUserModel;
+  isReady: boolean;
 }
 
 export default class App extends React.Component<{}, State> {
 
-  private handleNotification: EventSubscription;
   private store: Store<StoreModule.ApplicationState>;
 
   public constructor(props: {}) {
     super(props);
 
-    this.state = { assetsLoaded: false, authLoaded: false };
+    SplashScreen.preventAutoHide();
+
+    this.state = { isReady: false };
+
+    registerForPushNotificationsAsync();
+    Notifications.addListener(handleNotification);
   }
 
   public async componentDidMount() {
-    registerForPushNotificationsAsync();
 
-    if (!this.handleNotification) {
-      this.handleNotification = Notifications.addListener(handleNotification);
-    }
+    const loadLoggedInUserPromise = new Promise<LoggedInUserModel>(
+      (resolve) => getData(loggedInUserStorageKey, resolve));
 
-    getData(loggedInUserStorageKey,
-      (loggedInUser) => {
-        this.setState({ authLoaded: true, loggedInUser });
-      });
-
-    await Font.loadAsync({
+    const loadFontsPromise = Font.loadAsync({
       'lineto-circular-book': require('./assets/fonts/lineto-circular-book.ttf'),
       'Nexa Bold': require('./assets/fonts/Nexa_Bold.otf'),
     });
 
-    this.setState({ assetsLoaded: true });
+    const loggedInUser = await loadLoggedInUserPromise;
+    const initialState: DeepPartial<StoreModule.ApplicationState> = { auth: { loggedInUser } };
+    const allReducers = combineReducers<StoreModule.ApplicationState>(StoreModule.reducers);
+    this.store = createStore(allReducers, initialState, applyMiddleware(thunk, localStoreMiddleware));
+
+    await loadFontsPromise;
+
+    this.setState({ isReady: true });
   }
 
   public render() {
-    const { assetsLoaded, authLoaded, loggedInUser } = this.state;
+    const { isReady } = this.state;
 
-    if (!assetsLoaded || !authLoaded) {
+    if (!isReady) {
       return <HQContentView />;
-    }
-
-    if (!this.store) {
-      const initialState: DeepPartial<StoreModule.ApplicationState> = { auth: { loggedInUser } };
-      const allReducers = combineReducers<StoreModule.ApplicationState>(StoreModule.reducers);
-      this.store = createStore(allReducers, initialState, applyMiddleware(thunk, localStoreMiddleware));
     }
 
     const hqFlashMessageComponent: React.SFC<MessageComponentProps> = (props) =>
       <DefaultFlash {...props} titleStyle={hqStyles.pr1} textStyle={hqStyles.pr1} />;
+
+    SplashScreen.hide();
 
     return (
       <HQContentView>
