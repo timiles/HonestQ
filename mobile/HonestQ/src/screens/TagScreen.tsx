@@ -1,12 +1,12 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
-import { HQContentView, HQHeader, HQLabel, HQPrimaryButton, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQLabel, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -49,7 +49,7 @@ class TagScreen extends React.Component<Props> {
     const { tagSlug } = this.props.navigation.state.params;
 
     if (!tag || tag.slug !== tagSlug) {
-      return <HQContentView><HQText>Loading</HQText></HQContentView>;
+      return <HQContentView style={hqStyles.center}><ActivityIndicator size="large" /></HQContentView>;
     }
 
     const { description, moreInfoUrl, questions, watching } = tag;

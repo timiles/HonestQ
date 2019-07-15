@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -48,7 +48,7 @@ class QuestionScreen extends React.Component<Props> {
     const { questionId } = this.props.navigation.state.params;
 
     if (!question || question.id !== questionId) {
-      return <HQContentView><HQText>Loading</HQText></HQContentView>;
+      return <HQContentView style={hqStyles.center}><ActivityIndicator size="large" /></HQContentView>;
     }
 
     const { text, context, tags, answers, watching } = question;

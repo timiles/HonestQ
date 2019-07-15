@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -57,7 +57,8 @@ class AnswerScreen extends React.Component<Props, State> {
     const { questionId, answerId } = this.props.navigation.state.params;
 
     if (!question || question.id !== questionId) {
-      return <HQContentView><HQText>Loading</HQText></HQContentView>;
+      // This could happen if a notification links straight to an Answer
+      return <HQContentView style={hqStyles.center}><ActivityIndicator size="large" /></HQContentView>;
     }
 
     const answer = question.answers.filter((x) => x.id === answerId)[0];
