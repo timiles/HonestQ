@@ -10,8 +10,6 @@ import QuotationMarks from '../components/QuotationMarks';
 import WatchButton from '../components/WatchButton';
 import { HQContentView, HQHeader, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
-import { LoggedInUserContext } from '../LoggedInUserContext';
-import { LoggedInUserModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import AgreeIcon from '../svg-icons/AgreeIcon';
@@ -24,8 +22,7 @@ export interface AnswerNavigationProps {
 
 type Props = QuestionStore.QuestionState
   & typeof QuestionStore.actionCreators
-  & NavigationScreenProps<AnswerNavigationProps>
-  & { loggedInUser?: LoggedInUserModel };
+  & NavigationScreenProps<AnswerNavigationProps>;
 
 interface State {
   replyWithAgreementRating?: string;
@@ -70,59 +67,57 @@ class AnswerScreen extends React.Component<Props, State> {
     const { replyWithAgreementRating } = this.state;
 
     return (
-      <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-        <HQContentView>
-          <FlatList
-            ListHeaderComponent={(
-              <View style={[hqStyles.mh1]}>
-                <CircleIconCard type="Q">
-                  <HQHeader>{questionText}</HQHeader>
-                </CircleIconCard>
-                <CircleIconCard type="A" style={hqStyles.mb1}>
-                  <QuotationMarks width={20}>
-                    <HQHeader>{text}</HQHeader>
-                  </QuotationMarks>
-                </CircleIconCard>
-                <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
-                  <WatchButton
-                    onWatch={this.handleWatch}
-                    watching={watching}
-                  />
-                  <HQPrimaryButton
-                    style={[hqStyles.flexRow, hqStyles.mr1]}
-                    onPress={this.handleNewCommentAgree}
-                  >
-                    <HQText style={[hqStyles.primaryButtonText, hqStyles.mr1]}>Agree</HQText>
-                    <AgreeIcon fill="#fff" />
-                  </HQPrimaryButton>
-                  <HQPrimaryButton
-                    style={[hqStyles.flexRow]}
-                    onPress={this.handleNewCommentDisagree}
-                  >
-                    <HQText style={[hqStyles.primaryButtonText, hqStyles.mr1]}>Disagree</HQText>
-                    <DisagreeIcon fill="#fff" />
-                  </HQPrimaryButton>
-                </View>
-                {replyWithAgreementRating &&
-                  <NewCommentCard
-                    questionId={questionId}
-                    answerId={answerId}
-                    agreementRating={replyWithAgreementRating}
-                    onCancel={this.handleNewCommentCancel}
-                  />
-                }
+      <HQContentView>
+        <FlatList
+          ListHeaderComponent={(
+            <View style={[hqStyles.mh1]}>
+              <CircleIconCard type="Q">
+                <HQHeader>{questionText}</HQHeader>
+              </CircleIconCard>
+              <CircleIconCard type="A" style={hqStyles.mb1}>
+                <QuotationMarks width={20}>
+                  <HQHeader>{text}</HQHeader>
+                </QuotationMarks>
+              </CircleIconCard>
+              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
+                <WatchButton
+                  onWatch={this.handleWatch}
+                  watching={watching}
+                />
+                <HQPrimaryButton
+                  style={[hqStyles.flexRow, hqStyles.mr1]}
+                  onPress={this.handleNewCommentAgree}
+                >
+                  <HQText style={[hqStyles.primaryButtonText, hqStyles.mr1]}>Agree</HQText>
+                  <AgreeIcon fill="#fff" />
+                </HQPrimaryButton>
+                <HQPrimaryButton
+                  style={[hqStyles.flexRow]}
+                  onPress={this.handleNewCommentDisagree}
+                >
+                  <HQText style={[hqStyles.primaryButtonText, hqStyles.mr1]}>Disagree</HQText>
+                  <DisagreeIcon fill="#fff" />
+                </HQPrimaryButton>
               </View>
-            )}
-            data={comments.filter((x) => !x.parentCommentId)}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={[hqStyles.mb1, hqStyles.mr1]}>
-                <CommentCard questionId={questionId} answerId={answerId} comment={item} onUpvote={this.handleUpvote} />
-              </View>
-            )}
-          />
-        </HQContentView>
-      </LoggedInUserContext.Provider>
+              {replyWithAgreementRating &&
+                <NewCommentCard
+                  questionId={questionId}
+                  answerId={answerId}
+                  agreementRating={replyWithAgreementRating}
+                  onCancel={this.handleNewCommentCancel}
+                />
+              }
+            </View>
+          )}
+          data={comments.filter((x) => !x.parentCommentId)}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View style={[hqStyles.mb1, hqStyles.mr1]}>
+              <CommentCard questionId={questionId} answerId={answerId} comment={item} onUpvote={this.handleUpvote} />
+            </View>
+          )}
+        />
+      </HQContentView>
     );
   }
 
@@ -147,5 +142,5 @@ class AnswerScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({ ...state.question, loggedInUser: state.auth.loggedInUser });
+const mapStateToProps = (state: ApplicationState) => (state.question);
 export default connect(mapStateToProps, QuestionStore.actionCreators)(AnswerScreen);

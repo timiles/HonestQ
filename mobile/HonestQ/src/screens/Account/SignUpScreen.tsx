@@ -1,5 +1,4 @@
 import React from 'react';
-import { showMessage } from 'react-native-flash-message';
 import { connect } from 'react-redux';
 import { HQContentView, HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
@@ -24,26 +23,12 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  public componentDidUpdate(prevProps: Props) {
-    if (prevProps.submitted && !this.props.submitted) {
-      showMessage({
-        message: 'Success',
-        description: `Welcome to HonestQ, ${this.props.signedUpUsername}!`,
-        type: 'success',
-        icon: 'success',
-        floating: true,
-      });
-
-      NavigationService.goBack();
-    }
-  }
-
   public render() {
     const { submitting = false, submitted, error } = this.props;
     const { username, password, confirmPassword, email } = this.state;
 
     return (
-      <HQContentView style={hqStyles.p1}>
+      <HQContentView style={[hqStyles.p1, hqStyles.center]}>
         <HQHeader style={hqStyles.mb1}>Sign up to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput

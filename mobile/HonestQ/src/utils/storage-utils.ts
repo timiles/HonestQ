@@ -6,9 +6,7 @@ export async function storeData(key: string, data: any) {
 
 export async function getData(key: string, handleData: (data: any) => void) {
   const value = await AsyncStorage.getItem(key);
-  if (value !== null) {
-    handleData(JSON.parse(value));
-  }
+  handleData(value ? JSON.parse(value) : null);
 }
 
 export async function removeData(key: string) {

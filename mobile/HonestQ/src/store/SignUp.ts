@@ -1,4 +1,5 @@
-﻿import { Reducer } from 'redux';
+﻿import { showMessage } from 'react-native-flash-message';
+import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { LoggedInUserModel, SignUpFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
@@ -11,7 +12,6 @@ export interface SignUpState {
   submitting: boolean;
   submitted: boolean;
   success: boolean;
-  signedUpUsername?: string;
   error?: string;
 }
 
@@ -54,6 +54,14 @@ export const actionCreators = {
             registerForPushNotificationsAsync(response);
 
             dispatch({ type: 'SIGNUP_SUCCESS', payload: response });
+
+            showMessage({
+              message: 'Success',
+              description: `Welcome to HonestQ, ${form.username}!`,
+              type: 'success',
+              icon: 'success',
+              floating: true,
+            });
           })
           .catch((reason) => {
             dispatch({ type: 'SIGNUP_FAILURE', payload: { reason } });
@@ -88,7 +96,6 @@ export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownA
         submitting: false,
         submitted: false,
         success: true,
-        signedUpUsername: action.payload.username,
         error: undefined,
       };
     case 'SIGNUP_FAILURE':

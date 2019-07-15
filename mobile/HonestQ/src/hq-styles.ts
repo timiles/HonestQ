@@ -2,6 +2,10 @@ import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 // tslint:disable:no-object-literal-type-assertion
 export default StyleSheet.create({
+  center: {
+    justifyContent: 'center',
+  } as ViewStyle,
+
   error: {
     color: 'red',
   } as TextStyle,

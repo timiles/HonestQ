@@ -1,5 +1,4 @@
 import React from 'react';
-import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native';
 import { connect } from 'react-redux';
 import { HQContentView, HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
@@ -26,18 +25,12 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  public componentDidUpdate() {
-    if (this.props.loggedInUser) {
-      NavigationService.goBack();
-    }
-  }
-
   public render() {
     const { submitting = false, submitted, error } = this.props;
     const { username, password } = this.state;
 
     return (
-      <HQContentView style={hqStyles.p1}>
+      <HQContentView style={[hqStyles.p1, hqStyles.center]}>
         <HQHeader style={hqStyles.mb1}>Log in to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
@@ -69,12 +62,12 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     NavigationService.navigate('SignUp');
   }
 
-  private handleSubmit(ev: NativeSyntheticEvent<NativeTouchEvent>): void {
+  private handleSubmit(): void {
     this.props.logIn(this.state);
   }
 }
 
 export default connect(
-  (state: ApplicationState, ownProps: any) => ({ ...state.logIn, loggedInUser: state.auth.loggedInUser }),
+  (state: ApplicationState) => (state.logIn),
   LogInStore.actionCreators,
 )(LogInScreen);

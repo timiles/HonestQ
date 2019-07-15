@@ -2,6 +2,7 @@ import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import CustomDrawer from './CustomDrawer';
 import LogInScreen from './screens/Account/LogInScreen';
 import SignUpScreen from './screens/Account/SignUpScreen';
+import UnauthScreen from './screens/Account/UnauthScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
 import NewAnswerScreen from './screens/NewAnswerScreen';
@@ -13,12 +14,10 @@ import TagScreen from './screens/TagScreen';
 const AppStack = createStackNavigator({
   Answer: { screen: AnswerScreen },
   Home: { screen: HomeScreen },
-  LogIn: { screen: LogInScreen },
   NewAnswer: { screen: NewAnswerScreen },
   NewQuestion: { screen: NewQuestionScreen },
   NewTag: { screen: NewTagScreen },
   Question: { screen: QuestionScreen },
-  SignUp: { screen: SignUpScreen },
   Tag: { screen: TagScreen },
 },
   {
@@ -34,11 +33,9 @@ const AppStack = createStackNavigator({
     },
   });
 
-const DrawerNavigator = createDrawerNavigator(
+export const MainNavigator = createDrawerNavigator(
   {
     Home: { screen: AppStack },
-    LogIn: { screen: LogInScreen, navigationOptions: { drawerLabel: 'Log in' } },
-    SignUp: { screen: SignUpScreen, navigationOptions: { drawerLabel: 'Sign up' } },
   },
   {
     contentComponent: CustomDrawer,
@@ -47,7 +44,16 @@ const DrawerNavigator = createDrawerNavigator(
       activeTintColor: '#FFFFFF',
       inactiveTintColor: '#FFFFFF',
     },
-  },
-);
+  });
 
-export default DrawerNavigator;
+export const UnauthNavigator = createStackNavigator(
+  {
+    Unauth: { screen: UnauthScreen },
+    LogIn: { screen: LogInScreen },
+    SignUp: { screen: SignUpScreen },
+  }, {
+    initialRouteName: 'Unauth',
+    defaultNavigationOptions: {
+      header: null,
+    },
+  });
