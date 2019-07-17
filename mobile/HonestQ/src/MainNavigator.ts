@@ -6,6 +6,7 @@ import UnauthScreen from './screens/Account/UnauthScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
 import NewAnswerScreen from './screens/NewAnswerScreen';
+import NewCommentScreen from './screens/NewCommentScreen';
 import NewQuestionScreen from './screens/NewQuestionScreen';
 import NewTagScreen from './screens/NewTagScreen';
 import QuestionScreen from './screens/QuestionScreen';
@@ -15,6 +16,7 @@ const AppStack = createStackNavigator({
   Answer: { screen: AnswerScreen },
   Home: { screen: HomeScreen },
   NewAnswer: { screen: NewAnswerScreen },
+  NewComment: { screen: NewCommentScreen },
   NewQuestion: { screen: NewQuestionScreen },
   NewTag: { screen: NewTagScreen },
   Question: { screen: QuestionScreen },

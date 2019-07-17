@@ -3,46 +3,39 @@ import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { HQCard, HQLabel, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
+import { NewCommentNavigationProps } from '../screens/NewCommentScreen';
 import { CommentModel } from '../server-models';
-import AgreeIcon from '../svg-icons/AgreeIcon';
-import DisagreeIcon from '../svg-icons/DisagreeIcon';
 import AgreementLabel from './AgreementLabel';
 import FriendlyDateTime from './FriendlyDateTime';
-import NewCommentCard from './NewCommentCard';
 import TextWithShortLinks from './TextWithShortLinks';
 import UpvoteButton from './UpvoteButton';
 
 interface Props {
-  questionId: number;
-  answerId: number;
   comment: CommentModel;
-  onUpvote(on: boolean, answerId: number, commentId: number): void;
+  isNested?: boolean;
+  renderChildComments?: boolean;
+  questionId?: number;
+  answerId?: number;
+  onUpvote?: (on: boolean, answerId: number, commentId: number) => void;
 }
 
-interface State {
-  replyWithAgreementRating?: string;
-}
-
-export default class CommentCard extends React.Component<Props, State> {
+export default class CommentCard extends React.Component<Props> {
 
   public constructor(props: Props) {
     super(props);
 
-    this.state = {};
-
-    this.handleNewCommentAgree = this.handleNewCommentAgree.bind(this);
-    this.handleNewCommentDisagree = this.handleNewCommentDisagree.bind(this);
-    this.handleNewCommentCancel = this.handleNewCommentCancel.bind(this);
+    this.handleNewComment = this.handleNewComment.bind(this);
   }
 
   public render() {
-    const { questionId, answerId, comment, onUpvote } = this.props;
+    const { comment, isNested, renderChildComments = true, questionId, answerId, onUpvote } = this.props;
     const { id: commentId, agreementRating, text, source, postedBy, postedAt, comments } = comment;
     const { upvotes, upvotedByMe } = comment;
-    const { replyWithAgreementRating } = this.state;
+    const showActions = questionId && answerId && onUpvote;
 
     return (
-      <View style={hqStyles.ml1}>
+      <View style={isNested ? hqStyles.ml1 : null}>
         <HQCard style={hqStyles.p1}>
           <View style={[hqStyles.flexRow, hqStyles.mb1]}>
             <AgreementLabel isAgree={agreementRating === 'Agree'} />
@@ -57,51 +50,33 @@ export default class CommentCard extends React.Component<Props, State> {
             </View>
             : null
           }
-          <View style={hqStyles.flexRow}>
-            <UpvoteButton
-              answerId={answerId}
-              commentId={commentId}
-              count={upvotes}
-              isUpvotedByLoggedInUser={upvotedByMe}
-              onUpvote={onUpvote}
-            />
-            <HQLabel style={[hqStyles.vAlignCenter, hqStyles.ml1, hqStyles.mr1]}>Reply:</HQLabel>
-            <HQPrimaryButton
-              style={[hqStyles.flexRow, hqStyles.mr1]}
-              onPress={this.handleNewCommentAgree}
-            >
-              <AgreeIcon fill="#fff" />
-            </HQPrimaryButton>
-            <HQPrimaryButton
-              style={[hqStyles.flexRow]}
-              onPress={this.handleNewCommentDisagree}
-            >
-              <DisagreeIcon fill="#fff" />
-            </HQPrimaryButton>
-          </View>
+          {showActions && (
+            <View style={hqStyles.flexRow}>
+              <UpvoteButton
+                answerId={answerId}
+                commentId={commentId}
+                count={upvotes}
+                isUpvotedByLoggedInUser={upvotedByMe}
+                onUpvote={onUpvote}
+              />
+              <HQPrimaryButton
+                title="Reply"
+                onPress={this.handleNewComment}
+              />
+            </View>
+          )}
         </HQCard>
         {
-          replyWithAgreementRating &&
-          <View style={hqStyles.ml1}>
-            <NewCommentCard
-              questionId={questionId}
-              answerId={answerId}
-              agreementRating={replyWithAgreementRating}
-              parentCommentId={commentId}
-              onCancel={this.handleNewCommentCancel}
-            />
-          </View>
-        }
-        {
-          (comments && comments.length > 0) &&
+          (renderChildComments && comments && comments.length > 0) &&
           <FlatList
             data={comment.comments}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
               <CommentCard
+                comment={item}
+                isNested={true}
                 questionId={questionId}
                 answerId={answerId}
-                comment={item}
                 onUpvote={onUpvote}
               />
             )}
@@ -111,13 +86,9 @@ export default class CommentCard extends React.Component<Props, State> {
     );
   }
 
-  private handleNewCommentAgree() {
-    this.setState({ replyWithAgreementRating: 'Agree' });
-  }
-  private handleNewCommentDisagree() {
-    this.setState({ replyWithAgreementRating: 'Disagree' });
-  }
-  private handleNewCommentCancel() {
-    this.setState({ replyWithAgreementRating: undefined });
+  private handleNewComment() {
+    const { questionId, answerId, comment } = this.props;
+    const params: NewCommentNavigationProps = { questionId, answerId, parentComment: comment };
+    NavigationService.navigate('NewComment', params);
   }
 }

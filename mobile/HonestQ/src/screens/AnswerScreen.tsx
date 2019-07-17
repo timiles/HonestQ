@@ -5,15 +5,14 @@ import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation
 import { connect } from 'react-redux';
 import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
-import NewCommentCard from '../components/NewCommentCard';
 import QuotationMarks from '../components/QuotationMarks';
 import WatchButton from '../components/WatchButton';
-import { HQContentView, HQHeader, HQPrimaryButton, HQText } from '../hq-components';
+import { HQContentView, HQHeader, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
-import AgreeIcon from '../svg-icons/AgreeIcon';
-import DisagreeIcon from '../svg-icons/DisagreeIcon';
+import { NewCommentNavigationProps } from './NewCommentScreen';
 
 export interface AnswerNavigationProps {
   questionId: number;
@@ -24,11 +23,7 @@ type Props = QuestionStore.QuestionState
   & typeof QuestionStore.actionCreators
   & NavigationScreenProps<AnswerNavigationProps>;
 
-interface State {
-  replyWithAgreementRating?: string;
-}
-
-class AnswerScreen extends React.Component<Props, State> {
+class AnswerScreen extends React.Component<Props> {
 
   protected static navigationOptions: NavigationScreenOptions = {
     title: 'Answer',
@@ -42,12 +37,7 @@ class AnswerScreen extends React.Component<Props, State> {
       this.props.getQuestion(questionId);
     }
 
-    this.state = {};
-
-    this.handleNewCommentAgree = this.handleNewCommentAgree.bind(this);
-    this.handleNewCommentDisagree = this.handleNewCommentDisagree.bind(this);
-    this.handleNewCommentCancel = this.handleNewCommentCancel.bind(this);
-
+    this.handleNewComment = this.handleNewComment.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
     this.handleWatch = this.handleWatch.bind(this);
   }
@@ -65,7 +55,6 @@ class AnswerScreen extends React.Component<Props, State> {
 
     const { text: questionText } = question;
     const { text, comments, watching } = answer;
-    const { replyWithAgreementRating } = this.state;
 
     return (
       <HQContentView>
@@ -86,34 +75,16 @@ class AnswerScreen extends React.Component<Props, State> {
                   watching={watching}
                 />
                 <HQPrimaryButton
-                  style={[hqStyles.flexRow, hqStyles.mr1]}
-                  onPress={this.handleNewCommentAgree}
-                >
-                  <HQText style={[hqStyles.primaryButtonText, hqStyles.mr1]}>Agree</HQText>
-                  <AgreeIcon fill="#fff" />
-                </HQPrimaryButton>
-                <HQPrimaryButton
-                  style={[hqStyles.flexRow]}
-                  onPress={this.handleNewCommentDisagree}
-                >
-                  <HQText style={[hqStyles.primaryButtonText, hqStyles.mr1]}>Disagree</HQText>
-                  <DisagreeIcon fill="#fff" />
-                </HQPrimaryButton>
-              </View>
-              {replyWithAgreementRating &&
-                <NewCommentCard
-                  questionId={questionId}
-                  answerId={answerId}
-                  agreementRating={replyWithAgreementRating}
-                  onCancel={this.handleNewCommentCancel}
+                  title="Reply"
+                  onPress={this.handleNewComment}
                 />
-              }
+              </View>
             </View>
           )}
           data={comments.filter((x) => !x.parentCommentId)}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={[hqStyles.mb1, hqStyles.mr1]}>
+            <View style={[hqStyles.mb1, hqStyles.mh1]}>
               <CommentCard questionId={questionId} answerId={answerId} comment={item} onUpvote={this.handleUpvote} />
             </View>
           )}
@@ -122,14 +93,12 @@ class AnswerScreen extends React.Component<Props, State> {
     );
   }
 
-  private handleNewCommentAgree() {
-    this.setState({ replyWithAgreementRating: 'Agree' });
-  }
-  private handleNewCommentDisagree() {
-    this.setState({ replyWithAgreementRating: 'Disagree' });
-  }
-  private handleNewCommentCancel() {
-    this.setState({ replyWithAgreementRating: undefined });
+  private handleNewComment() {
+    const { questionId, answerId } = this.props.navigation.state.params;
+    const { question } = this.props;
+    const answer = question.answers.filter((x) => x.id === answerId)[0];
+    const params: NewCommentNavigationProps = { questionId, answerId, answer };
+    NavigationService.navigate('NewComment', params);
   }
 
   private handleUpvote(on: boolean, answerId: number, commentId: number): void {

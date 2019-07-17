@@ -7,17 +7,22 @@ import DisagreeIcon from '../svg-icons/DisagreeIcon';
 
 interface Props {
   isAgree: boolean;
+  disabled?: boolean;
 }
 
 export default class AgreementLabel extends React.Component<Props> {
 
   public render() {
-    const { isAgree } = this.props;
+    const { isAgree, disabled } = this.props;
+    const disabledColor = '#555';
+    const fill = disabled ? disabledColor : undefined;
 
     return (
-      <View style={[styles.pill, hqStyles.flexRow]}>
-        {isAgree ? <AgreeIcon /> : <DisagreeIcon />}
-        <HQLabel style={[styles.text, hqStyles.vAlignCenter]}>{isAgree ? 'Agree' : 'Disagree'}</HQLabel>
+      <View style={[styles.pill, hqStyles.flexRow, disabled ? { borderColor: disabledColor } : null]}>
+        {isAgree ? <AgreeIcon fill={fill} /> : <DisagreeIcon fill={fill} />}
+        <HQLabel style={[styles.text, hqStyles.vAlignCenter, disabled ? { color: disabledColor } : null]}>
+          {isAgree ? 'Agree' : 'Disagree'}
+        </HQLabel>
       </View>
     );
   }
