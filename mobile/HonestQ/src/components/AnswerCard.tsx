@@ -25,7 +25,7 @@ export default class AnswerCard extends React.Component<OwnProps> {
     return (
       <CircleIconCard type="A">
         <View style={hqStyles.mb1}>
-          <QuotationMarks width={16}>
+          <QuotationMarks size="small">
             <HQText>{text}</HQText>
           </QuotationMarks>
         </View>

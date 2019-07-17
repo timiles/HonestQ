@@ -5,13 +5,14 @@ import QuotationMarkCloseIcon from '../svg-icons/QuotationMarkCloseIcon';
 import QuotationMarkOpenIcon from '../svg-icons/QuotationMarkOpenIcon';
 
 interface Props {
-  width: number;
+  size: 'small' | 'large';
 }
 
 export default class QuotationMarks extends React.Component<Props> {
 
   public render() {
-    const { width } = this.props;
+    const { size } = this.props;
+    const width = (size === 'small') ? 16 : 20;
     const fill = '#AECCF5';
 
     return (

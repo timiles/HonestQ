@@ -76,7 +76,7 @@ class AnswerScreen extends React.Component<Props, State> {
                 <HQHeader>{questionText}</HQHeader>
               </CircleIconCard>
               <CircleIconCard type="A" style={hqStyles.mb1}>
-                <QuotationMarks width={20}>
+                <QuotationMarks size="large">
                   <HQHeader>{text}</HQHeader>
                 </QuotationMarks>
               </CircleIconCard>
