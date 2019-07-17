@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import AgreementLabel from '../components/AgreementLabel';
 import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
+import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
 import QuotationMarks from '../components/QuotationMarks';
-import { HQCard, HQContentView, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
+import { HQCard, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { LoggedInUserContext } from '../LoggedInUserContext';
 import NavigationService from '../NavigationService';
@@ -81,7 +82,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
     const { text: commentText, source, agreementRating } = this.state;
 
     return (
-      <HQContentView style={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
         {parentComment ? this.renderParentComment(parentComment) : this.renderAnswer(answer)}
         <HQCard style={[hqStyles.mb1, hqStyles.p1, (parentComment ? hqStyles.ml1 : null)]}>
           <View style={[hqStyles.flexRow, hqStyles.mb1]}>
@@ -123,7 +124,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
             submitted={submitted && !error}
           />
         </HQCard>
-      </HQContentView>
+      </KeyboardPaddedScrollView>
     );
   }
 

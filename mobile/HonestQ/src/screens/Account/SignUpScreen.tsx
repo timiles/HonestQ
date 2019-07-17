@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
+import KeyboardPaddedScrollView from '../../components/KeyboardPaddedScrollView';
+import { HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { SignUpFormModel } from '../../server-models';
@@ -28,7 +29,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
     const { username, password, confirmPassword, email } = this.state;
 
     return (
-      <HQContentView style={[hqStyles.p1, hqStyles.center]}>
+      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={[hqStyles.p1, hqStyles.center]}>
         <HQHeader style={hqStyles.mb1}>Sign up to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
@@ -72,7 +73,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
         />
         <HQSubmitButton title="Sign up" onPress={this.handleSubmit} submitting={submitting} />
         <HQNavigationButton title="Already have an account? Log in" onPress={this.navigateToLogIn} />
-      </HQContentView>
+      </KeyboardPaddedScrollView>
     );
   }
 

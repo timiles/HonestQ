@@ -1,7 +1,8 @@
 import React from 'react';
 import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQSuperTextInput, HQText } from '../hq-components';
+import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
+import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { AnswerFormModel } from '../server-models';
@@ -36,7 +37,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
     const { text: answerText } = this.state;
 
     return (
-      <HQContentView style={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Got an answer?</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQSuperTextInput
@@ -51,7 +52,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
           error={!answerText ? 'Answer is required' : null}
         />
         <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
-      </HQContentView>
+      </KeyboardPaddedScrollView>
     );
   }
 

@@ -2,7 +2,8 @@ import React from 'react';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
+import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
+import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { QuestionFormModel, TagValueModel } from '../server-models';
@@ -48,7 +49,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
     const { text: questionText, context, tags } = this.state;
 
     return (
-      <HQContentView style={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Ask a question</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQSuperTextInput
@@ -71,7 +72,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
           submitted={submitted && !error}
         />
         <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
-      </HQContentView>
+      </KeyboardPaddedScrollView>
     );
   }
 

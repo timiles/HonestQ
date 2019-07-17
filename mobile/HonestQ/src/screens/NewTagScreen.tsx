@@ -1,7 +1,8 @@
 import React from 'react';
 import { showMessage } from 'react-native-flash-message';
 import { connect } from 'react-redux';
-import { HQContentView, HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
+import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
+import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { TagFormModel } from '../server-models';
@@ -46,7 +47,7 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
     const { submitting, submitted, error } = this.props;
 
     return (
-      <HQContentView style={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Suggest a new tag</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
@@ -76,7 +77,7 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
           submitted={submitted && !error}
         />
         <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
-      </HQContentView>
+      </KeyboardPaddedScrollView>
     );
   }
 
