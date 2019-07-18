@@ -17,6 +17,8 @@ import { NewQuestionNavigationProps } from './NewQuestionScreen';
 export interface TagNavigationProps {
   tagSlug: string;
   tagName: string;
+  handleWatch?: (on: boolean) => void;
+  watching?: boolean;
 }
 
 type Props = TagStore.TagState
@@ -27,8 +29,19 @@ class TagScreen extends React.Component<Props> {
 
   protected static navigationOptions =
     ({ navigation }: NavigationScreenProps<TagNavigationProps>): NavigationScreenOptions => {
+      const handleWatch = navigation.getParam('handleWatch');
+      const watchButton = handleWatch ? (
+        <View style={hqStyles.mr1}>
+          <WatchButton
+            onWatch={handleWatch}
+            watching={navigation.getParam('watching')}
+          />
+        </View>
+      ) : null;
+
       return {
         title: navigation.getParam('tagName'),
+        headerRight: watchButton,
       };
     }
 
@@ -42,6 +55,15 @@ class TagScreen extends React.Component<Props> {
 
     this.navigateToNewQuestion = this.navigateToNewQuestion.bind(this);
     this.handleWatch = this.handleWatch.bind(this);
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    if (this.props.tag &&
+      (!prevProps.tag ||
+        prevProps.tag.slug !== this.props.tag.slug ||
+        prevProps.tag.watching !== this.props.tag.watching)) {
+      this.props.navigation.setParams({ handleWatch: this.handleWatch, watching: this.props.tag.watching });
+    }
   }
 
   public render() {
@@ -95,12 +117,6 @@ class TagScreen extends React.Component<Props> {
                   </InfoCard>
                   : null
                 }
-              </View>
-              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
-                <WatchButton
-                  onWatch={this.handleWatch}
-                  watching={watching}
-                />
               </View>
               <HQHeader>{questionsCountText}</HQHeader>
               {questions.length === 0 &&
