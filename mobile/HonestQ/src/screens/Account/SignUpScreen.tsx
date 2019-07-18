@@ -65,6 +65,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
         <HQTextInput
           containerStyle={hqStyles.mb1}
           autoCapitalize="none"
+          keyboardType="email-address"
           placeholder="Email (optional)"
           helpText="Provide an email address to enable account recovery features."
           value={email}

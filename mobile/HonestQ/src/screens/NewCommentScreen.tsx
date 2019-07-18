@@ -117,6 +117,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
           />
           <HQTextInput
             containerStyle={hqStyles.mb1}
+            keyboardType="url"
             placeholder="Source (optional)"
             maxLength={2000}
             value={source}
