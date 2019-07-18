@@ -1,13 +1,14 @@
 import React from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { HQCard, HQLabel, HQPrimaryButton, HQText } from '../hq-components';
+import { HQCard, HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { NewCommentNavigationProps } from '../screens/NewCommentScreen';
 import { CommentModel } from '../server-models';
 import AgreementLabel from './AgreementLabel';
 import FriendlyDateTime from './FriendlyDateTime';
+import ReplyButton from './ReplyButton';
 import TextWithShortLinks from './TextWithShortLinks';
 import UpvoteButton from './UpvoteButton';
 
@@ -59,10 +60,7 @@ export default class CommentCard extends React.Component<Props> {
                 isUpvotedByLoggedInUser={upvotedByMe}
                 onUpvote={onUpvote}
               />
-              <HQPrimaryButton
-                title="Reply"
-                onPress={this.handleNewComment}
-              />
+              <ReplyButton onPress={this.handleNewComment} />
             </View>
           )}
         </HQCard>

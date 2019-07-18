@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import QuotationMarks from '../components/QuotationMarks';
+import ReplyButton from '../components/ReplyButton';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQPrimaryButton } from '../hq-components';
+import { HQHeader } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -74,10 +75,7 @@ class AnswerScreen extends React.Component<Props> {
                   onWatch={this.handleWatch}
                   watching={watching}
                 />
-                <HQPrimaryButton
-                  title="Reply"
-                  onPress={this.handleNewComment}
-                />
+                <ReplyButton onPress={this.handleNewComment} />
               </View>
             </View>
           )}
