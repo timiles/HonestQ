@@ -1,8 +1,9 @@
+import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { QuestionListItemModel } from '../../server-models';
 import { buildQuestionUrl } from '../../utils/route-utils';
-import { getItemCountText, parseDateWithTimeZoneOffset } from '../../utils/string-utils';
+import { getItemCountText } from '../../utils/string-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 
 interface Props {
@@ -15,8 +16,7 @@ export default class QuestionList extends React.Component<Props, {}> {
         const { questions } = this.props;
 
         const orderedQuestions = questions.sort((a, b) =>
-            parseDateWithTimeZoneOffset(b.mostRecentActivityPostedAt).getTime() -
-            parseDateWithTimeZoneOffset(a.mostRecentActivityPostedAt).getTime());
+            moment(b.mostRecentActivityPostedAt).isAfter(moment(a.mostRecentActivityPostedAt)) ? 1 : -1);
 
         return (
             <ul className="list-unstyled">

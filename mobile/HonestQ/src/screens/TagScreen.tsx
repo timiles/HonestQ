@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
@@ -11,7 +12,7 @@ import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
-import { getItemCountText, parseDateWithTimeZoneOffset } from '../utils/string-utils';
+import { getItemCountText } from '../utils/string-utils';
 import { NewQuestionNavigationProps } from './NewQuestionScreen';
 
 export interface TagNavigationProps {
@@ -77,8 +78,7 @@ class TagScreen extends React.Component<Props> {
     const { description, moreInfoUrl, questions, watching } = tag;
 
     const orderedQuestions = questions.sort((a, b) =>
-      parseDateWithTimeZoneOffset(b.mostRecentActivityPostedAt).getTime() -
-      parseDateWithTimeZoneOffset(a.mostRecentActivityPostedAt).getTime());
+      moment(b.mostRecentActivityPostedAt).isAfter(moment(a.mostRecentActivityPostedAt)) ? 1 : -1);
 
     const questionsCountText = getItemCountText('Question', questions.length);
     const newQuestionButton = (

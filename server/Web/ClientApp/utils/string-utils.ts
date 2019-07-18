@@ -49,18 +49,6 @@ export function extractExtensionFromUrl(url: string): string | null {
     return urlPartsSplitOnDot[urlPartsSplitOnDot.length - 1].toLowerCase();
 }
 
-export function parseDateWithTimeZoneOffset(dateString: string, hoursOffset: number = 0) {
-    // If date from server ends with 'Z', javascript automatically applies the local time zone
-    if (dateString && dateString[dateString.length - 1] === 'Z') {
-        dateString = dateString.substring(0, dateString.length - 1);
-    }
-    const date = new Date(dateString);
-    if (hoursOffset !== 0) {
-        date.setTime(date.getTime() + (hoursOffset * 60 * 60 * 1000));
-    }
-    return date;
-}
-
 export function getItemCountText(itemName: string, count: number): string {
     switch (count) {
         case 0: {

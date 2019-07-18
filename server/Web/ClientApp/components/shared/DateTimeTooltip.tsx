@@ -2,8 +2,6 @@ import $ from 'jquery';
 import moment from 'moment';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { LoggedInUserContext } from '../../LoggedInUserContext';
-import { parseDateWithTimeZoneOffset } from '../../utils/string-utils';
 
 interface Props {
     dateTime: string;
@@ -29,28 +27,21 @@ export default class DateTimeTooltip extends React.Component<Props> {
     public render() {
         const { dateTime } = this.props;
 
-        return (
-            <LoggedInUserContext.Consumer>
-                {(user) => {
-                    const offsetHours = new Date().getTimezoneOffset() / -60;
-                    const dateTimeOffset = parseDateWithTimeZoneOffset(dateTime, offsetHours);
-                    const dateTimeMoment = moment(dateTimeOffset);
-                    const friendlyTime = dateTimeMoment.fromNow();
-                    const fullTime = dateTimeMoment.format('LLLL');
+        const dateTimeMoment = moment(dateTime);
+        // Client time could be behind Server time - avoid printing 'in a few seconds'
+        const friendlyTime = dateTimeMoment.isAfter(moment.now()) ? 'just now' : dateTimeMoment.fromNow();
+        const fullTime = dateTimeMoment.format('LLLL');
 
-                    return (
-                        <span
-                            className="text-nowrap"
-                            ref={this.tooltipRef}
-                            data-toggle="tooltip"
-                            data-placement="top"
-                            title={fullTime}
-                        >
-                            {friendlyTime}
-                        </span>
-                    );
-                }}
-            </LoggedInUserContext.Consumer>
+        return (
+            <span
+                className="text-nowrap"
+                ref={this.tooltipRef}
+                data-toggle="tooltip"
+                data-placement="top"
+                title={fullTime}
+            >
+                {friendlyTime}
+            </span>
         );
     }
 }
