@@ -8,19 +8,21 @@ import DisagreeIcon from '../svg-icons/DisagreeIcon';
 interface Props {
   isAgree: boolean;
   disabled?: boolean;
+  size?: 'small' | 'medium';
 }
 
 export default class AgreementLabel extends React.Component<Props> {
 
   public render() {
-    const { isAgree, disabled } = this.props;
+    const { isAgree, disabled, size } = this.props;
     const disabledColor = '#555';
     const fill = disabled ? disabledColor : undefined;
+    const fontSize = (size === 'medium') ? styles.mediumFontSize : styles.smallFontSize;
 
     return (
       <View style={[styles.pill, hqStyles.flexRow, disabled ? { borderColor: disabledColor } : null]}>
         {isAgree ? <AgreeIcon fill={fill} /> : <DisagreeIcon fill={fill} />}
-        <HQLabel style={[styles.text, hqStyles.vAlignCenter, disabled ? { color: disabledColor } : null]}>
+        <HQLabel style={[styles.text, fontSize, hqStyles.vAlignCenter, disabled ? { color: disabledColor } : null]}>
           {isAgree ? 'Agree' : 'Disagree'}
         </HQLabel>
       </View>
@@ -40,7 +42,14 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#2293A5',
-    fontSize: 11,
     marginLeft: 3,
+  } as TextStyle,
+
+  smallFontSize: {
+    fontSize: 11,
+  } as TextStyle,
+
+  mediumFontSize: {
+    fontSize: 14,
   } as TextStyle,
 });

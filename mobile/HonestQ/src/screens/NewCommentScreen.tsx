@@ -90,13 +90,13 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
               onPress={this.handleAgree}
               disabled={agreementRating === 'Agree'}
             >
-              <AgreementLabel isAgree={true} disabled={agreementRating === 'Disagree'} />
+              <AgreementLabel isAgree={true} disabled={agreementRating === 'Disagree'} size="medium" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={this.handleDisagree}
               disabled={agreementRating === 'Disagree'}
             >
-              <AgreementLabel isAgree={false} disabled={agreementRating === 'Agree'} />
+              <AgreementLabel isAgree={false} disabled={agreementRating === 'Agree'} size="medium" />
             </TouchableOpacity>
             <LoggedInUserContext.Consumer>
               {(user) =>
