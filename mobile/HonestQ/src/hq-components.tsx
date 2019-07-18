@@ -113,15 +113,16 @@ export class HQPrimaryButton extends React.Component<TouchableOpacityProps & { t
 interface HQSubmitButtonProps {
   title?: string;
   submitting?: boolean;
+  activityIndicatorColor?: string;
 }
 export class HQSubmitButton extends React.Component<TouchableOpacityProps & HQSubmitButtonProps> {
   public render() {
-    const { title, submitting = false } = this.props;
+    const { title, submitting = false, activityIndicatorColor } = this.props;
 
     return (
       <TouchableOpacity {...this.props} style={[styles.submitButton, this.props.style]}>
         {title ? <HQText style={styles.submitButtonText}>{title}</HQText> : this.props.children}
-        {submitting && <ActivityIndicator animating={true} color="#fff" style={hqStyles.ml1} />}
+        {submitting && <ActivityIndicator animating={true} color={activityIndicatorColor} style={hqStyles.ml1} />}
       </TouchableOpacity>
     );
   }

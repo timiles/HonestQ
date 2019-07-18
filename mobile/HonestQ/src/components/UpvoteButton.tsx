@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet, TextStyle } from 'react-native';
 import { HQSubmitButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import UpvoteIcon from '../svg-icons/UpvoteIcon';
@@ -35,16 +34,18 @@ export default class UpvoteButton extends React.Component<Props, State> {
   public render() {
     const { count, isUpvotedByLoggedInUser } = this.props;
     const { submitting } = this.state;
+    const activeColor = isUpvotedByLoggedInUser ? '#FF5A00' : '#FFF';
 
     return (
       <HQSubmitButton
         onPress={this.handlePress}
         submitting={submitting}
+        activityIndicatorColor={activeColor}
       >
-        <UpvoteIcon fill={isUpvotedByLoggedInUser ? 'red' : 'white'} />
+        <UpvoteIcon fill={activeColor} />
         {count > 0 && (
           <HQText
-            style={[hqStyles.ml1, hqStyles.primaryButtonText, isUpvotedByLoggedInUser ? styles.countUpvotedByMe : null]}
+            style={[hqStyles.ml1, hqStyles.primaryButtonText, { color: activeColor }]}
           >
             {count}
           </HQText>
@@ -59,10 +60,3 @@ export default class UpvoteButton extends React.Component<Props, State> {
       () => this.props.onUpvote(!isUpvotedByLoggedInUser, answerId, commentId));
   }
 }
-
-// tslint:disable:no-object-literal-type-assertion
-const styles = StyleSheet.create({
-  countUpvotedByMe: {
-    color: 'red',
-  } as TextStyle,
-});

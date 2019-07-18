@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet, TextStyle } from 'react-native';
 import { HQSubmitButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import WatchIcon from '../svg-icons/WatchIcon';
@@ -30,16 +29,18 @@ export default class WatchButton extends React.Component<Props, State> {
   public render() {
     const { watching } = this.props;
     const { submitting } = this.state;
+    const activeColor = watching ? '#FF5A00' : '#FFF';
 
     return (
       <HQSubmitButton
         onPress={this.handlePress}
         submitting={submitting}
+        activityIndicatorColor={activeColor}
       >
-        <WatchIcon fill={watching ? 'red' : 'white'} />
+        <WatchIcon fill={activeColor} />
         {watching ? (
           <HQText
-            style={[hqStyles.ml1, hqStyles.primaryButtonText, styles.watching]}
+            style={[hqStyles.ml1, hqStyles.primaryButtonText, { color: activeColor }]}
           >
             Watching
           </HQText>
@@ -59,10 +60,3 @@ export default class WatchButton extends React.Component<Props, State> {
       () => this.props.onWatch(!this.props.watching));
   }
 }
-
-// tslint:disable:no-object-literal-type-assertion
-const styles = StyleSheet.create({
-  watching: {
-    color: 'red',
-  } as TextStyle,
-});
