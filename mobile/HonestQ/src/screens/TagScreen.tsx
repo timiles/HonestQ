@@ -6,7 +6,7 @@ import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
-import { HQContentView, HQHeader, HQLabel, HQPrimaryButton } from '../hq-components';
+import { HQHeader, HQLabel, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -49,7 +49,7 @@ class TagScreen extends React.Component<Props> {
     const { tagSlug } = this.props.navigation.state.params;
 
     if (!tag || tag.slug !== tagSlug) {
-      return <HQContentView style={hqStyles.center}><ActivityIndicator size="large" /></HQContentView>;
+      return <View style={[hqStyles.contentView, hqStyles.center]}><ActivityIndicator size="large" /></View>;
     }
 
     const { description, moreInfoUrl, questions, watching } = tag;
@@ -68,7 +68,7 @@ class TagScreen extends React.Component<Props> {
     );
 
     return (
-      <HQContentView>
+      <View style={hqStyles.contentView}>
         <FlatList
           ListHeaderComponent={
             <View style={hqStyles.mh1}>
@@ -123,7 +123,7 @@ class TagScreen extends React.Component<Props> {
             </View>
           }
         />
-      </HQContentView>
+      </View>
     );
   }
 

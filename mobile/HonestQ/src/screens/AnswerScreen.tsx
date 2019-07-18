@@ -7,7 +7,7 @@ import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import QuotationMarks from '../components/QuotationMarks';
 import WatchButton from '../components/WatchButton';
-import { HQContentView, HQHeader, HQPrimaryButton } from '../hq-components';
+import { HQHeader, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -48,7 +48,7 @@ class AnswerScreen extends React.Component<Props> {
 
     if (!question || question.id !== questionId) {
       // This could happen if a notification links straight to an Answer
-      return <HQContentView style={hqStyles.center}><ActivityIndicator size="large" /></HQContentView>;
+      return <View style={[hqStyles.contentView, hqStyles.center]}><ActivityIndicator size="large" /></View>;
     }
 
     const answer = question.answers.filter((x) => x.id === answerId)[0];
@@ -57,7 +57,7 @@ class AnswerScreen extends React.Component<Props> {
     const { text, comments, watching } = answer;
 
     return (
-      <HQContentView>
+      <View style={hqStyles.contentView}>
         <FlatList
           ListHeaderComponent={(
             <View style={[hqStyles.mh1]}>
@@ -89,7 +89,7 @@ class AnswerScreen extends React.Component<Props> {
             </View>
           )}
         />
-      </HQContentView>
+      </View>
     );
   }
 

@@ -1,12 +1,12 @@
 import { Notifications, SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import React from 'react';
+import { View } from 'react-native';
 import FlashMessage, { DefaultFlash, MessageComponentProps } from 'react-native-flash-message';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore, DeepPartial, Store } from 'redux';
 import thunk from 'redux-thunk';
 import AuthCheck from './src/AuthCheck';
-import { HQContentView } from './src/hq-components';
 import hqStyles from './src/hq-styles';
 import { localStoreMiddleware, loggedInUserStorageKey } from './src/localStoreMiddleware';
 import { LoggedInUserModel } from './src/server-models';
@@ -57,7 +57,7 @@ export default class App extends React.Component<{}, State> {
     const { isReady } = this.state;
 
     if (!isReady) {
-      return <HQContentView />;
+      return <View style={hqStyles.contentView} />;
     }
 
     const hqFlashMessageComponent: React.SFC<MessageComponentProps> = (props) =>
@@ -66,12 +66,10 @@ export default class App extends React.Component<{}, State> {
     SplashScreen.hide();
 
     return (
-      <HQContentView>
-        <Provider store={this.store}>
-          <AuthCheck />
-        </Provider>
+      <Provider store={this.store}>
+        <AuthCheck />
         <FlashMessage position="top" MessageComponent={hqFlashMessageComponent} />
-      </HQContentView>
+      </Provider>
     );
   }
 }

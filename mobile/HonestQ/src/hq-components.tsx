@@ -15,11 +15,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   } as ViewStyle,
 
-  contentView: {
-    flex: 1,
-    backgroundColor: '#28374B',
-  } as ViewStyle,
-
   header: {
     color: '#AECCF5',
     fontFamily: 'Nexa Bold',
@@ -78,12 +73,6 @@ const styles = StyleSheet.create({
 export class HQCard extends React.Component<ViewProps> {
   public render() {
     return <View {...this.props} style={[styles.card, this.props.style]}>{this.props.children}</View>;
-  }
-}
-
-export class HQContentView extends React.Component<ViewProps> {
-  public render() {
-    return <View {...this.props} style={[styles.contentView, this.props.style]}>{this.props.children}</View>;
   }
 }
 

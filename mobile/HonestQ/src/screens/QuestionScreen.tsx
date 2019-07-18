@@ -8,7 +8,7 @@ import CircleIconCard from '../components/CircleIconCard';
 import { InfoCard } from '../components/InfoCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
-import { HQContentView, HQHeader, HQPrimaryButton, HQText } from '../hq-components';
+import { HQHeader, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -48,7 +48,7 @@ class QuestionScreen extends React.Component<Props> {
     const { questionId } = this.props.navigation.state.params;
 
     if (!question || question.id !== questionId) {
-      return <HQContentView style={hqStyles.center}><ActivityIndicator size="large" /></HQContentView>;
+      return <View style={[hqStyles.contentView, hqStyles.center]}><ActivityIndicator size="large" /></View>;
     }
 
     const { text, context, tags, answers, watching } = question;
@@ -62,7 +62,7 @@ class QuestionScreen extends React.Component<Props> {
     );
 
     return (
-      <HQContentView>
+      <View style={hqStyles.contentView}>
         <FlatList
           ListHeaderComponent={(
             <View style={hqStyles.mh1}>
@@ -109,7 +109,7 @@ class QuestionScreen extends React.Component<Props> {
             </View>
           }
         />
-      </HQContentView>
+      </View>
     );
   }
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import TagsList from '../components/TagsList';
-import { HQContentView } from '../hq-components';
+import hqStyles from '../hq-styles';
 
 interface Props {
   navigation: any;
@@ -22,9 +22,9 @@ export default class HomeScreen extends React.Component<Props> {
 
   public render() {
     return (
-      <HQContentView>
+      <View style={hqStyles.contentView}>
         <TagsList />
-      </HQContentView>
+      </View>
     );
   }
 }
