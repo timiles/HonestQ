@@ -1,6 +1,7 @@
 ﻿import { Reducer } from 'redux';
 import { LoggedInUserModel } from '../server-models';
-import { LogInSuccessAction, LogOutSuccessAction } from './LogIn';
+import { LogInSuccessAction } from './LogIn';
+import { LogOutSuccessAction } from './LogOut';
 import { SignUpSuccessAction } from './SignUp';
 
 export interface AuthState {
