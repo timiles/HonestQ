@@ -8,6 +8,7 @@ import NavigationService from '../NavigationService';
 import { TagFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewTagStore from '../store/NewTag';
+import ThemeService from '../ThemeService';
 
 type Props = NewTagStore.NewTagState
   & typeof NewTagStore.actionCreators;
@@ -47,7 +48,7 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
     const { submitting, submitted, error } = this.props;
 
     return (
-      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Suggest a new tag</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput

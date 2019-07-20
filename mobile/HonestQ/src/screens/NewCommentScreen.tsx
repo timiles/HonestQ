@@ -14,6 +14,7 @@ import NavigationService from '../NavigationService';
 import { AnswerModel, CommentFormModel, CommentModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewCommentStore from '../store/NewComment';
+import ThemeService from '../ThemeService';
 
 export interface NewCommentNavigationProps {
   questionId: number;
@@ -82,7 +83,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
     const { text: commentText, source, agreementRating } = this.state;
 
     return (
-      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         {parentComment ? this.renderParentComment(parentComment) : this.renderAnswer(answer)}
         <HQCard style={[hqStyles.mb1, hqStyles.p1, (parentComment ? hqStyles.ml1 : null)]}>
           <View style={[hqStyles.flexRow, hqStyles.mb1]}>

@@ -10,43 +10,53 @@ import NewCommentScreen from './screens/NewCommentScreen';
 import NewQuestionScreen from './screens/NewQuestionScreen';
 import NewTagScreen from './screens/NewTagScreen';
 import QuestionScreen from './screens/QuestionScreen';
+import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
+import ThemeService from './ThemeService';
 
-const AppStack = createStackNavigator({
-  Answer: { screen: AnswerScreen },
-  Home: { screen: HomeScreen },
-  NewAnswer: { screen: NewAnswerScreen },
-  NewComment: { screen: NewCommentScreen },
-  NewQuestion: { screen: NewQuestionScreen },
-  NewTag: { screen: NewTagScreen },
-  Question: { screen: QuestionScreen },
-  Tag: { screen: TagScreen },
-},
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: '#28374B',
-      },
-      headerTintColor: '#FFFFFF',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
-  });
+export function createMainNavigator() {
 
-export const MainNavigator = createDrawerNavigator(
-  {
-    Home: { screen: AppStack },
+  const backgroundColor = ThemeService.getBackgroundColor();
+  const navTextColor = ThemeService.getNavTextColor();
+
+  const AppStack = createStackNavigator({
+    Answer: { screen: AnswerScreen },
+    Home: { screen: HomeScreen },
+    NewAnswer: { screen: NewAnswerScreen },
+    NewComment: { screen: NewCommentScreen },
+    NewQuestion: { screen: NewQuestionScreen },
+    NewTag: { screen: NewTagScreen },
+    Question: { screen: QuestionScreen },
+    Settings: { screen: SettingsScreen },
+    Tag: { screen: TagScreen },
   },
-  {
-    contentComponent: CustomDrawer,
-    drawerBackgroundColor: '#28374B',
-    contentOptions: {
-      activeTintColor: '#FFFFFF',
-      inactiveTintColor: '#FFFFFF',
-    },
-  });
+    {
+      initialRouteName: 'Home',
+      defaultNavigationOptions: {
+        headerStyle: {
+          backgroundColor,
+        },
+        headerTintColor: navTextColor,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    });
+
+  return createDrawerNavigator({
+    App: { screen: AppStack },
+    Home: { screen: HomeScreen },
+    Settings: { screen: SettingsScreen },
+  },
+    {
+      contentComponent: CustomDrawer,
+      drawerBackgroundColor: backgroundColor,
+      contentOptions: {
+        activeTintColor: navTextColor,
+        inactiveTintColor: navTextColor,
+      },
+    });
+}
 
 export const UnauthNavigator = createStackNavigator(
   {

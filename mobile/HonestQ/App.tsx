@@ -1,16 +1,16 @@
 import { Notifications, SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import React from 'react';
-import { View } from 'react-native';
 import FlashMessage, { DefaultFlash, MessageComponentProps } from 'react-native-flash-message';
 import { Provider } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore, DeepPartial, Store } from 'redux';
 import thunk from 'redux-thunk';
 import AuthCheck from './src/AuthCheck';
 import hqStyles from './src/hq-styles';
-import { localStoreMiddleware, loggedInUserStorageKey } from './src/localStoreMiddleware';
+import { localStoreMiddleware, loggedInUserStorageKey, themeStorageKey } from './src/localStoreMiddleware';
 import { LoggedInUserModel } from './src/server-models';
 import * as StoreModule from './src/store';
+import ThemeService, { Theme } from './src/ThemeService';
 import { handleNotification, registerForPushNotificationsAsync } from './src/utils/notification-utils';
 import { getData } from './src/utils/storage-utils';
 
@@ -35,6 +35,9 @@ export default class App extends React.Component<{}, State> {
 
   public async componentDidMount() {
 
+    const loadThemePromise = new Promise<Theme>(
+      (resolve) => getData(themeStorageKey, resolve));
+
     const loadLoggedInUserPromise = new Promise<LoggedInUserModel>(
       (resolve) => getData(loggedInUserStorageKey, resolve));
 
@@ -44,7 +47,9 @@ export default class App extends React.Component<{}, State> {
     });
 
     const loggedInUser = await loadLoggedInUserPromise;
-    const initialState: DeepPartial<StoreModule.ApplicationState> = { auth: { loggedInUser } };
+    const theme = (await loadThemePromise) || 'light';
+    ThemeService.setTheme(theme);
+    const initialState: DeepPartial<StoreModule.ApplicationState> = { auth: { loggedInUser }, themeSetting: { theme } };
     const allReducers = combineReducers<StoreModule.ApplicationState>(StoreModule.reducers);
     this.store = createStore(allReducers, initialState, applyMiddleware(thunk, localStoreMiddleware));
 
@@ -57,7 +62,9 @@ export default class App extends React.Component<{}, State> {
     const { isReady } = this.state;
 
     if (!isReady) {
-      return <View style={hqStyles.contentView} />;
+      // BEWARE: Cannot use any Theme styles until isReady is true!
+      // TODO: pre-isReady styling
+      return null;
     }
 
     const hqFlashMessageComponent: React.SFC<MessageComponentProps> = (props) =>

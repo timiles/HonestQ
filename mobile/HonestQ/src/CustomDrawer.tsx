@@ -16,7 +16,7 @@ export default class CustomDrawer extends React.Component<DrawerItemsProps> {
         <LoggedInUserContext.Consumer>
           {(user) => <HQText>Hello, {user.username}</HQText>}
         </LoggedInUserContext.Consumer>
-        <DrawerItems {...this.props} items={items} />
+        <DrawerItems {...this.props} items={items.filter((x) => x.key !== 'App')} />
         <LogOutButton />
       </View>
     );

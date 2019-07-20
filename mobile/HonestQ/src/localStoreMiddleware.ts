@@ -1,6 +1,7 @@
 import { Middleware } from 'redux';
 import { removeData, storeData } from './utils/storage-utils';
 
+export const themeStorageKey = '@themeSetting.theme';
 export const loggedInUserStorageKey = '@auth.loggedInUser';
 
 export const localStoreMiddleware: Middleware = (store) => (next) => (action) => {
@@ -12,6 +13,10 @@ export const localStoreMiddleware: Middleware = (store) => (next) => (action) =>
     }
     case 'SIGNUP_SUCCESS': {
       storeData(loggedInUserStorageKey, action.payload);
+      break;
+    }
+    case 'SET_THEME_SUCCESS': {
+      storeData(themeStorageKey, action.payload.theme);
       break;
     }
     case 'LOGOUT_SUCCESS': {

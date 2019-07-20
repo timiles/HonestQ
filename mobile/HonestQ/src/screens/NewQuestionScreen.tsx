@@ -9,6 +9,7 @@ import NavigationService from '../NavigationService';
 import { QuestionFormModel, TagValueModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewQuestionStore from '../store/NewQuestion';
+import ThemeService from '../ThemeService';
 
 export interface NewQuestionNavigationProps {
   initialTagValues?: TagValueModel[];
@@ -49,7 +50,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
     const { text: questionText, context, tags } = this.state;
 
     return (
-      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Ask a question</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQSuperTextInput

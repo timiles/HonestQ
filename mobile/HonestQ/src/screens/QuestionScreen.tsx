@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -8,11 +8,12 @@ import CircleIconCard from '../components/CircleIconCard';
 import { InfoCard } from '../components/InfoCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQPrimaryButton } from '../hq-components';
+import { HQHeader, HQLoadingView, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
+import ThemeService from '../ThemeService';
 import { getItemCountText } from '../utils/string-utils';
 import { NewAnswerNavigationProps } from './NewAnswerScreen';
 
@@ -48,7 +49,7 @@ class QuestionScreen extends React.Component<Props> {
     const { questionId } = this.props.navigation.state.params;
 
     if (!question || question.id !== questionId) {
-      return <View style={[hqStyles.contentView, hqStyles.center]}><ActivityIndicator size="large" /></View>;
+      return <HQLoadingView />;
     }
 
     const { text, context, answers, watching } = question;
@@ -62,7 +63,7 @@ class QuestionScreen extends React.Component<Props> {
     );
 
     return (
-      <View style={hqStyles.contentView}>
+      <View style={ThemeService.getStyles().contentView}>
         <FlatList
           ListHeaderComponent={(
             <View style={hqStyles.mh1}>

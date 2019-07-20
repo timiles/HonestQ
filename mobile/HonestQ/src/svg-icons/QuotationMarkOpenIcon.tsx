@@ -13,7 +13,7 @@ export default class QuotationMarkOpenIcon extends React.Component<Props> {
     const { width, fill } = this.props;
 
     return (
-      <Svg viewBox="51 78 201 180" width={width} height={width} fill={fill}>
+      <Svg viewBox="51 78 201 180" width={width} height={width} fill={fill} opacity={0.4}>
         <Path
           d="M131.085,219.818c-9.06,8.525-20.407,12.785-34.041,12.785c-12.146,0-22.909-5.539-32.283-16.621
           c-9.164-10.438-13.744-21.735-13.744-33.882c0-35.597,24.538-70.001,73.619-103.218c1.746-1.182,6.129-2.222,8.693,0.626l4.731,5.95

@@ -7,11 +7,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
   } as ViewStyle,
 
-  contentView: {
-    flex: 1,
-    backgroundColor: '#28374B',
-  } as ViewStyle,
-
   error: {
     color: 'red',
   } as TextStyle,

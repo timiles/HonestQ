@@ -7,6 +7,7 @@ import NavigationService from '../../NavigationService';
 import { LoggedInUserModel, LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LogInStore from '../../store/LogIn';
+import ThemeService from '../../ThemeService';
 
 type LogInProps = LogInStore.LogInState
   & typeof LogInStore.actionCreators
@@ -31,7 +32,10 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     const { username, password } = this.state;
 
     return (
-      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={[hqStyles.p1, hqStyles.center]}>
+      <KeyboardPaddedScrollView
+        style={ThemeService.getStyles().contentView}
+        contentContainerStyle={[hqStyles.p1, hqStyles.center]}
+      >
         <HQHeader style={hqStyles.mb1}>Log in to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput

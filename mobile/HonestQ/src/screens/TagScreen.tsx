@@ -1,17 +1,18 @@
 import moment from 'moment';
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQLabel, HQPrimaryButton } from '../hq-components';
+import { HQHeader, HQLabel, HQLoadingView, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
+import ThemeService from '../ThemeService';
 import { getItemCountText } from '../utils/string-utils';
 import { NewQuestionNavigationProps } from './NewQuestionScreen';
 
@@ -50,7 +51,7 @@ class TagScreen extends React.Component<Props> {
     const { tagSlug } = this.props.navigation.state.params;
 
     if (!tag || tag.slug !== tagSlug) {
-      return <View style={[hqStyles.contentView, hqStyles.center]}><ActivityIndicator size="large" /></View>;
+      return <HQLoadingView />;
     }
 
     const { description, moreInfoUrl, questions, watching } = tag;
@@ -68,7 +69,7 @@ class TagScreen extends React.Component<Props> {
     );
 
     return (
-      <View style={hqStyles.contentView}>
+      <View style={ThemeService.getStyles().contentView}>
         <FlatList
           ListHeaderComponent={
             <View style={hqStyles.mh1}>

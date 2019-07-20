@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -8,11 +8,12 @@ import CommentCard from '../components/CommentCard';
 import QuotationMarks from '../components/QuotationMarks';
 import ReplyButton from '../components/ReplyButton';
 import WatchButton from '../components/WatchButton';
-import { HQHeader } from '../hq-components';
+import { HQHeader, HQLoadingView } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
+import ThemeService from '../ThemeService';
 import { NewCommentNavigationProps } from './NewCommentScreen';
 
 export interface AnswerNavigationProps {
@@ -49,7 +50,7 @@ class AnswerScreen extends React.Component<Props> {
 
     if (!question || question.id !== questionId) {
       // This could happen if a notification links straight to an Answer
-      return <View style={[hqStyles.contentView, hqStyles.center]}><ActivityIndicator size="large" /></View>;
+      return <HQLoadingView />;
     }
 
     const answer = question.answers.filter((x) => x.id === answerId)[0];
@@ -58,7 +59,7 @@ class AnswerScreen extends React.Component<Props> {
     const { text, comments, watching } = answer;
 
     return (
-      <View style={hqStyles.contentView}>
+      <View style={ThemeService.getStyles().contentView}>
         <FlatList
           ListHeaderComponent={(
             <View style={[hqStyles.mh1]}>

@@ -2,31 +2,10 @@ import React from 'react';
 // tslint:disable-next-line:max-line-length
 import { ActivityIndicator, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
 import hqStyles from './hq-styles';
+import ThemeService from './ThemeService';
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#1F2B3A',
-    // Necessary to enable overriding each individually
-    borderTopColor: '#394D67',
-    borderRightColor: '#394D67',
-    borderBottomColor: '#394D67',
-    borderLeftColor: '#394D67',
-    borderWidth: 1,
-  } as ViewStyle,
-
-  header: {
-    color: '#AECCF5',
-    fontFamily: 'Nexa Bold',
-    fontSize: 20,
-  } as TextStyle,
-
-  label: {
-    color: '#AECCF5',
-    fontFamily: 'Nexa Bold',
-    fontSize: 14,
-  } as TextStyle,
-
   navigationButton: {
     borderColor: '#6c757d',
     borderRadius: 4,
@@ -43,7 +22,6 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: '#007bff',
     borderRadius: 4,
-    borderWidth: 1,
     flexDirection: 'row',
     height: 45,
     padding: 12,
@@ -53,38 +31,56 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlignVertical: 'center',
   } as TextStyle,
-
-  text: {
-    color: '#AECCF5',
-    fontFamily: 'lineto-circular-book',
-    fontSize: 14,
-  } as TextStyle,
-
-  textInput: {
-    borderColor: '#AECCF5',
-    borderRadius: 30,
-    borderWidth: 1,
-    padding: 10,
-  } as TextStyle,
 });
 
 // tslint:disable:max-classes-per-file
 
+export class HQLoadingView extends React.Component {
+  public render() {
+    return (
+      <View style={[ThemeService.getStyles().contentView, hqStyles.center]}>
+        <ActivityIndicator size="large" color="#FF5A00" />
+      </View>
+    );
+  }
+}
+
 export class HQCard extends React.Component<ViewProps> {
   public render() {
-    return <View {...this.props} style={[styles.card, this.props.style]}>{this.props.children}</View>;
+    return (
+      <View
+        {...this.props}
+        style={[ThemeService.getStyles().card, this.props.style]}
+      >
+        {this.props.children}
+      </View>
+    );
   }
 }
 
 export class HQHeader extends React.Component<ViewProps> {
   public render() {
-    return <Text {...this.props} style={[styles.header, this.props.style]}>{this.props.children}</Text>;
+    return (
+      <Text
+        {...this.props}
+        style={[ThemeService.getStyles().header, this.props.style]}
+      >
+        {this.props.children}
+      </Text>
+    );
   }
 }
 
 export class HQLabel extends React.Component<TextProps> {
   public render() {
-    return <Text {...this.props} style={[styles.label, this.props.style]}>{this.props.children}</Text>;
+    return (
+      <Text
+        {...this.props}
+        style={[ThemeService.getStyles().label, this.props.style]}
+      >
+        {this.props.children}
+      </Text>
+    );
   }
 }
 
@@ -166,18 +162,19 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
         submitted ? { borderColor: error ? 'red' : 'green' } : null;
 
     const remainingCharacterCount = maxLength - (value ? value.length : 0);
+    const themeStyles = ThemeService.getStyles();
 
     return (
       <View style={containerStyle}>
         {helpText && <HQText style={[hqStyles.small, hqStyles.ml1]}>{helpText}</HQText>}
         <TextInput
-          placeholderTextColor="#AECCF5"
+          placeholderTextColor={ThemeService.getTextColor()}
           multiline={true}
           numberOfLines={4}
           textAlignVertical="top"
           {...this.props}
           maxLength={undefined} // Must be after {...this.props} to override
-          style={[styles.text, styles.textInput, this.props.style, errorStyle, { width: widthHack }]}
+          style={[themeStyles.text, themeStyles.textInput, this.props.style, errorStyle, { width: widthHack }]}
         >
           {this.props.children}
         </TextInput>
@@ -194,7 +191,7 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
 
 export class HQText extends React.Component<TextProps> {
   public render() {
-    return <Text {...this.props} style={[styles.text, this.props.style]}>{this.props.children}</Text>;
+    return <Text {...this.props} style={[ThemeService.getStyles().text, this.props.style]}>{this.props.children}</Text>;
   }
 }
 
@@ -213,9 +210,9 @@ export class HQTextInput extends React.Component<TextInputProps & HQTextInputPro
       <View style={containerStyle}>
         {helpText && <HQText style={[hqStyles.small, hqStyles.ml1]}>{helpText}</HQText>}
         <TextInput
-          placeholderTextColor="#AECCF5"
+          placeholderTextColor={ThemeService.getTextColor()}
           {...this.props}
-          style={[styles.text, styles.textInput, this.props.style, errorStyle]}
+          style={[ThemeService.getStyles().text, ThemeService.getStyles().textInput, this.props.style, errorStyle]}
         >
           {this.props.children}
         </TextInput>

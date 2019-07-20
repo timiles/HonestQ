@@ -8,6 +8,7 @@ import NavigationService from '../NavigationService';
 import { AnswerFormModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as NewAnswerStore from '../store/NewAnswer';
+import ThemeService from '../ThemeService';
 
 export interface NewAnswerNavigationProps {
   questionId: number;
@@ -37,7 +38,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
     const { text: answerText } = this.state;
 
     return (
-      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={hqStyles.p1}>
+      <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         <HQHeader style={hqStyles.mb1}>Got an answer?</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQSuperTextInput

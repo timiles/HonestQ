@@ -7,6 +7,7 @@ import NavigationService from '../../NavigationService';
 import { SignUpFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as SignUpStore from '../../store/SignUp';
+import ThemeService from '../../ThemeService';
 
 type Props = SignUpStore.SignUpState
   & typeof SignUpStore.actionCreators;
@@ -29,7 +30,10 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
     const { username, password, confirmPassword, email } = this.state;
 
     return (
-      <KeyboardPaddedScrollView style={hqStyles.contentView} contentContainerStyle={[hqStyles.p1, hqStyles.center]}>
+      <KeyboardPaddedScrollView
+        style={ThemeService.getStyles().contentView}
+        contentContainerStyle={[hqStyles.p1, hqStyles.center]}
+      >
         <HQHeader style={hqStyles.mb1}>Sign up to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
