@@ -117,7 +117,7 @@ interface HQSubmitButtonProps {
 }
 export class HQSubmitButton extends React.Component<TouchableOpacityProps & HQSubmitButtonProps> {
   public render() {
-    const { title, submitting = false, activityIndicatorColor } = this.props;
+    const { title, submitting = false, activityIndicatorColor = '#fff' } = this.props;
 
     return (
       <TouchableOpacity {...this.props} style={[styles.submitButton, this.props.style]}>
