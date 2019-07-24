@@ -2,6 +2,7 @@
 import { AppThunkAction } from '.';
 import { NotificationsListModel } from '../server-models';
 import { getJson, postJson } from '../utils/http-utils';
+import { LogOutSuccessAction } from './Login';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -35,6 +36,7 @@ type KnownAction =
     | GetNotificationsListFailureAction
     | MarkNotificationAsSeenSuccessAction
     | MarkAllNotificationsAsSeenSuccessAction
+    | LogOutSuccessAction
     ;
 
 // ----------------
@@ -151,6 +153,8 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
                     notificationsList: { ...state.notificationsList, notifications: notificationsNext },
                 };
             }
+        case 'LOGOUT_SUCCESS':
+            return defaultState;
 
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
