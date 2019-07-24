@@ -101,8 +101,7 @@ class NotificationList extends React.Component<Props> {
                                     <WatchControlDemo />
                                 </p>
                                 <p>
-                                    Try watching some Tags, Questions, Answers, or Comments
-                                    to be notified of new posts under each.
+                                    Try watching some Tags, Questions or Answers to be notified of new posts under each.
                                 </p>
                             </div>
                         }
