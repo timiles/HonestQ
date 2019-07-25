@@ -35,11 +35,19 @@ const styles = StyleSheet.create({
 
 // tslint:disable:max-classes-per-file
 
+export class HQActivityIndicator extends React.Component {
+  public render() {
+    return (
+      <ActivityIndicator size="large" color="#FF5A00" />
+    );
+  }
+}
+
 export class HQLoadingView extends React.Component {
   public render() {
     return (
       <View style={[ThemeService.getStyles().contentView, hqStyles.center]}>
-        <ActivityIndicator size="large" color="#FF5A00" />
+        <HQActivityIndicator />
       </View>
     );
   }

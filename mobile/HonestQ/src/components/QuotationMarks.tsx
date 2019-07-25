@@ -5,31 +5,44 @@ import QuotationMarkCloseIcon from '../svg-icons/QuotationMarkCloseIcon';
 import QuotationMarkOpenIcon from '../svg-icons/QuotationMarkOpenIcon';
 import ThemeService from '../ThemeService';
 
+type Size = 'xsmall' | 'small' | 'large';
 interface Props {
-  size: 'small' | 'large';
+  size: Size;
 }
 
 export default class QuotationMarks extends React.Component<Props> {
 
   public render() {
     const { size } = this.props;
-    const width = (size === 'small') ? 16 : 20;
+    const width = this.switchSize(size);
     const fill = ThemeService.getTextColor();
 
     return (
       <View style={hqStyles.flexRow}>
         <QuotationMarkOpenIcon width={width} fill={fill} />
-        <View style={styles.childrenContainer}>
+        <View style={size === 'xsmall' ? styles.xsmallChildrenContainer : styles.childrenContainer}>
           {this.props.children}
         </View>
         <QuotationMarkCloseIcon width={width} fill={fill} />
       </View>
     );
   }
+
+  private switchSize(size: Size) {
+    switch (size) {
+      case 'xsmall': return 10;
+      case 'small': return 16;
+      case 'large': return 20;
+    }
+  }
 }
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
+  xsmallChildrenContainer: {
+    paddingHorizontal: 4,
+  } as ViewStyle,
+
   childrenContainer: {
     paddingHorizontal: 8,
   } as ViewStyle,

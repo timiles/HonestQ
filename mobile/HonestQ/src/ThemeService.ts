@@ -30,6 +30,10 @@ export default class ThemeService {
     return this.theme === 'dark' ? '#28374B' : '#EDF6FB';
   }
 
+  public static getBorderColor() {
+    return this.theme === 'dark' ? '#394D67' : '#C9D4DD';
+  }
+
   public static getNavTextColor() {
     return this.theme === 'dark' ? '#FFF' : '#00000080';
   }
@@ -43,7 +47,7 @@ export default class ThemeService {
 
   private static createStyles(): Styles {
     const cardBackgroundColor = this.theme === 'dark' ? '#1F2B3A' : '#FFFFFF';
-    const cardBorderColor = this.theme === 'dark' ? '#394D67' : '#C9D4DD';
+    const cardBorderColor = this.getBorderColor();
     const textColor = this.getTextColor();
 
     // tslint:disable:no-object-literal-type-assertion

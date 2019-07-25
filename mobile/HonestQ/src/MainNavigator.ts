@@ -9,6 +9,7 @@ import NewAnswerScreen from './screens/NewAnswerScreen';
 import NewCommentScreen from './screens/NewCommentScreen';
 import NewQuestionScreen from './screens/NewQuestionScreen';
 import NewTagScreen from './screens/NewTagScreen';
+import Notifications from './screens/NotificationsScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
@@ -26,6 +27,7 @@ export function createMainNavigator() {
     NewComment: { screen: NewCommentScreen },
     NewQuestion: { screen: NewQuestionScreen },
     NewTag: { screen: NewTagScreen },
+    Notifications: { screen: Notifications },
     Question: { screen: QuestionScreen },
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
@@ -46,6 +48,7 @@ export function createMainNavigator() {
   return createDrawerNavigator({
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
+    Notifications: { screen: Notifications },
     Settings: { screen: SettingsScreen },
   },
     {

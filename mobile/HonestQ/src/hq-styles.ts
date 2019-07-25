@@ -25,6 +25,10 @@ export default StyleSheet.create({
     width: 25,
   } as ViewStyle,
 
+  m1: {
+    margin: 10,
+  } as ViewStyle,
+
   mb1: {
     marginBottom: 10,
   } as ViewStyle,
@@ -41,8 +45,20 @@ export default StyleSheet.create({
     marginRight: 10,
   } as ViewStyle,
 
+  mt1: {
+    marginTop: 10,
+  } as ViewStyle,
+
+  mt2: {
+    marginTop: 20,
+  } as ViewStyle,
+
   mt3: {
     marginTop: 30,
+  } as ViewStyle,
+
+  mv1: {
+    marginVertical: 10,
   } as ViewStyle,
 
   p1: {
@@ -53,6 +69,10 @@ export default StyleSheet.create({
     paddingRight: 10,
   } as ViewStyle,
 
+  pv1: {
+    paddingVertical: 10,
+  } as ViewStyle,
+
   primaryButtonText: {
     color: '#fff',
     textAlignVertical: 'center',
@@ -60,6 +80,10 @@ export default StyleSheet.create({
 
   small: {
     fontSize: 11,
+  } as TextStyle,
+
+  textAlignCenter: {
+    textAlign: 'center',
   } as TextStyle,
 
   vAlignCenter: {
