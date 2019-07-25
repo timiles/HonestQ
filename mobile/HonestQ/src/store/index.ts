@@ -11,6 +11,7 @@ import * as SignUp from './SignUp';
 import * as Tag from './Tag';
 import * as Tags from './Tags';
 import * as ThemeSetting from './ThemeSetting';
+import * as WatchingTags from './WatchingTags';
 
 // The top-level state object
 export interface ApplicationState {
@@ -27,6 +28,7 @@ export interface ApplicationState {
   tag: Tag.TagState;
   tags: Tags.ListState;
   themeSetting: ThemeSetting.ThemeSettingState;
+  watchingsTags: WatchingTags.State;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -46,6 +48,7 @@ export const reducers = {
   tag: Tag.reducer,
   tags: Tags.reducer,
   themeSetting: ThemeSetting.reducer,
+  watchingsTags: WatchingTags.reducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

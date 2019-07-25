@@ -11,6 +11,10 @@ export default StyleSheet.create({
     color: 'red',
   } as TextStyle,
 
+  flexGrow: {
+    flexGrow: 1,
+  } as ViewStyle,
+
   flexRow: {
     flexDirection: 'row',
   } as ViewStyle,

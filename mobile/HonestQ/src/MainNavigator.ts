@@ -13,6 +13,7 @@ import Notifications from './screens/NotificationsScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
+import WatchingTagsScreen from './screens/WatchingTagsScreen';
 import ThemeService from './ThemeService';
 
 export function createMainNavigator() {
@@ -31,6 +32,7 @@ export function createMainNavigator() {
     Question: { screen: QuestionScreen },
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
+    WatchingTags: { screen: WatchingTagsScreen },
   },
     {
       initialRouteName: 'Home',
@@ -49,6 +51,7 @@ export function createMainNavigator() {
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
+    WatchingTags: { screen: WatchingTagsScreen },
     Settings: { screen: SettingsScreen },
   },
     {
