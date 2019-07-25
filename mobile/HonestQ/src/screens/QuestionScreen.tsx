@@ -117,7 +117,7 @@ class QuestionScreen extends React.Component<Props> {
 
   private handleWatch(on: boolean): void {
     const { questionId } = this.props.navigation.state.params;
-    this.props.updateWatch(on, questionId);
+    this.props.updateWatchQuestion(on, questionId);
   }
 }
 

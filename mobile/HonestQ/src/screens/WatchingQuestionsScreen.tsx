@@ -14,7 +14,7 @@ import { QuestionNavigationProps } from './QuestionScreen';
 
 type Props = WatchingQuestionsStore.State
   & typeof WatchingQuestionsStore.actionCreators
-  & { updateWatch: (on: boolean, questionId: number) => any };
+  & { updateWatchQuestion: (on: boolean, questionId: number) => any };
 
 class WatchingQuestionsScreen extends React.Component<Props> {
 
@@ -64,10 +64,13 @@ class WatchingQuestionsScreen extends React.Component<Props> {
   }
 
   private handleWatch(on: boolean, questionId: number): void {
-    this.props.updateWatch(on, questionId);
+    this.props.updateWatchQuestion(on, questionId);
   }
 }
 
 const mapStateToProps = (state: ApplicationState) => (state.watchingsQuestions);
-const actions = { ...WatchingQuestionsStore.actionCreators, updateWatch: QuestionStore.actionCreators.updateWatch };
+const actions = {
+  ...WatchingQuestionsStore.actionCreators,
+  updateWatchQuestion: QuestionStore.actionCreators.updateWatchQuestion,
+};
 export default connect(mapStateToProps, actions)(WatchingQuestionsScreen);

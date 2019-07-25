@@ -3,7 +3,7 @@ import { AppThunkAction } from '.';
 import { QuestionListItemModel, QuestionsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 import { LogOutSuccessAction } from './LogOut';
-import { UpdateWatchSuccessAction } from './Question';
+import { UpdateWatchQuestionSuccessAction } from './Question';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -37,7 +37,7 @@ type KnownAction =
   | GetWatchingQuestionsListRequestAction
   | GetWatchingQuestionsListSuccessAction
   | GetWatchingQuestionsListFailureAction
-  | UpdateWatchSuccessAction
+  | UpdateWatchQuestionSuccessAction
   | LogOutSuccessAction;
 
 // ----------------
@@ -80,9 +80,8 @@ export const reducer: Reducer<State> = (state: State, action: KnownAction) => {
       return {
         questionsList: action.payload.questions.map((x) => ({ ...x, watching: true })),
       };
-    case 'UPDATE_WATCH_SUCCESS': {
-      // If answerId is set, we're unwatching an Answer, so ignore
-      if (action.payload.answerId || !state.questionsList) {
+    case 'UPDATE_WATCH_QUESTION_SUCCESS': {
+      if (!state.questionsList) {
         return state;
       }
       // Slice for immutability

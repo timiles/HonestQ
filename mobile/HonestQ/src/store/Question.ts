@@ -40,11 +40,18 @@ interface RemoveReactionSuccessAction {
   type: 'REMOVE_REACTION_SUCCESS';
   payload: { reaction: ReactionModel; };
 }
-export interface UpdateWatchSuccessAction {
-  type: 'UPDATE_WATCH_SUCCESS';
+export interface UpdateWatchQuestionSuccessAction {
+  type: 'UPDATE_WATCH_QUESTION_SUCCESS';
   payload: {
     questionId: number;
-    answerId?: number;
+    response: WatchResponseModel;
+  };
+}
+export interface UpdateWatchAnswerSuccessAction {
+  type: 'UPDATE_WATCH_ANSWER_SUCCESS';
+  payload: {
+    questionId: number;
+    answerId: number;
     response: WatchResponseModel;
   };
 }
@@ -60,7 +67,8 @@ type KnownAction =
   | NewCommentFormSuccessAction
   | AddReactionSuccessAction
   | RemoveReactionSuccessAction
-  | UpdateWatchSuccessAction
+  | UpdateWatchQuestionSuccessAction
+  | UpdateWatchAnswerSuccessAction
   ;
 
 // ----------------
@@ -111,19 +119,35 @@ export const actionCreators = {
           });
       })();
     },
-  updateWatch: (on: boolean, questionId: number, answerId?: number):
+  updateWatchQuestion: (on: boolean, questionId: number):
     AppThunkAction<KnownAction> =>
     (dispatch, getState) => {
       return (async () => {
-
-        const url = answerId ? `/api/questions/${questionId}/answers/${answerId}/watch` :
-          `/api/questions/${questionId}/watch`;
-
+        const url = `/api/questions/${questionId}/watch`;
         const method = on ? 'POST' : 'DELETE';
         fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
           .then((watchResponse) => {
             dispatch({
-              type: 'UPDATE_WATCH_SUCCESS',
+              type: 'UPDATE_WATCH_QUESTION_SUCCESS',
+              payload: { questionId, response: watchResponse },
+            });
+          })
+          .catch((reason) => {
+            // TODO: Toast?
+          });
+      })();
+    },
+  updateWatchAnswer: (on: boolean, questionId: number, answerId: number):
+    AppThunkAction<KnownAction> =>
+    (dispatch, getState) => {
+      return (async () => {
+
+        const url = `/api/questions/${questionId}/answers/${answerId}/watch`;
+        const method = on ? 'POST' : 'DELETE';
+        fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
+          .then((watchResponse) => {
+            dispatch({
+              type: 'UPDATE_WATCH_ANSWER_SUCCESS',
               payload: { questionId, answerId, response: watchResponse },
             });
           })
@@ -235,19 +259,20 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
         question: questionNext,
       };
     }
-    case 'UPDATE_WATCH_SUCCESS': {
+    case 'UPDATE_WATCH_QUESTION_SUCCESS': {
+      const { response } = action.payload;
+      const questionNext = { ...state.question!, watching: response.watching };
+      return {
+        question: questionNext,
+      };
+    }
+    case 'UPDATE_WATCH_ANSWER_SUCCESS': {
       const { answerId, response } = action.payload;
       const questionModel = state.question!;
       // Slice for immutability
-      const answersNext = questionModel.answers;
+      const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === answerId)[0];
-
-      if (answerId) {
-        answerModel.watching = response.watching;
-      } else {
-        questionModel.watching = response.watching;
-      }
-
+      answerModel.watching = response.watching;
       const questionNext = { ...questionModel, answers: answersNext };
       return {
         question: questionNext,
