@@ -43,6 +43,7 @@ interface RemoveReactionSuccessAction {
 export interface UpdateWatchSuccessAction {
   type: 'UPDATE_WATCH_SUCCESS';
   payload: {
+    questionId: number;
     answerId?: number;
     response: WatchResponseModel;
   };
@@ -123,7 +124,7 @@ export const actionCreators = {
           .then((watchResponse) => {
             dispatch({
               type: 'UPDATE_WATCH_SUCCESS',
-              payload: { answerId, response: watchResponse },
+              payload: { questionId, answerId, response: watchResponse },
             });
           })
           .catch((reason) => {

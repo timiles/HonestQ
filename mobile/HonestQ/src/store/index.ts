@@ -11,6 +11,7 @@ import * as SignUp from './SignUp';
 import * as Tag from './Tag';
 import * as Tags from './Tags';
 import * as ThemeSetting from './ThemeSetting';
+import * as WatchingQuestions from './WatchingQuestions';
 import * as WatchingTags from './WatchingTags';
 
 // The top-level state object
@@ -28,6 +29,7 @@ export interface ApplicationState {
   tag: Tag.TagState;
   tags: Tags.ListState;
   themeSetting: ThemeSetting.ThemeSettingState;
+  watchingsQuestions: WatchingQuestions.State;
   watchingsTags: WatchingTags.State;
 }
 
@@ -48,6 +50,7 @@ export const reducers = {
   tag: Tag.reducer,
   tags: Tags.reducer,
   themeSetting: ThemeSetting.reducer,
+  watchingsQuestions: WatchingQuestions.reducer,
   watchingsTags: WatchingTags.reducer,
 };
 
