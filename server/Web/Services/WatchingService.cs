@@ -3,13 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Pobs.Domain;
 using Pobs.Web.Models.Questions;
-using Pobs.Web.Models.Tags;
 
 namespace Pobs.Web.Services
 {
     public interface IWatchingService
     {
-        Task<TagsListModel> GetTags(int loggedInUserId);
         Task<QuestionsListModel> GetQuestions(int loggedInUserId);
         Task<AnswersListModel> GetAnswers(int loggedInUserId);
     }
@@ -21,12 +19,6 @@ namespace Pobs.Web.Services
         public WatchingService(HonestQDbContext context)
         {
             _context = context;
-        }
-
-        public async Task<TagsListModel> GetTags(int loggedInUserId)
-        {
-            var tags = await _context.Tags.Where(x => x.Watches.Any(y => y.UserId == loggedInUserId)).ToListAsync();
-            return new TagsListModel(tags);
         }
 
         public async Task<QuestionsListModel> GetQuestions(int loggedInUserId)

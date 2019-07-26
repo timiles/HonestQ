@@ -16,12 +16,6 @@ namespace Pobs.Web.Controllers
             this.watchingService = watchingService;
         }
 
-        [HttpGet, Route("tags")]
-        public async Task<IActionResult> GetTags()
-        {
-            return Ok(await this.watchingService.GetTags(User.Identity.ParseUserId()));
-        }
-
         [HttpGet, Route("questions")]
         public async Task<IActionResult> GetQuestions()
         {
