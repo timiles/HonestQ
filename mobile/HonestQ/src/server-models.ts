@@ -74,7 +74,7 @@ export interface NotificationsListModel {
 }
 
 export interface PushTokenModel {
-  pushToken: string;
+  token: string;
 }
 
 export interface WatchResponseModel {

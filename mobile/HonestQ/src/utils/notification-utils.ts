@@ -19,8 +19,8 @@ export async function registerForPushNotificationsAsync(loggedInUser?: LoggedInU
   }
 
   // Get the token that uniquely identifies this device
-  const pushToken = await Notifications.getExpoPushTokenAsync();
-  const payload: PushTokenModel = { pushToken };
+  const token = await Notifications.getExpoPushTokenAsync();
+  const payload: PushTokenModel = { token };
 
   return postJson('/api/notifications/pushtoken', payload, loggedInUser)
     .catch((reason: string) => {
