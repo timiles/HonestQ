@@ -1,4 +1,4 @@
-import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
+import { createDrawerNavigator, createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
 import CustomDrawer from './CustomDrawer';
 import LogInScreen from './screens/Account/LogInScreen';
 import SignUpScreen from './screens/Account/SignUpScreen';
@@ -23,6 +23,23 @@ export function createMainNavigator() {
   const backgroundColor = ThemeService.getBackgroundColor();
   const navTextColor = ThemeService.getNavTextColor();
 
+  const WatchingTabNavigator = createMaterialTopTabNavigator({
+    WatchingTags: { screen: WatchingTagsScreen },
+    WatchingQuestions: { screen: WatchingQuestionsScreen },
+    WatchingAnswers: { screen: WatchingAnswersScreen },
+  },
+    {
+      navigationOptions: {
+        title: 'Watching',
+      },
+      tabBarOptions: {
+        indicatorStyle: {
+          backgroundColor: '#FF5A00',
+        },
+        upperCaseLabel: false,
+      },
+    });
+
   const AppStack = createStackNavigator({
     Answer: { screen: AnswerScreen },
     Home: { screen: HomeScreen },
@@ -34,9 +51,7 @@ export function createMainNavigator() {
     Question: { screen: QuestionScreen },
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
-    WatchingAnswers: { screen: WatchingAnswersScreen },
-    WatchingQuestions: { screen: WatchingQuestionsScreen },
-    WatchingTags: { screen: WatchingTagsScreen },
+    Watching: { screen: WatchingTabNavigator },
   },
     {
       initialRouteName: 'Home',
@@ -55,9 +70,7 @@ export function createMainNavigator() {
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
-    WatchingTags: { screen: WatchingTagsScreen },
-    WatchingQuestions: { screen: WatchingQuestionsScreen },
-    WatchingAnswers: { screen: WatchingAnswersScreen },
+    Watching: { screen: WatchingTabNavigator },
     Settings: { screen: SettingsScreen },
   },
     {

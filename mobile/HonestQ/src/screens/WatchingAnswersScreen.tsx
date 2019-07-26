@@ -19,7 +19,7 @@ type Props = WatchingAnswersStore.State
 class WatchingAnswersScreen extends React.Component<Props> {
 
   protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Watching Answers',
+    title: 'Answers',
   };
 
   constructor(props: Props) {
