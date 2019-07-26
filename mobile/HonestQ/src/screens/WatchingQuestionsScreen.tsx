@@ -46,10 +46,10 @@ class WatchingQuestionsScreen extends React.Component<Props> {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) =>
             <HQNavigationButton
-              style={[hqStyles.flexRow, hqStyles.mh1, hqStyles.mb1]}
+              style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
               onPress={() => this.navigateToQuestion(item.id)}
             >
-              <HQHeader style={[hqStyles.flexGrow, hqStyles.vAlignCenter]}>{item.text}</HQHeader>
+              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.text}</HQHeader>
               <WatchButton onWatch={() => this.handleWatch(!item.watching, item.id)} watching={item.watching} />
             </HQNavigationButton>
           }

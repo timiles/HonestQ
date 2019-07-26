@@ -46,10 +46,10 @@ class WatchingTagsScreen extends React.Component<Props> {
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
             <HQNavigationButton
-              style={[hqStyles.flexRow, hqStyles.mh1, hqStyles.mb1]}
+              style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
               onPress={() => this.navigateToTag(item.slug, item.name)}
             >
-              <HQHeader style={[hqStyles.flexGrow, hqStyles.vAlignCenter]}>{item.name}</HQHeader>
+              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.name}</HQHeader>
               <WatchButton onWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
             </HQNavigationButton>
           }
