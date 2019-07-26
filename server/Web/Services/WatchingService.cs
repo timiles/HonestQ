@@ -39,6 +39,7 @@ namespace Pobs.Web.Services
         {
             var answers = await _context.Questions
                 .SelectMany(x => x.Answers)
+                .Include(x => x.Question)
                 .Where(x => x.Watches.Any(y => y.UserId == loggedInUserId)).ToListAsync();
             return new AnswersListModel(answers);
         }

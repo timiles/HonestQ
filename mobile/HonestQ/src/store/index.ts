@@ -11,6 +11,7 @@ import * as SignUp from './SignUp';
 import * as Tag from './Tag';
 import * as Tags from './Tags';
 import * as ThemeSetting from './ThemeSetting';
+import * as WatchingAnswers from './WatchingAnswers';
 import * as WatchingQuestions from './WatchingQuestions';
 import * as WatchingTags from './WatchingTags';
 
@@ -29,6 +30,7 @@ export interface ApplicationState {
   tag: Tag.TagState;
   tags: Tags.ListState;
   themeSetting: ThemeSetting.ThemeSettingState;
+  watchingsAnswers: WatchingAnswers.State;
   watchingsQuestions: WatchingQuestions.State;
   watchingsTags: WatchingTags.State;
 }
@@ -50,6 +52,7 @@ export const reducers = {
   tag: Tag.reducer,
   tags: Tags.reducer,
   themeSetting: ThemeSetting.reducer,
+  watchingsAnswers: WatchingAnswers.reducer,
   watchingsQuestions: WatchingQuestions.reducer,
   watchingsTags: WatchingTags.reducer,
 };

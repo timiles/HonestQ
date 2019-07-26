@@ -107,6 +107,8 @@ export interface AnswerListItemModel {
     id: number;
     slug: string;
     text: string;
+    questionId: number;
+    questionText: string;
 }
 
 export interface AnswerModel {

@@ -103,6 +103,14 @@ export interface AnswerFormModel {
   text: string;
 }
 
+export interface AnswerListItemModel {
+  id: number;
+  slug: string;
+  text: string;
+  questionId: number;
+  questionText: string;
+}
+
 export interface AnswerModel {
   id: number;
   text: string;
@@ -111,6 +119,11 @@ export interface AnswerModel {
   upvotes: number;
   upvotedByMe: boolean;
   watching: boolean;
+}
+
+export interface AnswersListModel {
+  answers: AnswerListItemModel[];
+  lastTimestamp: number;
 }
 
 export interface CommentFormModel {

@@ -13,6 +13,7 @@ import Notifications from './screens/NotificationsScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
+import WatchingAnswersScreen from './screens/WatchingAnswersScreen';
 import WatchingQuestionsScreen from './screens/WatchingQuestionsScreen';
 import WatchingTagsScreen from './screens/WatchingTagsScreen';
 import ThemeService from './ThemeService';
@@ -33,6 +34,7 @@ export function createMainNavigator() {
     Question: { screen: QuestionScreen },
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
+    WatchingAnswers: { screen: WatchingAnswersScreen },
     WatchingQuestions: { screen: WatchingQuestionsScreen },
     WatchingTags: { screen: WatchingTagsScreen },
   },
@@ -55,6 +57,7 @@ export function createMainNavigator() {
     Notifications: { screen: Notifications },
     WatchingTags: { screen: WatchingTagsScreen },
     WatchingQuestions: { screen: WatchingQuestionsScreen },
+    WatchingAnswers: { screen: WatchingAnswersScreen },
     Settings: { screen: SettingsScreen },
   },
     {

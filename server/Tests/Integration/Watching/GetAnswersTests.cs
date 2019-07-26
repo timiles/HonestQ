@@ -15,6 +15,7 @@ namespace Pobs.Tests.Integration.Watching
         private readonly string _url = "/api/watching/answers";
 
         private readonly int _userId;
+        private readonly Question _question;
         private readonly Answer _watchingAnswer;
         private readonly Answer _notWatchingAnswer;
 
@@ -23,7 +24,9 @@ namespace Pobs.Tests.Integration.Watching
             var user = DataHelpers.CreateUser();
             _userId = user.Id;
 
-            var answers = DataHelpers.CreateQuestions(user, 1, user, 2).Single().Answers.ToArray();
+            var question = DataHelpers.CreateQuestions(user, 1, user, 2).Single();
+            _question = question;
+            var answers = question.Answers.ToArray();
             _watchingAnswer = answers[0];
             DataHelpers.CreateWatch(user.Id, _watchingAnswer);
 
@@ -56,8 +59,11 @@ namespace Pobs.Tests.Integration.Watching
                 var responseModel = JsonConvert.DeserializeObject<AnswersListModel>(responseContent);
 
                 Assert.Single(responseModel.Answers);
-                Assert.Equal(this._watchingAnswer.Id, responseModel.Answers[0].Id);
-                Assert.Equal(this._watchingAnswer.Text, responseModel.Answers[0].Text);
+                var responseAnswer = responseModel.Answers[0];
+                Assert.Equal(this._watchingAnswer.Id, responseAnswer.Id);
+                Assert.Equal(this._watchingAnswer.Text, responseAnswer.Text);
+                Assert.Equal(this._question.Id, responseAnswer.QuestionId);
+                Assert.Equal(this._question.Text, responseAnswer.QuestionText);
             }
         }
 

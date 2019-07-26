@@ -260,6 +260,10 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
       };
     }
     case 'UPDATE_WATCH_QUESTION_SUCCESS': {
+      // We could be updating from WatchingAnswersScreen
+      if (!state.question) {
+        return state;
+      }
       const { response } = action.payload;
       const questionNext = { ...state.question!, watching: response.watching };
       return {
@@ -267,12 +271,18 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
       };
     }
     case 'UPDATE_WATCH_ANSWER_SUCCESS': {
+      // We could be updating from WatchingAnswersScreen
+      if (!state.question) {
+        return state;
+      }
       const { answerId, response } = action.payload;
       const questionModel = state.question!;
       // Slice for immutability
       const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === answerId)[0];
-      answerModel.watching = response.watching;
+      if (answerModel) {
+        answerModel.watching = response.watching;
+      }
       const questionNext = { ...questionModel, answers: answersNext };
       return {
         question: questionNext,

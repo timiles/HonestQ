@@ -11,6 +11,8 @@ namespace Pobs.Web.Models.Questions
             this.Id = answer.Id;
             this.Slug = answer.Slug;
             this.Text = answer.Text;
+            this.QuestionId = answer.Question.Id;
+            this.QuestionText = answer.Question.Text;
         }
 
         public int Id { get; set; }
@@ -20,5 +22,10 @@ namespace Pobs.Web.Models.Questions
 
         [Required]
         public string Text { get; set; }
+
+        public int QuestionId { get; set; }
+
+        [Required]
+        public string QuestionText { get; set; }
     }
 }

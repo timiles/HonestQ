@@ -24,6 +24,15 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
   } as ViewStyle,
 
+  flexRowSpaceBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  } as ViewStyle,
+
+  flexShrink: {
+    flexShrink: 1,
+  } as ViewStyle,
+
   icon: {
     alignItems: 'center',
     width: 25,
