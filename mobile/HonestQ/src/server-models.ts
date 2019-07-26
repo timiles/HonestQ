@@ -240,6 +240,7 @@ export interface TagModel {
 export interface TagListItemModel {
   slug: string;
   name: string;
+  watching: boolean;
 }
 
 export interface TagsListModel {

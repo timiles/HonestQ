@@ -28,7 +28,8 @@ namespace Pobs.Web.Controllers
                 return this.Forbid();
             }
 
-            var tagsListModel = await _tagService.GetAllTags(isApproved);
+            var loggedInUserId = User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?;
+            var tagsListModel = await _tagService.GetAllTags(isApproved, loggedInUserId);
             return Ok(tagsListModel);
         }
 

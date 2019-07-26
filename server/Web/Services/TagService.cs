@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace Pobs.Web.Services
 {
     public interface ITagService
     {
-        Task<TagsListModel> GetAllTags(bool isApproved);
+        Task<TagsListModel> GetAllTags(bool isApproved, int? loggedInUserId = null);
         Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId);
         Task<AdminTagModel> UpdateTag(string tagSlug, string newSlug, string name, string description, string moreInfoUrl, bool isApproved);
         Task<TagModel> GetTag(string tagSlug, int? loggedInUserId, bool isAdmin);
@@ -28,10 +29,17 @@ namespace Pobs.Web.Services
             _context = context;
         }
 
-        public async Task<TagsListModel> GetAllTags(bool isApproved)
+        public async Task<TagsListModel> GetAllTags(bool isApproved, int? loggedInUserId = null)
         {
             var tags = await _context.Tags.Where(x => x.IsApproved == isApproved).ToListAsync();
-            return new TagsListModel(tags);
+            List<int> watchingTagIds = null;
+            if (loggedInUserId.HasValue)
+            {
+                watchingTagIds = await _context.Tags
+                    .Where(x => x.Watches.Any(y => y.UserId == loggedInUserId))
+                    .Select(x => x.Id).ToListAsync();
+            }
+            return new TagsListModel(tags, watchingTagIds);
         }
 
         public async Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId)

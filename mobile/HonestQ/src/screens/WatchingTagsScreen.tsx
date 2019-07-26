@@ -8,12 +8,12 @@ import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
-import * as WatchingTagsStore from '../store/WatchingTags';
+import * as TagsStore from '../store/Tags';
 import ThemeService from '../ThemeService';
 import { TagNavigationProps } from './TagScreen';
 
-type Props = WatchingTagsStore.State
-  & typeof WatchingTagsStore.actionCreators
+type Props = TagsStore.ListState
+  & typeof TagsStore.actionCreators
   & { updateWatch: (on: boolean, tagSlug: string) => any };
 
 class WatchingTagsScreen extends React.Component<Props> {
@@ -26,7 +26,7 @@ class WatchingTagsScreen extends React.Component<Props> {
     super(props);
 
     if (!this.props.tagsList) {
-      this.props.getWatchingTagsList();
+      this.props.getTagsList();
     }
   }
 
@@ -37,7 +37,7 @@ class WatchingTagsScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const orderedTags = tagsList.sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
+    const orderedTags = tagsList.tags.sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
 
     return (
       <View style={ThemeService.getStyles().contentView}>
@@ -68,6 +68,6 @@ class WatchingTagsScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.watchingsTags);
-const actions = { ...WatchingTagsStore.actionCreators, updateWatch: TagStore.actionCreators.updateWatch };
+const mapStateToProps = (state: ApplicationState) => (state.tags);
+const actions = { ...TagsStore.actionCreators, updateWatch: TagStore.actionCreators.updateWatch };
 export default connect(mapStateToProps, actions)(WatchingTagsScreen);

@@ -8,9 +8,13 @@ namespace Pobs.Web.Models.Tags
     public class TagsListModel
     {
         public TagsListModel() { }
-        public TagsListModel(List<Tag> tags)
+        public TagsListModel(List<Tag> tags, List<int> watchingTagIds = null)
         {
-            this.Tags = tags.Select(x => new TagsListModel.TagListItemModel(x)).ToArray();
+            this.Tags = tags.Select(x =>
+                new TagsListModel.TagListItemModel(x)
+                {
+                    Watching = watchingTagIds != null && watchingTagIds.Contains(x.Id)
+                }).ToArray();
         }
 
         public TagListItemModel[] Tags { get; set; }
@@ -29,6 +33,8 @@ namespace Pobs.Web.Models.Tags
 
             [Required]
             public string Name { get; set; }
+
+            public bool Watching { get; set; }
         }
     }
 }

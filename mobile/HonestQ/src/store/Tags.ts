@@ -2,6 +2,8 @@
 import { AppThunkAction } from '.';
 import { TagsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
+import { LogOutSuccessAction } from './LogOut';
+import { UpdateWatchTagSuccessAction } from './Tag';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -24,7 +26,9 @@ interface GetTagsListFailureAction { type: 'GET_TAGS_LIST_FAILURE'; payload: { e
 type KnownAction =
   | GetTagsListRequestAction
   | GetTagsListSuccessAction
-  | GetTagsListFailureAction;
+  | GetTagsListFailureAction
+  | UpdateWatchTagSuccessAction
+  | LogOutSuccessAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -66,6 +70,23 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
       return {
         tagsList: action.payload,
       };
+    case 'UPDATE_WATCH_TAG_SUCCESS': {
+      if (!state.tagsList) {
+        return state;
+      }
+      // Slice for immutability
+      const tagsNext = state.tagsList.tags.slice();
+      const tag = tagsNext.filter((x) => x.slug === action.payload.tagSlug)[0];
+      if (tag) {
+        tag.watching = action.payload.response.watching;
+      }
+      return {
+        tagsList: { tags: tagsNext },
+      };
+    }
+    case 'LOGOUT_SUCCESS': {
+      return defaultState;
+    }
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

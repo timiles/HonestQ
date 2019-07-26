@@ -61,6 +61,32 @@ namespace Pobs.Tests.Integration.Tags
         }
 
         [Fact]
+        public async Task WatchingTag_WatchingShouldBeTrue()
+        {
+            var watchingTag = _approvedTags[0];
+            var notWatchingTag = _approvedTags[1];
+            DataHelpers.CreateWatch(_userId, watchingTag);
+
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_userId);
+
+                var response = await client.GetAsync(_generateUrl());
+                response.EnsureSuccessStatusCode();
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<TagsListModel>(responseContent);
+
+                var responseWatchingTag = responseModel.Tags.Single(x => x.Slug == watchingTag.Slug);
+                Assert.True(responseWatchingTag.Watching);
+
+                var responseNotWatchingTag = responseModel.Tags.Single(x => x.Slug == notWatchingTag.Slug);
+                Assert.False(responseNotWatchingTag.Watching);
+            }
+        }
+
+        [Fact]
         public async Task AuthenticatedAsAdmin_ApprovedFalse_ShouldGetUnapprovedTags()
         {
             using (var server = new IntegrationTestingServer())
