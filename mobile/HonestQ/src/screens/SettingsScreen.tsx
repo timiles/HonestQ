@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, View } from 'react-native';
 import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
+import LogOutButton from '../components/LogOutButton';
 import { HQHeader } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
@@ -28,6 +29,9 @@ class SettingsScreen extends React.Component<Props> {
             onValueChange={(value) => this.props.setTheme(value ? 'dark' : 'light')}
             value={theme === 'dark'}
           />
+        </View>
+        <View style={hqStyles.m1}>
+          <LogOutButton />
         </View>
       </View>
     );
