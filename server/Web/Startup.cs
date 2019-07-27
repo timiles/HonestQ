@@ -102,8 +102,6 @@ namespace Pobs.Web
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IWatchingService, WatchingService>();
-
 
             var scopeFactory = services.BuildServiceProvider()
                 .GetRequiredService<IServiceScopeFactory>();

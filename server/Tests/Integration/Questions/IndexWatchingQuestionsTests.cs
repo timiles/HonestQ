@@ -8,17 +8,17 @@ using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Watching
+namespace Pobs.Tests.Integration.Questions
 {
-    public class GetQuestionsTests : IDisposable
+    public class IndexWatchingQuestionsTests : IDisposable
     {
-        private readonly string _url = "/api/watching/questions";
+        private readonly string _url = "/api/questions?watching=true";
 
         private readonly int _userId;
         private readonly Question _watchingQuestion;
         private readonly Question _notWatchingQuestion;
 
-        public GetQuestionsTests()
+        public IndexWatchingQuestionsTests()
         {
             var user = DataHelpers.CreateUser();
             _userId = user.Id;

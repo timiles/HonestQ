@@ -49,7 +49,7 @@ export const actionCreators = {
     return (async () => {
       dispatch({ type: 'GET_WATCHING_ANSWERS_LIST_REQUEST' });
 
-      getJson<AnswersListModel>('/api/watching/answers', getState().auth.loggedInUser)
+      getJson<AnswersListModel>('/api/questions/_/answers?watching=true&pageSize=100', getState().auth.loggedInUser)
         .then((answersListResponse: AnswersListModel) => {
           dispatch({ type: 'GET_WATCHING_ANSWERS_LIST_SUCCESS', payload: answersListResponse });
         })

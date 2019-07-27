@@ -28,15 +28,35 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(PostStatus status = PostStatus.OK, int pageSize = 20, long? beforeTimestamp = null)
+        public async Task<IActionResult> Index(
+            PostStatus status = PostStatus.OK, bool? watching = null, int pageSize = 20, long? beforeTimestamp = null)
         {
             if (status == PostStatus.AwaitingApproval && !User.IsInRole(Role.Admin))
             {
                 return Forbid();
             }
 
-            var questionsList = await _questionService.ListQuestions(status, pageSize, beforeTimestamp);
+            var loggedInUserId = User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?;
+            if (watching.HasValue && loggedInUserId == null)
+            {
+                return Unauthorized();
+            }
+
+            var questionsList = await _questionService.ListQuestions(status, watching, loggedInUserId, pageSize, beforeTimestamp);
             return Ok(questionsList);
+        }
+
+        [HttpGet, Route("_/answers")]
+        public async Task<IActionResult> IndexAnswers(bool? watching = null, int pageSize = 20, long? beforeTimestamp = null)
+        {
+            var loggedInUserId = User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?;
+            if (watching.HasValue && loggedInUserId == null)
+            {
+                return Unauthorized();
+            }
+
+            var answersList = await _questionService.ListAnswers(watching, loggedInUserId, pageSize, beforeTimestamp);
+            return Ok(answersList);
         }
 
         [HttpGet, Route("search")]

@@ -29,7 +29,7 @@ namespace Pobs.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var getAllTagsTask = _tagService.GetAllTags(true);
-            var listQuestionsTask = _questionService.ListQuestions(PostStatus.OK, int.MaxValue);
+            var listQuestionsTask = _questionService.ListQuestions(PostStatus.OK, null, null, int.MaxValue);
 
             var tagsListModel = await getAllTagsTask;
             var questionsListModel = await listQuestionsTask;
