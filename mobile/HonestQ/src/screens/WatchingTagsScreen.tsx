@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQLoadingView, HQNavigationButton } from '../hq-components';
+import { HQHeader, HQLoadingView, HQNavigationButton, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -42,7 +42,7 @@ class WatchingTagsScreen extends React.Component<Props> {
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
-          style={hqStyles.mt1}
+          style={hqStyles.mv1}
           data={orderedTags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
@@ -54,6 +54,9 @@ class WatchingTagsScreen extends React.Component<Props> {
               <WatchButton onWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
             </HQNavigationButton>
           }
+          ListFooterComponent={
+            <HQPrimaryButton style={hqStyles.mh1} title="Suggest a new tag" onPress={this.navigateToNewTag} />
+          }
         />
       </View>
     );
@@ -62,6 +65,10 @@ class WatchingTagsScreen extends React.Component<Props> {
   private navigateToTag(tagSlug: string, tagName: string): void {
     const navProps: TagNavigationProps = { tagSlug, tagName };
     NavigationService.navigate('Tag', navProps);
+  }
+
+  private navigateToNewTag(): void {
+    NavigationService.navigate('NewTag');
   }
 
   private handleWatch(on: boolean, tagSlug: string): void {
