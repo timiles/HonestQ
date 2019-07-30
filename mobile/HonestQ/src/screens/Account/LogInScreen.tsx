@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../../components/KeyboardPaddedScrollView';
 import { HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
@@ -58,8 +59,10 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
           submitted={submitted && !error}
           error={!password ? 'Password is required' : null}
         />
-        <HQSubmitButton title="Log in" onPress={this.handleSubmit} submitting={submitting} />
-        <HQNavigationButton title="Or create a new account" onPress={this.navigateToSignUp} />
+        <View style={hqStyles.flexRowSpaceBetween}>
+          <HQNavigationButton title="Or create a new account" onPress={this.navigateToSignUp} />
+          <HQSubmitButton title="Log in" onPress={this.handleSubmit} submitting={submitting} />
+        </View>
       </KeyboardPaddedScrollView>
     );
   }
