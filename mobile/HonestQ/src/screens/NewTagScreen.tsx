@@ -1,8 +1,9 @@
 import React from 'react';
 import { showMessage } from 'react-native-flash-message';
+import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
-import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
+import { HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { TagFormModel } from '../server-models';
@@ -10,10 +11,30 @@ import { ApplicationState } from '../store';
 import * as NewTagStore from '../store/NewTag';
 import ThemeService from '../ThemeService';
 
+interface NewTagNavigationProps {
+  submit?: () => void;
+  submitting?: boolean;
+}
 type Props = NewTagStore.NewTagState
-  & typeof NewTagStore.actionCreators;
+  & typeof NewTagStore.actionCreators
+  & NavigationScreenProps<NewTagNavigationProps>;
 
 class NewTagScreen extends React.Component<Props, TagFormModel> {
+
+  protected static navigationOptions =
+    ({ navigation }: NavigationScreenProps): NavigationScreenOptions => {
+      return {
+        title: 'Suggest a new tag',
+        headerRight: (
+          <HQSubmitButton
+            style={hqStyles.mr1}
+            title="Submit"
+            onPress={navigation.getParam('submit')}
+            submitting={navigation.getParam('submitting')}
+          />
+        ),
+      };
+    }
 
   constructor(props: Props) {
     super(props);
@@ -27,7 +48,15 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  public componentDidMount() {
+    this.props.navigation.setParams({ submit: this.handleSubmit });
+  }
+
   public componentDidUpdate(prevProps: Props) {
+    if (prevProps.submitting !== this.props.submitting) {
+      this.props.navigation.setParams({ submitting: this.props.submitting });
+    }
+
     if (prevProps.submitted && !this.props.submitted) {
       const submittedTagName = this.props.previouslySubmittedTagFormModel.name;
       showMessage({
@@ -45,11 +74,10 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
 
   public render() {
     const { name, description, moreInfoUrl } = this.state;
-    const { submitting, submitted, error } = this.props;
+    const { submitted, error } = this.props;
 
     return (
       <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
-        <HQHeader style={hqStyles.mb1}>Suggest a new tag</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
           containerStyle={hqStyles.mb1}
@@ -77,7 +105,6 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
           onChangeText={(text) => this.setState({ moreInfoUrl: text })}
           submitted={submitted && !error}
         />
-        <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
       </KeyboardPaddedScrollView>
     );
   }

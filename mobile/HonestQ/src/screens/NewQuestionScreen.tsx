@@ -1,9 +1,9 @@
 import React from 'react';
 import { showMessage } from 'react-native-flash-message';
-import { NavigationScreenProps } from 'react-navigation';
+import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
-import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
+import { HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { QuestionFormModel, TagValueModel } from '../server-models';
@@ -13,12 +13,29 @@ import ThemeService from '../ThemeService';
 
 export interface NewQuestionNavigationProps {
   initialTagValues?: TagValueModel[];
+  submit?: () => void;
+  submitting?: boolean;
 }
 type Props = NewQuestionStore.NewQuestionState
   & typeof NewQuestionStore.actionCreators
   & NavigationScreenProps<NewQuestionNavigationProps>;
 
 class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
+
+  protected static navigationOptions =
+    ({ navigation }: NavigationScreenProps): NavigationScreenOptions => {
+      return {
+        title: 'Ask a question',
+        headerRight: (
+          <HQSubmitButton
+            style={hqStyles.mr1}
+            title="Submit"
+            onPress={navigation.getParam('submit')}
+            submitting={navigation.getParam('submitting')}
+          />
+        ),
+      };
+    }
 
   constructor(props: Props) {
     super(props);
@@ -29,7 +46,15 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  public componentDidMount() {
+    this.props.navigation.setParams({ submit: this.handleSubmit });
+  }
+
   public componentDidUpdate(prevProps: Props) {
+    if (prevProps.submitting !== this.props.submitting) {
+      this.props.navigation.setParams({ submitting: this.props.submitting });
+    }
+
     if (prevProps.submitted && !this.props.submitted) {
       if (this.props.awaitingApproval) {
         showMessage({
@@ -46,12 +71,11 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
   }
 
   public render() {
-    const { error, submitting, submitted } = this.props;
+    const { submitted, error } = this.props;
     const { text: questionText, context, tags } = this.state;
 
     return (
       <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
-        <HQHeader style={hqStyles.mb1}>Ask a question</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQSuperTextInput
           containerStyle={hqStyles.mb1}
@@ -72,7 +96,6 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
           onChangeText={(text) => this.setState({ context: text })}
           submitted={submitted && !error}
         />
-        <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
       </KeyboardPaddedScrollView>
     );
   }
