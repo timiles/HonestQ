@@ -41,7 +41,6 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
         <HQTextInput
           containerStyle={hqStyles.mb1}
           autoCapitalize="none"
-          autoFocus={true}
           placeholder="Username"
           helpText="Your username will be displayed next to any Comments you post."
           value={username}

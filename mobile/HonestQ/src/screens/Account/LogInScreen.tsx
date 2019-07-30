@@ -42,7 +42,6 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
         <HQTextInput
           containerStyle={hqStyles.mb1}
           autoCapitalize="none"
-          autoFocus={true}
           keyboardType="email-address"
           placeholder="Username or email"
           value={username}
