@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 
 // tslint:disable:no-object-literal-type-assertion
@@ -90,6 +91,10 @@ export default StyleSheet.create({
   small: {
     fontSize: 11,
   } as TextStyle,
+
+  statusBarMargin: {
+    marginTop: Constants.statusBarHeight,
+  } as ViewStyle,
 
   textAlignCenter: {
     textAlign: 'center',

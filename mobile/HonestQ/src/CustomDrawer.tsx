@@ -11,9 +11,9 @@ export default class CustomDrawer extends React.Component<DrawerItemsProps> {
     const { items } = this.props;
 
     return (
-      <View style={hqStyles.mt3}>
+      <View style={hqStyles.statusBarMargin}>
         <LoggedInUserContext.Consumer>
-          {(user) => <HQText>Hello, {user.username}</HQText>}
+          {(user) => <HQText style={hqStyles.m1}>Hello, {user.username}</HQText>}
         </LoggedInUserContext.Consumer>
         <DrawerItems {...this.props} items={items.filter((x) => x.key !== 'App')} />
       </View>
