@@ -1,5 +1,6 @@
+import { Linking } from 'expo';
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, Text, TextStyle, View } from 'react-native';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../../components/KeyboardPaddedScrollView';
 import { HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
@@ -77,6 +78,17 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
           onChangeText={(text) => this.setState({ email: text })}
           submitted={submitted && !error}
         />
+        <HQText style={[hqStyles.p1, hqStyles.small]}>
+          By clicking Sign up below, you are agreeing to our {}
+          <Text style={styles.link} onPress={() => Linking.openURL('https://www.honestq.com/docs/TermsOfService')}>
+            Terms of Service
+          </Text>
+          {} and {}
+          <Text style={styles.link} onPress={() => Linking.openURL('https://www.honestq.com/docs/PrivacyPolicy')}>
+            Privacy Policy
+          </Text>
+          .
+        </HQText>
         <View style={hqStyles.flexRowSpaceBetween}>
           <HQNavigationButton title="Already have an account? Log in" onPress={this.navigateToLogIn} />
           <HQSubmitButton title="Sign up" onPress={this.handleSubmit} submitting={submitting} />
@@ -97,3 +109,11 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
 
 const mapStateToProps = (state: ApplicationState, ownProps: any) => (state.signUp);
 export default connect(mapStateToProps, SignUpStore.actionCreators)(SignUpScreen);
+
+// tslint:disable:no-object-literal-type-assertion
+const styles = StyleSheet.create({
+  link: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+  } as TextStyle,
+});
