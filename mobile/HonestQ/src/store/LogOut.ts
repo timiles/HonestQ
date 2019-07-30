@@ -1,6 +1,8 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
+import ThemeService from '../ThemeService';
 import { postJson } from '../utils/http-utils';
+import { SetThemeSuccessAction } from './ThemeSetting';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -20,7 +22,7 @@ interface LogOutFailureAction { type: 'LOGOUT_FAILURE'; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction =
+type KnownActions =
   | LogOutRequestAction
   | LogOutSuccessAction
   | LogOutFailureAction
@@ -31,12 +33,15 @@ type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-  logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+  logOut: (): AppThunkAction<KnownActions | SetThemeSuccessAction> => (dispatch, getState) => {
     return (async () => {
       dispatch({ type: 'LOGOUT_REQUEST' });
 
       postJson('/api/account/logout', null, null, true)
         .then(() => {
+          const theme = 'light';
+          ThemeService.setTheme(theme);
+          dispatch({ type: 'SET_THEME_SUCCESS', payload: { theme } });
           dispatch({ type: 'LOGOUT_SUCCESS' });
         })
         .catch(() => {
@@ -52,7 +57,7 @@ export const actionCreators = {
 
 const defaultState: LogOutState = {};
 
-export const reducer: Reducer<LogOutState> = (state: LogOutState, action: KnownAction) => {
+export const reducer: Reducer<LogOutState> = (state: LogOutState, action: KnownActions) => {
   switch (action.type) {
     case 'LOGOUT_REQUEST':
       return { submitting: true };

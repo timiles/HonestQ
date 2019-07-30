@@ -14,7 +14,7 @@ export interface ThemeSettingState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface SetThemeSuccessAction {
+export interface SetThemeSuccessAction {
   type: 'SET_THEME_SUCCESS';
   payload: { theme: Theme; };
 }

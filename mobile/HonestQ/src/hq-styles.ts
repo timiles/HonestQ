@@ -75,6 +75,10 @@ export default StyleSheet.create({
     padding: 10,
   } as ViewStyle,
 
+  p3: {
+    padding: 30,
+  } as ViewStyle,
+
   pr1: {
     paddingRight: 10,
   } as ViewStyle,
