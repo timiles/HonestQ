@@ -42,6 +42,7 @@ class WatchingQuestionsScreen extends React.Component<Props> {
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
+          style={hqStyles.mt1}
           data={orderedQuestions}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) =>

@@ -42,6 +42,7 @@ class WatchingTagsScreen extends React.Component<Props> {
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
+          style={hqStyles.mt1}
           data={orderedTags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
