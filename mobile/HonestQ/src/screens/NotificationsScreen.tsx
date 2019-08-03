@@ -63,7 +63,7 @@ class NotificationScreen extends React.Component<Props, State> {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => this.markSeenAndNavigate(item.id)}>
-                    <View style={[hqStyles.m1, { opacity: 2 }]}>
+                    <View style={hqStyles.m1}>
                       {this.renderNotification(item)}
                     </View>
                   </TouchableOpacity>
