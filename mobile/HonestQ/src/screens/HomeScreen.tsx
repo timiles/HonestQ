@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import CircleIconCard from '../components/CircleIconCard';
+import NotificationsCount from '../components/NotificationsCount';
 import { HQActivityIndicator, HQHeader, HQLoadingView, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
@@ -27,6 +28,11 @@ class HomeScreen extends React.Component<Props, State> {
         title: 'Home',
         headerLeft: ({ tintColor }) => (
           <Text style={{ color: tintColor }} onPress={() => navigation.openDrawer()}>Menu</Text>
+        ),
+        headerRight: (
+          <TouchableOpacity style={hqStyles.mr1} onPress={() => navigation.navigate('Notifications')}>
+            <NotificationsCount />
+          </TouchableOpacity>
         ),
       };
     }

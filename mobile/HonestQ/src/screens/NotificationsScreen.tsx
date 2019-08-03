@@ -4,6 +4,7 @@ import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import AgreementLabel from '../components/AgreementLabel';
 import CircleIconCard from '../components/CircleIconCard';
+import NotificationsCount from '../components/NotificationsCount';
 import QuotationMarks from '../components/QuotationMarks';
 import { HQActivityIndicator, HQCard, HQHeader, HQLabel, HQLoadingView, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
@@ -25,6 +26,11 @@ class NotificationScreen extends React.Component<Props, State> {
 
   protected static navigationOptions: NavigationScreenOptions = {
     title: 'Notifications',
+    headerRight: (
+      <View style={hqStyles.mr1}>
+        <NotificationsCount />
+      </View>
+    ),
   };
 
   constructor(props: Props) {
