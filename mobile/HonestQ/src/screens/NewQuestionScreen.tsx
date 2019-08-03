@@ -3,7 +3,8 @@ import { showMessage } from 'react-native-flash-message';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
-import { HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
+import TagAutocomplete from '../components/TagAutocomplete';
+import { HQLabel, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { QuestionFormModel, TagValueModel } from '../server-models';
@@ -44,6 +45,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
     this.state = { text: '', context: '', tags: initialTagValues || [] };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTagsChange = this.handleTagsChange.bind(this);
   }
 
   public componentDidMount() {
@@ -96,8 +98,17 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
           onChangeText={(text) => this.setState({ context: text })}
           submitted={submitted && !error}
         />
+        <HQLabel style={hqStyles.mt1}>Tags (optional)</HQLabel>
+        <TagAutocomplete
+          selectedTags={tags}
+          onChange={this.handleTagsChange}
+        />
       </KeyboardPaddedScrollView>
     );
+  }
+
+  private handleTagsChange(selectedTags: TagValueModel[]): void {
+    this.setState({ tags: selectedTags });
   }
 
   private handleSubmit(): void {

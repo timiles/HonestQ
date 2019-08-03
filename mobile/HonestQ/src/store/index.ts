@@ -11,6 +11,7 @@ import * as Question from './Question';
 import * as Questions from './Questions';
 import * as SignUp from './SignUp';
 import * as Tag from './Tag';
+import * as TagAutocomplete from './TagAutocomplete';
 import * as Tags from './Tags';
 import * as ThemeSetting from './ThemeSetting';
 import * as WatchingAnswers from './WatchingAnswers';
@@ -31,6 +32,7 @@ export interface ApplicationState {
   questions: Questions.ListState;
   signUp: SignUp.SignUpState;
   tag: Tag.TagState;
+  tagAutocomplete: TagAutocomplete.TagAutocompleteState;
   tags: Tags.ListState;
   themeSetting: ThemeSetting.ThemeSettingState;
   watchingsAnswers: WatchingAnswers.State;
@@ -54,6 +56,7 @@ export const reducers = {
   questions: Questions.reducer,
   signUp: SignUp.reducer,
   tag: Tag.reducer,
+  tagAutocomplete: TagAutocomplete.reducer,
   tags: Tags.reducer,
   themeSetting: ThemeSetting.reducer,
   watchingsAnswers: WatchingAnswers.reducer,
