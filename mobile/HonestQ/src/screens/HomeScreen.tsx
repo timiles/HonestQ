@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import CircleIconCard from '../components/CircleIconCard';
@@ -10,6 +10,7 @@ import NavigationService from '../NavigationService';
 import { QuestionListItemModel } from '../server-models';
 import { ApplicationState } from '../store';
 import * as QuestionsStore from '../store/Questions';
+import MenuIcon from '../svg-icons/MenuIcon';
 import ThemeService from '../ThemeService';
 import { NewQuestionNavigationProps } from './NewQuestionScreen';
 import { QuestionNavigationProps } from './QuestionScreen';
@@ -27,7 +28,9 @@ class HomeScreen extends React.Component<Props, State> {
       return {
         title: 'Home',
         headerLeft: ({ tintColor }) => (
-          <Text style={{ color: tintColor }} onPress={() => navigation.openDrawer()}>Menu</Text>
+          <TouchableOpacity style={hqStyles.ml1} onPress={() => navigation.openDrawer()}>
+            <MenuIcon fill={tintColor} />
+          </TouchableOpacity>
         ),
         headerRight: (
           <TouchableOpacity style={hqStyles.mr1} onPress={() => navigation.navigate('Notifications')}>
