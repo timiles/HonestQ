@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import AnswerCard from '../components/AnswerCard';
 import CircleIconCard from '../components/CircleIconCard';
 import { InfoCard } from '../components/InfoCard';
+import ShareButton from '../components/ShareButton';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
 import { HQHeader, HQLoadingView, HQPrimaryButton } from '../hq-components';
@@ -14,11 +15,13 @@ import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import ThemeService from '../ThemeService';
+import { buildQuestionUrl } from '../utils/route-utils';
 import { getItemCountText } from '../utils/string-utils';
 import { NewAnswerNavigationProps } from './NewAnswerScreen';
 
 export interface QuestionNavigationProps {
   questionId: number;
+  shareUrl?: string;
 }
 
 type Props = QuestionStore.QuestionState
@@ -27,9 +30,19 @@ type Props = QuestionStore.QuestionState
 
 class QuestionScreen extends React.Component<Props> {
 
-  protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Question',
-  };
+  protected static navigationOptions =
+    ({ navigation }: NavigationScreenProps<QuestionNavigationProps>): NavigationScreenOptions => {
+      const shareUrl = navigation.getParam('shareUrl');
+      return {
+        title: 'Question',
+        headerRight:
+          shareUrl && (
+            <View style={hqStyles.mr1}>
+              <ShareButton fill={ThemeService.getNavTextColor()} url={shareUrl} />
+            </View>
+          ),
+      };
+    }
 
   public constructor(props: Props) {
     super(props);
@@ -42,6 +55,14 @@ class QuestionScreen extends React.Component<Props> {
     this.navigateToNewAnswer = this.navigateToNewAnswer.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
     this.handleWatch = this.handleWatch.bind(this);
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    const { navigation, question } = this.props;
+    if (!navigation.state.params.shareUrl && question) {
+      const questionUrl = buildQuestionUrl(question.id, question.slug);
+      this.props.navigation.setParams({ shareUrl: questionUrl });
+    }
   }
 
   public render() {

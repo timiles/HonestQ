@@ -7,6 +7,7 @@ import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import QuotationMarks from '../components/QuotationMarks';
 import ReplyButton from '../components/ReplyButton';
+import ShareButton from '../components/ShareButton';
 import WatchButton from '../components/WatchButton';
 import { HQHeader, HQLoadingView } from '../hq-components';
 import hqStyles from '../hq-styles';
@@ -14,11 +15,13 @@ import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
 import ThemeService from '../ThemeService';
+import { buildAnswerUrl } from '../utils/route-utils';
 import { NewCommentNavigationProps } from './NewCommentScreen';
 
 export interface AnswerNavigationProps {
   questionId: number;
   answerId: number;
+  shareUrl?: string;
 }
 
 type Props = QuestionStore.QuestionState
@@ -27,9 +30,19 @@ type Props = QuestionStore.QuestionState
 
 class AnswerScreen extends React.Component<Props> {
 
-  protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Answer',
-  };
+  protected static navigationOptions =
+    ({ navigation }: NavigationScreenProps<AnswerNavigationProps>): NavigationScreenOptions => {
+      const shareUrl = navigation.getParam('shareUrl');
+      return {
+        title: 'Answer',
+        headerRight:
+          shareUrl && (
+            <View style={hqStyles.mr1}>
+              <ShareButton fill={ThemeService.getNavTextColor()} url={shareUrl} />
+            </View>
+          ),
+      };
+    }
 
   public constructor(props: Props) {
     super(props);
@@ -42,6 +55,16 @@ class AnswerScreen extends React.Component<Props> {
     this.handleNewComment = this.handleNewComment.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
     this.handleWatch = this.handleWatch.bind(this);
+  }
+
+  public componentDidMount() {
+    // This is in case we navigated here from the QuestionScreen.
+    this.setShareUrl();
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    // This is in case the app loaded straight into the AnswerScreen.
+    this.setShareUrl();
   }
 
   public render() {
@@ -108,6 +131,15 @@ class AnswerScreen extends React.Component<Props> {
   private handleWatch(on: boolean): void {
     const { questionId, answerId } = this.props.navigation.state.params;
     this.props.updateWatchAnswer(on, questionId, answerId);
+  }
+
+  private setShareUrl(): void {
+    const { navigation, question } = this.props;
+    if (!navigation.state.params.shareUrl && question) {
+      const answer = question.answers.filter((x) => x.id === this.props.navigation.state.params.answerId)[0];
+      const answerUrl = buildAnswerUrl(question.id, question.slug, answer.id, answer.slug);
+      this.props.navigation.setParams({ shareUrl: answerUrl });
+    }
   }
 }
 

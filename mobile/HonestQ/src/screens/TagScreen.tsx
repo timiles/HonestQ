@@ -5,6 +5,7 @@ import { FlatList, NavigationScreenOptions, NavigationScreenProps } from 'react-
 import { connect } from 'react-redux';
 import { InfoCard } from '../components/InfoCard';
 import QuestionCard from '../components/QuestionCard';
+import ShareButton from '../components/ShareButton';
 import TextWithShortLinks from '../components/TextWithShortLinks';
 import WatchButton from '../components/WatchButton';
 import { HQHeader, HQLabel, HQLoadingView, HQPrimaryButton } from '../hq-components';
@@ -13,6 +14,7 @@ import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as TagStore from '../store/Tag';
 import ThemeService from '../ThemeService';
+import { buildTagUrl } from '../utils/route-utils';
 import { getItemCountText } from '../utils/string-utils';
 import { NewQuestionNavigationProps } from './NewQuestionScreen';
 
@@ -31,6 +33,11 @@ class TagScreen extends React.Component<Props> {
     ({ navigation }: NavigationScreenProps<TagNavigationProps>): NavigationScreenOptions => {
       return {
         title: navigation.getParam('tagName'),
+        headerRight: (
+          <View style={hqStyles.mr1}>
+            <ShareButton fill={ThemeService.getNavTextColor()} url={buildTagUrl(navigation.getParam('tagSlug'))} />
+          </View>
+        ),
       };
     }
 
