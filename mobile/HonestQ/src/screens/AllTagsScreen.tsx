@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQLoadingView, HQNavigationButton } from '../hq-components';
+import { HQHeader, HQLoadingView, HQNavigationButton, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -16,10 +16,10 @@ type Props = TagsStore.ListState
   & typeof TagsStore.actionCreators
   & { updateWatch: (on: boolean, tagSlug: string) => any };
 
-class WatchingTagsScreen extends React.Component<Props> {
+class AllTagsScreen extends React.Component<Props> {
 
   protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Tags',
+    title: 'All Tags',
   };
 
   constructor(props: Props) {
@@ -37,9 +37,7 @@ class WatchingTagsScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const orderedTags = tagsList.tags
-      .filter((x) => x.watching)
-      .sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
+    const orderedTags = tagsList.tags.sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
 
     return (
       <View style={ThemeService.getStyles().contentView}>
@@ -57,7 +55,7 @@ class WatchingTagsScreen extends React.Component<Props> {
             </HQNavigationButton>
           }
           ListFooterComponent={
-            <HQNavigationButton style={hqStyles.mh1} title="View all Tags" onPress={this.navigateToAllTags} />
+            <HQPrimaryButton style={hqStyles.mh1} title="Suggest a new tag" onPress={this.navigateToNewTag} />
           }
         />
       </View>
@@ -69,8 +67,8 @@ class WatchingTagsScreen extends React.Component<Props> {
     NavigationService.navigate('Tag', navProps);
   }
 
-  private navigateToAllTags(): void {
-    NavigationService.navigate('AllTags');
+  private navigateToNewTag(): void {
+    NavigationService.navigate('NewTag');
   }
 
   private handleWatch(on: boolean, tagSlug: string): void {
@@ -80,4 +78,4 @@ class WatchingTagsScreen extends React.Component<Props> {
 
 const mapStateToProps = (state: ApplicationState) => (state.tags);
 const actions = { ...TagsStore.actionCreators, updateWatch: TagStore.actionCreators.updateWatch };
-export default connect(mapStateToProps, actions)(WatchingTagsScreen);
+export default connect(mapStateToProps, actions)(AllTagsScreen);

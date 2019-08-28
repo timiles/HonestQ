@@ -31,9 +31,14 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={[ThemeService.getStyles().contentView, hqStyles.p1]}>
         <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToWatching} title="Watching" />
+        <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToAllTags} title="View all Tags" />
         <HQNavigationButton onPress={this.navigateToRecentQuestions} title="Recent Questions" />
       </View>
     );
+  }
+
+  private navigateToAllTags() {
+    NavigationService.navigate('AllTags');
   }
 
   private navigateToRecentQuestions() {

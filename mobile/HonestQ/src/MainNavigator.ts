@@ -3,6 +3,7 @@ import CustomDrawer from './CustomDrawer';
 import LogInScreen from './screens/Account/LogInScreen';
 import SignUpScreen from './screens/Account/SignUpScreen';
 import UnauthScreen from './screens/Account/UnauthScreen';
+import AllTagsScreen from './screens/AllTagsScreen';
 import AnswerScreen from './screens/AnswerScreen';
 import HomeScreen from './screens/HomeScreen';
 import NewAnswerScreen from './screens/NewAnswerScreen';
@@ -42,6 +43,7 @@ export function createMainNavigator() {
     });
 
   const AppStack = createStackNavigator({
+    AllTags: { screen: AllTagsScreen },
     Answer: { screen: AnswerScreen },
     Home: { screen: HomeScreen },
     NewAnswer: { screen: NewAnswerScreen },
@@ -69,6 +71,7 @@ export function createMainNavigator() {
     });
 
   return createDrawerNavigator({
+    AllTags: { screen: AllTagsScreen },
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
@@ -83,7 +86,7 @@ export function createMainNavigator() {
         activeTintColor: navTextColor,
         inactiveTintColor: navTextColor,
       },
-      order: ['App', 'Home', 'Notifications', 'Watching', 'RecentQuestions', 'Settings'],
+      order: ['App', 'Home', 'Notifications', 'Watching', 'AllTags', 'RecentQuestions', 'Settings'],
     });
 }
 
