@@ -42,7 +42,12 @@ export default class KeyboardPaddedScrollView extends Component<ScrollViewProps,
     const { keyboardHeight } = this.state;
 
     return (
-      <ScrollView ref={this.scrollViewRef} style={style} contentContainerStyle={contentContainerStyle}>
+      <ScrollView
+        ref={this.scrollViewRef}
+        style={style}
+        contentContainerStyle={contentContainerStyle}
+        keyboardShouldPersistTaps="handled"
+      >
         {children}
         <View style={{ height: keyboardHeight }} />
       </ScrollView>
