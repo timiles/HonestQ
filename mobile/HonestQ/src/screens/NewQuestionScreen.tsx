@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -14,8 +15,6 @@ import ThemeService from '../ThemeService';
 
 export interface NewQuestionNavigationProps {
   initialTagValues?: TagValueModel[];
-  submit?: () => void;
-  submitting?: boolean;
 }
 type Props = NewQuestionStore.NewQuestionState
   & typeof NewQuestionStore.actionCreators
@@ -23,20 +22,9 @@ type Props = NewQuestionStore.NewQuestionState
 
 class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
 
-  protected static navigationOptions =
-    ({ navigation }: NavigationScreenProps): NavigationScreenOptions => {
-      return {
-        title: 'Ask a question',
-        headerRight: (
-          <HQSubmitButton
-            style={hqStyles.mr1}
-            title="Submit"
-            onPress={navigation.getParam('submit')}
-            submitting={navigation.getParam('submitting')}
-          />
-        ),
-      };
-    }
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Ask a question',
+  };
 
   constructor(props: Props) {
     super(props);
@@ -48,15 +36,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
     this.handleTagsChange = this.handleTagsChange.bind(this);
   }
 
-  public componentDidMount() {
-    this.props.navigation.setParams({ submit: this.handleSubmit });
-  }
-
   public componentDidUpdate(prevProps: Props) {
-    if (prevProps.submitting !== this.props.submitting) {
-      this.props.navigation.setParams({ submitting: this.props.submitting });
-    }
-
     if (prevProps.submitted && !this.props.submitted) {
       if (this.props.awaitingApproval) {
         showMessage({
@@ -73,7 +53,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
   }
 
   public render() {
-    const { submitted, error } = this.props;
+    const { error, submitting, submitted } = this.props;
     const { text: questionText, context, tags } = this.state;
 
     return (
@@ -103,6 +83,9 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
           selectedTags={tags}
           onChange={this.handleTagsChange}
         />
+        <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+          <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
+        </View>
       </KeyboardPaddedScrollView>
     );
   }

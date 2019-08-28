@@ -1,4 +1,5 @@
 import React from 'react';
+import { View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
@@ -12,8 +13,6 @@ import ThemeService from '../ThemeService';
 
 export interface NewAnswerNavigationProps {
   questionId: number;
-  submit?: () => void;
-  submitting?: boolean;
 }
 type Props = NewAnswerStore.NewAnswerState
   & typeof NewAnswerStore.actionCreators
@@ -21,20 +20,9 @@ type Props = NewAnswerStore.NewAnswerState
 
 class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
 
-  protected static navigationOptions =
-    ({ navigation }: NavigationScreenProps): NavigationScreenOptions => {
-      return {
-        title: 'Got an answer?',
-        headerRight: (
-          <HQSubmitButton
-            style={hqStyles.mr1}
-            title="Submit"
-            onPress={navigation.getParam('submit')}
-            submitting={navigation.getParam('submitting')}
-          />
-        ),
-      };
-    }
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Got an answer?',
+  };
 
   constructor(props: Props) {
     super(props);
@@ -44,22 +32,14 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  public componentDidMount() {
-    this.props.navigation.setParams({ submit: this.handleSubmit });
-  }
-
   public componentDidUpdate(prevProps: Props) {
-    if (prevProps.submitting !== this.props.submitting) {
-      this.props.navigation.setParams({ submitting: this.props.submitting });
-    }
-
     if (prevProps.submitted && !this.props.submitted) {
       NavigationService.goBack();
     }
   }
 
   public render() {
-    const { submitted, error } = this.props;
+    const { submitting, submitted, error } = this.props;
     const { text: answerText } = this.state;
 
     return (
@@ -76,6 +56,9 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
           submitted={submitted && !error}
           error={!answerText ? 'Answer is required' : null}
         />
+        <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+          <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
+        </View>
       </KeyboardPaddedScrollView>
     );
   }

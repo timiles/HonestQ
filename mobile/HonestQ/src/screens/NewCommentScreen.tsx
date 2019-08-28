@@ -30,20 +30,9 @@ type Props = NewCommentStore.NewCommentState
 
 class NewCommentScreen extends React.Component<Props, CommentFormModel> {
 
-  protected static navigationOptions =
-    ({ navigation }: NavigationScreenProps): NavigationScreenOptions => {
-      return {
-        title: 'Reply',
-        headerRight: (
-          <HQSubmitButton
-            style={hqStyles.mr1}
-            title="Submit"
-            onPress={navigation.getParam('submit')}
-            submitting={navigation.getParam('submitting')}
-          />
-        ),
-      };
-    }
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Reply',
+  };
 
   constructor(props: Props) {
     super(props);
@@ -79,7 +68,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
   public render() {
     const { answer, parentComment } = this.props.navigation.state.params;
 
-    const { submitted, error } = this.props;
+    const { submitted, submitting, error } = this.props;
     const { text: commentText, source, agreementRating } = this.state;
 
     return (
@@ -125,6 +114,9 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
             onChangeText={(text) => this.setState({ source: text })}
             submitted={submitted && !error}
           />
+          <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+            <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
+          </View>
         </HQCard>
       </KeyboardPaddedScrollView>
     );
