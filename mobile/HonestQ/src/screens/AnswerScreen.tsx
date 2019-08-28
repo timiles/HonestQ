@@ -34,7 +34,7 @@ class AnswerScreen extends React.Component<Props> {
     ({ navigation }: NavigationScreenProps<AnswerNavigationProps>): NavigationScreenOptions => {
       const shareUrl = navigation.getParam('shareUrl');
       return {
-        title: 'Answer',
+        title: 'Discuss this Answer',
         headerRight:
           shareUrl && (
             <View style={hqStyles.mr1}>
