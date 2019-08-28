@@ -51,6 +51,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
         <HQTextInput
           containerStyle={hqStyles.mb1}
           placeholder="Password"
+          helpText="Your password must be at least 7 characters long."
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => this.setState({ password: text })}
