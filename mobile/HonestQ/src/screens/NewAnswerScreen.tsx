@@ -2,8 +2,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
+import CircleIconCard from '../components/CircleIconCard';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
-import { HQSubmitButton, HQSuperTextInput, HQText } from '../hq-components';
+import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { AnswerFormModel } from '../server-models';
@@ -13,6 +14,7 @@ import ThemeService from '../ThemeService';
 
 export interface NewAnswerNavigationProps {
   questionId: number;
+  questionText: string;
 }
 type Props = NewAnswerStore.NewAnswerState
   & typeof NewAnswerStore.actionCreators
@@ -40,10 +42,17 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
 
   public render() {
     const { submitting, submitted, error } = this.props;
+    const { questionText } = this.props.navigation.state.params;
     const { text: answerText } = this.state;
 
     return (
-      <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
+      <KeyboardPaddedScrollView
+        style={ThemeService.getStyles().contentView}
+        contentContainerStyle={[hqStyles.p1, hqStyles.pt0]}
+      >
+        <CircleIconCard type="Q" style={hqStyles.mb1}>
+          <HQHeader>{questionText}</HQHeader>
+        </CircleIconCard>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQSuperTextInput
           containerStyle={hqStyles.mb1}

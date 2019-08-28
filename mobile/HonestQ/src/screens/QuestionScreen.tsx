@@ -127,7 +127,8 @@ class QuestionScreen extends React.Component<Props> {
 
   private navigateToNewAnswer() {
     const { questionId } = this.props.navigation.state.params;
-    const navProps: NewAnswerNavigationProps = { questionId };
+    const { text } = this.props.question;
+    const navProps: NewAnswerNavigationProps = { questionId, questionText: text };
     NavigationService.navigate('NewAnswer', navProps);
   }
 

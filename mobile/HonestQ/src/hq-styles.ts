@@ -83,6 +83,10 @@ export default StyleSheet.create({
     paddingRight: 10,
   } as ViewStyle,
 
+  pt0: {
+    paddingTop: 0,
+  } as ViewStyle,
+
   pv1: {
     paddingVertical: 10,
   } as ViewStyle,
