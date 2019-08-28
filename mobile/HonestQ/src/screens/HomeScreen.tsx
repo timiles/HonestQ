@@ -30,6 +30,7 @@ export default class HomeScreen extends React.Component {
   public render() {
     return (
       <View style={[ThemeService.getStyles().contentView, hqStyles.p1]}>
+        <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToWatching} title="Watching" />
         <HQNavigationButton onPress={this.navigateToRecentQuestions} title="Recent Questions" />
       </View>
     );
@@ -37,5 +38,9 @@ export default class HomeScreen extends React.Component {
 
   private navigateToRecentQuestions() {
     NavigationService.navigate('RecentQuestions');
+  }
+
+  private navigateToWatching() {
+    NavigationService.navigate('Watching');
   }
 }
