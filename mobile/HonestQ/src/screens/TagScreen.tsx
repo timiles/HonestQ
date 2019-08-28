@@ -82,7 +82,7 @@ class TagScreen extends React.Component<Props> {
             <View style={hqStyles.mh1}>
               <View style={hqStyles.mb1}>
                 {(description || moreInfoUrl) ?
-                  <InfoCard>
+                  <InfoCard style={hqStyles.mt1}>
                     {description ?
                       <>
                         <HQHeader>Description</HQHeader>
