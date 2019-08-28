@@ -37,7 +37,9 @@ class WatchingAnswersScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const orderedAnswers = answersList.sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
+    const orderedAnswers = answersList
+      .filter((x) => x.watching)
+      .sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
 
     return (
       <View style={ThemeService.getStyles().contentView}>
@@ -61,6 +63,9 @@ class WatchingAnswersScreen extends React.Component<Props> {
                 />
               </View>
             </HQNavigationButton>
+          }
+          ListEmptyComponent={
+            <HQText style={[hqStyles.mh1, hqStyles.textAlignCenter]}>Not watching any Answers.</HQText>
           }
         />
       </View>

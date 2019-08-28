@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQLoadingView, HQNavigationButton } from '../hq-components';
+import { HQHeader, HQLoadingView, HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -37,7 +37,9 @@ class WatchingQuestionsScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const orderedQuestions = questionsList.sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
+    const orderedQuestions = questionsList
+      .filter((x) => x.watching)
+      .sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
 
     return (
       <View style={ThemeService.getStyles().contentView}>
@@ -53,6 +55,9 @@ class WatchingQuestionsScreen extends React.Component<Props> {
               <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.text}</HQHeader>
               <WatchButton onWatch={() => this.handleWatch(!item.watching, item.id)} watching={item.watching} />
             </HQNavigationButton>
+          }
+          ListEmptyComponent={
+            <HQText style={[hqStyles.mh1, hqStyles.textAlignCenter]}>Not watching any Questions.</HQText>
           }
         />
       </View>

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import WatchButton from '../components/WatchButton';
-import { HQHeader, HQLoadingView, HQNavigationButton } from '../hq-components';
+import { HQHeader, HQLoadingView, HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
@@ -55,6 +55,9 @@ class WatchingTagsScreen extends React.Component<Props> {
               <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.name}</HQHeader>
               <WatchButton onWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
             </HQNavigationButton>
+          }
+          ListEmptyComponent={
+            <HQText style={[hqStyles.mh1, hqStyles.mb1, hqStyles.textAlignCenter]}>Not watching any Tags.</HQText>
           }
           ListFooterComponent={
             <HQNavigationButton style={hqStyles.mh1} title="View all Tags" onPress={this.navigateToAllTags} />
