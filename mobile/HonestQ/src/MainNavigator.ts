@@ -11,6 +11,7 @@ import NewQuestionScreen from './screens/NewQuestionScreen';
 import NewTagScreen from './screens/NewTagScreen';
 import Notifications from './screens/NotificationsScreen';
 import QuestionScreen from './screens/QuestionScreen';
+import RecentQuestionsScreen from './screens/RecentQuestionsScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
 import WatchingAnswersScreen from './screens/WatchingAnswersScreen';
@@ -49,6 +50,7 @@ export function createMainNavigator() {
     NewTag: { screen: NewTagScreen },
     Notifications: { screen: Notifications },
     Question: { screen: QuestionScreen },
+    RecentQuestions: { screen: RecentQuestionsScreen },
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
     Watching: { screen: WatchingTabNavigator },
@@ -70,6 +72,7 @@ export function createMainNavigator() {
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
+    RecentQuestions: { screen: RecentQuestionsScreen },
     Watching: { screen: WatchingTabNavigator },
     Settings: { screen: SettingsScreen },
   },
@@ -80,6 +83,7 @@ export function createMainNavigator() {
         activeTintColor: navTextColor,
         inactiveTintColor: navTextColor,
       },
+      order: ['App', 'Home', 'Notifications', 'Watching', 'RecentQuestions', 'Settings'],
     });
 }
 
