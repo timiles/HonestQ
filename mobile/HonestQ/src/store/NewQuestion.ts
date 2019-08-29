@@ -25,7 +25,7 @@ export interface NewQuestionFormSuccessAction {
   type: 'NEW_QUESTION_FORM_SUCCESS';
   payload: { questionListItem: QuestionListItemModel; };
 }
-interface NewQuestionFormAwaitingApprovalAction {
+export interface NewQuestionFormAwaitingApprovalAction {
   type: 'NEW_QUESTION_FORM_AWAITING_APPROVAL';
 }
 interface NewQuestionFormFailureAction {

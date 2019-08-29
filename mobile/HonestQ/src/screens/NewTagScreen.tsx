@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
 import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
@@ -35,16 +34,6 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
 
   public componentDidUpdate(prevProps: Props) {
     if (prevProps.submitted && !this.props.submitted) {
-      const submittedTagName = this.props.previouslySubmittedTagFormModel.name;
-      showMessage({
-        message: 'Success',
-        description: `Your tag "${submittedTagName}" has been created and is awaiting approval!`,
-        type: 'success',
-        icon: 'success',
-        floating: true,
-        duration: 3000,
-      });
-
       NavigationService.goBack();
     }
   }

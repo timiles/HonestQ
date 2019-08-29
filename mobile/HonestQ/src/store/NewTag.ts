@@ -7,7 +7,6 @@ import { postJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface NewTagState {
-  previouslySubmittedTagFormModel?: TagFormModel;
   submitting?: boolean;
   submitted?: boolean;
   error?: string | null;
@@ -19,7 +18,7 @@ export interface NewTagState {
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
 interface TagFormRequestAction { type: 'TAG_FORM_REQUEST'; }
-interface TagFormSuccessAction { type: 'TAG_FORM_SUCCESS'; payload: { tag: TagFormModel; }; }
+export interface TagFormSuccessAction { type: 'TAG_FORM_SUCCESS'; payload: { tag: TagFormModel; }; }
 interface TagFormFailureAction { type: 'TAG_FORM_FAILURE'; payload: { error: string | null; }; }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -65,7 +64,7 @@ export const reducer: Reducer<NewTagState> = (state: NewTagState, action: KnownA
     case 'TAG_FORM_REQUEST':
       return { submitting: true, submitted: true };
     case 'TAG_FORM_SUCCESS':
-      return { submitting: false, submitted: false, previouslySubmittedTagFormModel: action.payload.tag };
+      return { submitting: false, submitted: false };
     case 'TAG_FORM_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
 

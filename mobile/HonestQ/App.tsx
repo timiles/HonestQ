@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import AuthCheck from './src/AuthCheck';
 import hqStyles from './src/hq-styles';
 import { localStoreMiddleware, loggedInUserStorageKey, themeStorageKey } from './src/localStoreMiddleware';
+import { PopupMiddleware } from './src/middlewares/PopupMiddleware';
 import { LoggedInUserModel } from './src/server-models';
 import * as StoreModule from './src/store';
 import ThemeService, { Theme } from './src/ThemeService';
@@ -51,7 +52,7 @@ export default class App extends React.Component<{}, State> {
     ThemeService.setTheme(theme);
     const initialState: DeepPartial<StoreModule.ApplicationState> = { auth: { loggedInUser }, themeSetting: { theme } };
     const allReducers = combineReducers<StoreModule.ApplicationState>(StoreModule.reducers);
-    this.store = createStore(allReducers, initialState, applyMiddleware(thunk, localStoreMiddleware));
+    this.store = createStore(allReducers, initialState, applyMiddleware(thunk, localStoreMiddleware, PopupMiddleware));
 
     await loadFontsPromise;
 

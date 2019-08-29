@@ -1,5 +1,4 @@
-﻿import { showMessage } from 'react-native-flash-message';
-import { Reducer } from 'redux';
+﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
 import { LoggedInUserModel, SignUpFormModel } from '../server-models';
 import { postJson } from '../utils/http-utils';
@@ -54,14 +53,6 @@ export const actionCreators = {
             registerForPushNotificationsAsync(response);
 
             dispatch({ type: 'SIGNUP_SUCCESS', payload: response });
-
-            showMessage({
-              message: 'Success',
-              description: `Welcome to HonestQ, ${form.username}!`,
-              type: 'success',
-              icon: 'success',
-              floating: true,
-            });
           })
           .catch((reason) => {
             dispatch({ type: 'SIGNUP_FAILURE', payload: { reason } });
