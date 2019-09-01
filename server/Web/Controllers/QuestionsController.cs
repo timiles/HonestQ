@@ -32,20 +32,14 @@ namespace Pobs.Web.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index(
-            PostStatus status = PostStatus.OK, bool? watching = null, int pageSize = 20, long? beforeTimestamp = null)
+            PostStatus status = PostStatus.OK, int pageSize = 20, long? beforeTimestamp = null)
         {
             if (status == PostStatus.AwaitingApproval && !User.IsInRole(Role.Admin))
             {
                 return Forbid();
             }
 
-            var loggedInUserId = User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?;
-            if (watching.HasValue && loggedInUserId == null)
-            {
-                return Unauthorized();
-            }
-
-            var questionsList = await _questionService.ListQuestions(status, watching, loggedInUserId, pageSize, beforeTimestamp);
+            var questionsList = await _questionService.ListQuestions(status, pageSize, beforeTimestamp);
             return Ok(questionsList);
         }
 
@@ -61,7 +55,7 @@ namespace Pobs.Web.Controllers
             var answersList = await _questionService.ListAnswers(watching, loggedInUserId, pageSize, beforeTimestamp);
             return Ok(answersList);
         }
-
+        
         [HttpGet, Route("search")]
         public async Task<IActionResult> Search(string q = null, long pageNumber = 1, long pageSize = 20)
         {

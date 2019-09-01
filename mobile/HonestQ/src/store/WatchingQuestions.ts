@@ -1,14 +1,12 @@
 ﻿import { Reducer } from 'redux';
 import { AppThunkAction } from '.';
-import { QuestionListItemModel, QuestionsListModel } from '../server-models';
+import { WatchingQuestionListItemModel, WatchingQuestionsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
 import { LogOutSuccessAction } from './LogOut';
 import { UpdateWatchQuestionSuccessAction } from './Question';
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
-
-type WatchingQuestionListItemModel = QuestionListItemModel & { watching: boolean };
 
 export interface State {
   questionsList?: WatchingQuestionListItemModel[];
@@ -24,7 +22,7 @@ interface GetWatchingQuestionsListRequestAction {
 }
 interface GetWatchingQuestionsListSuccessAction {
   type: 'GET_WATCHING_QUESTIONS_LIST_SUCCESS';
-  payload: QuestionsListModel;
+  payload: WatchingQuestionsListModel;
 }
 interface GetWatchingQuestionsListFailureAction {
   type: 'GET_WATCHING_QUESTIONS_LIST_FAILURE';
@@ -49,9 +47,9 @@ export const actionCreators = {
     return (async () => {
       dispatch({ type: 'GET_WATCHING_QUESTIONS_LIST_REQUEST' });
 
-      getJson<QuestionsListModel>('/api/questions?watching=true&pageSize=100', getState().auth.loggedInUser)
-        .then((questionsListResponse: QuestionsListModel) => {
-          dispatch({ type: 'GET_WATCHING_QUESTIONS_LIST_SUCCESS', payload: questionsListResponse });
+      getJson<WatchingQuestionsListModel>('/api/questions/_/watching?pageSize=100', getState().auth.loggedInUser)
+        .then((response) => {
+          dispatch({ type: 'GET_WATCHING_QUESTIONS_LIST_SUCCESS', payload: response });
         })
         .catch((reason) => {
           dispatch({
@@ -86,9 +84,16 @@ export const reducer: Reducer<State> = (state: State, action: KnownAction) => {
       }
       // Slice for immutability
       const questionsListNext = state.questionsList.slice();
-      const question = questionsListNext.filter((x) => x.id === action.payload.questionId)[0];
-      if (question) {
-        question.watching = action.payload.response.watching;
+      if (action.payload.watching) {
+        // Insert at the start
+        questionsListNext.unshift(action.payload.watchingQuestionListItem);
+      } else {
+        // No longer watching this question
+        const questionToRemove = questionsListNext.filter((x) => x.questionId === action.payload.questionId)[0];
+        if (questionToRemove) {
+          const index = questionsListNext.indexOf(questionToRemove);
+          questionsListNext.splice(index, 1);
+        }
       }
       return {
         questionsList: questionsListNext,

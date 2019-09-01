@@ -14,7 +14,7 @@ import { QuestionNavigationProps } from './QuestionScreen';
 
 type Props = WatchingQuestionsStore.State
   & typeof WatchingQuestionsStore.actionCreators
-  & { updateWatchQuestion: (on: boolean, questionId: number) => any };
+  & { updateWatchQuestion: (on: boolean, questionId: number) => void };
 
 class WatchingQuestionsScreen extends React.Component<Props> {
 
@@ -37,23 +37,21 @@ class WatchingQuestionsScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const orderedQuestions = questionsList
-      .filter((x) => x.watching)
-      .sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
+    const orderedQuestions = questionsList.sort((a, b) => (b.watchId - a.watchId));
 
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
           style={hqStyles.mt1}
           data={orderedQuestions}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.watchId.toString()}
           renderItem={({ item }) =>
             <HQNavigationButton
               style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
-              onPress={() => this.navigateToQuestion(item.id)}
+              onPress={() => this.navigateToQuestion(item.questionId)}
             >
-              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.text}</HQHeader>
-              <WatchButton onWatch={() => this.handleWatch(!item.watching, item.id)} watching={item.watching} />
+              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.questionText}</HQHeader>
+              <WatchButton onWatch={() => this.handleUnwatch(item.questionId)} watching={true} />
             </HQNavigationButton>
           }
           ListEmptyComponent={
@@ -69,8 +67,8 @@ class WatchingQuestionsScreen extends React.Component<Props> {
     NavigationService.navigate('Question', navProps);
   }
 
-  private handleWatch(on: boolean, questionId: number): void {
-    this.props.updateWatchQuestion(on, questionId);
+  private handleUnwatch(questionId: number): void {
+    this.props.updateWatchQuestion(false, questionId);
   }
 }
 

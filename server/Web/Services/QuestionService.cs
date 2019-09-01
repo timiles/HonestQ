@@ -13,7 +13,7 @@ namespace Pobs.Web.Services
 {
     public interface IQuestionService
     {
-        Task<QuestionsListModel> ListQuestions(PostStatus status, bool? watching, int? loggedInUserId, int pageSize, long? beforeUnixTimeMilliseconds = null);
+        Task<QuestionsListModel> ListQuestions(PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null);
         Task<AnswersListModel> ListAnswers(bool? watching, int? loggedInUserId, int pageSize, long? beforeUnixTimeMilliseconds = null);
         Task<QuestionSearchResultsModel> SearchQuestions(string query, int pageNumber, int pageSize);
         Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin);
@@ -39,7 +39,7 @@ namespace Pobs.Web.Services
         }
 
         public async Task<QuestionsListModel> ListQuestions(
-            PostStatus status, bool? watching, int? loggedInUserId, int pageSize, long? beforeUnixTimeMilliseconds = null)
+            PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null)
         {
             var beforeTime = beforeUnixTimeMilliseconds.ToUnixDateTime() ?? DateTime.UtcNow;
 
@@ -47,7 +47,6 @@ namespace Pobs.Web.Services
                 .Include(x => x.Answers)
                 .Include(x => x.QuestionTags).ThenInclude(x => x.Tag)
                 .Where(x => x.Status == status && x.PostedAt < beforeTime)
-                .Where(x => watching == null || (x.Watches.Any(y => y.UserId == loggedInUserId) == watching))
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();

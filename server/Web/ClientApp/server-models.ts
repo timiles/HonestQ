@@ -77,10 +77,6 @@ export interface PushTokenModel {
   token: string;
 }
 
-export interface WatchResponseModel {
-  watching: boolean;
-}
-
 export interface AdminQuestionFormModel {
   isApproved: boolean;
   text: string;
@@ -250,4 +246,20 @@ export interface TagsListModel {
 export interface TagValueModel {
   name: string;
   slug: string;
+}
+
+export interface WatchingQuestionListItemModel {
+  watchId: number;
+  questionId: number;
+  questionSlug: string;
+  questionText: string;
+}
+
+export interface WatchingQuestionsListModel {
+  questions: WatchingQuestionListItemModel[];
+  lastWatchId: number;
+}
+
+export interface WatchResponseModel {
+  watching: boolean;
 }

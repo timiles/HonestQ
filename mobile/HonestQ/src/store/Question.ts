@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { fetchJson, getJson } from '../utils/http-utils';
 import { findComment } from '../utils/model-utils';
-import { QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
+import { QuestionModel, ReactionModel, WatchingQuestionListItemModel, WatchResponseModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewCommentFormSuccessAction } from './NewComment';
 
@@ -44,7 +44,8 @@ export interface UpdateWatchQuestionSuccessAction {
   type: 'UPDATE_WATCH_QUESTION_SUCCESS';
   payload: {
     questionId: number;
-    response: WatchResponseModel;
+    watching: boolean;
+    watchingQuestionListItem?: WatchingQuestionListItemModel;
   };
 }
 export interface UpdateWatchAnswerSuccessAction {
@@ -125,11 +126,11 @@ export const actionCreators = {
       return (async () => {
         const url = `/api/questions/${questionId}/watch`;
         const method = on ? 'POST' : 'DELETE';
-        fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
-          .then((watchResponse) => {
+        fetchJson<WatchingQuestionListItemModel>(method, url, null, getState().auth.loggedInUser)
+          .then((response) => {
             dispatch({
               type: 'UPDATE_WATCH_QUESTION_SUCCESS',
-              payload: { questionId, response: watchResponse },
+              payload: { questionId, watching: on, watchingQuestionListItem: response },
             });
           })
           .catch((reason) => {
@@ -264,8 +265,8 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
       if (!state.question) {
         return state;
       }
-      const { response } = action.payload;
-      const questionNext = { ...state.question!, watching: response.watching };
+      const { watching } = action.payload;
+      const questionNext = { ...state.question!, watching };
       return {
         question: questionNext,
       };

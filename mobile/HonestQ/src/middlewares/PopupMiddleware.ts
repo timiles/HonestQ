@@ -58,7 +58,7 @@ function getPopupOptions(action: KnownAction): PopupOptions {
         null;
 
     case 'UPDATE_WATCH_QUESTION_SUCCESS':
-      return (action.payload.response.watching) ?
+      return (action.payload.watching) ?
         {
           title: 'Watching',
           message: 'You will receive a notification for each new answer to this question.',

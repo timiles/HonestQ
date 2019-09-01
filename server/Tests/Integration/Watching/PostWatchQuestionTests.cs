@@ -37,12 +37,15 @@ namespace Pobs.Tests.Integration.Watching
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
-                Assert.True(watchModel.Watching);
+                var watchingQuestionModel = JsonConvert.DeserializeObject<WatchingQuestionListItemModel>(responseContent);
+                Assert.Equal(_question.Id, watchingQuestionModel.QuestionId);
+                Assert.Equal(_question.Slug, watchingQuestionModel.QuestionSlug);
+                Assert.Equal(_question.Text, watchingQuestionModel.QuestionText);
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    Assert.True(dbContext.Watches.Any(x => x.UserId == _user.Id && x.QuestionId == _question.Id));
+                    var watch = dbContext.Watches.First(x => x.UserId == _user.Id && x.QuestionId == _question.Id);
+                    Assert.Equal(watch.Id, watchingQuestionModel.WatchId);
                 }
             }
         }
