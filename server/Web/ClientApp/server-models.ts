@@ -12,9 +12,9 @@ export interface LogInFormModel {
 }
 
 export interface SignUpFormModel {
-  email: string;
   username: string;
   password: string;
+  email?: string;
 }
 
 export interface VerifyEmailFormModel {
