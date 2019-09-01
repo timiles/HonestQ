@@ -8,103 +8,103 @@ import Modal from '../shared/Modal';
 import QuestionForm from './QuestionForm';
 
 type Props = NewQuestionStore.NewQuestionState
-    & typeof NewQuestionStore.actionCreators
-    & { tagValue: TagValueModel };
+  & typeof NewQuestionStore.actionCreators
+  & { tagValue: TagValueModel };
 
 interface State {
-    isModalOpen: boolean;
+  isModalOpen: boolean;
 }
 
 class NewQuestion extends React.Component<Props, State> {
 
-    constructor(props: Props) {
-        super(props);
+  constructor(props: Props) {
+    super(props);
 
-        this.state = { isModalOpen: false };
+    this.state = { isModalOpen: false };
 
-        this.handleOpen = this.handleOpen.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.questionForm!.submitted && !this.props.awaitingApproval && !this.props.questionForm!.submitted) {
+      // Close the modal when a Question has been successfully submitted
+      this.setState({ isModalOpen: false });
     }
+  }
 
-    public componentDidUpdate(prevProps: Props) {
-        if (prevProps.questionForm!.submitted && !this.props.awaitingApproval && !this.props.questionForm!.submitted) {
-            // Close the modal when a Question has been successfully submitted
-            this.setState({ isModalOpen: false });
-        }
-    }
+  public render(): JSX.Element {
+    const { questionForm, awaitingApproval, tagValue } = this.props;
+    const { isModalOpen } = this.state;
+    const initialTagValues = !tagValue ? [] : [{ ...tagValue }];
 
-    public render(): JSX.Element {
-        const { questionForm, awaitingApproval, tagValue } = this.props;
-        const { isModalOpen } = this.state;
-        const initialTagValues = !tagValue ? [] : [{ ...tagValue }];
-
-        return (
+    return (
+      <>
+        <ButtonOrLogin
+          type="button"
+          className="btn btn-lg btn-primary shadow-lg"
+          onClick={this.handleOpen}
+        >
+          Ask a question
+        </ButtonOrLogin>
+        <Modal title="Ask a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+          {!awaitingApproval &&
+            <QuestionForm
+              {...questionForm}
+              initialTagValues={initialTagValues}
+              isModal={true}
+              onCloseModalRequested={this.handleClose}
+              submit={this.handleSubmit}
+            />
+            ||
             <>
-                <ButtonOrLogin
-                    type="button"
-                    className="btn btn-lg btn-primary shadow-lg"
-                    onClick={this.handleOpen}
+              <div className="modal-body">
+                <h3>Thank you for your question!</h3>
+                <p>
+                  HonestQ is still in its early stages.
+                  We will be adding new questions slowly,
+                  to ensure that we're building a quality system.
+                </p>
+                <p>
+                  We will notify you by email when your question gets approved.
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={this.handleClose}
                 >
-                    Ask a question
-                </ButtonOrLogin>
-                <Modal title="Ask a question" isOpen={isModalOpen} onRequestClose={this.handleClose}>
-                    {!awaitingApproval &&
-                        <QuestionForm
-                            {...questionForm}
-                            initialTagValues={initialTagValues}
-                            isModal={true}
-                            onCloseModalRequested={this.handleClose}
-                            submit={this.handleSubmit}
-                        />
-                        ||
-                        <>
-                            <div className="modal-body">
-                                <h3>Thank you for your question!</h3>
-                                <p>
-                                    HonestQ is still in its early stages.
-                                    We will be adding new questions slowly,
-                                    to ensure that we're building a quality system.
-                                </p>
-                                <p>
-                                    We will notify you by email when your question gets approved.
-                                </p>
-                            </div>
-                            <div className="modal-footer">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary"
-                                    onClick={this.handleClose}
-                                >
-                                    You're welcome
-                                </button>
-                            </div>
-                        </>
-                    }
-                </Modal>
+                  You're welcome
+                </button>
+              </div>
             </>
-        );
-    }
+          }
+        </Modal>
+      </>
+    );
+  }
 
-    private handleOpen() {
-        this.setState({ isModalOpen: true });
-    }
+  private handleOpen() {
+    this.setState({ isModalOpen: true });
+  }
 
-    private handleClose() {
-        this.setState({ isModalOpen: false },
-            () => {
-                if (this.props.awaitingApproval) {
-                    this.props.reset();
-                }
-            });
-    }
+  private handleClose() {
+    this.setState({ isModalOpen: false },
+      () => {
+        if (this.props.awaitingApproval) {
+          this.props.reset();
+        }
+      });
+  }
 
-    private handleSubmit(form: QuestionFormModel): void {
-        this.props.submit(form);
-    }
+  private handleSubmit(form: QuestionFormModel): void {
+    this.props.submit(form);
+  }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.newQuestion),
-    NewQuestionStore.actionCreators,
+  (state: ApplicationState, ownProps: any) => (state.newQuestion),
+  NewQuestionStore.actionCreators,
 )(NewQuestion);

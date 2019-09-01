@@ -7,34 +7,34 @@ import { getItemCountText } from '../../utils/string-utils';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 
 interface Props {
-    questions: QuestionListItemModel[];
+  questions: QuestionListItemModel[];
 }
 
 export default class QuestionList extends React.Component<Props, {}> {
 
-    public render() {
-        const { questions } = this.props;
+  public render() {
+    const { questions } = this.props;
 
-        const orderedQuestions = questions.sort((a, b) =>
-            moment(b.mostRecentActivityPostedAt).isAfter(moment(a.mostRecentActivityPostedAt)) ? 1 : -1);
+    const orderedQuestions = questions.sort((a, b) =>
+      moment(b.mostRecentActivityPostedAt).isAfter(moment(a.mostRecentActivityPostedAt)) ? 1 : -1);
 
-        return (
-            <ul className="list-unstyled">
-                {orderedQuestions.map((x: QuestionListItemModel, i: number) =>
-                    <li key={i} className="mb-4">
-                        <div className="card light-dark-bg brand-font-color">
-                            <CircleIcon className="float-left mr-3" value={CircleIconValue.Question} />
-                            <div className="card-body px-sm-5">
-                                <p>{x.text}</p>
-                                <Link
-                                    to={buildQuestionUrl(x.id, x.slug)}
-                                    className="btn btn-outline-secondary"
-                                >
-                                    {getItemCountText('answer', x.answersCount)}
-                                </Link>
-                            </div>
-                        </div>
-                    </li>)}
-            </ul>);
-    }
+    return (
+      <ul className="list-unstyled">
+        {orderedQuestions.map((x: QuestionListItemModel, i: number) =>
+          <li key={i} className="mb-4">
+            <div className="card light-dark-bg brand-font-color">
+              <CircleIcon className="float-left mr-3" value={CircleIconValue.Question} />
+              <div className="card-body px-sm-5">
+                <p>{x.text}</p>
+                <Link
+                  to={buildQuestionUrl(x.id, x.slug)}
+                  className="btn btn-outline-secondary"
+                >
+                  {getItemCountText('answer', x.answersCount)}
+                </Link>
+              </div>
+            </div>
+          </li>)}
+      </ul>);
+  }
 }

@@ -1,41 +1,41 @@
 import $ from 'jquery';
 
 export function onCtrlEnter(selector: string, callback: (e: JQuery.Event<HTMLElement, null>) => void): void {
-    $(selector).keydown((e) => {
-        if ((e.ctrlKey || e.metaKey) && (e.keyCode === 13 || e.keyCode === 10)) {
-            e.stopPropagation();
-            callback(e);
-        }
-    });
+  $(selector).keydown((e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.keyCode === 13 || e.keyCode === 10)) {
+      e.stopPropagation();
+      callback(e);
+    }
+  });
 }
 
 export function enableConfirmOnLeave(shouldConfirm: boolean): void {
-    window.onbeforeunload = shouldConfirm ? () => true : null;
+  window.onbeforeunload = shouldConfirm ? () => true : null;
 }
 
 export function getValidationClassName(submitted?: boolean, value?: any): string {
-    return submitted ? value ? 'is-valid' : 'is-invalid' : '';
+  return submitted ? value ? 'is-valid' : 'is-invalid' : '';
 }
 
 export function getBackgroundColor(isDarkMode = false) {
-    return isDarkMode ? '#28374B' : '#EDF6FB';
+  return isDarkMode ? '#28374B' : '#EDF6FB';
 }
 
 export function setDarkMode(isDarkMode = true) {
-    if (isDarkMode) {
-        document.body.classList.add('dark');
-    } else {
-        document.body.classList.remove('dark');
+  if (isDarkMode) {
+    document.body.classList.add('dark');
+  } else {
+    document.body.classList.remove('dark');
+  }
+  // Update mobile browser theme
+  const headerColor = getBackgroundColor(isDarkMode);
+  Array.prototype.forEach((meta: HTMLMetaElement) => {
+    switch (meta.name) {
+      case 'msapplication-navbutton-color':
+      case 'theme-color': {
+        meta.content = headerColor;
+        break;
+      }
     }
-    // Update mobile browser theme
-    const headerColor = getBackgroundColor(isDarkMode);
-    Array.prototype.forEach((meta: HTMLMetaElement) => {
-        switch (meta.name) {
-            case 'msapplication-navbutton-color':
-            case 'theme-color': {
-                meta.content = headerColor;
-                break;
-            }
-        }
-    }, document.head.childNodes);
+  }, document.head.childNodes);
 }

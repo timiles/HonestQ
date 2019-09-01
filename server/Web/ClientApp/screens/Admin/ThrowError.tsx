@@ -2,9 +2,9 @@ import React from 'react';
 
 export default class ThrowError extends React.Component {
 
-    constructor(props: {}) {
-        super(props);
+  constructor(props: {}) {
+    super(props);
 
-        throw new Error('Error');
-    }
+    throw new Error('Error');
+  }
 }

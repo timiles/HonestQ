@@ -13,120 +13,120 @@ import Tag from './Tag';
 import TagHeader from './TagHeader';
 
 interface OwnProps {
-    tagSlug: string;
+  tagSlug: string;
 }
 type ContainerProps = TagStore.ContainerState
-    & typeof TagStore.actionCreators
-    & OwnProps
-    & {
-        getTagStatus: ActionStatus,
-    };
+  & typeof TagStore.actionCreators
+  & OwnProps
+  & {
+    getTagStatus: ActionStatus,
+  };
 
 class Container extends React.Component<ContainerProps, {}> {
 
-    constructor(props: ContainerProps) {
-        super(props);
+  constructor(props: ContainerProps) {
+    super(props);
 
-        this.handleWatch = this.handleWatch.bind(this);
+    this.handleWatch = this.handleWatch.bind(this);
 
-        // This will also run on server side render
-        if (!props.tag || props.tag.slug !== props.tagSlug) {
-            props.getTag(props.tagSlug);
-        }
+    // This will also run on server side render
+    if (!props.tag || props.tag.slug !== props.tagSlug) {
+      props.getTag(props.tagSlug);
     }
+  }
 
-    public render() {
-        const { tag } = this.props;
+  public render() {
+    const { tag } = this.props;
 
-        return (
-            <>
-                {this.renderHelmetTags()}
-                {tag &&
-                    <div className="cityscape-background">
-                        <LoggedInUserContext.Consumer>
-                            {(user) => isUserInRole(user, 'Admin') &&
-                                <div className="container">
-                                    <div className="clearfix">
-                                        <Link
-                                            className="btn btn-danger float-right"
-                                            to={`/admin/edit/tags/${tag.slug}`}
-                                        >
-                                            Edit
-                                        </Link>
-                                    </div>
-                                </div>
-                            }
-                        </LoggedInUserContext.Consumer>
-                        <TagHeader tag={tag} onWatch={this.handleWatch} />
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-lg-8">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <ActionStatusDisplay {...this.props.getTagStatus} />
-                                            <Tag tag={tag} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4">
-                                    <label className="mb-1">Browse by Tags</label>
-                                    <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
-                                </div>
-                            </div>
-                        </div>
+    return (
+      <>
+        {this.renderHelmetTags()}
+        {tag &&
+          <div className="cityscape-background">
+            <LoggedInUserContext.Consumer>
+              {(user) => isUserInRole(user, 'Admin') &&
+                <div className="container">
+                  <div className="clearfix">
+                    <Link
+                      className="btn btn-danger float-right"
+                      to={`/admin/edit/tags/${tag.slug}`}
+                    >
+                      Edit
+                    </Link>
+                  </div>
+                </div>
+              }
+            </LoggedInUserContext.Consumer>
+            <TagHeader tag={tag} onWatch={this.handleWatch} />
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-8">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <ActionStatusDisplay {...this.props.getTagStatus} />
+                      <Tag tag={tag} />
                     </div>
-                    ||
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-8">
-                                <ActionStatusDisplay {...this.props.getTagStatus} />
-                            </div>
-                        </div>
-                    </div>}
-            </>
-        );
+                  </div>
+                </div>
+                <div className="col-lg-4">
+                  <label className="mb-1">Browse by Tags</label>
+                  <TagsList selectedTagSlugs={tag && tag.slug ? [tag.slug] : []} />
+                </div>
+              </div>
+            </div>
+          </div>
+          ||
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-8">
+                <ActionStatusDisplay {...this.props.getTagStatus} />
+              </div>
+            </div>
+          </div>}
+      </>
+    );
+  }
+
+  private renderHelmetTags() {
+    const { tag, tagSlug } = this.props;
+
+    if (!tag || tag.slug !== tagSlug) {
+      return (
+        <Helmet>
+          <title>⏳ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
+        </Helmet>
+      );
     }
 
-    private renderHelmetTags() {
-        const { tag, tagSlug } = this.props;
+    const pageTitle = `HonestQ: ${tag.name}`;
+    const canonicalUrl = `https://www.honestq.com/tags/${tag.slug}`;
 
-        if (!tag || tag.slug !== tagSlug) {
-            return (
-                <Helmet>
-                    <title>⏳ 𝘓𝘰𝘢𝘥𝘪𝘯𝘨...</title>
-                </Helmet>
-            );
-        }
+    const ogTitle = `Questions about ${tag.name}`;
+    const ogDescription = `View questions about ${tag.name}, ask your own, and join the debate.`;
 
-        const pageTitle = `HonestQ: ${tag.name}`;
-        const canonicalUrl = `https://www.honestq.com/tags/${tag.slug}`;
+    return (
+      <Helmet>
+        <title>{pageTitle}</title>
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={ogTitle} />
+        <meta property="og:description" content={ogDescription} />
+        <meta property="og:image" content="https://www.honestq.com/android-chrome-256x256.png" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@HonestQ_com" />
+      </Helmet>
+    );
+  }
 
-        const ogTitle = `Questions about ${tag.name}`;
-        const ogDescription = `View questions about ${tag.name}, ask your own, and join the debate.`;
-
-        return (
-            <Helmet>
-                <title>{pageTitle}</title>
-                <link rel="canonical" href={canonicalUrl} />
-                <meta property="og:url" content={canonicalUrl} />
-                <meta property="og:title" content={ogTitle} />
-                <meta property="og:description" content={ogDescription} />
-                <meta property="og:image" content="https://www.honestq.com/android-chrome-256x256.png" />
-                <meta name="twitter:card" content="summary" />
-                <meta name="twitter:site" content="@HonestQ_com" />
-            </Helmet>
-        );
-    }
-
-    private handleWatch(on: boolean): void {
-        this.props.updateWatch(on, this.props.tagSlug);
-    }
+  private handleWatch(on: boolean): void {
+    this.props.updateWatch(on, this.props.tagSlug);
+  }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: OwnProps) => ({
-        ...state.tag,
-        getTagStatus: getActionStatus(state, 'GET_TAG'),
-    }),
-    TagStore.actionCreators,
+  (state: ApplicationState, ownProps: OwnProps) => ({
+    ...state.tag,
+    getTagStatus: getActionStatus(state, 'GET_TAG'),
+  }),
+  TagStore.actionCreators,
 )(Container);

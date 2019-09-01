@@ -1,37 +1,37 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:latest",
-        "tslint-react"
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:latest",
+    "tslint-react"
+  ],
+  "jsRules": {},
+  "rules": {
+    "interface-name": [
+      true,
+      "never-prefix"
     ],
-    "jsRules": {},
-    "rules": {
-        "interface-name": [
-            true,
-            "never-prefix"
-        ],
-        "jsx-no-multiline-js": false,
-        "max-classes-per-file": [
-            true,
-            1,
-            "exclude-class-expressions"
-        ],
-        "no-implicit-dependencies": [
-            true,
-            "dev"
-        ],
-        "object-literal-sort-keys": false,
-        "quotemark": [
-            true,
-            "single",
-            "jsx-double"
-        ],
-        "space-before-function-paren": [
-            true,
-            {
-                "anonymous": "always"
-            }
-        ]
-    },
-    "rulesDirectory": []
+    "jsx-no-multiline-js": false,
+    "max-classes-per-file": [
+      true,
+      1,
+      "exclude-class-expressions"
+    ],
+    "no-implicit-dependencies": [
+      true,
+      "dev"
+    ],
+    "object-literal-sort-keys": false,
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double"
+    ],
+    "space-before-function-paren": [
+      true,
+      {
+        "anonymous": "always"
+      }
+    ]
+  },
+  "rulesDirectory": []
 }

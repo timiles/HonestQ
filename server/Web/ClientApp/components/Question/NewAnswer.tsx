@@ -8,71 +8,71 @@ import Modal from '../shared/Modal';
 import AnswerForm from './AnswerForm';
 
 type Props = NewAnswerStore.NewAnswerState
-    & typeof NewAnswerStore.actionCreators
-    & { questionId: number };
+  & typeof NewAnswerStore.actionCreators
+  & { questionId: number };
 
 interface State {
-    isModalOpen: boolean;
+  isModalOpen: boolean;
 }
 
 class NewAnswer extends React.Component<Props, State> {
 
-    constructor(props: Props) {
-        super(props);
+  constructor(props: Props) {
+    super(props);
 
-        this.state = { isModalOpen: false };
+    this.state = { isModalOpen: false };
 
-        this.handleOpen = this.handleOpen.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  public componentDidUpdate(prevProps: Props) {
+    if (prevProps.answerForm!.submitted && !this.props.answerForm!.submitted) {
+      // Close the modal when an Answer has been successfully submitted
+      this.setState({ isModalOpen: false });
     }
+  }
 
-    public componentDidUpdate(prevProps: Props) {
-        if (prevProps.answerForm!.submitted && !this.props.answerForm!.submitted) {
-            // Close the modal when an Answer has been successfully submitted
-            this.setState({ isModalOpen: false });
-        }
-    }
+  public render() {
+    const { answerForm } = this.props;
+    const { isModalOpen } = this.state;
 
-    public render() {
-        const { answerForm } = this.props;
-        const { isModalOpen } = this.state;
+    return (
+      <>
+        <ButtonOrLogIn
+          type="button"
+          className="btn btn-lg btn-primary shadow-lg"
+          onClick={this.handleOpen}
+        >
+          Got an answer?
+        </ButtonOrLogIn>
+        <Modal title="Add your answer" isOpen={isModalOpen} onRequestClose={this.handleClose}>
+          <AnswerForm
+            {...answerForm}
+            isModal={true}
+            onCloseModalRequested={this.handleClose}
+            submit={this.handleSubmit}
+          />
+        </Modal>
+      </>
+    );
+  }
 
-        return (
-            <>
-                <ButtonOrLogIn
-                    type="button"
-                    className="btn btn-lg btn-primary shadow-lg"
-                    onClick={this.handleOpen}
-                >
-                    Got an answer?
-                </ButtonOrLogIn>
-                <Modal title="Add your answer" isOpen={isModalOpen} onRequestClose={this.handleClose}>
-                    <AnswerForm
-                        {...answerForm}
-                        isModal={true}
-                        onCloseModalRequested={this.handleClose}
-                        submit={this.handleSubmit}
-                    />
-                </Modal>
-            </>
-        );
-    }
+  private handleOpen() {
+    this.setState({ isModalOpen: true });
+  }
 
-    private handleOpen() {
-        this.setState({ isModalOpen: true });
-    }
+  private handleClose() {
+    this.setState({ isModalOpen: false });
+  }
 
-    private handleClose() {
-        this.setState({ isModalOpen: false });
-    }
-
-    private handleSubmit(form: AnswerFormModel): void {
-        this.props.submit(this.props.questionId, form);
-    }
+  private handleSubmit(form: AnswerFormModel): void {
+    this.props.submit(this.props.questionId, form);
+  }
 }
 
 export default connect(
-    (state: ApplicationState, ownProps: any) => (state.newAnswer),
-    NewAnswerStore.actionCreators,
+  (state: ApplicationState, ownProps: any) => (state.newAnswer),
+  NewAnswerStore.actionCreators,
 )(NewAnswer);

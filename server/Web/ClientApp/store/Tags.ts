@@ -7,7 +7,7 @@ import { getJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface ListState {
-    tagsList?: TagsListModel;
+  tagsList?: TagsListModel;
 }
 
 // -----------------
@@ -22,33 +22,33 @@ interface GetTagsListFailureAction { type: 'GET_TAGS_LIST_FAILURE'; payload: { e
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | GetTagsListRequestAction
-    | GetTagsListSuccessAction
-    | GetTagsListFailureAction;
+  | GetTagsListRequestAction
+  | GetTagsListSuccessAction
+  | GetTagsListFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    getTagsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        return (async () => {
-            dispatch({ type: 'GET_TAGS_LIST_REQUEST' });
+  getTagsList: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    return (async () => {
+      dispatch({ type: 'GET_TAGS_LIST_REQUEST' });
 
-            getJson<TagsListModel>('/api/tags', getState().login.loggedInUser)
-                .then((tagsListResponse: TagsListModel) => {
-                    dispatch({ type: 'GET_TAGS_LIST_SUCCESS', payload: tagsListResponse });
-                })
-                .catch((reason) => {
-                    dispatch({
-                        type: 'GET_TAGS_LIST_FAILURE',
-                        payload: {
-                            error: reason || 'Get tags list failed',
-                        },
-                    });
-                });
-        })();
-    },
+      getJson<TagsListModel>('/api/tags', getState().login.loggedInUser)
+        .then((tagsListResponse: TagsListModel) => {
+          dispatch({ type: 'GET_TAGS_LIST_SUCCESS', payload: tagsListResponse });
+        })
+        .catch((reason) => {
+          dispatch({
+            type: 'GET_TAGS_LIST_FAILURE',
+            payload: {
+              error: reason || 'Get tags list failed',
+            },
+          });
+        });
+    })();
+  },
 };
 
 // ----------------
@@ -58,21 +58,21 @@ export const actionCreators = {
 const defaultState: ListState = {};
 
 export const reducer: Reducer<ListState> = (state: ListState, action: KnownAction) => {
-    switch (action.type) {
-        case 'GET_TAGS_LIST_REQUEST':
-        case 'GET_TAGS_LIST_FAILURE':
-            return state;
-        case 'GET_TAGS_LIST_SUCCESS':
-            return {
-                tagsList: action.payload,
-            };
+  switch (action.type) {
+    case 'GET_TAGS_LIST_REQUEST':
+    case 'GET_TAGS_LIST_FAILURE':
+      return state;
+    case 'GET_TAGS_LIST_SUCCESS':
+      return {
+        tagsList: action.payload,
+      };
 
-        default:
-            // The following line guarantees that every action in the KnownAction union has been covered by a case above
-            const exhaustiveCheck: never = action;
-    }
+    default:
+      // The following line guarantees that every action in the KnownAction union has been covered by a case above
+      const exhaustiveCheck: never = action;
+  }
 
-    // For unrecognized actions (or in cases where actions have no effect), must return the existing state
-    //  (or default initial state if none was supplied)
-    return state || defaultState;
+  // For unrecognized actions (or in cases where actions have no effect), must return the existing state
+  //  (or default initial state if none was supplied)
+  return state || defaultState;
 };

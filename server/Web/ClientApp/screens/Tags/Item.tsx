@@ -7,19 +7,19 @@ import { LoggedInUserModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 
 type Props = { loggedInUser: LoggedInUserModel | undefined }
-    & RouteComponentProps<{ tagSlug: string }>;
+  & RouteComponentProps<{ tagSlug: string }>;
 
 class Item extends React.Component<Props> {
 
-    public render() {
-        const { tagSlug } = this.props.match.params;
+  public render() {
+    const { tagSlug } = this.props.match.params;
 
-        return (
-            <LoggedInUserContext.Provider value={this.props.loggedInUser}>
-                <Container key={tagSlug} tagSlug={tagSlug} />
-            </LoggedInUserContext.Provider>
-        );
-    }
+    return (
+      <LoggedInUserContext.Provider value={this.props.loggedInUser}>
+        <Container key={tagSlug} tagSlug={tagSlug} />
+      </LoggedInUserContext.Provider>
+    );
+  }
 }
 
 export default connect((state: ApplicationState, ownProps: any): any => (state.login))(Item);

@@ -7,10 +7,10 @@ import { postJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface SignUpState {
-    submitting: boolean;
-    submitted: boolean;
-    success: boolean;
-    error?: string;
+  submitting: boolean;
+  submitted: boolean;
+  success: boolean;
+  error?: string;
 }
 
 // -----------------
@@ -24,9 +24,9 @@ interface SignUpFailureAction { type: 'SIGNUP_FAILURE'; payload: { reason: strin
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-    | SignUpRequestAction
-    | SignUpSuccessAction
-    | SignUpFailureAction;
+  | SignUpRequestAction
+  | SignUpSuccessAction
+  | SignUpFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -34,26 +34,26 @@ type KnownAction =
 
 export const actionCreators = {
 
-    submitSignUpForm: (form: SignUpFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        return (async () => {
-            dispatch({ type: 'SIGNUP_REQUEST', payload: form });
+  submitSignUpForm: (form: SignUpFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    return (async () => {
+      dispatch({ type: 'SIGNUP_REQUEST', payload: form });
 
-            const user = form;
-            if (!user.email || !user.username || !user.password || user.password.length < 7) {
-                // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'SIGNUP_FAILURE', payload: { reason: '' } });
-                return;
-            }
+      const user = form;
+      if (!user.email || !user.username || !user.password || user.password.length < 7) {
+        // Don't set an error message, the validation properties will display instead
+        dispatch({ type: 'SIGNUP_FAILURE', payload: { reason: '' } });
+        return;
+      }
 
-            postJson('/api/account/signup', user, null)
-                .then((response) => {
-                    dispatch({ type: 'SIGNUP_SUCCESS' });
-                })
-                .catch((reason) => {
-                    dispatch({ type: 'SIGNUP_FAILURE', payload: { reason } });
-                });
-        })();
-    },
+      postJson('/api/account/signup', user, null)
+        .then((response) => {
+          dispatch({ type: 'SIGNUP_SUCCESS' });
+        })
+        .catch((reason) => {
+          dispatch({ type: 'SIGNUP_FAILURE', payload: { reason } });
+        });
+    })();
+  },
 };
 
 // ----------------
@@ -61,41 +61,41 @@ export const actionCreators = {
 // To support time travel, this must not mutate the old state.
 
 const defaultState: SignUpState = {
-    submitting: false,
-    submitted: false,
-    success: false,
-    error: undefined,
+  submitting: false,
+  submitted: false,
+  success: false,
+  error: undefined,
 };
 
 export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownAction) => {
-    switch (action.type) {
+  switch (action.type) {
 
-        case 'SIGNUP_REQUEST':
-            return {
-                submitting: true,
-                submitted: true,
-                success: false,
-                error: undefined,
-            };
-        case 'SIGNUP_SUCCESS':
-            return {
-                submitting: false,
-                submitted: true,
-                success: true,
-                error: undefined,
-            };
-        case 'SIGNUP_FAILURE':
-            return {
-                submitting: false,
-                submitted: true,
-                success: false,
-                error: action.payload.reason,
-            };
+    case 'SIGNUP_REQUEST':
+      return {
+        submitting: true,
+        submitted: true,
+        success: false,
+        error: undefined,
+      };
+    case 'SIGNUP_SUCCESS':
+      return {
+        submitting: false,
+        submitted: true,
+        success: true,
+        error: undefined,
+      };
+    case 'SIGNUP_FAILURE':
+      return {
+        submitting: false,
+        submitted: true,
+        success: false,
+        error: action.payload.reason,
+      };
 
-        default:
-            // The following line guarantees that every action in the KnownAction union has been covered by a case above
-            const exhaustiveCheck: never = action;
-    }
+    default:
+      // The following line guarantees that every action in the KnownAction union has been covered by a case above
+      const exhaustiveCheck: never = action;
+  }
 
-    return state || defaultState;
+  return state || defaultState;
 };

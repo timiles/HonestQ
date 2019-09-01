@@ -8,10 +8,10 @@ import { postJson } from '../utils/http-utils';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface LoginState {
-    loggedInUser?: LoggedInUserModel;
-    submitting?: boolean;
-    submitted?: boolean;
-    error?: string | null;
+  loggedInUser?: LoggedInUserModel;
+  submitting?: boolean;
+  submitted?: boolean;
+  error?: string | null;
 }
 
 // -----------------
@@ -29,55 +29,55 @@ interface LogOutFailureAction { type: 'LOGOUT_FAILURE'; }
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction = LogInRequestAction
-    | LogInSuccessAction
-    | LogInFailureAction
-    | LogOutRequestAction
-    | LogOutSuccessAction
-    | LogOutFailureAction;
+  | LogInSuccessAction
+  | LogInFailureAction
+  | LogOutRequestAction
+  | LogOutSuccessAction
+  | LogOutFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    logIn: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        return (async () => {
-            dispatch({ type: 'LOGIN_REQUEST' });
+  logIn: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    return (async () => {
+      dispatch({ type: 'LOGIN_REQUEST' });
 
-            if (!logInForm.username || !logInForm.password) {
-                // Don't set an error message, the validation properties will display instead
-                dispatch({ type: 'LOGIN_FAILURE', payload: { error: null } });
-                return;
-            }
+      if (!logInForm.username || !logInForm.password) {
+        // Don't set an error message, the validation properties will display instead
+        dispatch({ type: 'LOGIN_FAILURE', payload: { error: null } });
+        return;
+      }
 
-            postJson<LoggedInUserModel>('/api/account/login', logInForm, null, true)
-                .then((logInResponse: LoggedInUserModel) => {
-                    // Log in successful if there's a jwt token in the response
-                    if (logInResponse && logInResponse.token) {
-                        ReactGA.set({ userId: logInResponse.id });
-                        dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
-                    } else {
-                        dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'An error occurred, please try again' } });
-                    }
-                })
-                .catch((reason: string) => {
-                    dispatch({ type: 'LOGIN_FAILURE', payload: { error: reason || 'LogIn failed' } });
-                });
-        })();
-    },
-    logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
-        return (async () => {
-            dispatch({ type: 'LOGOUT_REQUEST' });
+      postJson<LoggedInUserModel>('/api/account/login', logInForm, null, true)
+        .then((logInResponse: LoggedInUserModel) => {
+          // Log in successful if there's a jwt token in the response
+          if (logInResponse && logInResponse.token) {
+            ReactGA.set({ userId: logInResponse.id });
+            dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
+          } else {
+            dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'An error occurred, please try again' } });
+          }
+        })
+        .catch((reason: string) => {
+          dispatch({ type: 'LOGIN_FAILURE', payload: { error: reason || 'LogIn failed' } });
+        });
+    })();
+  },
+  logOut: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    return (async () => {
+      dispatch({ type: 'LOGOUT_REQUEST' });
 
-            postJson('/api/account/logout', null, null, true)
-                .then(() => {
-                    dispatch({ type: 'LOGOUT_SUCCESS' });
-                })
-                .catch(() => {
-                    dispatch({ type: 'LOGOUT_FAILURE' });
-                });
-        })();
-    },
+      postJson('/api/account/logout', null, null, true)
+        .then(() => {
+          dispatch({ type: 'LOGOUT_SUCCESS' });
+        })
+        .catch(() => {
+          dispatch({ type: 'LOGOUT_FAILURE' });
+        });
+    })();
+  },
 };
 
 // ----------------
@@ -87,26 +87,26 @@ export const actionCreators = {
 const defaultState: LoginState = {};
 
 export const reducer: Reducer<LoginState> = (state: LoginState, action: KnownAction) => {
-    switch (action.type) {
-        case 'LOGIN_REQUEST':
-            return { submitting: true, submitted: true };
-        case 'LOGIN_SUCCESS':
-            return { submitting: false, submitted: true, loggedInUser: action.payload };
-        case 'LOGIN_FAILURE':
-            return { submitting: false, submitted: true, error: action.payload.error };
-        case 'LOGOUT_REQUEST':
-            return { loggedInUser: state.loggedInUser };
-        case 'LOGOUT_SUCCESS':
-            return defaultState;
-        case 'LOGOUT_FAILURE':
-            return { loggedInUser: state.loggedInUser };
+  switch (action.type) {
+    case 'LOGIN_REQUEST':
+      return { submitting: true, submitted: true };
+    case 'LOGIN_SUCCESS':
+      return { submitting: false, submitted: true, loggedInUser: action.payload };
+    case 'LOGIN_FAILURE':
+      return { submitting: false, submitted: true, error: action.payload.error };
+    case 'LOGOUT_REQUEST':
+      return { loggedInUser: state.loggedInUser };
+    case 'LOGOUT_SUCCESS':
+      return defaultState;
+    case 'LOGOUT_FAILURE':
+      return { loggedInUser: state.loggedInUser };
 
-        default:
-            // The following line guarantees that every action in the KnownAction union has been covered by a case above
-            const exhaustiveCheck: never = action;
-    }
+    default:
+      // The following line guarantees that every action in the KnownAction union has been covered by a case above
+      const exhaustiveCheck: never = action;
+  }
 
-    // For unrecognized actions (or in cases where actions have no effect), must return the existing state
-    //  (or default initial state if none was supplied)
-    return state || defaultState;
+  // For unrecognized actions (or in cases where actions have no effect), must return the existing state
+  //  (or default initial state if none was supplied)
+  return state || defaultState;
 };

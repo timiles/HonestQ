@@ -21,25 +21,25 @@ import Tag from './screens/Tags/Item';
 
 // tslint:disable:max-line-length
 export const routes = (
-    <Layout>
-        <Switch>
-            <Route exact={true} path="/" component={Home} />
-            <Route exact={true} path="/admin" component={AdminHome} />
-            <Route exact={true} path="/admin/throwerror" component={ThrowError} />
-            <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
-            <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
-            <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId/comments/:commentId" component={EditComment} />
-            <Route exact={true} path="/admin/edit/tags/:tagSlug" component={EditTag} />
-            <Route exact={true} path="/notifications" component={Notifications} />
-            <Route exact={true} path="/questions" component={Questions} />
-            <Route path="/login" component={LogIn} />
-            <Route path="/account/verifyemail" component={VerifyEmail} />
-            <Route path="/logout" component={LogOut} />
-            <Route path="/signup" component={SignUp} />
-            <Route path="/questions/:questionId/:questionSlug/:answerId?/:answerSlug?" component={Question} />
-            <Route exact={true} path="/tags" component={Tags} />
-            <Route path="/tags/_" component={NewTag} />
-            <Route path="/tags/:tagSlug" component={Tag} />
-        </Switch>
-    </Layout>
+  <Layout>
+    <Switch>
+      <Route exact={true} path="/" component={Home} />
+      <Route exact={true} path="/admin" component={AdminHome} />
+      <Route exact={true} path="/admin/throwerror" component={ThrowError} />
+      <Route exact={true} path="/admin/edit/questions/:questionId" component={EditQuestion} />
+      <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId" component={EditAnswer} />
+      <Route exact={true} path="/admin/edit/questions/:questionId/answers/:answerId/comments/:commentId" component={EditComment} />
+      <Route exact={true} path="/admin/edit/tags/:tagSlug" component={EditTag} />
+      <Route exact={true} path="/notifications" component={Notifications} />
+      <Route exact={true} path="/questions" component={Questions} />
+      <Route path="/login" component={LogIn} />
+      <Route path="/account/verifyemail" component={VerifyEmail} />
+      <Route path="/logout" component={LogOut} />
+      <Route path="/signup" component={SignUp} />
+      <Route path="/questions/:questionId/:questionSlug/:answerId?/:answerSlug?" component={Question} />
+      <Route exact={true} path="/tags" component={Tags} />
+      <Route path="/tags/_" component={NewTag} />
+      <Route path="/tags/:tagSlug" component={Tag} />
+    </Switch>
+  </Layout>
 );

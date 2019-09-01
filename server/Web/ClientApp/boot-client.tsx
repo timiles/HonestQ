@@ -21,39 +21,39 @@ const initialState = (window as any).initialReduxState as ApplicationState;
 const store = configureStore(history, initialState);
 
 function renderApp() {
-    // TODO: Use .env instead? Couldn't get it working...
-    const googleAnalyticsTrackingCode = (window.location.host === 'www.honestq.com') ? 'UA-128648766-2' : null;
-    if (googleAnalyticsTrackingCode) {
-        ReactGA.initialize(googleAnalyticsTrackingCode);
-        const loggedInUser = store.getState().login.loggedInUser;
-        if (loggedInUser) {
-            ReactGA.set({ userId: loggedInUser.id });
-        }
-        ReactGA.pageview(window.location.pathname + window.location.search);
-        history.listen((location, action) => {
-            // Track all actions: PUSH, POP, REPLACE
-            ReactGA.pageview(location.pathname + location.search);
-        });
+  // TODO: Use .env instead? Couldn't get it working...
+  const googleAnalyticsTrackingCode = (window.location.host === 'www.honestq.com') ? 'UA-128648766-2' : null;
+  if (googleAnalyticsTrackingCode) {
+    ReactGA.initialize(googleAnalyticsTrackingCode);
+    const loggedInUser = store.getState().login.loggedInUser;
+    if (loggedInUser) {
+      ReactGA.set({ userId: loggedInUser.id });
     }
+    ReactGA.pageview(window.location.pathname + window.location.search);
+    history.listen((location, action) => {
+      // Track all actions: PUSH, POP, REPLACE
+      ReactGA.pageview(location.pathname + location.search);
+    });
+  }
 
-    // This code starts up the React app when it runs in a browser. It sets up the routing configuration
-    // and injects the app into a DOM element.
-    ReactDOM.render(
-        <AppContainer>
-            <Provider store={store}>
-                <ConnectedRouter history={history} children={routes} />
-            </Provider>
-        </AppContainer>,
-        document.getElementById('react-app'),
-    );
+  // This code starts up the React app when it runs in a browser. It sets up the routing configuration
+  // and injects the app into a DOM element.
+  ReactDOM.render(
+    <AppContainer>
+      <Provider store={store}>
+        <ConnectedRouter history={history} children={routes} />
+      </Provider>
+    </AppContainer>,
+    document.getElementById('react-app'),
+  );
 }
 
 renderApp();
 
 // Allow Hot Module Replacement
 if (module.hot) {
-    module.hot.accept('./routes', () => {
-        routes = require<typeof RoutesModule>('./routes').routes;
-        renderApp();
-    });
+  module.hot.accept('./routes', () => {
+    routes = require<typeof RoutesModule>('./routes').routes;
+    renderApp();
+  });
 }
