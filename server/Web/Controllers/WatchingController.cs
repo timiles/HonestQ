@@ -6,7 +6,7 @@ using Pobs.Web.Services;
 
 namespace Pobs.Web.Controllers
 {
-    [Route("api")]
+    [Route("api"), Authorize]
     public class WatchingController : Controller
     {
         private readonly IWatchingService _watchingService;
@@ -17,7 +17,7 @@ namespace Pobs.Web.Controllers
         }
 
 
-        [Authorize, HttpPost, Route("tags/{tagSlug}/watch")]
+        [HttpPost, Route("tags/{tagSlug}/watch")]
         public async Task<IActionResult> AddTagWatch(string tagSlug)
         {
             try
@@ -39,7 +39,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        [Authorize, HttpDelete, Route("tags/{tagSlug}/watch")]
+        [HttpDelete, Route("tags/{tagSlug}/watch")]
         public async Task<IActionResult> RemoveTagWatch(string tagSlug)
         {
             try
@@ -58,7 +58,7 @@ namespace Pobs.Web.Controllers
         }
 
 
-        [Authorize, HttpGet, Route("questions/_/watching")]
+        [HttpGet, Route("questions/_/watching")]
         public async Task<IActionResult> IndexQuestions(int pageSize = 20, long? beforeWatchId = null)
         {
             var loggedInUserId = User.Identity.ParseUserId();
@@ -66,7 +66,7 @@ namespace Pobs.Web.Controllers
             return Ok(questionsList);
         }
 
-        [Authorize, HttpPost, Route("questions/{questionId}/watch")]
+        [HttpPost, Route("questions/{questionId}/watch")]
         public async Task<IActionResult> AddQuestionWatch(int questionId)
         {
             try
@@ -88,7 +88,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        [Authorize, HttpDelete, Route("questions/{questionId}/watch")]
+        [HttpDelete, Route("questions/{questionId}/watch")]
         public async Task<IActionResult> RemoveQuestionWatch(int questionId)
         {
             try
@@ -107,7 +107,7 @@ namespace Pobs.Web.Controllers
         }
 
 
-        [Authorize, HttpGet, Route("questions/_/answers/_/watching")]
+        [HttpGet, Route("questions/_/answers/_/watching")]
         public async Task<IActionResult> IndexAnswers(int pageSize = 20, long? beforeWatchId = null)
         {
             var loggedInUserId = User.Identity.ParseUserId();
@@ -115,7 +115,7 @@ namespace Pobs.Web.Controllers
             return Ok(answersList);
         }
 
-        [Authorize, HttpPost, Route("questions/{questionId}/answers/{answerId}/watch")]
+        [HttpPost, Route("questions/{questionId}/answers/{answerId}/watch")]
         public async Task<IActionResult> AddAnswerWatch(int questionId, int answerId)
         {
             try
@@ -137,7 +137,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        [Authorize, HttpDelete, Route("questions/{questionId}/answers/{answerId}/watch")]
+        [HttpDelete, Route("questions/{questionId}/answers/{answerId}/watch")]
         public async Task<IActionResult> RemoveAnswerWatch(int questionId, int answerId)
         {
             try
@@ -155,7 +155,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        [Authorize, HttpPost, Route("questions/{questionId}/answers/{answerId}/comments/{commentId}/watch")]
+        [HttpPost, Route("questions/{questionId}/answers/{answerId}/comments/{commentId}/watch")]
         public async Task<IActionResult> AddCommentWatch(int questionId, int answerId, long commentId)
         {
             try
@@ -177,7 +177,7 @@ namespace Pobs.Web.Controllers
             }
         }
 
-        [Authorize, HttpDelete, Route("questions/{questionId}/answers/{answerId}/comments/{commentId}/watch")]
+        [HttpDelete, Route("questions/{questionId}/answers/{answerId}/comments/{commentId}/watch")]
         public async Task<IActionResult> RemoveCommentWatch(int questionId, int answerId, long commentId)
         {
             try
