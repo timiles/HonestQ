@@ -1,7 +1,7 @@
 using System.Linq;
 using Pobs.Domain.Entities;
 
-namespace Pobs.Web.Models.Notifications
+namespace Pobs.Web.Models.Watching
 {
     public class WatchResponseModel
     {

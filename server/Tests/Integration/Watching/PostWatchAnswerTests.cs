@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web.Models.Notifications;
+using Pobs.Web.Models.Watching;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Notifications
+namespace Pobs.Tests.Integration.Watching
 {
     public class PostWatchAnswerTests : IDisposable
     {

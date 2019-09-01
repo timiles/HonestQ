@@ -16,14 +16,17 @@ namespace Pobs.Web.Controllers
     {
         private readonly IQuestionService _questionService;
         private readonly INotificationsService _notificationsService;
+        private readonly IWatchingService _watchingService;
         private readonly IEmailSender _emailSender;
 
         public QuestionsController(IQuestionService questionService,
             INotificationsService notificationsService,
+            IWatchingService watchingService,
             IEmailSender emailSender)
         {
             _questionService = questionService;
             _notificationsService = notificationsService;
+            _watchingService = watchingService;
             _emailSender = emailSender;
         }
 
@@ -93,7 +96,7 @@ namespace Pobs.Web.Controllers
             var questionModel = await _questionService.SaveQuestion(payload, userId, isAdmin);
             if (questionModel != null)
             {
-                await _notificationsService.AddWatchToQuestion(userId, questionModel.Id);
+                await _watchingService.AddWatchToQuestion(userId, questionModel.Id);
                 if (isAdmin)
                 {
                     await _notificationsService.CreateNotificationsForQuestion(questionModel.Id);
@@ -160,46 +163,6 @@ namespace Pobs.Web.Controllers
             return NotFound();
         }
 
-        [Authorize, HttpPost, Route("{questionId}/watch")]
-        public async Task<IActionResult> AddQuestionWatch(int questionId)
-        {
-            try
-            {
-                var response = await _notificationsService.AddWatchToQuestion(User.Identity.ParseUserId(), questionId);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                if (e.Message == "Watch already exists.")
-                {
-                    return Conflict(e.Message);
-                }
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize, HttpDelete, Route("{questionId}/watch")]
-        public async Task<IActionResult> RemoveQuestionWatch(int questionId)
-        {
-            try
-            {
-                var response = await _notificationsService.RemoveWatchFromQuestion(User.Identity.ParseUserId(), questionId);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
         [HttpPost, Route("{questionId}/answers"), Authorize]
         public async Task<IActionResult> AddAnswer(int questionId, [FromBody] AnswerFormModel payload)
         {
@@ -214,7 +177,7 @@ namespace Pobs.Web.Controllers
                 var answerModel = await _questionService.SaveAnswer(questionId, payload, userId);
                 if (answerModel != null)
                 {
-                    await _notificationsService.AddWatchToAnswer(userId, questionId, answerModel.Id);
+                    await _watchingService.AddWatchToAnswer(userId, questionId, answerModel.Id);
                     await _notificationsService.CreateNotificationsForAnswer(answerModel.Id);
                     answerModel.Watching = true;
                     return Ok(answerModel);
@@ -298,46 +261,6 @@ namespace Pobs.Web.Controllers
                 return Ok(responseModel);
             }
             return NotFound();
-        }
-
-        [Authorize, HttpPost, Route("{questionId}/answers/{answerId}/watch")]
-        public async Task<IActionResult> AddAnswerWatch(int questionId, int answerId)
-        {
-            try
-            {
-                var response = await _notificationsService.AddWatchToAnswer(User.Identity.ParseUserId(), questionId, answerId);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                if (e.Message == "Watch already exists.")
-                {
-                    return Conflict(e.Message);
-                }
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize, HttpDelete, Route("{questionId}/answers/{answerId}/watch")]
-        public async Task<IActionResult> RemoveAnswerWatch(int questionId, int answerId)
-        {
-            try
-            {
-                var response = await _notificationsService.RemoveWatchFromAnswer(User.Identity.ParseUserId(), questionId, answerId);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                return BadRequest(e.Message);
-            }
         }
 
         [HttpPost, Route("{questionId}/answers/{answerId}/comments"), Authorize]
@@ -447,46 +370,6 @@ namespace Pobs.Web.Controllers
                 return Ok(responseModel);
             }
             return NotFound();
-        }
-
-        [Authorize, HttpPost, Route("{questionId}/answers/{answerId}/comments/{commentId}/watch")]
-        public async Task<IActionResult> AddCommentWatch(int questionId, int answerId, long commentId)
-        {
-            try
-            {
-                var response = await _notificationsService.AddWatchToComment(User.Identity.ParseUserId(), questionId, answerId, commentId);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                if (e.Message == "Watch already exists.")
-                {
-                    return Conflict(e.Message);
-                }
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize, HttpDelete, Route("{questionId}/answers/{answerId}/comments/{commentId}/watch")]
-        public async Task<IActionResult> RemoveCommentWatch(int questionId, int answerId, long commentId)
-        {
-            try
-            {
-                var response = await _notificationsService.RemoveWatchFromComment(User.Identity.ParseUserId(), questionId, answerId, commentId);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                return BadRequest(e.Message);
-            }
         }
     }
 }

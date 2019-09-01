@@ -13,11 +13,15 @@ namespace Pobs.Web.Controllers
     {
         private readonly ITagService _tagService;
         private readonly INotificationsService _notificationsService;
+        private readonly IWatchingService _watchingService;
 
-        public TagsController(ITagService tagService, INotificationsService notificationsService)
+        public TagsController(ITagService tagService,
+            INotificationsService notificationsService,
+            IWatchingService watchingService)
         {
             _tagService = tagService;
             _notificationsService = notificationsService;
+            _watchingService = watchingService;
         }
 
         [HttpGet]
@@ -54,7 +58,7 @@ namespace Pobs.Web.Controllers
                 var tagModel = await _tagService.SaveTag(payload.Name, payload.Description, payload.MoreInfoUrl, userId);
                 if (tagModel != null)
                 {
-                    await _notificationsService.AddWatchToTag(userId, tagModel.Slug);
+                    await _watchingService.AddWatchToTag(userId, tagModel.Slug);
                 }
 
                 return Ok();
@@ -102,46 +106,6 @@ namespace Pobs.Web.Controllers
                 return Ok(tagModel);
             }
             return NotFound();
-        }
-
-        [Authorize, HttpPost, Route("{tagSlug}/watch")]
-        public async Task<IActionResult> AddWatch(string tagSlug)
-        {
-            try
-            {
-                var response = await _notificationsService.AddWatchToTag(User.Identity.ParseUserId(), tagSlug);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                if (e.Message == "Watch already exists.")
-                {
-                    return Conflict(e.Message);
-                }
-                return BadRequest(e.Message);
-            }
-        }
-
-        [Authorize, HttpDelete, Route("{tagSlug}/watch")]
-        public async Task<IActionResult> RemoveWatch(string tagSlug)
-        {
-            try
-            {
-                var response = await _notificationsService.RemoveWatchFromTag(User.Identity.ParseUserId(), tagSlug);
-                if (response == null)
-                {
-                    return NotFound();
-                }
-                return Ok(response);
-            }
-            catch (AppException e)
-            {
-                return BadRequest(e.Message);
-            }
         }
     }
 }

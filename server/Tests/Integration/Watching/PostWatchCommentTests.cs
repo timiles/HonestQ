@@ -5,21 +5,23 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
-using Pobs.Web.Models.Notifications;
+using Pobs.Web.Models.Watching;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Notifications
+namespace Pobs.Tests.Integration.Watching
 {
-    public class PostWatchTagTests : IDisposable
+    public class PostWatchCommentTests : IDisposable
     {
-        private string _buildUrl(string tagSlug) => $"/api/tags/{tagSlug}/watch";
+        private string _buildUrl(int questionId, int answerId, long commentId) =>
+            $"/api/questions/{questionId}/answers/{answerId}/comments/{commentId}/watch";
         private readonly User _user;
-        private readonly Tag _tag;
+        private readonly Comment _comment;
 
-        public PostWatchTagTests()
+        public PostWatchCommentTests()
         {
             _user = DataHelpers.CreateUser();
-            _tag = DataHelpers.CreateTag(_user);
+            var answer = DataHelpers.CreateQuestions(_user, 1, _user, 1).Single().Answers.Single();
+            _comment = DataHelpers.CreateComments(answer, _user, 1).Single();
         }
 
         [Fact]
@@ -30,7 +32,7 @@ namespace Pobs.Tests.Integration.Notifications
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _buildUrl(_tag.Slug);
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id);
                 var response = await client.PostAsync(url, null);
                 response.EnsureSuccessStatusCode();
 
@@ -40,7 +42,7 @@ namespace Pobs.Tests.Integration.Notifications
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    Assert.True(dbContext.Watches.Any(x => x.UserId == _user.Id && x.TagId == _tag.Id));
+                    Assert.True(dbContext.Watches.Any(x => x.UserId == _user.Id && x.CommentId == _comment.Id));
                 }
             }
         }
@@ -50,7 +52,7 @@ namespace Pobs.Tests.Integration.Notifications
         {
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                dbContext.Watches.Add(new Watch(_user.Id) { TagId = _tag.Id });
+                dbContext.Watches.Add(new Watch(_user.Id) { CommentId = _comment.Id });
                 dbContext.SaveChanges();
             }
 
@@ -59,7 +61,7 @@ namespace Pobs.Tests.Integration.Notifications
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _buildUrl(_tag.Slug);
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id);
                 var response = await client.PostAsync(url, null);
                 Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
 
@@ -68,7 +70,7 @@ namespace Pobs.Tests.Integration.Notifications
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    Assert.True(dbContext.Watches.Any(x => x.UserId == _user.Id && x.TagId == _tag.Id));
+                    Assert.True(dbContext.Watches.Any(x => x.UserId == _user.Id && x.CommentId == _comment.Id));
                 }
             }
         }
@@ -78,7 +80,7 @@ namespace Pobs.Tests.Integration.Notifications
         {
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                dbContext.Watches.Add(new Watch(_user.Id) { TagId = _tag.Id });
+                dbContext.Watches.Add(new Watch(_user.Id) { CommentId = _comment.Id });
                 dbContext.SaveChanges();
             }
 
@@ -87,7 +89,7 @@ namespace Pobs.Tests.Integration.Notifications
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _buildUrl(_tag.Slug);
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id);
                 var response = await client.DeleteAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -97,7 +99,7 @@ namespace Pobs.Tests.Integration.Notifications
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    Assert.False(dbContext.Watches.Any(x => x.UserId == _user.Id && x.TagId == _tag.Id));
+                    Assert.False(dbContext.Watches.Any(x => x.UserId == _user.Id && x.CommentId == _comment.Id));
                 }
             }
         }
@@ -110,7 +112,7 @@ namespace Pobs.Tests.Integration.Notifications
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _buildUrl(_tag.Slug);
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id);
                 var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -119,7 +121,7 @@ namespace Pobs.Tests.Integration.Notifications
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {
-                    Assert.False(dbContext.Watches.Any(x => x.UserId == _user.Id && x.TagId == _tag.Id));
+                    Assert.False(dbContext.Watches.Any(x => x.UserId == _user.Id && x.CommentId == _comment.Id));
                 }
             }
         }
@@ -130,7 +132,7 @@ namespace Pobs.Tests.Integration.Notifications
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var url = _buildUrl(_tag.Slug);
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id);
                 var response = await client.PostAsync(url, null);
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
@@ -142,35 +144,35 @@ namespace Pobs.Tests.Integration.Notifications
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                var url = _buildUrl(_tag.Slug);
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, _comment.Id);
                 var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
             }
         }
 
         [Fact]
-        public async Task Add_UnknownTagSlug_ShouldReturnNotFound()
+        public async Task Add_UnknownCommentId_ShouldReturnNotFound()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _buildUrl("herpyderp");
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, 0);
                 var response = await client.PostAsync(url, null);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 
         [Fact]
-        public async Task Remove_UnknownTagSlug_ShouldReturnNotFound()
+        public async Task Remove_UnknownCommentId_ShouldReturnNotFound()
         {
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
-                var url = _buildUrl("herpyderp");
+                var url = _buildUrl(_comment.Answer.Question.Id, _comment.Answer.Id, 0);
                 var response = await client.DeleteAsync(url);
                 Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }

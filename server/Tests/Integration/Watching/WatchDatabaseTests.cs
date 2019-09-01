@@ -5,7 +5,7 @@ using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Xunit;
 
-namespace Pobs.Tests.Integration.Notifications
+namespace Pobs.Tests.Integration.Watching
 {
     public class WatchDatabaseTests : IDisposable
     {
