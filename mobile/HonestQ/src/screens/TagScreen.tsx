@@ -106,7 +106,7 @@ class TagScreen extends React.Component<Props> {
               </View>
               <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
                 <WatchButton
-                  onWatch={this.handleWatch}
+                  onChangeWatch={this.handleWatch}
                   watching={watching}
                 />
               </View>
@@ -140,9 +140,9 @@ class TagScreen extends React.Component<Props> {
     NavigationService.navigate('NewQuestion', navProps);
   }
 
-  private handleWatch(on: boolean): void {
+  private handleWatch(watching: boolean): void {
     const { tagSlug } = this.props.navigation.state.params;
-    this.props.updateWatch(on, tagSlug);
+    this.props.updateWatch(watching, tagSlug);
   }
 }
 

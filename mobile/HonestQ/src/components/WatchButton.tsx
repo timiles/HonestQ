@@ -4,7 +4,7 @@ import hqStyles from '../hq-styles';
 import WatchIcon from '../svg-icons/WatchIcon';
 
 interface Props {
-  onWatch: (on: boolean) => void;
+  onChangeWatch: (watching: boolean) => void;
   watching: boolean;
 }
 interface State {
@@ -57,6 +57,6 @@ export default class WatchButton extends React.Component<Props, State> {
 
   private handlePress(): void {
     this.setState({ submitting: true },
-      () => this.props.onWatch(!this.props.watching));
+      () => this.props.onChangeWatch(!this.props.watching));
   }
 }

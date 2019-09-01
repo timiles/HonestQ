@@ -14,7 +14,7 @@ import { QuestionNavigationProps } from './QuestionScreen';
 
 type Props = WatchingQuestionsStore.State
   & typeof WatchingQuestionsStore.actionCreators
-  & { updateWatchQuestion: (on: boolean, questionId: number) => void };
+  & { updateWatchQuestion: (watching: boolean, questionId: number) => void };
 
 class WatchingQuestionsScreen extends React.Component<Props> {
 
@@ -51,7 +51,7 @@ class WatchingQuestionsScreen extends React.Component<Props> {
               onPress={() => this.navigateToQuestion(item.questionId)}
             >
               <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.questionText}</HQHeader>
-              <WatchButton onWatch={() => this.handleUnwatch(item.questionId)} watching={true} />
+              <WatchButton onChangeWatch={() => this.handleUnwatch(item.questionId)} watching={true} />
             </HQNavigationButton>
           }
           ListEmptyComponent={

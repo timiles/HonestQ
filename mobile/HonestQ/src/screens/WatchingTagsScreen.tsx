@@ -14,7 +14,7 @@ import { TagNavigationProps } from './TagScreen';
 
 type Props = TagsStore.ListState
   & typeof TagsStore.actionCreators
-  & { updateWatch: (on: boolean, tagSlug: string) => any };
+  & { updateWatch: (watching: boolean, tagSlug: string) => any };
 
 class WatchingTagsScreen extends React.Component<Props> {
 
@@ -53,7 +53,7 @@ class WatchingTagsScreen extends React.Component<Props> {
               onPress={() => this.navigateToTag(item.slug, item.name)}
             >
               <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.name}</HQHeader>
-              <WatchButton onWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
+              <WatchButton onChangeWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
             </HQNavigationButton>
           }
           ListEmptyComponent={
@@ -76,8 +76,8 @@ class WatchingTagsScreen extends React.Component<Props> {
     NavigationService.navigate('AllTags');
   }
 
-  private handleWatch(on: boolean, tagSlug: string): void {
-    this.props.updateWatch(on, tagSlug);
+  private handleWatch(watching: boolean, tagSlug: string): void {
+    this.props.updateWatch(watching, tagSlug);
   }
 }
 

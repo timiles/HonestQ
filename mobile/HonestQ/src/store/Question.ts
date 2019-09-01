@@ -122,17 +122,17 @@ export const actionCreators = {
           });
       })();
     },
-  updateWatchQuestion: (on: boolean, questionId: number):
+  updateWatchQuestion: (watching: boolean, questionId: number):
     AppThunkAction<KnownAction> =>
     (dispatch, getState) => {
       return (async () => {
         const url = `/api/questions/${questionId}/watch`;
-        const method = on ? 'POST' : 'DELETE';
+        const method = watching ? 'POST' : 'DELETE';
         fetchJson<WatchingQuestionListItemModel>(method, url, null, getState().auth.loggedInUser)
           .then((response) => {
             dispatch({
               type: 'UPDATE_WATCH_QUESTION_SUCCESS',
-              payload: { questionId, watching: on, watchingQuestionListItem: response },
+              payload: { questionId, watching, watchingQuestionListItem: response },
             });
           })
           .catch((reason) => {
@@ -140,18 +140,18 @@ export const actionCreators = {
           });
       })();
     },
-  updateWatchAnswer: (on: boolean, questionId: number, answerId: number):
+  updateWatchAnswer: (watching: boolean, questionId: number, answerId: number):
     AppThunkAction<KnownAction> =>
     (dispatch, getState) => {
       return (async () => {
 
         const url = `/api/questions/${questionId}/answers/${answerId}/watch`;
-        const method = on ? 'POST' : 'DELETE';
+        const method = watching ? 'POST' : 'DELETE';
         fetchJson<WatchingAnswerListItemModel>(method, url, null, getState().auth.loggedInUser)
           .then((response) => {
             dispatch({
               type: 'UPDATE_WATCH_ANSWER_SUCCESS',
-              payload: { questionId, answerId, watching: on, watchingAnswerListItem: response },
+              payload: { questionId, answerId, watching, watchingAnswerListItem: response },
             });
           })
           .catch((reason) => {

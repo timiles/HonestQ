@@ -71,14 +71,14 @@ export const actionCreators = {
         });
     })();
   },
-  updateWatch: (on: boolean, tagSlug: string):
+  updateWatch: (watching: boolean, tagSlug: string):
     AppThunkAction<KnownAction> =>
     (dispatch, getState) => {
       return (async () => {
 
         const url = `/api/tags/${tagSlug}/watch`;
 
-        const method = on ? 'POST' : 'DELETE';
+        const method = watching ? 'POST' : 'DELETE';
         fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
           .then((watchResponse) => {
             dispatch({

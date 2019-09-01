@@ -14,7 +14,7 @@ import { AnswerNavigationProps } from './AnswerScreen';
 
 type Props = WatchingAnswersStore.State
   & typeof WatchingAnswersStore.actionCreators
-  & { updateWatchAnswer: (on: boolean, questionId: number, answerId: number) => void };
+  & { updateWatchAnswer: (watching: boolean, questionId: number, answerId: number) => void };
 
 class WatchingAnswersScreen extends React.Component<Props> {
 
@@ -54,9 +54,9 @@ class WatchingAnswersScreen extends React.Component<Props> {
                 <HQText>{item.questionText}</HQText>
                 <HQHeader>{item.answerText}</HQHeader>
               </View>
-              <View >
+              <View>
                 <WatchButton
-                  onWatch={() => this.handleUnwatch(item.questionId, item.answerId)}
+                  onChangeWatch={() => this.handleUnwatch(item.questionId, item.answerId)}
                   watching={true}
                 />
               </View>

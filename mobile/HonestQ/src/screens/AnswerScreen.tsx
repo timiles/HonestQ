@@ -96,7 +96,7 @@ class AnswerScreen extends React.Component<Props> {
               </CircleIconCard>
               <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
                 <WatchButton
-                  onWatch={this.handleWatch}
+                  onChangeWatch={this.handleWatch}
                   watching={watching}
                 />
                 <ReplyButton onPress={this.handleNewComment} />
@@ -128,9 +128,9 @@ class AnswerScreen extends React.Component<Props> {
     this.props.updateUpvote(on, questionId, answerId, commentId);
   }
 
-  private handleWatch(on: boolean): void {
+  private handleWatch(watching: boolean): void {
     const { questionId, answerId } = this.props.navigation.state.params;
-    this.props.updateWatchAnswer(on, questionId, answerId);
+    this.props.updateWatchAnswer(watching, questionId, answerId);
   }
 
   private setShareUrl(): void {

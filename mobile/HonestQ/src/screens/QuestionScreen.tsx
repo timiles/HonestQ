@@ -93,7 +93,7 @@ class QuestionScreen extends React.Component<Props> {
               </CircleIconCard>
               <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
                 <WatchButton
-                  onWatch={this.handleWatch}
+                  onChangeWatch={this.handleWatch}
                   watching={watching}
                 />
               </View>
@@ -137,9 +137,9 @@ class QuestionScreen extends React.Component<Props> {
     this.props.updateUpvote(on, questionId, answerId);
   }
 
-  private handleWatch(on: boolean): void {
+  private handleWatch(watching: boolean): void {
     const { questionId } = this.props.navigation.state.params;
-    this.props.updateWatchQuestion(on, questionId);
+    this.props.updateWatchQuestion(watching, questionId);
   }
 }
 
