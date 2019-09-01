@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Web.Models.Tags;
 
