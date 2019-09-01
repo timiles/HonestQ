@@ -44,18 +44,12 @@ namespace Pobs.Web.Controllers
         }
 
         [HttpGet, Route("_/answers")]
-        public async Task<IActionResult> IndexAnswers(bool? watching = null, int pageSize = 20, long? beforeTimestamp = null)
+        public async Task<IActionResult> IndexAnswers(int pageSize = 20, long? beforeTimestamp = null)
         {
-            var loggedInUserId = User.Identity.IsAuthenticated ? User.Identity.ParseUserId() : null as int?;
-            if (watching.HasValue && loggedInUserId == null)
-            {
-                return Unauthorized();
-            }
-
-            var answersList = await _questionService.ListAnswers(watching, loggedInUserId, pageSize, beforeTimestamp);
+            var answersList = await _questionService.ListAnswers(pageSize, beforeTimestamp);
             return Ok(answersList);
         }
-        
+
         [HttpGet, Route("search")]
         public async Task<IActionResult> Search(string q = null, long pageNumber = 1, long pageSize = 20)
         {

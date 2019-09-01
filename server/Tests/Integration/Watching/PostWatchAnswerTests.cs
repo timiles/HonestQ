@@ -35,8 +35,13 @@ namespace Pobs.Tests.Integration.Watching
                 response.EnsureSuccessStatusCode();
 
                 var responseContent = await response.Content.ReadAsStringAsync();
-                var watchModel = JsonConvert.DeserializeObject<WatchResponseModel>(responseContent);
-                Assert.True(watchModel.Watching);
+                var watchingAnswerModel = JsonConvert.DeserializeObject<WatchingAnswerListItemModel>(responseContent);
+                Assert.Equal(_answer.Question.Id, watchingAnswerModel.QuestionId);
+                Assert.Equal(_answer.Question.Slug, watchingAnswerModel.QuestionSlug);
+                Assert.Equal(_answer.Question.Text, watchingAnswerModel.QuestionText);
+                Assert.Equal(_answer.Id, watchingAnswerModel.AnswerId);
+                Assert.Equal(_answer.Slug, watchingAnswerModel.AnswerSlug);
+                Assert.Equal(_answer.Text, watchingAnswerModel.AnswerText);
 
                 using (var dbContext = TestSetup.CreateDbContext())
                 {

@@ -248,6 +248,21 @@ export interface TagValueModel {
   slug: string;
 }
 
+export interface WatchingAnswerListItemModel {
+  watchId: number;
+  questionId: number;
+  questionSlug: string;
+  questionText: string;
+  answerId: number;
+  answerSlug: string;
+  answerText: string;
+}
+
+export interface WatchingAnswersListModel {
+  answers: WatchingAnswerListItemModel[];
+  lastWatchId: number;
+}
+
 export interface WatchingQuestionListItemModel {
   watchId: number;
   questionId: number;

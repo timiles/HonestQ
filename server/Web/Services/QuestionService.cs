@@ -14,7 +14,7 @@ namespace Pobs.Web.Services
     public interface IQuestionService
     {
         Task<QuestionsListModel> ListQuestions(PostStatus status, int pageSize, long? beforeUnixTimeMilliseconds = null);
-        Task<AnswersListModel> ListAnswers(bool? watching, int? loggedInUserId, int pageSize, long? beforeUnixTimeMilliseconds = null);
+        Task<AnswersListModel> ListAnswers(int pageSize, long? beforeUnixTimeMilliseconds = null);
         Task<QuestionSearchResultsModel> SearchQuestions(string query, int pageNumber, int pageSize);
         Task<QuestionListItemModel> SaveQuestion(QuestionFormModel questionForm, int postedByUserId, bool isAdmin);
         Task<(QuestionListItemModel questionModel, bool hasJustBeenApproved)> UpdateQuestion(int questionId, AdminQuestionFormModel questionForm);
@@ -53,8 +53,7 @@ namespace Pobs.Web.Services
             return new QuestionsListModel(questions);
         }
 
-        public async Task<AnswersListModel> ListAnswers(
-            bool? watching, int? loggedInUserId, int pageSize, long? beforeUnixTimeMilliseconds = null)
+        public async Task<AnswersListModel> ListAnswers(int pageSize, long? beforeUnixTimeMilliseconds = null)
         {
             var beforeTime = beforeUnixTimeMilliseconds.ToUnixDateTime() ?? DateTime.UtcNow;
 
@@ -62,7 +61,6 @@ namespace Pobs.Web.Services
                 .SelectMany(x => x.Answers)
                 .Include(x => x.Question)
                 .Where(x => x.PostedAt < beforeTime)
-                .Where(x => watching == null || (x.Watches.Any(y => y.UserId == loggedInUserId) == watching))
                 .OrderByDescending(x => x.PostedAt)
                 .Take(pageSize)
                 .ToListAsync();

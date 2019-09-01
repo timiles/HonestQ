@@ -106,6 +106,15 @@ namespace Pobs.Web.Controllers
             }
         }
 
+
+        [Authorize, HttpGet, Route("questions/_/answers/_/watching")]
+        public async Task<IActionResult> IndexAnswers(int pageSize = 20, long? beforeWatchId = null)
+        {
+            var loggedInUserId = User.Identity.ParseUserId();
+            var answersList = await _watchingService.ListAnswers(loggedInUserId, pageSize, beforeWatchId);
+            return Ok(answersList);
+        }
+
         [Authorize, HttpPost, Route("questions/{questionId}/answers/{answerId}/watch")]
         public async Task<IActionResult> AddAnswerWatch(int questionId, int answerId)
         {

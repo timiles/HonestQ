@@ -17,7 +17,8 @@ namespace Pobs.Web.Services
         Task<WatchingQuestionListItemModel> AddWatchToQuestion(int loggedInUserId, int questionId);
         Task<WatchResponseModel> RemoveWatchFromQuestion(int loggedInUserId, int questionId);
 
-        Task<WatchResponseModel> AddWatchToAnswer(int loggedInUserId, int questionId, int answerId);
+        Task<WatchingAnswersListModel> ListAnswers(int? loggedInUserId, int pageSize, long? beforeWatchId = null);
+        Task<WatchingAnswerListItemModel> AddWatchToAnswer(int loggedInUserId, int questionId, int answerId);
         Task<WatchResponseModel> RemoveWatchFromAnswer(int loggedInUserId, int questionId, int answerId);
 
         Task<WatchResponseModel> AddWatchToComment(int loggedInUserId, int questionId, int answerId, long commentId);
@@ -133,21 +134,40 @@ namespace Pobs.Web.Services
             return new WatchResponseModel(question, loggedInUserId);
         }
 
-        public async Task<WatchResponseModel> AddWatchToAnswer(int loggedInUserId, int questionId, int answerId)
+
+        public async Task<WatchingAnswersListModel> ListAnswers(
+            int? loggedInUserId, int pageSize, long? beforeWatchId = null)
+        {
+            var watches = await _context.Watches
+                .Include(x => x.Answer)
+                .ThenInclude(x => x.Question)
+                .Where(x =>
+                    x.UserId == loggedInUserId &&
+                    (beforeWatchId == null || x.Id < beforeWatchId) &&
+                    x.Answer.Question.Status == PostStatus.OK)
+                .OrderByDescending(x => x.Id)
+                .Take(pageSize)
+                .ToListAsync();
+            return new WatchingAnswersListModel(watches);
+        }
+
+        public async Task<WatchingAnswerListItemModel> AddWatchToAnswer(int loggedInUserId, int questionId, int answerId)
         {
             var answer = await _context.Questions.SelectMany(x => x.Answers)
                 .Include(x => x.Question)
-                .Include(x => x.Watches)
                 .FirstOrDefaultAsync(x => x.Id == answerId && x.Question.Id == questionId);
             if (answer == null)
             {
                 return null;
             }
-            answer.Watches.Add(new Watch(loggedInUserId));
+
+            var watch = new Watch(loggedInUserId) { Answer = answer };
+
             try
             {
+                _context.Watches.Add(watch);
                 await _context.SaveChangesAsync();
-                return new WatchResponseModel(answer, loggedInUserId);
+                return new WatchingAnswerListItemModel(watch);
             }
             catch (DbUpdateException e)
             {

@@ -2,7 +2,8 @@
 import { AppThunkAction } from '.';
 import { fetchJson, getJson } from '../utils/http-utils';
 import { findComment } from '../utils/model-utils';
-import { QuestionModel, ReactionModel, WatchingQuestionListItemModel, WatchResponseModel } from './../server-models';
+// tslint:disable-next-line:max-line-length
+import { QuestionModel, ReactionModel, WatchingAnswerListItemModel, WatchingQuestionListItemModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewCommentFormSuccessAction } from './NewComment';
 
@@ -53,7 +54,8 @@ export interface UpdateWatchAnswerSuccessAction {
   payload: {
     questionId: number;
     answerId: number;
-    response: WatchResponseModel;
+    watching: boolean;
+    watchingAnswerListItem?: WatchingAnswerListItemModel;
   };
 }
 
@@ -145,11 +147,11 @@ export const actionCreators = {
 
         const url = `/api/questions/${questionId}/answers/${answerId}/watch`;
         const method = on ? 'POST' : 'DELETE';
-        fetchJson<WatchResponseModel>(method, url, null, getState().auth.loggedInUser)
-          .then((watchResponse) => {
+        fetchJson<WatchingAnswerListItemModel>(method, url, null, getState().auth.loggedInUser)
+          .then((response) => {
             dispatch({
               type: 'UPDATE_WATCH_ANSWER_SUCCESS',
-              payload: { questionId, answerId, response: watchResponse },
+              payload: { questionId, answerId, watching: on, watchingAnswerListItem: response },
             });
           })
           .catch((reason) => {
@@ -276,13 +278,13 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
       if (!state.question) {
         return state;
       }
-      const { answerId, response } = action.payload;
+      const { answerId, watching } = action.payload;
       const questionModel = state.question!;
       // Slice for immutability
       const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === answerId)[0];
       if (answerModel) {
-        answerModel.watching = response.watching;
+        answerModel.watching = watching;
       }
       const questionNext = { ...questionModel, answers: answersNext };
       return {

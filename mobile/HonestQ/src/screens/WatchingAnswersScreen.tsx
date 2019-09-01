@@ -14,7 +14,7 @@ import { AnswerNavigationProps } from './AnswerScreen';
 
 type Props = WatchingAnswersStore.State
   & typeof WatchingAnswersStore.actionCreators
-  & { updateWatchAnswer: (on: boolean, questionId: number, answerId: number) => any };
+  & { updateWatchAnswer: (on: boolean, questionId: number, answerId: number) => void };
 
 class WatchingAnswersScreen extends React.Component<Props> {
 
@@ -37,29 +37,27 @@ class WatchingAnswersScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const orderedAnswers = answersList
-      .filter((x) => x.watching)
-      .sort((a, b) => (a.slug.toLowerCase().localeCompare(b.slug.toLowerCase())));
+    const orderedAnswers = answersList.sort((a, b) => (b.watchId - a.watchId));
 
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
           style={hqStyles.mt1}
           data={orderedAnswers}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.answerId.toString()}
           renderItem={({ item }) =>
             <HQNavigationButton
               style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
-              onPress={() => this.navigateToAnswer(item.questionId, item.id)}
+              onPress={() => this.navigateToAnswer(item.questionId, item.answerId)}
             >
               <View style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>
                 <HQText>{item.questionText}</HQText>
-                <HQHeader>{item.text}</HQHeader>
+                <HQHeader>{item.answerText}</HQHeader>
               </View>
               <View >
                 <WatchButton
-                  onWatch={() => this.handleWatch(!item.watching, item.questionId, item.id)}
-                  watching={item.watching}
+                  onWatch={() => this.handleUnwatch(item.questionId, item.answerId)}
+                  watching={true}
                 />
               </View>
             </HQNavigationButton>
@@ -77,8 +75,8 @@ class WatchingAnswersScreen extends React.Component<Props> {
     NavigationService.navigate('Answer', navProps);
   }
 
-  private handleWatch(on: boolean, questionId: number, answerId: number): void {
-    this.props.updateWatchAnswer(on, questionId, answerId);
+  private handleUnwatch(questionId: number, answerId: number): void {
+    this.props.updateWatchAnswer(false, questionId, answerId);
   }
 }
 
