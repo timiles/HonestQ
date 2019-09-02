@@ -38,11 +38,13 @@ class NotificationScreen extends React.Component<Props, State> {
 
     this.state = { loadingMore: false };
 
+    this.loadMore = this.loadMore.bind(this);
+  }
+
+  public componentDidMount() {
     if (!this.props.notificationsList) {
       this.props.loadMoreNotifications();
     }
-
-    this.loadMore = this.loadMore.bind(this);
   }
 
   public componentDidUpdate(prevProps: Props) {

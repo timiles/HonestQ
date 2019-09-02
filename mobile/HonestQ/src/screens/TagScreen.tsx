@@ -56,13 +56,15 @@ class TagScreen extends React.Component<Props> {
   public constructor(props: Props) {
     super(props);
 
-    const { tagSlug } = this.props.navigation.state.params;
-    if (!props.tag || props.tag.slug !== tagSlug) {
-      props.getTag(tagSlug);
-    }
-
     this.navigateToNewQuestion = this.navigateToNewQuestion.bind(this);
     this.props.navigation.setParams({ handleWatch: this.handleWatch.bind(this) });
+  }
+
+  public componentDidMount() {
+    const { tagSlug } = this.props.navigation.state.params;
+    if (!this.props.tag || this.props.tag.slug !== tagSlug) {
+      this.props.getTag(tagSlug);
+    }
   }
 
   public componentDidUpdate() {

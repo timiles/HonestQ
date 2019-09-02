@@ -60,14 +60,16 @@ class AnswerScreen extends React.Component<Props> {
   public constructor(props: Props) {
     super(props);
 
-    const { questionId } = this.props.navigation.state.params;
-    if (!props.question || props.question.id !== questionId) {
-      this.props.getQuestion(questionId);
-    }
-
     this.handleNewComment = this.handleNewComment.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
     this.props.navigation.setParams({ handleWatch: this.handleWatch.bind(this) });
+  }
+
+  public componentDidMount() {
+    const { questionId } = this.props.navigation.state.params;
+    if (!this.props.question || this.props.question.id !== questionId) {
+      this.props.getQuestion(questionId);
+    }
   }
 
   public componentDidUpdate() {

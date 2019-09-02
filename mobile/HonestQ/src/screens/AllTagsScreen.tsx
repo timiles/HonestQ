@@ -22,9 +22,7 @@ class AllTagsScreen extends React.Component<Props> {
     title: 'All Tags',
   };
 
-  constructor(props: Props) {
-    super(props);
-
+  public componentDidMount() {
     if (!this.props.tagsList) {
       this.props.getTagsList();
     }

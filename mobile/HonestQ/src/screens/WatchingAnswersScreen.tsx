@@ -22,9 +22,7 @@ class WatchingAnswersScreen extends React.Component<Props> {
     title: 'Answers',
   };
 
-  constructor(props: Props) {
-    super(props);
-
+  public componentDidMount() {
     if (!this.props.answersList) {
       this.props.getWatchingAnswersList();
     }
