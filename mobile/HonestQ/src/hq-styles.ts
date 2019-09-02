@@ -4,13 +4,16 @@ import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 // tslint:disable:no-object-literal-type-assertion
 export default StyleSheet.create({
   center: {
-    flex: 1,
     justifyContent: 'center',
   } as ViewStyle,
 
   error: {
     color: 'red',
   } as TextStyle,
+
+  flexGrow: {
+    flexGrow: 1,
+  } as ViewStyle,
 
   flexRow: {
     flexDirection: 'row',
@@ -53,6 +56,10 @@ export default StyleSheet.create({
 
   mr1: {
     marginRight: 10,
+  } as ViewStyle,
+
+  mr2: {
+    marginRight: 20,
   } as ViewStyle,
 
   mt1: {

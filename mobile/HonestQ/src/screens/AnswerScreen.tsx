@@ -21,6 +21,8 @@ import { NewCommentNavigationProps } from './NewCommentScreen';
 export interface AnswerNavigationProps {
   questionId: number;
   answerId: number;
+  watching?: boolean;
+  handleWatch?: (watching: boolean) => void;
   shareUrl?: string;
 }
 
@@ -35,12 +37,23 @@ class AnswerScreen extends React.Component<Props> {
       const shareUrl = navigation.getParam('shareUrl');
       return {
         title: 'Discuss this Answer',
-        headerRight:
-          shareUrl && (
-            <View style={hqStyles.mr1}>
-              <ShareButton fill={ThemeService.getNavTextColor()} url={shareUrl} />
-            </View>
-          ),
+        headerRight: (
+          <>
+            {(navigation.getParam('watching') !== undefined) && (
+              <View style={hqStyles.mr2}>
+                <WatchButton
+                  onChangeWatch={navigation.getParam('handleWatch')}
+                  watching={navigation.getParam('watching')}
+                />
+              </View>
+            )}
+            {shareUrl && (
+              <View style={hqStyles.mr1}>
+                <ShareButton fill={ThemeService.getNavTextColor()} url={shareUrl} />
+              </View>
+            )}
+          </>
+        ),
       };
     }
 
@@ -54,17 +67,26 @@ class AnswerScreen extends React.Component<Props> {
 
     this.handleNewComment = this.handleNewComment.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
-    this.handleWatch = this.handleWatch.bind(this);
+    this.props.navigation.setParams({ handleWatch: this.handleWatch.bind(this) });
   }
 
-  public componentDidMount() {
-    // This is in case we navigated here from the QuestionScreen.
-    this.setShareUrl();
-  }
+  public componentDidUpdate() {
+    const { navigation, question } = this.props;
 
-  public componentDidUpdate(prevProps: Props) {
-    // This is in case the app loaded straight into the AnswerScreen.
-    this.setShareUrl();
+    if (!question) {
+      return;
+    }
+
+    const answer = question.answers.filter((x) => x.id === this.props.navigation.state.params.answerId)[0];
+
+    if (navigation.state.params.watching !== answer.watching) {
+      navigation.setParams({ watching: answer.watching });
+    }
+
+    if (!navigation.state.params.shareUrl) {
+      const answerUrl = buildAnswerUrl(question.id, question.slug, answer.id, answer.slug);
+      this.props.navigation.setParams({ shareUrl: answerUrl });
+    }
   }
 
   public render() {
@@ -79,7 +101,7 @@ class AnswerScreen extends React.Component<Props> {
     const answer = question.answers.filter((x) => x.id === answerId)[0];
 
     const { text: questionText } = question;
-    const { text, comments, watching } = answer;
+    const { text, comments } = answer;
 
     return (
       <View style={ThemeService.getStyles().contentView}>
@@ -95,10 +117,6 @@ class AnswerScreen extends React.Component<Props> {
                 </QuotationMarks>
               </CircleIconCard>
               <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
-                <WatchButton
-                  onChangeWatch={this.handleWatch}
-                  watching={watching}
-                />
                 <ReplyButton onPress={this.handleNewComment} />
               </View>
             </View>
@@ -131,15 +149,6 @@ class AnswerScreen extends React.Component<Props> {
   private handleWatch(watching: boolean): void {
     const { questionId, answerId } = this.props.navigation.state.params;
     this.props.updateWatchAnswer(watching, questionId, answerId);
-  }
-
-  private setShareUrl(): void {
-    const { navigation, question } = this.props;
-    if (!navigation.state.params.shareUrl && question) {
-      const answer = question.answers.filter((x) => x.id === this.props.navigation.state.params.answerId)[0];
-      const answerUrl = buildAnswerUrl(question.id, question.slug, answer.id, answer.slug);
-      this.props.navigation.setParams({ shareUrl: answerUrl });
-    }
   }
 }
 

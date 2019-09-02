@@ -46,13 +46,20 @@ class AllTagsScreen extends React.Component<Props> {
           data={orderedTags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
-            <HQNavigationButton
-              style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
-              onPress={() => this.navigateToTag(item.slug, item.name)}
-            >
-              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.name}</HQHeader>
-              <WatchButton onChangeWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
-            </HQNavigationButton>
+            <View style={[hqStyles.flexRow, hqStyles.mh1, hqStyles.mb1]}>
+              <HQNavigationButton
+                style={[hqStyles.flexGrow, hqStyles.flexShrink]}
+                onPress={() => this.navigateToTag(item.slug, item.name)}
+              >
+                <HQHeader>{item.name}</HQHeader>
+              </HQNavigationButton>
+              <View style={[hqStyles.flexShrink, hqStyles.ml1, hqStyles.center]}>
+                <WatchButton
+                  onChangeWatch={() => this.handleWatch(!item.watching, item.slug)}
+                  watching={item.watching}
+                />
+              </View>
+            </View>
           }
           ListFooterComponent={
             <HQPrimaryButton style={hqStyles.mh1} title="Suggest a new tag" onPress={this.navigateToNewTag} />

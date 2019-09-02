@@ -21,6 +21,8 @@ import { NewQuestionNavigationProps } from './NewQuestionScreen';
 export interface TagNavigationProps {
   tagSlug: string;
   tagName: string;
+  watching?: boolean;
+  handleWatch?: (watching: boolean) => void;
 }
 
 type Props = TagStore.TagState
@@ -34,9 +36,19 @@ class TagScreen extends React.Component<Props> {
       return {
         title: navigation.getParam('tagName'),
         headerRight: (
-          <View style={hqStyles.mr1}>
-            <ShareButton fill={ThemeService.getNavTextColor()} url={buildTagUrl(navigation.getParam('tagSlug'))} />
-          </View>
+          <>
+            {(navigation.getParam('watching') !== undefined) && (
+              <View style={hqStyles.mr2}>
+                <WatchButton
+                  onChangeWatch={navigation.getParam('handleWatch')}
+                  watching={navigation.getParam('watching')}
+                />
+              </View>
+            )}
+            <View style={hqStyles.mr1}>
+              <ShareButton fill={ThemeService.getNavTextColor()} url={buildTagUrl(navigation.getParam('tagSlug'))} />
+            </View>
+          </>
         ),
       };
     }
@@ -50,7 +62,18 @@ class TagScreen extends React.Component<Props> {
     }
 
     this.navigateToNewQuestion = this.navigateToNewQuestion.bind(this);
-    this.handleWatch = this.handleWatch.bind(this);
+    this.props.navigation.setParams({ handleWatch: this.handleWatch.bind(this) });
+  }
+
+  public componentDidUpdate() {
+    const { navigation, tag } = this.props;
+    if (tag && navigation.state.params.watching !== tag.watching) {
+      navigation.setParams({ watching: tag.watching });
+    }
+  }
+
+  public componentWillUnmount() {
+    this.props.clearTag();
   }
 
   public render() {
@@ -61,7 +84,7 @@ class TagScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const { description, moreInfoUrl, questions, watching } = tag;
+    const { description, moreInfoUrl, questions } = tag;
 
     const orderedQuestions = questions.sort((a, b) =>
       moment(b.mostRecentActivityPostedAt).isAfter(moment(a.mostRecentActivityPostedAt)) ? 1 : -1);
@@ -103,12 +126,6 @@ class TagScreen extends React.Component<Props> {
                   </InfoCard>
                   : null
                 }
-              </View>
-              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
-                <WatchButton
-                  onChangeWatch={this.handleWatch}
-                  watching={watching}
-                />
               </View>
               <HQHeader>{questionsCountText}</HQHeader>
               {questions.length === 0 &&

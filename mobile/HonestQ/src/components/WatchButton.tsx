@@ -1,7 +1,8 @@
 import React from 'react';
-import { HQSubmitButton, HQText } from '../hq-components';
-import hqStyles from '../hq-styles';
+import { ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import WatchIcon from '../svg-icons/WatchIcon';
+import ThemeService from '../ThemeService';
 
 interface Props {
   onChangeWatch: (watching: boolean) => void;
@@ -29,29 +30,18 @@ export default class WatchButton extends React.Component<Props, State> {
   public render() {
     const { watching } = this.props;
     const { submitting } = this.state;
-    const activeColor = watching ? '#FF5A00' : '#FFF';
+    const activeColor = watching ? '#FF5A00' : ThemeService.getNavTextColor();
 
     return (
-      <HQSubmitButton
+      <TouchableOpacity
         onPress={this.handlePress}
-        submitting={submitting}
-        activityIndicatorColor={activeColor}
+        disabled={submitting}
       >
-        <WatchIcon fill={activeColor} />
-        {watching ? (
-          <HQText
-            style={[hqStyles.ml1, hqStyles.primaryButtonText, { color: activeColor }]}
-          >
-            Watching
-          </HQText>
-        ) : (
-            <HQText
-              style={[hqStyles.ml1, hqStyles.primaryButtonText]}
-            >
-              Watch
-            </HQText>
-          )}
-      </HQSubmitButton>
+        {submitting ?
+          <ActivityIndicator color={activeColor} style={styles.activityIndicatorWidth} /> :
+          <WatchIcon fill={activeColor} />
+        }
+      </TouchableOpacity>
     );
   }
 
@@ -60,3 +50,10 @@ export default class WatchButton extends React.Component<Props, State> {
       () => this.props.onChangeWatch(!this.props.watching));
   }
 }
+
+// tslint:disable:no-object-literal-type-assertion
+const styles = StyleSheet.create({
+  activityIndicatorWidth: {
+    width: WatchIcon.getWidth(),
+  } as ViewStyle,
+});

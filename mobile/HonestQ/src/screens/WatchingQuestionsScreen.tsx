@@ -46,13 +46,20 @@ class WatchingQuestionsScreen extends React.Component<Props> {
           data={orderedQuestions}
           keyExtractor={(item) => item.watchId.toString()}
           renderItem={({ item }) =>
-            <HQNavigationButton
-              style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
-              onPress={() => this.navigateToQuestion(item.questionId)}
-            >
-              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.questionText}</HQHeader>
-              <WatchButton onChangeWatch={() => this.handleUnwatch(item.questionId)} watching={true} />
-            </HQNavigationButton>
+            <View style={[hqStyles.flexRow, hqStyles.mh1, hqStyles.mb1]}>
+              <HQNavigationButton
+                style={[hqStyles.flexGrow, hqStyles.flexShrink]}
+                onPress={() => this.navigateToQuestion(item.questionId)}
+              >
+                <HQHeader>{item.questionText}</HQHeader>
+              </HQNavigationButton>
+              <View style={[hqStyles.flexShrink, hqStyles.ml1, hqStyles.center]}>
+                <WatchButton
+                  onChangeWatch={() => this.handleUnwatch(item.questionId)}
+                  watching={true}
+                />
+              </View>
+            </View>
           }
           ListEmptyComponent={
             <HQText style={[hqStyles.mh1, hqStyles.textAlignCenter]}>Not watching any Questions.</HQText>

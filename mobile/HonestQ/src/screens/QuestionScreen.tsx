@@ -21,6 +21,8 @@ import { NewAnswerNavigationProps } from './NewAnswerScreen';
 
 export interface QuestionNavigationProps {
   questionId: number;
+  watching?: boolean;
+  handleWatch?: (watching: boolean) => void;
   shareUrl?: string;
 }
 
@@ -35,12 +37,23 @@ class QuestionScreen extends React.Component<Props> {
       const shareUrl = navigation.getParam('shareUrl');
       return {
         title: 'Question',
-        headerRight:
-          shareUrl && (
-            <View style={hqStyles.mr1}>
-              <ShareButton fill={ThemeService.getNavTextColor()} url={shareUrl} />
-            </View>
-          ),
+        headerRight: (
+          <>
+            {(navigation.getParam('watching') !== undefined) && (
+              <View style={hqStyles.mr2}>
+                <WatchButton
+                  onChangeWatch={navigation.getParam('handleWatch')}
+                  watching={navigation.getParam('watching')}
+                />
+              </View>
+            )}
+            {shareUrl && (
+              <View style={hqStyles.mr1}>
+                <ShareButton fill={ThemeService.getNavTextColor()} url={shareUrl} />
+              </View>
+            )}
+          </>
+        ),
       };
     }
 
@@ -54,12 +67,21 @@ class QuestionScreen extends React.Component<Props> {
 
     this.navigateToNewAnswer = this.navigateToNewAnswer.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
-    this.handleWatch = this.handleWatch.bind(this);
+    this.props.navigation.setParams({ handleWatch: this.handleWatch.bind(this) });
   }
 
-  public componentDidUpdate(prevProps: Props) {
+  public componentDidUpdate() {
     const { navigation, question } = this.props;
-    if (!navigation.state.params.shareUrl && question) {
+
+    if (!question) {
+      return;
+    }
+
+    if (navigation.state.params.watching !== question.watching) {
+      navigation.setParams({ watching: question.watching });
+    }
+
+    if (!navigation.state.params.shareUrl) {
       const questionUrl = buildQuestionUrl(question.id, question.slug);
       this.props.navigation.setParams({ shareUrl: questionUrl });
     }
@@ -73,7 +95,7 @@ class QuestionScreen extends React.Component<Props> {
       return <HQLoadingView />;
     }
 
-    const { text, context, answers, watching } = question;
+    const { text, context, answers } = question;
     const answersCountText = getItemCountText('Answer', answers.length);
     const newAnswerButton = (
       <HQPrimaryButton
@@ -91,12 +113,6 @@ class QuestionScreen extends React.Component<Props> {
               <CircleIconCard type="Q" style={hqStyles.mb1}>
                 <HQHeader>{text}</HQHeader>
               </CircleIconCard>
-              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
-                <WatchButton
-                  onChangeWatch={this.handleWatch}
-                  watching={watching}
-                />
-              </View>
               {context &&
                 <InfoCard style={hqStyles.mb1}>
                   <HQHeader>Context</HQHeader>

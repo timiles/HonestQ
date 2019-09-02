@@ -35,6 +35,9 @@ export interface UpdateWatchTagSuccessAction {
     response: WatchResponseModel;
   };
 }
+interface ClearTagAction {
+  type: 'CLEAR_TAG';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -45,6 +48,7 @@ type KnownAction =
   | NewQuestionFormSuccessAction
   | NewAnswerFormSuccessAction
   | UpdateWatchTagSuccessAction
+  | ClearTagAction
   ;
 
 // ----------------
@@ -91,6 +95,13 @@ export const actionCreators = {
           });
       })();
     },
+  clearTag: (): AppThunkAction<KnownAction> => (dispatch) => {
+    return (() => {
+      dispatch({
+        type: 'CLEAR_TAG',
+      });
+    })();
+  },
 };
 
 // ----------------
@@ -140,14 +151,21 @@ export const reducer: Reducer<TagState> = (state: TagState, action: KnownAction)
       };
     }
     case 'UPDATE_WATCH_TAG_SUCCESS': {
+      if (!state.tag) {
+        // We could be unwatching from a list view
+        return state;
+      }
       const { response } = action.payload;
       const tagNext = {
-        ...state.tag!,
+        ...state.tag,
         watching: response.watching,
       };
       return {
         tag: tagNext,
       };
+    }
+    case 'CLEAR_TAG': {
+      return defaultState;
     }
 
     default:

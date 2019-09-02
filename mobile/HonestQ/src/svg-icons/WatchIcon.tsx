@@ -6,9 +6,11 @@ interface Props {
 }
 export default class WatchIcon extends React.Component<Props> {
 
+  public static getWidth(): number { return 23; }
+
   public render() {
     const { fill = '#fff' } = this.props;
-    const width = 23;
+    const width = WatchIcon.getWidth();
 
     // tslint:disable:max-line-length
     return (

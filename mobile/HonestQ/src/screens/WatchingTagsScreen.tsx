@@ -48,13 +48,20 @@ class WatchingTagsScreen extends React.Component<Props> {
           data={orderedTags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
-            <HQNavigationButton
-              style={[hqStyles.flexRowSpaceBetween, hqStyles.mh1, hqStyles.mb1]}
-              onPress={() => this.navigateToTag(item.slug, item.name)}
-            >
-              <HQHeader style={[hqStyles.flexShrink, hqStyles.vAlignCenter]}>{item.name}</HQHeader>
-              <WatchButton onChangeWatch={() => this.handleWatch(!item.watching, item.slug)} watching={item.watching} />
-            </HQNavigationButton>
+            <View style={[hqStyles.flexRow, hqStyles.mh1, hqStyles.mb1]}>
+              <HQNavigationButton
+                style={[hqStyles.flexGrow, hqStyles.flexShrink]}
+                onPress={() => this.navigateToTag(item.slug, item.name)}
+              >
+                <HQHeader>{item.name}</HQHeader>
+              </HQNavigationButton>
+              <View style={[hqStyles.flexShrink, hqStyles.ml1, hqStyles.center]}>
+                <WatchButton
+                  onChangeWatch={() => this.handleUnwatch(item.slug)}
+                  watching={true}
+                />
+              </View>
+            </View>
           }
           ListEmptyComponent={
             <HQText style={[hqStyles.mh1, hqStyles.mb1, hqStyles.textAlignCenter]}>Not watching any Tags.</HQText>
@@ -76,8 +83,8 @@ class WatchingTagsScreen extends React.Component<Props> {
     NavigationService.navigate('AllTags');
   }
 
-  private handleWatch(watching: boolean, tagSlug: string): void {
-    this.props.updateWatch(watching, tagSlug);
+  private handleUnwatch(tagSlug: string): void {
+    this.props.updateWatch(false, tagSlug);
   }
 }
 
