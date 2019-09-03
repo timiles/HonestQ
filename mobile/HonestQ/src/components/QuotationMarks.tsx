@@ -16,11 +16,12 @@ export default class QuotationMarks extends React.Component<Props> {
     const { size } = this.props;
     const width = this.switchSize(size);
     const fill = ThemeService.getTextColor();
+    const childrenContainerStyle = size === 'xsmall' ? styles.xsmallChildrenContainer : styles.childrenContainer;
 
     return (
       <View style={hqStyles.flexRow}>
         <QuotationMarkOpenIcon width={width} fill={fill} />
-        <View style={size === 'xsmall' ? styles.xsmallChildrenContainer : styles.childrenContainer}>
+        <View style={[hqStyles.flexShrink, childrenContainerStyle]}>
           {this.props.children}
         </View>
         <QuotationMarkCloseIcon width={width} fill={fill} />

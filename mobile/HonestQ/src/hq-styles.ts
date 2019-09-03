@@ -19,6 +19,11 @@ export default StyleSheet.create({
     flexDirection: 'row',
   } as ViewStyle,
 
+  flexRowAlignCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  } as ViewStyle,
+
   flexRowPullRight: {
     flexDirection: 'row',
     justifyContent: 'flex-end',

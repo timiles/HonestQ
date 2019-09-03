@@ -1,14 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
-import { HQNavigationButton, HQText } from '../hq-components';
+import { TouchableOpacity, View } from 'react-native';
+import { HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { AnswerNavigationProps } from '../screens/AnswerScreen';
 import { AnswerModel } from '../server-models';
-import { getItemCountText } from '../utils/string-utils';
+import { getCommentScores } from '../utils/model-utils';
+import AgreementLabel from './AgreementLabel';
 import CircleIconCard from './CircleIconCard';
 import QuotationMarks from './QuotationMarks';
-import UpvoteButton from './UpvoteButton';
 
 interface OwnProps {
   questionId: number;
@@ -19,30 +19,43 @@ interface OwnProps {
 export default class AnswerCard extends React.Component<OwnProps> {
 
   public render() {
-    const { answer, onUpvote } = this.props;
-    const { id, text, comments, upvotes, upvotedByMe } = answer;
+    const { answer } = this.props;
+    const { id, text, comments } = answer;
+    const [agreeCount, disagreeCount] = getCommentScores(comments);
 
     return (
-      <CircleIconCard type="A">
-        <View style={hqStyles.mb1}>
-          <QuotationMarks size="small">
-            <HQText>{text}</HQText>
-          </QuotationMarks>
-        </View>
-        <View style={hqStyles.flexRow}>
-          <UpvoteButton
-            answerId={id}
-            count={upvotes}
-            isUpvotedByLoggedInUser={upvotedByMe}
-            onUpvote={onUpvote}
-          />
-          <HQNavigationButton
-            style={hqStyles.ml1}
-            title={`Discuss (${getItemCountText('comment', comments.length)})`}
-            onPress={() => this.navigateToAnswer(id)}
-          />
-        </View>
-      </CircleIconCard>
+      <TouchableOpacity
+        onPress={() => this.navigateToAnswer(id)}
+      >
+        <CircleIconCard type="A" position="left">
+          <View style={hqStyles.m1}>
+            <QuotationMarks size="small">
+              <HQText>{text}</HQText>
+            </QuotationMarks>
+          </View>
+          {comments && comments.length > 0 &&
+            <View style={hqStyles.flexRowAlignCenter}>
+              <HQLabel>Comments:</HQLabel>
+              {agreeCount > 0 &&
+                <>
+                  <View style={hqStyles.ml1}>
+                    <AgreementLabel isAgree={true} />
+                  </View>
+                  <HQLabel> × {agreeCount}</HQLabel>
+                </>
+              }
+              {disagreeCount > 0 &&
+                <>
+                  <View style={hqStyles.ml1}>
+                    <AgreementLabel isAgree={false} />
+                  </View>
+                  <HQLabel> × {disagreeCount}</HQLabel>
+                </>
+              }
+            </View>
+          }
+        </CircleIconCard>
+      </TouchableOpacity>
     );
   }
 
