@@ -38,10 +38,21 @@ export default class CommentCard extends React.Component<Props> {
     return (
       <View style={isNested ? hqStyles.ml1 : null}>
         <HQCard style={hqStyles.p1}>
-          <View style={[hqStyles.flexRow, hqStyles.mb1]}>
-            <AgreementLabel isAgree={agreementRating === 'Agree'} />
-            <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, </HQText>
-            <FriendlyDateTime style={hqStyles.vAlignCenter} value={postedAt} />
+          <View style={[hqStyles.flexRowSpaceBetween, hqStyles.mb1]}>
+            <View style={hqStyles.flexRow}>
+              <AgreementLabel isAgree={agreementRating === 'Agree'} />
+              <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, </HQText>
+              <FriendlyDateTime style={hqStyles.vAlignCenter} value={postedAt} />
+            </View>
+            {showActions && (
+              <UpvoteButton
+                answerId={answerId}
+                commentId={commentId}
+                count={upvotes}
+                isUpvotedByLoggedInUser={upvotedByMe}
+                onUpvote={onUpvote}
+              />
+            )}
           </View>
           <HQText style={hqStyles.mb1}>{text}</HQText>
           {source ?
@@ -52,14 +63,7 @@ export default class CommentCard extends React.Component<Props> {
             : null
           }
           {showActions && (
-            <View style={hqStyles.flexRow}>
-              <UpvoteButton
-                answerId={answerId}
-                commentId={commentId}
-                count={upvotes}
-                isUpvotedByLoggedInUser={upvotedByMe}
-                onUpvote={onUpvote}
-              />
+            <View style={hqStyles.flexRowPullRight}>
               <ReplyButton onPress={this.handleNewComment} />
             </View>
           )}

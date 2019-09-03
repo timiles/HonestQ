@@ -6,14 +6,15 @@ interface Props {
 }
 export default class UpvoteIcon extends React.Component<Props> {
 
+  public static getWidth(): number { return 23; }
+
   public render() {
     const { fill = '#fff' } = this.props;
-    const width = 18;
-    const height = 16;
+    const width = UpvoteIcon.getWidth();
 
     // tslint:disable:max-line-length
     return (
-      <Svg viewBox="0 0 561 561" width={width} height={height} fill={fill}>
+      <Svg viewBox="0 0 561 561" width={width} height={width} fill={fill}>
         <Path
           d="M0,535.5h102v-306H0V535.5z M561,255c0-28.05-22.95-51-51-51H349.35l25.5-117.3c0-2.55,0-5.1,0-7.65
           c0-10.2-5.1-20.4-10.199-28.05L336.6,25.5L168.3,193.8c-10.2,7.65-15.3,20.4-15.3,35.7v255c0,28.05,22.95,51,51,51h229.5

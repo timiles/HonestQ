@@ -1,7 +1,10 @@
 import React from 'react';
-import { HQSubmitButton, HQText } from '../hq-components';
+import { ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import UpvoteIcon from '../svg-icons/UpvoteIcon';
+import ThemeService from '../ThemeService';
 
 interface Props {
   answerId: number;
@@ -34,15 +37,18 @@ export default class UpvoteButton extends React.Component<Props, State> {
   public render() {
     const { count, isUpvotedByLoggedInUser } = this.props;
     const { submitting } = this.state;
-    const activeColor = isUpvotedByLoggedInUser ? '#FF5A00' : '#FFF';
+    const activeColor = isUpvotedByLoggedInUser ? '#FF5A00' : ThemeService.getNavTextColor();
 
     return (
-      <HQSubmitButton
+      <TouchableOpacity
+        style={hqStyles.flexRow}
         onPress={this.handlePress}
-        submitting={submitting}
-        activityIndicatorColor={activeColor}
+        disabled={submitting}
       >
-        <UpvoteIcon fill={activeColor} />
+        {submitting ?
+          <ActivityIndicator color={activeColor} style={styles.activityIndicatorWidth} /> :
+          <UpvoteIcon fill={activeColor} />
+        }
         {count > 0 && (
           <HQText
             style={[hqStyles.ml1, hqStyles.primaryButtonText, { color: activeColor }]}
@@ -50,7 +56,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
             {count}
           </HQText>
         )}
-      </HQSubmitButton>
+      </TouchableOpacity>
     );
   }
 
@@ -60,3 +66,10 @@ export default class UpvoteButton extends React.Component<Props, State> {
       () => this.props.onUpvote(!isUpvotedByLoggedInUser, answerId, commentId));
   }
 }
+
+// tslint:disable:no-object-literal-type-assertion
+const styles = StyleSheet.create({
+  activityIndicatorWidth: {
+    width: UpvoteIcon.getWidth(),
+  } as ViewStyle,
+});
