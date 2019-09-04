@@ -27,7 +27,7 @@ class LogOutButton extends React.Component<Props> {
   }
 
   private handleLogOut(): void {
-    this.props.logOut();
+    this.props.submit();
   }
 }
 

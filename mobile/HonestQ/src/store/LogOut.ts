@@ -16,13 +16,19 @@ export interface LogOutState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface LogOutRequestAction { type: 'LOGOUT_REQUEST'; }
-export interface LogOutSuccessAction { type: 'LOGOUT_SUCCESS'; }
-interface LogOutFailureAction { type: 'LOGOUT_FAILURE'; }
+interface LogOutRequestAction {
+  type: 'LOGOUT_REQUEST';
+}
+export interface LogOutSuccessAction {
+  type: 'LOGOUT_SUCCESS';
+}
+interface LogOutFailureAction {
+  type: 'LOGOUT_FAILURE';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownActions =
+type KnownAction =
   | LogOutRequestAction
   | LogOutSuccessAction
   | LogOutFailureAction
@@ -33,7 +39,7 @@ type KnownActions =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-  logOut: (): AppThunkAction<KnownActions | SetThemeSuccessAction> => (dispatch, getState) => {
+  submit: (): AppThunkAction<KnownAction | SetThemeSuccessAction> => (dispatch, getState) => {
     return (async () => {
       dispatch({ type: 'LOGOUT_REQUEST' });
 
@@ -57,7 +63,7 @@ export const actionCreators = {
 
 const defaultState: LogOutState = {};
 
-export const reducer: Reducer<LogOutState> = (state: LogOutState, action: KnownActions) => {
+export const reducer: Reducer<LogOutState> = (state: LogOutState, action: KnownAction) => {
   switch (action.type) {
     case 'LOGOUT_REQUEST':
       return { submitting: true };
