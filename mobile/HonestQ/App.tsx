@@ -7,7 +7,7 @@ import { applyMiddleware, combineReducers, createStore, DeepPartial, Store } fro
 import thunk from 'redux-thunk';
 import AuthCheck from './src/AuthCheck';
 import hqStyles from './src/hq-styles';
-import { localStoreMiddleware, loggedInUserStorageKey, themeStorageKey } from './src/localStoreMiddleware';
+import { localStoreMiddleware, loggedInUserStorageKey, themeStorageKey } from './src/middlewares/localStoreMiddleware';
 import { PopupMiddleware } from './src/middlewares/PopupMiddleware';
 import { LoggedInUserModel } from './src/server-models';
 import * as StoreModule from './src/store';

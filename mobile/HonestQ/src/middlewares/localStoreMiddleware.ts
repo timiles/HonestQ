@@ -1,9 +1,9 @@
 import { Middleware } from 'redux';
-import { LogInFormSuccessAction } from './store/LogIn';
-import { LogOutSuccessAction } from './store/LogOut';
-import { SignUpFormSuccessAction } from './store/SignUp';
-import { SetThemeSuccessAction } from './store/ThemeSetting';
-import { removeData, storeData } from './utils/storage-utils';
+import { LogInFormSuccessAction } from '../store/LogIn';
+import { LogOutSuccessAction } from '../store/LogOut';
+import { SignUpFormSuccessAction } from '../store/SignUp';
+import { SetThemeSuccessAction } from '../store/ThemeSetting';
+import { removeData, storeData } from '../utils/storage-utils';
 
 export const themeStorageKey = '@themeSetting.theme';
 export const loggedInUserStorageKey = '@auth.loggedInUser';
