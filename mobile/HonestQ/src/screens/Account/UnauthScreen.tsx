@@ -20,13 +20,13 @@ export default class UnauthScreen extends React.Component {
     const leadStyle = styles.leadStyle;
 
     return (
-      <View style={ThemeService.getStyles().contentView}>
+      <View style={[ThemeService.getStyles().contentView, hqStyles.flex1]}>
         <ImageBackground
           source={natureBackground}
           style={styles.background}
           imageStyle={styles.backgroundImage}
         >
-          <View style={[hqStyles.center, styles.centerItems]}>
+          <View style={[hqStyles.flexGrow, hqStyles.center, styles.centerItems]}>
             <Text style={stepOutStyle}>Step out of your</Text>
             <Text style={echoChamberStyle}>echo chamber</Text>
             <View style={hqStyles.p3}>

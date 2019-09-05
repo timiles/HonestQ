@@ -39,7 +39,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     return (
       <KeyboardPaddedScrollView
         style={ThemeService.getStyles().contentView}
-        contentContainerStyle={[hqStyles.p1, hqStyles.center]}
+        contentContainerStyle={[hqStyles.p1, hqStyles.flexGrow, hqStyles.center]}
       >
         <HQHeader style={hqStyles.mb1}>Log in to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
