@@ -17,15 +17,23 @@ export interface NewTagState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface TagFormRequestAction { type: 'TAG_FORM_REQUEST'; }
-export interface TagFormSuccessAction { type: 'TAG_FORM_SUCCESS'; payload: { tag: TagFormModel; }; }
-interface TagFormFailureAction { type: 'TAG_FORM_FAILURE'; payload: { error: string | null; }; }
+interface NewTagFormRequestAction {
+  type: 'NEW_TAG_FORM_REQUEST';
+}
+export interface NewTagFormSuccessAction {
+  type: 'NEW_TAG_FORM_SUCCESS';
+  payload: { tag: TagFormModel; };
+}
+interface NewTagFormFailureAction {
+  type: 'NEW_TAG_FORM_FAILURE';
+  payload: { error: string | null; };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = TagFormRequestAction
-  | TagFormSuccessAction
-  | TagFormFailureAction;
+type KnownAction = NewTagFormRequestAction
+  | NewTagFormSuccessAction
+  | NewTagFormFailureAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -34,20 +42,20 @@ type KnownAction = TagFormRequestAction
 export const actionCreators = {
   submit: (tagForm: TagFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
     return (async () => {
-      dispatch({ type: 'TAG_FORM_REQUEST' });
+      dispatch({ type: 'NEW_TAG_FORM_REQUEST' });
 
       if (!tagForm.name || (tagForm.description && tagForm.description.length > 280)) {
         // Don't set an error message, the validation properties will display instead
-        dispatch({ type: 'TAG_FORM_FAILURE', payload: { error: null } });
+        dispatch({ type: 'NEW_TAG_FORM_FAILURE', payload: { error: null } });
         return;
       }
 
       postJson('/api/tags', tagForm, getState().auth.loggedInUser!)
         .then(() => {
-          dispatch({ type: 'TAG_FORM_SUCCESS', payload: { tag: tagForm } });
+          dispatch({ type: 'NEW_TAG_FORM_SUCCESS', payload: { tag: tagForm } });
         })
         .catch((reason: string) => {
-          dispatch({ type: 'TAG_FORM_FAILURE', payload: { error: reason } });
+          dispatch({ type: 'NEW_TAG_FORM_FAILURE', payload: { error: reason } });
         });
     })();
   },
@@ -61,11 +69,11 @@ const defaultState: NewTagState = {};
 
 export const reducer: Reducer<NewTagState> = (state: NewTagState, action: KnownAction) => {
   switch (action.type) {
-    case 'TAG_FORM_REQUEST':
+    case 'NEW_TAG_FORM_REQUEST':
       return { submitting: true, submitted: true };
-    case 'TAG_FORM_SUCCESS':
+    case 'NEW_TAG_FORM_SUCCESS':
       return { submitting: false, submitted: false };
-    case 'TAG_FORM_FAILURE':
+    case 'NEW_TAG_FORM_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
 
     default:

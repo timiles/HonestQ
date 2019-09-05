@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import { NewQuestionFormAwaitingApprovalAction } from '../store/NewQuestion';
-import { TagFormSuccessAction } from '../store/NewTag';
+import { NewTagFormSuccessAction } from '../store/NewTag';
 import { UpdateWatchAnswerSuccessAction, UpdateWatchQuestionSuccessAction } from '../store/Question';
 import { SignUpFormSuccessAction } from '../store/SignUp';
 import { UpdateWatchTagSuccessAction } from '../store/Tag';
@@ -8,7 +8,7 @@ import { PopupOptions, showPopup } from '../utils/popup-utils';
 
 type KnownAction =
   SignUpFormSuccessAction
-  | TagFormSuccessAction
+  | NewTagFormSuccessAction
   | NewQuestionFormAwaitingApprovalAction
   | UpdateWatchTagSuccessAction
   | UpdateWatchQuestionSuccessAction
@@ -35,7 +35,7 @@ function getPopupOptions(action: KnownAction): PopupOptions {
         message: `Welcome to HonestQ, ${action.payload.username}!`,
       };
 
-    case 'TAG_FORM_SUCCESS':
+    case 'NEW_TAG_FORM_SUCCESS':
       return {
         title: 'Success',
         message: `Your tag "${action.payload.tag.name}" has been created and is awaiting approval!`,
