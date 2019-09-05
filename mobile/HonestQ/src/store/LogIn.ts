@@ -18,16 +18,24 @@ export interface LogInState {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-interface LogInRequestAction { type: 'LOGIN_REQUEST'; }
-export interface LogInSuccessAction { type: 'LOGIN_SUCCESS'; payload: LoggedInUserModel; }
-interface LogInFailureAction { type: 'LOGIN_FAILURE'; payload: { error: string | null; }; }
+interface LogInFormRequestAction {
+  type: 'LOGIN_FORM_REQUEST';
+}
+export interface LogInFormSuccessAction {
+  type: 'LOGIN_FORM_SUCCESS';
+  payload: LoggedInUserModel;
+}
+interface LogInFormFailureAction {
+  type: 'LOGIN_FORM_FAILURE';
+  payload: { error: string | null; };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-  | LogInRequestAction
-  | LogInSuccessAction
-  | LogInFailureAction
+  | LogInFormRequestAction
+  | LogInFormSuccessAction
+  | LogInFormFailureAction
   ;
 
 // ----------------
@@ -35,13 +43,13 @@ type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-  logIn: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
+  submit: (logInForm: LogInFormModel): AppThunkAction<KnownAction> => (dispatch, getState) => {
     return (async () => {
-      dispatch({ type: 'LOGIN_REQUEST' });
+      dispatch({ type: 'LOGIN_FORM_REQUEST' });
 
       if (!logInForm.username || !logInForm.password) {
         // Don't set an error message, the validation properties will display instead
-        dispatch({ type: 'LOGIN_FAILURE', payload: { error: null } });
+        dispatch({ type: 'LOGIN_FORM_FAILURE', payload: { error: null } });
         return;
       }
 
@@ -52,13 +60,13 @@ export const actionCreators = {
             // Re-register push token for this user account
             registerForPushNotificationsAsync(logInResponse);
 
-            dispatch({ type: 'LOGIN_SUCCESS', payload: logInResponse });
+            dispatch({ type: 'LOGIN_FORM_SUCCESS', payload: logInResponse });
           } else {
-            dispatch({ type: 'LOGIN_FAILURE', payload: { error: 'An error occurred, please try again' } });
+            dispatch({ type: 'LOGIN_FORM_FAILURE', payload: { error: 'An error occurred, please try again' } });
           }
         })
         .catch((reason: string) => {
-          dispatch({ type: 'LOGIN_FAILURE', payload: { error: reason || 'LogIn failed' } });
+          dispatch({ type: 'LOGIN_FORM_FAILURE', payload: { error: reason || 'LogIn failed' } });
         });
     })();
   },
@@ -72,11 +80,11 @@ const defaultState: LogInState = {};
 
 export const reducer: Reducer<LogInState> = (state: LogInState, action: KnownAction) => {
   switch (action.type) {
-    case 'LOGIN_REQUEST':
+    case 'LOGIN_FORM_REQUEST':
       return { submitting: true, submitted: true };
-    case 'LOGIN_SUCCESS':
+    case 'LOGIN_FORM_SUCCESS':
       return { submitting: false, submitted: true };
-    case 'LOGIN_FAILURE':
+    case 'LOGIN_FORM_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
 
     default:

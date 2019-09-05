@@ -18,16 +18,24 @@ export interface SignUpState {
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface SignUpRequestAction { type: 'SIGNUP_REQUEST'; }
-export interface SignUpSuccessAction { type: 'SIGNUP_SUCCESS'; payload: LoggedInUserModel; }
-interface SignUpFailureAction { type: 'SIGNUP_FAILURE'; payload: { reason: string; }; }
+interface SignUpFormRequestAction {
+  type: 'SIGNUP_FORM_REQUEST';
+}
+export interface SignUpFormSuccessAction {
+  type: 'SIGNUP_FORM_SUCCESS';
+  payload: LoggedInUserModel;
+}
+interface SignUpFormFailureAction {
+  type: 'SIGNUP_FORM_FAILURE';
+  payload: { reason: string; };
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction =
-  | SignUpRequestAction
-  | SignUpSuccessAction
-  | SignUpFailureAction
+  | SignUpFormRequestAction
+  | SignUpFormSuccessAction
+  | SignUpFormFailureAction
   ;
 
 // ----------------
@@ -36,14 +44,14 @@ type KnownAction =
 
 export const actionCreators = {
 
-  submitSignUpForm: (form: SignUpFormModel, confirmPassword: string):
+  submit: (form: SignUpFormModel, confirmPassword: string):
     AppThunkAction<KnownAction> => (dispatch, getState) => {
       return (async () => {
-        dispatch({ type: 'SIGNUP_REQUEST' });
+        dispatch({ type: 'SIGNUP_FORM_REQUEST' });
 
         if (!form.username || !form.password || form.password.length < 7 || form.password !== confirmPassword) {
           // Don't set an error message, the validation properties will display instead
-          dispatch({ type: 'SIGNUP_FAILURE', payload: { reason: null } });
+          dispatch({ type: 'SIGNUP_FORM_FAILURE', payload: { reason: null } });
           return;
         }
 
@@ -52,10 +60,10 @@ export const actionCreators = {
             // Re-register push token for this user account
             registerForPushNotificationsAsync(response);
 
-            dispatch({ type: 'SIGNUP_SUCCESS', payload: response });
+            dispatch({ type: 'SIGNUP_FORM_SUCCESS', payload: response });
           })
           .catch((reason) => {
-            dispatch({ type: 'SIGNUP_FAILURE', payload: { reason } });
+            dispatch({ type: 'SIGNUP_FORM_FAILURE', payload: { reason } });
           });
       })();
     },
@@ -75,21 +83,21 @@ const defaultState: SignUpState = {
 export const reducer: Reducer<SignUpState> = (state: SignUpState, action: KnownAction) => {
   switch (action.type) {
 
-    case 'SIGNUP_REQUEST':
+    case 'SIGNUP_FORM_REQUEST':
       return {
         submitting: true,
         submitted: true,
         success: false,
         error: undefined,
       };
-    case 'SIGNUP_SUCCESS':
+    case 'SIGNUP_FORM_SUCCESS':
       return {
         submitting: false,
         submitted: false,
         success: true,
         error: undefined,
       };
-    case 'SIGNUP_FAILURE':
+    case 'SIGNUP_FORM_FAILURE':
       return {
         submitting: false,
         submitted: true,

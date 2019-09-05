@@ -2,12 +2,12 @@ import { Middleware } from 'redux';
 import { NewQuestionFormAwaitingApprovalAction } from '../store/NewQuestion';
 import { TagFormSuccessAction } from '../store/NewTag';
 import { UpdateWatchAnswerSuccessAction, UpdateWatchQuestionSuccessAction } from '../store/Question';
-import { SignUpSuccessAction } from '../store/SignUp';
+import { SignUpFormSuccessAction } from '../store/SignUp';
 import { UpdateWatchTagSuccessAction } from '../store/Tag';
 import { PopupOptions, showPopup } from '../utils/popup-utils';
 
 type KnownAction =
-  SignUpSuccessAction
+  SignUpFormSuccessAction
   | TagFormSuccessAction
   | NewQuestionFormAwaitingApprovalAction
   | UpdateWatchTagSuccessAction
@@ -29,7 +29,7 @@ function getPopupOptions(action: KnownAction): PopupOptions {
 
   switch (action.type) {
 
-    case 'SIGNUP_SUCCESS':
+    case 'SIGNUP_FORM_SUCCESS':
       return {
         title: 'Success',
         message: `Welcome to HonestQ, ${action.payload.username}!`,

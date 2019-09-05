@@ -71,7 +71,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
   }
 
   private handleSubmit(): void {
-    this.props.logIn(this.state);
+    this.props.submit(this.state);
   }
 }
 

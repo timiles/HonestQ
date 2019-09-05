@@ -1,16 +1,16 @@
 ﻿import { Reducer } from 'redux';
 import { LoggedInUserModel } from '../server-models';
-import { LogInSuccessAction } from './LogIn';
+import { LogInFormSuccessAction } from './LogIn';
 import { LogOutSuccessAction } from './LogOut';
-import { SignUpSuccessAction } from './SignUp';
+import { SignUpFormSuccessAction } from './SignUp';
 
 export interface AuthState {
   loggedInUser?: LoggedInUserModel;
 }
 
 type KnownAction =
-  | LogInSuccessAction
-  | SignUpSuccessAction
+  | LogInFormSuccessAction
+  | SignUpFormSuccessAction
   | LogOutSuccessAction
   ;
 
@@ -18,9 +18,9 @@ const defaultState: AuthState = {};
 
 export const reducer: Reducer<AuthState> = (state: AuthState, action: KnownAction) => {
   switch (action.type) {
-    case 'LOGIN_SUCCESS':
+    case 'LOGIN_FORM_SUCCESS':
       return { loggedInUser: action.payload };
-    case 'SIGNUP_SUCCESS':
+    case 'SIGNUP_FORM_SUCCESS':
       return { loggedInUser: action.payload };
     case 'LOGOUT_SUCCESS':
       return defaultState;

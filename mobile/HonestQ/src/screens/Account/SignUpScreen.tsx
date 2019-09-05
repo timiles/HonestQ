@@ -103,7 +103,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
 
   private handleSubmit(): void {
     const { confirmPassword } = this.state;
-    this.props.submitSignUpForm(this.state, confirmPassword!);
+    this.props.submit(this.state, confirmPassword!);
   }
 }
 
