@@ -1,6 +1,7 @@
 import React from 'react';
 // tslint:disable-next-line:max-line-length
 import { ActivityIndicator, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
+import hqColors from './hq-colors';
 import hqStyles from './hq-styles';
 import ThemeService from './ThemeService';
 
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
 export class HQActivityIndicator extends React.Component {
   public render() {
     return (
-      <ActivityIndicator size="large" color="#FF5A00" />
+      <ActivityIndicator size="large" color={hqColors.Orange} />
     );
   }
 }

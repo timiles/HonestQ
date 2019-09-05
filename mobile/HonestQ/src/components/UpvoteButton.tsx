@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import hqColors from '../hq-colors';
 import { HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import UpvoteIcon from '../svg-icons/UpvoteIcon';
@@ -37,7 +38,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
   public render() {
     const { count, isUpvotedByLoggedInUser } = this.props;
     const { submitting } = this.state;
-    const activeColor = isUpvotedByLoggedInUser ? '#FF5A00' : ThemeService.getNavTextColor();
+    const activeColor = isUpvotedByLoggedInUser ? hqColors.Orange : ThemeService.getNavTextColor();
 
     return (
       <TouchableOpacity

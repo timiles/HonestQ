@@ -1,5 +1,6 @@
 import { createDrawerNavigator, createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation';
 import CustomDrawer from './CustomDrawer';
+import hqColors from './hq-colors';
 import LogInScreen from './screens/Account/LogInScreen';
 import SignUpScreen from './screens/Account/SignUpScreen';
 import UnauthScreen from './screens/Account/UnauthScreen';
@@ -36,7 +37,7 @@ export function createMainNavigator() {
       },
       tabBarOptions: {
         indicatorStyle: {
-          backgroundColor: '#FF5A00',
+          backgroundColor: hqColors.Orange,
         },
         upperCaseLabel: false,
       },
@@ -96,8 +97,8 @@ export const UnauthNavigator = createStackNavigator(
     LogIn: { screen: LogInScreen },
     SignUp: { screen: SignUpScreen },
   }, {
-    initialRouteName: 'Unauth',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  });
+  initialRouteName: 'Unauth',
+  defaultNavigationOptions: {
+    header: null,
+  },
+});

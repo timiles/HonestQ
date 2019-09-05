@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
+import hqColors from '../hq-colors';
 import { HQCard } from '../hq-components';
 import hqStyles from '../hq-styles';
 
@@ -14,7 +15,7 @@ export default class CircleIconCard extends React.Component<Props> {
 
   public render() {
     const { type, position = 'top' } = this.props;
-    const backgroundColor = type === 'Q' ? '#FF5A00' : '#12BC62';
+    const backgroundColor = type === 'Q' ? hqColors.Orange : hqColors.Green;
     const isTop = position === 'top';
 
     return (

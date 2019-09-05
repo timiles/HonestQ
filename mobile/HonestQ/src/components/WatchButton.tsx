@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, ViewStyle } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import hqColors from '../hq-colors';
 import WatchIcon from '../svg-icons/WatchIcon';
 import ThemeService from '../ThemeService';
 
@@ -30,7 +31,7 @@ export default class WatchButton extends React.Component<Props, State> {
   public render() {
     const { watching } = this.props;
     const { submitting } = this.state;
-    const activeColor = watching ? '#FF5A00' : ThemeService.getNavTextColor();
+    const activeColor = watching ? hqColors.Orange : ThemeService.getNavTextColor();
 
     return (
       <TouchableOpacity
