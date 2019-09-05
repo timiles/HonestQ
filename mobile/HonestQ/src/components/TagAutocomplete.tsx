@@ -33,6 +33,10 @@ class TagAutocomplete extends React.Component<TagAutocompleteProps, State> {
     this.handleQueryInputChange = this.handleQueryInputChange.bind(this);
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { suggestions, loading, error } = this.props;
     const { query, selectedTags } = this.state;

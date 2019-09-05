@@ -38,6 +38,10 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
     }
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { name, description, moreInfoUrl } = this.state;
     const { submitting, submitted, error } = this.props;

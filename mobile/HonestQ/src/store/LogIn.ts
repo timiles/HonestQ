@@ -29,6 +29,9 @@ interface LogInFormFailureAction {
   type: 'LOGIN_FORM_FAILURE';
   payload: { error: string | null; };
 }
+interface LogInFormResetAction {
+  type: 'LOGIN_FORM_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -36,6 +39,7 @@ type KnownAction =
   | LogInFormRequestAction
   | LogInFormSuccessAction
   | LogInFormFailureAction
+  | LogInFormResetAction
   ;
 
 // ----------------
@@ -70,6 +74,9 @@ export const actionCreators = {
         });
     })();
   },
+  reset: (): AppThunkAction<KnownAction> => (dispatch) => {
+    return (async () => { dispatch({ type: 'LOGIN_FORM_RESET' }); })();
+  },
 };
 
 // ----------------
@@ -86,6 +93,8 @@ export const reducer: Reducer<LogInState> = (state: LogInState, action: KnownAct
       return { submitting: false, submitted: true };
     case 'LOGIN_FORM_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
+    case 'LOGIN_FORM_RESET':
+      return defaultState;
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

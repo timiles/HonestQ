@@ -41,6 +41,10 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
     }
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { error, submitting, submitted } = this.props;
     const { text: questionText, context, tags } = this.state;

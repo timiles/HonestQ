@@ -40,6 +40,10 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
     }
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { submitting, submitted, error } = this.props;
     const { questionText } = this.props.navigation.state.params;

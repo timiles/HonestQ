@@ -65,6 +65,10 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
     }
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { answer, parentComment } = this.props.navigation.state.params;
 

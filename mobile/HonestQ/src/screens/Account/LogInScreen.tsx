@@ -28,6 +28,10 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { submitting = false, submitted, error } = this.props;
     const { username, password } = this.state;

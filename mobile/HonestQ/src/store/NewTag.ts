@@ -28,12 +28,18 @@ interface NewTagFormFailureAction {
   type: 'NEW_TAG_FORM_FAILURE';
   payload: { error: string | null; };
 }
+interface NewTagFormResetAction {
+  type: 'NEW_TAG_FORM_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = NewTagFormRequestAction
+type KnownAction =
+  | NewTagFormRequestAction
   | NewTagFormSuccessAction
-  | NewTagFormFailureAction;
+  | NewTagFormFailureAction
+  | NewTagFormResetAction
+  ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -59,6 +65,9 @@ export const actionCreators = {
         });
     })();
   },
+  reset: (): AppThunkAction<KnownAction> => (dispatch) => {
+    return (async () => { dispatch({ type: 'NEW_TAG_FORM_RESET' }); })();
+  },
 };
 
 // ----------------
@@ -75,6 +84,8 @@ export const reducer: Reducer<NewTagState> = (state: NewTagState, action: KnownA
       return { submitting: false, submitted: false };
     case 'NEW_TAG_FORM_FAILURE':
       return { submitting: false, submitted: true, error: action.payload.error };
+    case 'NEW_TAG_FORM_RESET':
+      return defaultState;
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

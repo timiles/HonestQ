@@ -33,13 +33,18 @@ interface AutocompleteTagsFailureAction {
   type: 'AUTOCOMPLETE_TAGS_FAILURE';
   payload: { query: string; error: string; };
 }
+interface AutocompleteTagsResetAction {
+  type: 'AUTOCOMPLETE_TAGS_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction = AutocompleteTagsClearAction
   | AutocompleteTagsRequestAction
   | AutocompleteTagsSuccessAction
-  | AutocompleteTagsFailureAction;
+  | AutocompleteTagsFailureAction
+  | AutocompleteTagsResetAction
+  ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -72,6 +77,9 @@ export const actionCreators = {
           });
         });
     })();
+  },
+  reset: (): AppThunkAction<KnownAction> => (dispatch) => {
+    return (async () => { dispatch({ type: 'AUTOCOMPLETE_TAGS_RESET' }); })();
   },
 };
 
@@ -113,6 +121,8 @@ export const reducer: Reducer<TagAutocompleteState> = (state: TagAutocompleteSta
         suggestions: [],
         error: action.payload.error,
       };
+    case 'AUTOCOMPLETE_TAGS_RESET':
+      return defaultState;
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

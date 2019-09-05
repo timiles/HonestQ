@@ -27,6 +27,10 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  public componentWillUnmount() {
+    this.props.reset();
+  }
+
   public render() {
     const { submitting = false, submitted, error } = this.props;
     const { username, password, confirmPassword, email } = this.state;

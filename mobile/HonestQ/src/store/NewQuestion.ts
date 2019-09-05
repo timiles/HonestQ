@@ -32,6 +32,9 @@ interface NewQuestionFormFailureAction {
   type: 'NEW_QUESTION_FORM_FAILURE';
   payload: { error: string | null; };
 }
+interface NewQuestionFormResetAction {
+  type: 'NEW_QUESTION_FORM_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
@@ -40,6 +43,7 @@ type KnownAction =
   | NewQuestionFormSuccessAction
   | NewQuestionFormAwaitingApprovalAction
   | NewQuestionFormFailureAction
+  | NewQuestionFormResetAction
   ;
 
 // ----------------
@@ -80,6 +84,9 @@ export const actionCreators = {
           });
       })();
     },
+  reset: (): AppThunkAction<KnownAction> => (dispatch) => {
+    return (async () => { dispatch({ type: 'NEW_QUESTION_FORM_RESET' }); })();
+  },
 };
 
 // ----------------
@@ -95,6 +102,7 @@ export const reducer: Reducer<NewQuestionState> = (state: NewQuestionState, acti
         submitting: true,
         submitted: true,
       };
+    case 'NEW_QUESTION_FORM_RESET':
     case 'NEW_QUESTION_FORM_SUCCESS':
       return defaultState;
     case 'NEW_QUESTION_FORM_AWAITING_APPROVAL':

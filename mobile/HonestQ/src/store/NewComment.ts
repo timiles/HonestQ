@@ -28,12 +28,17 @@ interface NewCommentFormFailureAction {
   type: 'NEW_COMMENT_FORM_FAILURE';
   payload: { error?: string; };
 }
+interface NewCommentFormResetAction {
+  type: 'NEW_COMMENT_FORM_RESET';
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
 type KnownAction = NewCommentFormRequestAction
   | NewCommentFormSuccessAction
-  | NewCommentFormFailureAction;
+  | NewCommentFormFailureAction
+  | NewCommentFormResetAction
+  ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -68,6 +73,9 @@ export const actionCreators = {
           });
       })();
     },
+  reset: (): AppThunkAction<KnownAction> => (dispatch) => {
+    return (async () => { dispatch({ type: 'NEW_COMMENT_FORM_RESET' }); })();
+  },
 };
 
 // ----------------
@@ -83,6 +91,7 @@ export const reducer: Reducer<NewCommentState> = (state: NewCommentState, action
         submitting: true,
         submitted: true,
       };
+    case 'NEW_COMMENT_FORM_RESET':
     case 'NEW_COMMENT_FORM_SUCCESS':
       return defaultState;
     case 'NEW_COMMENT_FORM_FAILURE':
