@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import CircleIconCard from '../components/CircleIconCard';
+import hqColors from '../hq-colors';
 import { HQActivityIndicator, HQHeader, HQLoadingView, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
@@ -31,11 +32,12 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
     this.state = { loadingMore: false };
 
     this.loadMore = this.loadMore.bind(this);
+    this.handleRefresh = this.handleRefresh.bind(this);
   }
 
   public componentDidMount() {
     if (!this.props.questionsList) {
-      this.props.loadMoreQuestionItems();
+      this.props.loadMoreQuestionItems({});
     }
   }
 
@@ -47,7 +49,7 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
   }
 
   public render() {
-    const { questionsList } = this.props;
+    const { questionsList, refreshing } = this.props;
 
     if (!questionsList) {
       return <HQLoadingView />;
@@ -84,6 +86,14 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
             }}
           />}
           onEndReached={this.loadMore}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.handleRefresh}
+              colors={[hqColors.Orange]}
+              progressBackgroundColor={ThemeService.getBorderColor()}
+            />
+          }
           ListFooterComponent={this.state.loadingMore ?
             <HQActivityIndicator />
             : (questionsList.lastTimestamp === 0) &&
@@ -116,8 +126,12 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
     const { questionsList: { lastTimestamp }, loadMoreQuestionItems } = this.props;
     if (lastTimestamp > 0 && !this.state.loadingMore) {
       this.setState({ loadingMore: true });
-      loadMoreQuestionItems(lastTimestamp);
+      loadMoreQuestionItems({ beforeTimestamp: lastTimestamp });
     }
+  }
+
+  private handleRefresh(): void {
+    this.props.loadMoreQuestionItems({ isRefresh: true });
   }
 
   private navigateToNewQuestion() {
