@@ -49,12 +49,14 @@ namespace Pobs.Tests.Integration.Questions
                 {
                     var reloadedQuestion = dbContext.Questions
                         .Include(x => x.Answers).ThenInclude(x => x.PostedByUser)
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments)
                         .Include(x => x.Answers).ThenInclude(x => x.Watches)
                         .First(x => x.Id == question.Id);
                     var answer = reloadedQuestion.Answers.Single();
                     Assert.Equal(payload.Text.CleanText(), answer.Text);
                     Assert.Equal(_user.Id, answer.PostedByUser.Id);
                     Assert.True(answer.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                    Assert.Empty(answer.Comments);
                     Assert.NotEmpty(answer.Watches.Where(x => x.User.Id == _user.Id));
 
                     var responseContent = await response.Content.ReadAsStringAsync();
@@ -64,6 +66,58 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal(answer.Text, responseModel.Text);
                     Assert.Equal(answer.Slug, responseModel.Slug);
                     Assert.True(responseModel.Watching);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("  This is my comment  ", null)]
+        [InlineData("  This is my comment  ", "  https://www.example.com  ")]
+        public async Task IncludeCommentInfo_ShouldAddAnswerAndComment(string commentText, string commentSource)
+        {
+            var question = _question;
+            var payload = new AnswerFormModel
+            {
+                // Include emoji in the Text, and white space around it
+                Text = "\nHere's a poop emoji: 💩\r\t\r",
+                CommentText = commentText,
+                CommentSource = commentSource,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(question.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments)
+                        .First(x => x.Id == question.Id);
+                    var answer = reloadedQuestion.Answers.Single();
+                    Assert.Equal(payload.Text.CleanText(), answer.Text);
+
+                    Assert.Single(answer.Comments);
+                    var comment = answer.Comments.Single();
+
+                    Assert.Equal(payload.CommentText.CleanText(), comment.Text);
+                    Assert.Equal(payload.CommentSource.CleanText(), comment.Source);
+                    Assert.Equal(AgreementRating.Agree, comment.AgreementRating);
+                    Assert.Equal(PostStatus.OK, comment.Status);
+
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseModel = JsonConvert.DeserializeObject<AnswerModel>(responseContent);
+
+                    Assert.Single(responseModel.Comments);
+                    var responseComment = responseModel.Comments[0];
+
+                    Assert.Equal(comment.Id, responseComment.Id);
+                    Assert.Equal(comment.Text, responseComment.Text);
+                    Assert.Equal(comment.Source, responseComment.Source);
+                    Assert.Null(responseComment.ParentCommentId);
                 }
             }
         }

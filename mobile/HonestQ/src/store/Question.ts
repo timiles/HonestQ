@@ -188,7 +188,7 @@ export const reducer: Reducer<QuestionState> = (state: QuestionState, anyAction:
       const questionModel = state.question!;
       // Slice for immutability
       const answersNext = questionModel.answers.slice();
-      answersNext.push(action.payload.answer);
+      answersNext.unshift(action.payload.answer);
       const questionNext = { ...questionModel, answers: answersNext };
       return {
         question: questionNext,

@@ -195,7 +195,18 @@ namespace Pobs.Web.Services
                 return null;
             }
 
-            var answer = new Answer(answerForm.Text, await postedByUserTask, DateTime.UtcNow);
+            var user = await postedByUserTask;
+            var answer = new Answer(answerForm.Text, user, DateTime.UtcNow);
+
+            if (!string.IsNullOrWhiteSpace(answerForm.CommentText) ||
+              !string.IsNullOrWhiteSpace(answerForm.CommentSource))
+            {
+                var comment = new Comment(answerForm.CommentText, user, DateTime.UtcNow, AgreementRating.Agree, null)
+                {
+                    Source = answerForm.CommentSource.CleanText(),
+                };
+                answer.Comments.Add(comment);
+            }
 
             question.Answers.Add(answer);
             await _context.SaveChangesAsync();

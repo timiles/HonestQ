@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using Pobs.Domain.Utils;
 
 namespace Pobs.Domain.Entities
 {
@@ -16,7 +17,7 @@ namespace Pobs.Domain.Entities
         public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating agreementRating, long? parentCommentId)
             : this()
         {
-            this.Text = text;
+            this.Text = text.CleanText();
             this.PostedByUser = postedByUser;
             this.PostedAt = postedAt;
             this.AgreementRating = agreementRating;

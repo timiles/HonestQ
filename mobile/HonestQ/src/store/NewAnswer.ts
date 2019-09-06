@@ -50,7 +50,8 @@ export const actionCreators = {
       return (async () => {
         dispatch({ type: 'NEW_ANSWER_FORM_REQUEST' });
 
-        if (!answerForm.text || answerForm.text.length > 280) {
+        if (!answerForm.text || answerForm.text.length > 280 ||
+          (answerForm.commentSource && !answerForm.commentText)) {
           // Don't set an error message, the validation properties will display instead
           dispatch({ type: 'NEW_ANSWER_FORM_FAILURE', payload: {} });
           return;

@@ -4,7 +4,7 @@ import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation
 import { connect } from 'react-redux';
 import CircleIconCard from '../components/CircleIconCard';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
-import { HQHeader, HQSubmitButton, HQSuperTextInput, HQText } from '../hq-components';
+import { HQHeader, HQLabel, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { AnswerFormModel } from '../server-models';
@@ -47,7 +47,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
   public render() {
     const { submitting, submitted, error } = this.props;
     const { questionText } = this.props.navigation.state.params;
-    const { text: answerText } = this.state;
+    const { text: answerText, commentText, commentSource } = this.state;
 
     return (
       <KeyboardPaddedScrollView
@@ -58,16 +58,39 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
           <HQHeader>{questionText}</HQHeader>
         </CircleIconCard>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
+        <HQLabel style={hqStyles.mv1}>
+          Provide a generic, short summary of your answer
+        </HQLabel>
         <HQSuperTextInput
           containerStyle={hqStyles.mb1}
           autoFocus={true}
-          placeholder="Provide a short summary of your answer"
-          helpText="You can back up your answer with specific details and sources in the Comments section."
+          placeholder="Summary"
           maxLength={280}
           value={answerText}
           onChangeText={(text) => this.setState({ text })}
           submitted={submitted && !error}
           error={!answerText ? 'Answer is required' : null}
+        />
+        <HQLabel style={hqStyles.mv1}>
+          You can add a comment and source too, if you want to provide more specific detail
+        </HQLabel>
+        <HQSuperTextInput
+          containerStyle={hqStyles.mb1}
+          placeholder="Comment"
+          maxLength={280}
+          value={commentText}
+          onChangeText={(text) => this.setState({ commentText: text })}
+          submitted={submitted && !error}
+          error={commentSource && !commentText ? 'Please add a comment to explain your source' : null}
+        />
+        <HQTextInput
+          containerStyle={hqStyles.mb1}
+          keyboardType="url"
+          placeholder="Source"
+          maxLength={2000}
+          value={commentSource}
+          onChangeText={(text) => this.setState({ commentSource: text })}
+          submitted={submitted && !error}
         />
         <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
           <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />

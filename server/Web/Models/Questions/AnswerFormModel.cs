@@ -6,5 +6,9 @@ namespace Pobs.Web.Models.Questions
     {
         [Required]
         public string Text { get; set; }
+
+        public string CommentText { get; set; }
+
+        public string CommentSource { get; set; }
     }
 }

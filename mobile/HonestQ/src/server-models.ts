@@ -97,6 +97,8 @@ export interface AdminQuestionModel {
 
 export interface AnswerFormModel {
   text: string;
+  commentText?: string;
+  commentSource?: string;
 }
 
 export interface AnswerListItemModel {
