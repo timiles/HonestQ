@@ -187,7 +187,7 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
         >
           {this.props.children}
         </TextInput>
-        <View style={hqStyles.flexRowPullRight}>
+        <View style={hqStyles.rowAlignEnd}>
           <HQLabel style={remainingCharacterCountStyle}>
             {remainingCharacterCount} characters remaining
           </HQLabel>

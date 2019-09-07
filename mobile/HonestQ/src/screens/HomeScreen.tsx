@@ -27,7 +27,7 @@ export default class HomeScreen extends React.Component {
       <View style={[ThemeService.getStyles().contentView, hqStyles.p1]}>
         <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToWatching} title="Watching" />
         <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToNotifications}>
-          <View style={hqStyles.flexRowAlignCenter}>
+          <View style={hqStyles.row}>
             <HQText>Notifications </HQText>
             <NotificationsCount />
           </View>

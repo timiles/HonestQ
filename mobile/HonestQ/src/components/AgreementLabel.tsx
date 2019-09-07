@@ -21,7 +21,7 @@ export default class AgreementLabel extends React.Component<Props> {
     const fontSize = (size === 'medium') ? styles.mediumFontSize : styles.smallFontSize;
 
     return (
-      <View style={[styles.pill, hqStyles.flexRowAlignCenter, disabled ? { borderColor: disabledColor } : null]}>
+      <View style={[styles.pill, hqStyles.row, disabled ? { borderColor: disabledColor } : null]}>
         {isAgree ? <AgreeIcon fill={fill} /> : <DisagreeIcon fill={fill} />}
         {showLabel && (
           <HQLabel style={[styles.text, fontSize, hqStyles.vAlignCenter, disabled ? { color: disabledColor } : null]}>

@@ -26,7 +26,7 @@ export default class UnauthScreen extends React.Component {
           style={styles.background}
           imageStyle={styles.backgroundImage}
         >
-          <View style={[hqStyles.flexGrow, hqStyles.center, styles.centerItems]}>
+          <View style={[hqStyles.fillSpace, hqStyles.center, styles.centerItems]}>
             <Text style={stepOutStyle}>Step out of your</Text>
             <Text style={echoChamberStyle}>echo chamber</Text>
             <View style={hqStyles.p3}>
@@ -37,7 +37,7 @@ export default class UnauthScreen extends React.Component {
                 Find out how people can disagree, honestly.
               </Text>
             </View>
-            <View style={hqStyles.flexRowAlignCenter}>
+            <View style={hqStyles.row}>
               <HQSubmitButton title="Log in" onPress={this.navigateToLogIn} />
               <HQSubmitButton title="Sign up" onPress={this.navigateToSignUp} style={hqStyles.ml1} />
             </View>

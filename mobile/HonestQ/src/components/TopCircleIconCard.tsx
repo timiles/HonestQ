@@ -18,7 +18,7 @@ export default class TopCircleIconCard extends React.Component<Props> {
     return (
       <HQCard style={[hqStyles.mt2, this.props.style]}>
         <CircleIcon type={type} style={styles.circleIconOffset} />
-        <View style={[hqStyles.flexShrink, hqStyles.m1, hqStyles.pl3]}>
+        <View style={[hqStyles.fillSpace, hqStyles.m1, hqStyles.pl3]}>
           {this.props.children}
         </View>
       </HQCard>

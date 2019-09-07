@@ -22,7 +22,7 @@ class SettingsScreen extends React.Component<Props> {
     const { theme } = this.props;
     return (
       <View style={ThemeService.getStyles().contentView}>
-        <View style={[hqStyles.flexRowAlignCenter, hqStyles.p1]}>
+        <View style={[hqStyles.row, hqStyles.p1]}>
           <HQHeader>Light / Dark mode</HQHeader>
           <Switch
             style={hqStyles.ml1}

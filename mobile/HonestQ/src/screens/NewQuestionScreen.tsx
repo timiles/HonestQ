@@ -76,7 +76,7 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
           selectedTags={tags}
           onChange={this.handleTagsChange}
         />
-        <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+        <View style={[hqStyles.rowAlignEnd, hqStyles.mt1]}>
           <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
         </View>
       </KeyboardPaddedScrollView>

@@ -79,7 +79,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
       <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         {parentComment ? this.renderParentComment(parentComment) : this.renderAnswer(answer)}
         <HQCard style={[hqStyles.mb1, hqStyles.p1, (parentComment ? hqStyles.ml1 : null)]}>
-          <View style={[hqStyles.flexRowAlignCenter, hqStyles.mb1]}>
+          <View style={[hqStyles.row, hqStyles.mb1]}>
             <TouchableOpacity
               onPress={this.handleAgree}
               disabled={agreementRating === 'Agree'}
@@ -118,7 +118,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
             onChangeText={(text) => this.setState({ source: text })}
             submitted={submitted && !error}
           />
-          <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+          <View style={[hqStyles.rowAlignEnd, hqStyles.mt1]}>
             <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
           </View>
         </HQCard>

@@ -32,7 +32,7 @@ export default class AnswerCard extends React.Component<OwnProps> {
             <HQText>{text}</HQText>
           </QuotationMarks>
           {comments && comments.length > 0 &&
-            <View style={[hqStyles.flexRowAlignCenter, hqStyles.mt1]}>
+            <View style={[hqStyles.row, hqStyles.mt1]}>
               <HQLabel>Comments:</HQLabel>
               {agreeCount > 0 &&
                 <>

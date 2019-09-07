@@ -92,7 +92,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
           onChangeText={(text) => this.setState({ commentSource: text })}
           submitted={submitted && !error}
         />
-        <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+        <View style={[hqStyles.rowAlignEnd, hqStyles.mt1]}>
           <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
         </View>
       </KeyboardPaddedScrollView>

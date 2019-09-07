@@ -123,7 +123,7 @@ class AnswerScreen extends React.Component<Props> {
                   <HQHeader>{text}</HQHeader>
                 </QuotationMarks>
               </TopCircleIconCard>
-              <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
+              <View style={[hqStyles.rowAlignEnd, hqStyles.mb1]}>
                 <ReplyButton onPress={this.handleNewComment} />
               </View>
             </View>

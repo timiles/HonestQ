@@ -39,7 +39,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
     return (
       <KeyboardPaddedScrollView
         style={ThemeService.getStyles().contentView}
-        contentContainerStyle={[hqStyles.p1, hqStyles.flexGrow, hqStyles.center]}
+        contentContainerStyle={[hqStyles.p1, hqStyles.fillSpace, hqStyles.center]}
       >
         <HQHeader style={hqStyles.mb1}>Log in to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
@@ -62,7 +62,7 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
           submitted={submitted && !error}
           error={!password ? 'Password is required' : null}
         />
-        <View style={hqStyles.flexRowSpaceBetween}>
+        <View style={hqStyles.rowJustifySpace}>
           <HQNavigationButton title="Or create a new account" onPress={this.navigateToSignUp} />
           <HQSubmitButton title="Log in" onPress={this.handleSubmit} submitting={submitting} />
         </View>

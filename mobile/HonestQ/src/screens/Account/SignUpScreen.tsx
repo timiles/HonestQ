@@ -38,7 +38,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
     return (
       <KeyboardPaddedScrollView
         style={ThemeService.getStyles().contentView}
-        contentContainerStyle={[hqStyles.p1, hqStyles.flexGrow, hqStyles.center]}
+        contentContainerStyle={[hqStyles.p1, hqStyles.fillSpace, hqStyles.center]}
       >
         <HQHeader style={hqStyles.mb1}>Sign up to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
@@ -93,7 +93,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
           </Text>
           .
         </HQText>
-        <View style={hqStyles.flexRowSpaceBetween}>
+        <View style={hqStyles.rowJustifySpace}>
           <HQNavigationButton title="Already have an account? Log in" onPress={this.navigateToLogIn} />
           <HQSubmitButton title="Sign up" onPress={this.handleSubmit} submitting={submitting} />
         </View>

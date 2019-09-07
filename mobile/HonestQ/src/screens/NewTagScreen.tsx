@@ -75,7 +75,7 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
           onChangeText={(text) => this.setState({ moreInfoUrl: text })}
           submitted={submitted && !error}
         />
-        <View style={[hqStyles.flexRowPullRight, hqStyles.mt1]}>
+        <View style={[hqStyles.rowAlignEnd, hqStyles.mt1]}>
           <HQSubmitButton title="Submit" submitting={submitting} onPress={this.handleSubmit} />
         </View>
       </KeyboardPaddedScrollView>

@@ -44,9 +44,9 @@ class AllTagsScreen extends React.Component<Props> {
           data={orderedTags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
-            <View style={[hqStyles.flexRowAlignCenter, hqStyles.mh1, hqStyles.mb1]}>
+            <View style={[hqStyles.row, hqStyles.mh1, hqStyles.mb1]}>
               <HQNavigationButton
-                style={[hqStyles.flexGrow, hqStyles.flexShrink, hqStyles.mr1]}
+                style={[hqStyles.fillSpace, hqStyles.mr1]}
                 onPress={() => this.navigateToTag(item.slug, item.name)}
               >
                 <HQHeader>{item.name}</HQHeader>

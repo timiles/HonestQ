@@ -11,31 +11,8 @@ export default StyleSheet.create({
     color: 'red',
   } as TextStyle,
 
-  flexGrow: {
+  fillSpace: {
     flexGrow: 1,
-  } as ViewStyle,
-
-  flexRowAlignStart: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  } as ViewStyle,
-
-  flexRowAlignCenter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  } as ViewStyle,
-
-  flexRowPullRight: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  } as ViewStyle,
-
-  flexRowSpaceBetween: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  } as ViewStyle,
-
-  flexShrink: {
     flexShrink: 1,
   } as ViewStyle,
 
@@ -112,6 +89,27 @@ export default StyleSheet.create({
     color: '#fff',
     textAlignVertical: 'center',
   } as TextStyle,
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  } as ViewStyle,
+
+  rowAlignStart: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  } as ViewStyle,
+
+  rowAlignEnd: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  } as ViewStyle,
+
+  rowJustifySpace: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  } as ViewStyle,
 
   small: {
     fontSize: 11,
