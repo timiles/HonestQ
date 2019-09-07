@@ -2,7 +2,7 @@ import React from 'react';
 import { RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
-import CircleIconCard from '../components/CircleIconCard';
+import IconCard from '../components/IconCard';
 import hqColors from '../hq-colors';
 import { HQActivityIndicator, HQHeader, HQLoadingView, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
@@ -112,11 +112,9 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
             Question
             {question.tags.length > 0 ? ' in: ' + question.tags.map((x) => x.name).join(', ') : null}
           </HQText>
-          <CircleIconCard type="Q" position="left">
-            <View style={hqStyles.mt1}>
-              <HQText>{question.text}</HQText>
-            </View>
-          </CircleIconCard>
+          <IconCard type="Q">
+            <HQText>{question.text}</HQText>
+          </IconCard>
         </View>
       </TouchableOpacity>
     );

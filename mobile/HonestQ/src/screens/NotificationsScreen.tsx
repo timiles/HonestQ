@@ -2,11 +2,10 @@ import React from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
-import AgreementLabel from '../components/AgreementLabel';
-import CircleIconCard from '../components/CircleIconCard';
+import IconCard from '../components/IconCard';
 import NotificationsCount from '../components/NotificationsCount';
 import QuotationMarks from '../components/QuotationMarks';
-import { HQActivityIndicator, HQCard, HQHeader, HQLabel, HQLoadingView, HQText } from '../hq-components';
+import { HQActivityIndicator, HQHeader, HQLabel, HQLoadingView, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { NotificationModel } from '../server-models';
@@ -114,11 +113,9 @@ class NotificationScreen extends React.Component<Props, State> {
               {!notification.seen && 'NEW: '}Question
               {notification.tags.length > 0 ? ' in: ' + notification.tags.map((x) => x.name).join(', ') : null}
             </HQText>
-            <CircleIconCard type="Q" position="left">
-              <View style={hqStyles.mt1}>
-                <HQText>{notification.questionText}</HQText>
-              </View>
-            </CircleIconCard>
+            <IconCard type="Q">
+              <HQText>{notification.questionText}</HQText>
+            </IconCard>
           </>
         );
       }
@@ -128,13 +125,11 @@ class NotificationScreen extends React.Component<Props, State> {
             <HQText>
               {!notification.seen && 'NEW: '}Answer to: {notification.questionText}
             </HQText>
-            <CircleIconCard type="A" position="left">
-              <View style={hqStyles.mt1}>
-                <QuotationMarks size="large">
-                  <HQText>{notification.answerText}</HQText>
-                </QuotationMarks>
-              </View>
-            </CircleIconCard>
+            <IconCard type="A">
+              <QuotationMarks size="large">
+                <HQText>{notification.answerText}</HQText>
+              </QuotationMarks>
+            </IconCard>
           </>
         );
       }
@@ -147,16 +142,9 @@ class NotificationScreen extends React.Component<Props, State> {
             <QuotationMarks size="xsmall">
               <HQText>{notification.answerText}</HQText>
             </QuotationMarks>
-            <HQCard>
-              <View style={hqStyles.flexRowAlignCenter}>
-                <View style={{ margin: 5 }}>
-                  <AgreementLabel isAgree={notification.agreementRating === 'Agree'} showLabel={false} />
-                </View>
-                <View style={hqStyles.mv1}>
-                  <HQText>{notification.commentText}</HQText>
-                </View>
-              </View>
-            </HQCard>
+            <IconCard type={notification.agreementRating === 'Agree' ? 'Agree' : 'Disagree'}>
+              <HQText>{notification.commentText}</HQText>
+            </IconCard>
           </>
         );
       }

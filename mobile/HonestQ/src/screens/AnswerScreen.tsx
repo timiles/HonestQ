@@ -3,11 +3,11 @@ import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import QuotationMarks from '../components/QuotationMarks';
 import ReplyButton from '../components/ReplyButton';
 import ShareButton from '../components/ShareButton';
+import TopCircleIconCard from '../components/TopCircleIconCard';
 import WatchButton from '../components/WatchButton';
 import { HQHeader, HQLoadingView } from '../hq-components';
 import hqStyles from '../hq-styles';
@@ -110,14 +110,14 @@ class AnswerScreen extends React.Component<Props> {
         <FlatList
           ListHeaderComponent={(
             <View style={[hqStyles.mh1]}>
-              <CircleIconCard type="Q">
+              <TopCircleIconCard type="Q">
                 <HQHeader>{questionText}</HQHeader>
-              </CircleIconCard>
-              <CircleIconCard type="A" style={hqStyles.mb1}>
+              </TopCircleIconCard>
+              <TopCircleIconCard type="A" style={hqStyles.mb1}>
                 <QuotationMarks size="large">
                   <HQHeader>{text}</HQHeader>
                 </QuotationMarks>
-              </CircleIconCard>
+              </TopCircleIconCard>
               <View style={[hqStyles.flexRowPullRight, hqStyles.mb1]}>
                 <ReplyButton onPress={this.handleNewComment} />
               </View>

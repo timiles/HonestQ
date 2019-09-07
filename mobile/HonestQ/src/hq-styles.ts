@@ -92,6 +92,10 @@ export default StyleSheet.create({
     padding: 30,
   } as ViewStyle,
 
+  pl3: {
+    paddingLeft: 30,
+  } as ViewStyle,
+
   pr1: {
     paddingRight: 10,
   } as ViewStyle,

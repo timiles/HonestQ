@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
-import CircleIconCard from '../components/CircleIconCard';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
+import TopCircleIconCard from '../components/TopCircleIconCard';
 import { HQHeader, HQLabel, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
@@ -54,9 +54,9 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
         style={ThemeService.getStyles().contentView}
         contentContainerStyle={[hqStyles.p1, hqStyles.pt0]}
       >
-        <CircleIconCard type="Q" style={hqStyles.mb1}>
+        <TopCircleIconCard type="Q" style={hqStyles.mb1}>
           <HQHeader>{questionText}</HQHeader>
-        </CircleIconCard>
+        </TopCircleIconCard>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQLabel style={hqStyles.mv1}>
           Provide a generic, short summary of your answer

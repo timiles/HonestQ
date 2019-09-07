@@ -3,10 +3,10 @@ import { TouchableOpacity, View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import AgreementLabel from '../components/AgreementLabel';
-import CircleIconCard from '../components/CircleIconCard';
 import CommentCard from '../components/CommentCard';
 import KeyboardPaddedScrollView from '../components/KeyboardPaddedScrollView';
 import QuotationMarks from '../components/QuotationMarks';
+import TopCircleIconCard from '../components/TopCircleIconCard';
 import { HQCard, HQSubmitButton, HQSuperTextInput, HQText, HQTextInput } from '../hq-components';
 import hqStyles from '../hq-styles';
 import { LoggedInUserContext } from '../LoggedInUserContext';
@@ -128,11 +128,11 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
 
   private renderAnswer(answer: AnswerModel) {
     return (
-      <CircleIconCard type="A" style={[hqStyles.mb1]}>
+      <TopCircleIconCard type="A" style={hqStyles.mb1}>
         <QuotationMarks size="small">
           <HQText>{answer.text}</HQText>
         </QuotationMarks>
-      </CircleIconCard>
+      </TopCircleIconCard>
     );
   }
 

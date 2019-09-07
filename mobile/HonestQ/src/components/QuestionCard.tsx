@@ -6,7 +6,7 @@ import NavigationService from '../NavigationService';
 import { QuestionNavigationProps } from '../screens/QuestionScreen';
 import { QuestionListItemModel } from '../server-models';
 import { getItemCountText } from '../utils/string-utils';
-import CircleIconCard from './CircleIconCard';
+import TopCircleIconCard from './TopCircleIconCard';
 
 interface Props {
   question: QuestionListItemModel;
@@ -19,15 +19,17 @@ export default class QuestionCard extends React.Component<Props> {
     const { id, text, answersCount } = question;
 
     return (
-      <CircleIconCard type="Q">
-        <View style={hqStyles.mb1}>
-          <HQText>{text}</HQText>
+      <TopCircleIconCard type="Q">
+        <View style={hqStyles.mv1}>
+          <View style={hqStyles.mb1}>
+            <HQText>{text}</HQText>
+          </View>
+          <HQNavigationButton
+            title={getItemCountText('answer', answersCount)}
+            onPress={() => this.navigateToQuestion(id)}
+          />
         </View>
-        <HQNavigationButton
-          title={getItemCountText('answer', answersCount)}
-          onPress={() => this.navigateToQuestion(id)}
-        />
-      </CircleIconCard>
+      </TopCircleIconCard>
     );
   }
 

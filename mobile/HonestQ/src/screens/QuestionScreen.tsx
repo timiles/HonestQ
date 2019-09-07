@@ -4,10 +4,10 @@ import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import AnswerCard from '../components/AnswerCard';
-import CircleIconCard from '../components/CircleIconCard';
 import { InfoCard } from '../components/InfoCard';
 import ShareButton from '../components/ShareButton';
 import TextWithShortLinks from '../components/TextWithShortLinks';
+import TopCircleIconCard from '../components/TopCircleIconCard';
 import WatchButton from '../components/WatchButton';
 import { HQHeader, HQLoadingView, HQPrimaryButton } from '../hq-components';
 import hqStyles from '../hq-styles';
@@ -112,9 +112,9 @@ class QuestionScreen extends React.Component<Props> {
         <FlatList
           ListHeaderComponent={(
             <View style={hqStyles.mh1}>
-              <CircleIconCard type="Q" style={hqStyles.mb1}>
+              <TopCircleIconCard type="Q" style={hqStyles.mb1}>
                 <HQHeader>{text}</HQHeader>
-              </CircleIconCard>
+              </TopCircleIconCard>
               {context &&
                 <InfoCard style={hqStyles.mb1}>
                   <HQHeader>Context</HQHeader>
