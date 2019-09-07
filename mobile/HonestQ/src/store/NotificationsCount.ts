@@ -2,7 +2,6 @@
 import { AppThunkAction } from '.';
 import { NotificationsCountModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
-import { LogOutSuccessAction } from './LogOut';
 import { MarkAllNotificationsAsSeenSuccessAction, MarkNotificationAsSeenSuccessAction } from './Notifications';
 
 // -----------------
@@ -37,7 +36,6 @@ type KnownAction =
   | GetNotificationsCountFailureAction
   | MarkNotificationAsSeenSuccessAction
   | MarkAllNotificationsAsSeenSuccessAction
-  | LogOutSuccessAction
   ;
 
 // ----------------
@@ -98,8 +96,6 @@ export const reducer: Reducer<NotificationsCountState> = (state: NotificationsCo
         notificationsCount: { count: 0 },
       };
     }
-    case 'LOGOUT_SUCCESS':
-      return defaultState;
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

@@ -3,12 +3,13 @@ import * as Font from 'expo-font';
 import React from 'react';
 import FlashMessage, { DefaultFlash, MessageComponentProps } from 'react-native-flash-message';
 import { Provider } from 'react-redux';
-import { applyMiddleware, combineReducers, createStore, DeepPartial, Store } from 'redux';
+import { applyMiddleware, createStore, DeepPartial, Store } from 'redux';
 import thunk from 'redux-thunk';
 import AuthCheck from './src/AuthCheck';
 import hqStyles from './src/hq-styles';
 import { localStoreMiddleware, loggedInUserStorageKey, themeStorageKey } from './src/middlewares/localStoreMiddleware';
 import { PopupMiddleware } from './src/middlewares/PopupMiddleware';
+import { createRootReducer } from './src/RootReducer';
 import { LoggedInUserModel } from './src/server-models';
 import * as StoreModule from './src/store';
 import ThemeService, { Theme } from './src/ThemeService';
@@ -50,9 +51,10 @@ export default class App extends React.Component<{}, State> {
     const loggedInUser = await loadLoggedInUserPromise;
     const theme = (await loadThemePromise) || 'light';
     ThemeService.setTheme(theme);
+    const rootReducer = createRootReducer();
     const initialState: DeepPartial<StoreModule.ApplicationState> = { auth: { loggedInUser }, themeSetting: { theme } };
-    const allReducers = combineReducers<StoreModule.ApplicationState>(StoreModule.reducers);
-    this.store = createStore(allReducers, initialState, applyMiddleware(thunk, localStoreMiddleware, PopupMiddleware));
+    const middlewares = applyMiddleware(thunk, localStoreMiddleware, PopupMiddleware);
+    this.store = createStore(rootReducer, initialState, middlewares);
 
     await loadFontsPromise;
 

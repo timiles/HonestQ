@@ -1,7 +1,6 @@
 ﻿import { Reducer } from 'redux';
 import { LoggedInUserModel } from '../server-models';
 import { LogInFormSuccessAction } from './LogIn';
-import { LogOutSuccessAction } from './LogOut';
 import { SignUpFormSuccessAction } from './SignUp';
 
 export interface AuthState {
@@ -11,7 +10,6 @@ export interface AuthState {
 type KnownAction =
   | LogInFormSuccessAction
   | SignUpFormSuccessAction
-  | LogOutSuccessAction
   ;
 
 const defaultState: AuthState = {};
@@ -22,8 +20,6 @@ export const reducer: Reducer<AuthState> = (state: AuthState, action: KnownActio
       return { loggedInUser: action.payload };
     case 'SIGNUP_FORM_SUCCESS':
       return { loggedInUser: action.payload };
-    case 'LOGOUT_SUCCESS':
-      return defaultState;
 
     default:
       // The following line guarantees that every action in the KnownAction union has been covered by a case above

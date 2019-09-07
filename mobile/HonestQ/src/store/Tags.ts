@@ -2,7 +2,6 @@
 import { AppThunkAction } from '.';
 import { TagsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
-import { LogOutSuccessAction } from './LogOut';
 import { UpdateWatchTagSuccessAction } from './Tag';
 
 // -----------------
@@ -28,7 +27,7 @@ type KnownAction =
   | GetTagsListSuccessAction
   | GetTagsListFailureAction
   | UpdateWatchTagSuccessAction
-  | LogOutSuccessAction;
+  ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -83,9 +82,6 @@ export const reducer: Reducer<ListState> = (state: ListState, action: KnownActio
       return {
         tagsList: { tags: tagsNext },
       };
-    }
-    case 'LOGOUT_SUCCESS': {
-      return defaultState;
     }
 
     default:

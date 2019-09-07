@@ -2,7 +2,6 @@
 import { AppThunkAction } from '.';
 import { WatchingQuestionListItemModel, WatchingQuestionsListModel } from '../server-models';
 import { getJson } from '../utils/http-utils';
-import { LogOutSuccessAction } from './LogOut';
 import { UpdateWatchQuestionSuccessAction } from './Question';
 
 // -----------------
@@ -36,7 +35,7 @@ type KnownAction =
   | GetWatchingQuestionsListSuccessAction
   | GetWatchingQuestionsListFailureAction
   | UpdateWatchQuestionSuccessAction
-  | LogOutSuccessAction;
+  ;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -98,9 +97,6 @@ export const reducer: Reducer<State> = (state: State, action: KnownAction) => {
       return {
         questionsList: questionsListNext,
       };
-    }
-    case 'LOGOUT_SUCCESS': {
-      return defaultState;
     }
 
     default:
