@@ -74,12 +74,17 @@ class AnswerScreen extends React.Component<Props> {
 
   public componentDidUpdate() {
     const { navigation, question } = this.props;
-
-    if (!question) {
+    const { questionId, answerId } = this.props.navigation.state.params;
+    if (!question || question.id !== questionId) {
+      // This could happen if a notification links straight to an Answer
       return;
     }
 
-    const answer = question.answers.filter((x) => x.id === this.props.navigation.state.params.answerId)[0];
+    const answer = question.answers.filter((x) => x.id === answerId)[0];
+    if (!answer) {
+      // Not expecting this to happen, but best guard against it just in case
+      return;
+    }
 
     if (navigation.state.params.watching !== answer.watching) {
       navigation.setParams({ watching: answer.watching });
