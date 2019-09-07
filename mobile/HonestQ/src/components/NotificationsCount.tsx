@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import { connect } from 'react-redux';
+import hqColors from '../hq-colors';
 import { HQLabel } from '../hq-components';
-import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
 import * as NotificationsCountStore from '../store/NotificationsCount';
 
@@ -19,18 +19,15 @@ class NotificationsCount extends React.Component<Props, {}> {
 
   public render() {
     const { notificationsCount } = this.props;
-    if (!notificationsCount || notificationsCount.count === 0) {
+    if (!notificationsCount) {
       return null;
     }
 
     return (
-      <View style={hqStyles.flexRowPullRight}>
-        <Text>🔔</Text>
-        <View style={styles.countLabel}>
-          <HQLabel style={{ color: '#fff' }}>
-            {notificationsCount.count}
-          </HQLabel>
-        </View>
+      <View style={styles.countLabel}>
+        <HQLabel style={styles.countLabelText}>
+          {notificationsCount.count}
+        </HQLabel>
       </View>
     );
   }
@@ -42,10 +39,15 @@ export default connect(mapStateToProps, NotificationsCountStore.actionCreators)(
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
   countLabel: {
-    backgroundColor: '#dc3545',
+    backgroundColor: hqColors.Orange,
     marginLeft: 5,
     paddingHorizontal: 5,
     paddingTop: 2,
     borderRadius: 5,
   } as ViewStyle,
+
+  countLabelText: {
+    color: '#fff',
+    fontSize: 12,
+  } as TextStyle,
 });
