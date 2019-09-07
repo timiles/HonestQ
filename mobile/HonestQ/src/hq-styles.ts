@@ -15,8 +15,9 @@ export default StyleSheet.create({
     flexGrow: 1,
   } as ViewStyle,
 
-  flexRow: {
+  flexRowAlignStart: {
     flexDirection: 'row',
+    alignItems: 'flex-start',
   } as ViewStyle,
 
   flexRowAlignCenter: {

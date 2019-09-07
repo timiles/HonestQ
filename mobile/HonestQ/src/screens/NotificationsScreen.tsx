@@ -148,7 +148,7 @@ class NotificationScreen extends React.Component<Props, State> {
               <HQText>{notification.answerText}</HQText>
             </QuotationMarks>
             <HQCard>
-              <View style={hqStyles.flexRow}>
+              <View style={hqStyles.flexRowAlignCenter}>
                 <View style={{ margin: 5 }}>
                   <AgreementLabel isAgree={notification.agreementRating === 'Agree'} showLabel={false} />
                 </View>

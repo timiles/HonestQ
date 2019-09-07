@@ -13,7 +13,7 @@ export default class ReplyButton extends React.Component<Props> {
   public render() {
     return (
       <HQPrimaryButton onPress={this.props.onPress}>
-        <View style={hqStyles.flexRow}>
+        <View style={hqStyles.flexRowAlignCenter}>
           <CommentIcon />
           <HQText style={[hqStyles.ml1, hqStyles.primaryButtonText]}>Reply</HQText>
         </View>

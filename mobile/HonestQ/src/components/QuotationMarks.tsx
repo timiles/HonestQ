@@ -19,7 +19,7 @@ export default class QuotationMarks extends React.Component<Props> {
     const childrenContainerStyle = size === 'xsmall' ? styles.xsmallChildrenContainer : styles.childrenContainer;
 
     return (
-      <View style={hqStyles.flexRow}>
+      <View style={hqStyles.flexRowAlignStart}>
         <QuotationMarkOpenIcon width={width} fill={fill} />
         <View style={[hqStyles.flexShrink, childrenContainerStyle]}>
           {this.props.children}

@@ -32,28 +32,28 @@ export default class AnswerCard extends React.Component<OwnProps> {
             <QuotationMarks size="small">
               <HQText>{text}</HQText>
             </QuotationMarks>
+            {comments && comments.length > 0 &&
+              <View style={[hqStyles.flexRowAlignCenter, hqStyles.mt1]}>
+                <HQLabel>Comments:</HQLabel>
+                {agreeCount > 0 &&
+                  <>
+                    <View style={hqStyles.ml1}>
+                      <AgreementLabel isAgree={true} />
+                    </View>
+                    <HQLabel> × {agreeCount}</HQLabel>
+                  </>
+                }
+                {disagreeCount > 0 &&
+                  <>
+                    <View style={hqStyles.ml1}>
+                      <AgreementLabel isAgree={false} />
+                    </View>
+                    <HQLabel> × {disagreeCount}</HQLabel>
+                  </>
+                }
+              </View>
+            }
           </View>
-          {comments && comments.length > 0 &&
-            <View style={hqStyles.flexRowAlignCenter}>
-              <HQLabel>Comments:</HQLabel>
-              {agreeCount > 0 &&
-                <>
-                  <View style={hqStyles.ml1}>
-                    <AgreementLabel isAgree={true} />
-                  </View>
-                  <HQLabel> × {agreeCount}</HQLabel>
-                </>
-              }
-              {disagreeCount > 0 &&
-                <>
-                  <View style={hqStyles.ml1}>
-                    <AgreementLabel isAgree={false} />
-                  </View>
-                  <HQLabel> × {disagreeCount}</HQLabel>
-                </>
-              }
-            </View>
-          }
         </CircleIconCard>
       </TouchableOpacity>
     );

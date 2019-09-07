@@ -39,7 +39,7 @@ export default class CommentCard extends React.Component<Props> {
       <View style={isNested ? hqStyles.ml1 : null}>
         <HQCard style={hqStyles.p1}>
           <View style={[hqStyles.flexRowSpaceBetween, hqStyles.mb1]}>
-            <View style={hqStyles.flexRow}>
+            <View style={hqStyles.flexRowAlignCenter}>
               <AgreementLabel isAgree={agreementRating === 'Agree'} />
               <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, </HQText>
               <FriendlyDateTime style={hqStyles.vAlignCenter} value={postedAt} />
@@ -56,7 +56,7 @@ export default class CommentCard extends React.Component<Props> {
           </View>
           <HQText style={hqStyles.mb1}>{text}</HQText>
           {source ?
-            <View style={[hqStyles.flexRow, hqStyles.mb1]}>
+            <View style={[hqStyles.flexRowAlignCenter, hqStyles.mb1]}>
               <HQLabel>Source: </HQLabel>
               <TextWithShortLinks value={source} />
             </View>

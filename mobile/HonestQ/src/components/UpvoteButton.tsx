@@ -42,7 +42,7 @@ export default class UpvoteButton extends React.Component<Props, State> {
 
     return (
       <TouchableOpacity
-        style={hqStyles.flexRow}
+        style={hqStyles.flexRowAlignCenter}
         onPress={this.handlePress}
         disabled={submitting}
       >

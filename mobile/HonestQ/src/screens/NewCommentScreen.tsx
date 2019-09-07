@@ -79,7 +79,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
       <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         {parentComment ? this.renderParentComment(parentComment) : this.renderAnswer(answer)}
         <HQCard style={[hqStyles.mb1, hqStyles.p1, (parentComment ? hqStyles.ml1 : null)]}>
-          <View style={[hqStyles.flexRow, hqStyles.mb1]}>
+          <View style={[hqStyles.flexRowAlignCenter, hqStyles.mb1]}>
             <TouchableOpacity
               onPress={this.handleAgree}
               disabled={agreementRating === 'Agree'}

@@ -18,9 +18,9 @@ export default class CircleIconCard extends React.Component<Props> {
     const isTop = position === 'top';
 
     return (
-      <HQCard style={[isTop ? hqStyles.mt2 : hqStyles.flexRow, this.props.style]}>
+      <HQCard style={[isTop ? hqStyles.mt2 : hqStyles.flexRowAlignCenter, this.props.style]}>
         <CircleIcon type={type} style={isTop ? styles.circleIconPositionTop : null} />
-        <View style={[styles.content, isTop ? styles.contentPositionTop : null]}>
+        <View style={[hqStyles.flexShrink, hqStyles.mb1, isTop ? styles.contentPositionTop : null]}>
           {this.props.children}
         </View>
       </HQCard >
@@ -34,11 +34,6 @@ const styles = StyleSheet.create({
     top: -18,
     marginTop: 0,
     marginBottom: -18,
-  } as ViewStyle,
-
-  content: {
-    flexShrink: 1,
-    paddingBottom: 10,
   } as ViewStyle,
 
   contentPositionTop: {

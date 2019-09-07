@@ -20,7 +20,7 @@ export default class UnauthScreen extends React.Component {
     const leadStyle = styles.leadStyle;
 
     return (
-      <View style={[ThemeService.getStyles().contentView, hqStyles.flex1]}>
+      <View style={ThemeService.getStyles().contentView}>
         <ImageBackground
           source={natureBackground}
           style={styles.background}
@@ -37,7 +37,7 @@ export default class UnauthScreen extends React.Component {
                 Find out how people can disagree, honestly.
               </Text>
             </View>
-            <View style={hqStyles.flexRow}>
+            <View style={hqStyles.flexRowAlignCenter}>
               <HQSubmitButton title="Log in" onPress={this.navigateToLogIn} />
               <HQSubmitButton title="Sign up" onPress={this.navigateToSignUp} style={hqStyles.ml1} />
             </View>
