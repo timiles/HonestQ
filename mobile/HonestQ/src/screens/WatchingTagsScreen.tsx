@@ -65,7 +65,7 @@ class WatchingTagsScreen extends React.Component<Props> {
             <HQText style={[hqStyles.mh1, hqStyles.mb1, hqStyles.textAlignCenter]}>Not watching any Tags.</HQText>
           }
           ListFooterComponent={
-            <HQNavigationButton style={hqStyles.mh1} title="View all Tags" onPress={this.navigateToAllTags} />
+            <HQNavigationButton style={hqStyles.mh1} title="Browse all Tags" onPress={this.navigateToAllTags} />
           }
         />
       </View>

@@ -72,7 +72,7 @@ export function createMainNavigator() {
     });
 
   return createDrawerNavigator({
-    AllTags: { screen: AllTagsScreen },
+    AllTags: { screen: AllTagsScreen, navigationOptions: { drawerLabel: 'Browse all Tags' } },
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
