@@ -3,9 +3,10 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import IconCard from '../components/IconCard';
+import NewLabel from '../components/NewLabel';
 import NotificationsCount from '../components/NotificationsCount';
 import QuotationMarks from '../components/QuotationMarks';
-import { HQActivityIndicator, HQHeader, HQLabel, HQLoadingView, HQText } from '../hq-components';
+import { HQActivityIndicator, HQHeader, HQLabel, HQLoadingView, HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { NotificationModel } from '../server-models';
@@ -63,42 +64,40 @@ class NotificationScreen extends React.Component<Props, State> {
     return (
       <View style={ThemeService.getStyles().contentView}>
         {notificationsList &&
-          <>
-            {notificationsList.notifications.length > 0 ?
-              <FlatList
-                data={notificationsList.notifications}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => this.markSeenAndNavigate(item.id)}>
-                    <View style={hqStyles.m1}>
-                      {this.renderNotification(item)}
-                    </View>
-                  </TouchableOpacity>
-                )}
-                ItemSeparatorComponent={() => <View
-                  style={{
-                    borderBottomColor: ThemeService.getBorderColor(),
-                    borderBottomWidth: StyleSheet.hairlineWidth,
-                  }}
-                />}
-                onEndReached={this.loadMore}
-                ListFooterComponent={this.state.loadingMore ?
-                  <HQActivityIndicator />
-                  : (notificationsList.lastId === 0 && notificationsList.notifications.length > 40) &&
-                  <HQText style={hqStyles.textAlignCenter}>
-                    That's all, folks!
-                  </HQText>
-                }
-              />
-              :
-              <>
+          <FlatList
+            data={notificationsList.notifications}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => this.markSeenAndNavigate(item.id)}>
+                <View style={hqStyles.m1}>
+                  {this.renderNotification(item)}
+                </View>
+              </TouchableOpacity>
+            )}
+            ItemSeparatorComponent={() => <View
+              style={{
+                borderBottomColor: ThemeService.getBorderColor(),
+                borderBottomWidth: StyleSheet.hairlineWidth,
+              }}
+            />}
+            onEndReached={this.loadMore}
+            ListEmptyComponent={
+              <View style={hqStyles.m1}>
                 <HQHeader>No notifications yet.</HQHeader>
-                <HQLabel>
+                <HQLabel style={hqStyles.mb1}>
                   Try watching some Tags, Questions or Answers to be notified of new posts under each.
                 </HQLabel>
-              </>
+                <HQNavigationButton title="Browse all Tags" onPress={this.navigateToAllTags} />
+              </View>
             }
-          </>
+            ListFooterComponent={this.state.loadingMore ?
+              <HQActivityIndicator />
+              : (notificationsList.lastId === 0 && notificationsList.notifications.length > 40) &&
+              <HQText style={hqStyles.textAlignCenter}>
+                That's all, folks!
+              </HQText>
+            }
+          />
         }
       </View>
     );
@@ -109,10 +108,13 @@ class NotificationScreen extends React.Component<Props, State> {
       case 'Question': {
         return (
           <>
-            <HQText>
-              {!notification.seen && 'NEW: '}Question
-              {notification.tags.length > 0 ? ' in: ' + notification.tags.map((x) => x.name).join(', ') : null}
-            </HQText>
+            <View style={[hqStyles.row, hqStyles.mb1]}>
+              {!notification.seen && <NewLabel style={hqStyles.mr1} />}
+              <HQText style={hqStyles.fillSpace}>
+                Question
+                {notification.tags.length > 0 ? ' in: ' + notification.tags.map((x) => x.name).join(', ') : null}
+              </HQText>
+            </View>
             <IconCard type="Q">
               <HQText>{notification.questionText}</HQText>
             </IconCard>
@@ -122,9 +124,12 @@ class NotificationScreen extends React.Component<Props, State> {
       case 'Answer': {
         return (
           <>
-            <HQText>
-              {!notification.seen && 'NEW: '}Answer to: {notification.questionText}
-            </HQText>
+            <View style={[hqStyles.row, hqStyles.mb1]}>
+              {!notification.seen && <NewLabel style={hqStyles.mr1} />}
+              <HQText style={hqStyles.fillSpace}>
+                Answer to: {notification.questionText}
+              </HQText>
+            </View>
             <IconCard type="A">
               <QuotationMarks size="large">
                 <HQText>{notification.answerText}</HQText>
@@ -136,9 +141,12 @@ class NotificationScreen extends React.Component<Props, State> {
       case 'Comment': {
         return (
           <>
-            <HQText>
-              {!notification.seen && 'NEW: '}Comment on: {notification.questionText}
-            </HQText>
+            <View style={[hqStyles.row, hqStyles.mb1]}>
+              {!notification.seen && <NewLabel style={hqStyles.mr1} />}
+              <HQText style={hqStyles.fillSpace}>
+                Comment on: {notification.questionText}
+              </HQText>
+            </View>
             <QuotationMarks size="xsmall">
               <HQText>{notification.answerText}</HQText>
             </QuotationMarks>
@@ -160,7 +168,7 @@ class NotificationScreen extends React.Component<Props, State> {
     }
   }
 
-  private markSeenAndNavigate(notificationId): void {
+  private markSeenAndNavigate(notificationId: number): void {
     const notification = this.props.notificationsList.notifications.filter((x) => x.id === notificationId)[0];
     if (!notification.seen) {
       this.props.markAsSeen(notificationId);
@@ -180,6 +188,10 @@ class NotificationScreen extends React.Component<Props, State> {
         break;
       }
     }
+  }
+
+  private navigateToAllTags(): void {
+    NavigationService.navigate('AllTags');
   }
 }
 
