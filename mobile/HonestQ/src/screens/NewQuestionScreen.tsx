@@ -28,8 +28,11 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
   constructor(props: Props) {
     super(props);
 
-    const { initialTagValues } = this.props.navigation.state.params;
-    this.state = { text: '', context: '', tags: initialTagValues || [] };
+    this.state = {
+      text: '',
+      context: '',
+      tags: (this.props.navigation.state.params) ? this.props.navigation.state.params.initialTagValues || [] : [],
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTagsChange = this.handleTagsChange.bind(this);
