@@ -101,7 +101,7 @@ class QuestionScreen extends React.Component<Props> {
     }
 
     const { text, context, answers } = question;
-    const answersCountText = getItemCountText('Answer', answers.length);
+    const answersCountText = getItemCountText('answer', answers.length);
     const newAnswerButton = (
       <HQPrimaryButton
         title="Got an answer?"
@@ -124,7 +124,7 @@ class QuestionScreen extends React.Component<Props> {
                   <TextWithShortLinks value={context} />
                 </InfoCard>
               }
-              <HQHeader>{answersCountText}</HQHeader>
+              <HQHeader style={hqStyles.mb1}>{answersCountText}</HQHeader>
               {newAnswerButton}
             </View>
           )}
