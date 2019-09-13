@@ -9,20 +9,20 @@ import ThemeService from './ThemeService';
 const styles = StyleSheet.create({
   navigationButton: {
     borderColor: '#6c757d',
-    borderRadius: 4,
+    borderRadius: 5,
     borderWidth: 1,
     padding: 12,
   } as ViewStyle,
 
   primaryButton: {
     backgroundColor: '#007bff',
-    borderRadius: 4,
+    borderRadius: 5,
     padding: 12,
   } as ViewStyle,
 
   submitButton: {
     backgroundColor: '#007bff',
-    borderRadius: 4,
+    borderRadius: 5,
     flexDirection: 'row',
     height: 45,
     padding: 12,

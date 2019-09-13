@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   pill: {
     borderWidth: 1,
     borderColor: hqColors.AgreementLabelBlue,
-    borderRadius: 10,
+    borderRadius: 5,
     height: 30,
     padding: 5,
   } as ViewStyle,
