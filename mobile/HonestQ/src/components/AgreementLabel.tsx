@@ -1,5 +1,7 @@
+import { NamedColor } from 'csstype';
 import React from 'react';
-import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
+import { StyleSheet, Switch, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import hqColors from '../hq-colors';
 import { HQLabel } from '../hq-components';
 import hqStyles from '../hq-styles';
 import AgreeIcon from '../svg-icons/AgreeIcon';
@@ -7,29 +9,64 @@ import DisagreeIcon from '../svg-icons/DisagreeIcon';
 
 interface Props {
   isAgree: boolean;
-  disabled?: boolean;
+  onSwitch?: (isAgree: boolean) => void;
   size?: 'small' | 'medium';
   showLabel?: boolean;
 }
 
 export default class AgreementLabel extends React.Component<Props> {
 
-  public render() {
-    const { isAgree, disabled, size, showLabel = true } = this.props;
-    const disabledColor = '#555';
-    const fill = disabled ? disabledColor : undefined;
-    const fontSize = (size === 'medium') ? styles.mediumFontSize : styles.smallFontSize;
+  constructor(props: Props) {
+    super(props);
 
-    return (
-      <View style={[styles.pill, hqStyles.row, disabled ? { borderColor: disabledColor } : null]}>
-        {isAgree ? <AgreeIcon fill={fill} /> : <DisagreeIcon fill={fill} />}
-        {showLabel && (
-          <HQLabel style={[styles.text, fontSize, hqStyles.vAlignCenter, disabled ? { color: disabledColor } : null]}>
+    this.handleSwitch = this.handleSwitch.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
+  }
+
+  public render() {
+    const { isAgree, onSwitch, size, showLabel = true } = this.props;
+    const fontSize = (size === 'medium') ? styles.mediumFontSize : styles.smallFontSize;
+    const trackColor: NamedColor = 'lightgray';
+
+    const agreementLabel = (
+      <View style={[styles.pill, hqStyles.row]}>
+        {onSwitch &&
+          <Switch
+            value={!isAgree}
+            thumbColor={hqColors.AgreementLabelBlue}
+            trackColor={{ true: trackColor, false: trackColor }}
+            ios_backgroundColor={trackColor}
+            onValueChange={this.handleSwitch}
+          />
+        }
+        {isAgree ? <AgreeIcon /> : <DisagreeIcon />}
+        {showLabel &&
+          <HQLabel style={[styles.text, fontSize, hqStyles.vAlignCenter]}>
             {isAgree ? 'Agree' : 'Disagree'}
           </HQLabel>
-        )}
+        }
       </View>
     );
+
+    if (!onSwitch) {
+      return agreementLabel;
+    }
+
+    return (
+      <TouchableOpacity
+        onPress={this.handleToggle}
+        activeOpacity={1}
+      >
+        {agreementLabel}
+      </TouchableOpacity>
+    );
+  }
+
+  private handleSwitch(on: boolean) {
+    this.props.onSwitch(!on);
+  }
+  private handleToggle() {
+    this.props.onSwitch(!this.props.isAgree);
   }
 }
 
@@ -37,14 +74,14 @@ export default class AgreementLabel extends React.Component<Props> {
 const styles = StyleSheet.create({
   pill: {
     borderWidth: 1,
-    borderColor: '#2293A5',
+    borderColor: hqColors.AgreementLabelBlue,
     borderRadius: 10,
     height: 30,
     padding: 5,
   } as ViewStyle,
 
   text: {
-    color: '#2293A5',
+    color: hqColors.AgreementLabelBlue,
     marginLeft: 3,
   } as TextStyle,
 

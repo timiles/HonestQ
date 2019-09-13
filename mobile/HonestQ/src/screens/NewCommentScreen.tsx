@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
 import AgreementLabel from '../components/AgreementLabel';
@@ -46,8 +46,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
       isAnonymous: false,
     };
 
-    this.handleAgree = this.handleAgree.bind(this);
-    this.handleDisagree = this.handleDisagree.bind(this);
+    this.handleAgreementSwitch = this.handleAgreementSwitch.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -80,18 +79,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
         {parentComment ? this.renderParentComment(parentComment) : this.renderAnswer(answer)}
         <HQCard style={[hqStyles.mb1, hqStyles.p1, (parentComment ? hqStyles.ml1 : null)]}>
           <View style={[hqStyles.row, hqStyles.mb1]}>
-            <TouchableOpacity
-              onPress={this.handleAgree}
-              disabled={agreementRating === 'Agree'}
-            >
-              <AgreementLabel isAgree={true} disabled={agreementRating === 'Disagree'} size="medium" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={this.handleDisagree}
-              disabled={agreementRating === 'Disagree'}
-            >
-              <AgreementLabel isAgree={false} disabled={agreementRating === 'Agree'} size="medium" />
-            </TouchableOpacity>
+            <AgreementLabel onSwitch={this.handleAgreementSwitch} isAgree={agreementRating === 'Agree'} size="medium" />
             <LoggedInUserContext.Consumer>
               {(user) =>
                 <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{user.username}</HQText>
@@ -140,12 +128,8 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
     return <CommentCard comment={parentComment} renderChildComments={false} />;
   }
 
-  private handleAgree(): void {
-    this.setState({ agreementRating: 'Agree' });
-  }
-
-  private handleDisagree(): void {
-    this.setState({ agreementRating: 'Disagree' });
+  private handleAgreementSwitch(isAgree: boolean): void {
+    this.setState({ agreementRating: isAgree ? 'Agree' : 'Disagree' });
   }
 
   private handleSubmit(): void {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import Svg, { Polygon } from 'react-native-svg';
+import hqColors from '../hq-colors';
 import hqStyles from '../hq-styles';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 export default class DisagreeIcon extends React.Component<Props> {
 
   public render() {
-    const { fill = '#2293A5' } = this.props;
+    const { fill = hqColors.AgreementLabelBlue } = this.props;
     const width = 14;
 
     // tslint:disable:max-line-length
