@@ -22,7 +22,7 @@ type Props = StateProps & DispatchProps;
 class AllTagsScreen extends React.Component<Props> {
 
   protected static navigationOptions: NavigationScreenOptions = {
-    title: 'All Tags',
+    title: 'All tags',
   };
 
   public componentDidMount() {

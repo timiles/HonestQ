@@ -72,11 +72,11 @@ export function createMainNavigator() {
     });
 
   return createDrawerNavigator({
-    AllTags: { screen: AllTagsScreen, navigationOptions: { drawerLabel: 'Browse all Tags' } },
+    AllTags: { screen: AllTagsScreen, navigationOptions: { drawerLabel: 'Browse all tags' } },
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
-    RecentQuestions: { screen: RecentQuestionsScreen },
+    RecentQuestions: { screen: RecentQuestionsScreen, navigationOptions: { drawerLabel: 'Recent questions' } },
     Watching: { screen: WatchingTabNavigator },
     Settings: { screen: SettingsScreen },
   },

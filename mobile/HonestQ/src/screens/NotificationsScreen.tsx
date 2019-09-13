@@ -90,9 +90,9 @@ class NotificationScreen extends React.Component<Props, State> {
               <View style={hqStyles.m1}>
                 <HQHeader>No notifications yet.</HQHeader>
                 <HQLabel style={hqStyles.mb1}>
-                  Try watching some Tags, Questions or Answers to be notified of new posts under each.
+                  Try watching some tags, questions or answers to be notified of new posts under each.
                 </HQLabel>
-                <HQNavigationButton title="Browse all Tags" onPress={this.navigateToAllTags} />
+                <HQNavigationButton title="Browse all tags" onPress={this.navigateToAllTags} />
               </View>
             }
             ListFooterComponent={this.state.loadingMore ?

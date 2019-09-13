@@ -32,8 +32,8 @@ export default class HomeScreen extends React.Component {
             <NotificationsCount />
           </View>
         </HQNavigationButton>
-        <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToAllTags} title="Browse all Tags" />
-        <HQNavigationButton onPress={this.navigateToRecentQuestions} title="Recent Questions" />
+        <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToAllTags} title="Browse all tags" />
+        <HQNavigationButton onPress={this.navigateToRecentQuestions} title="Recent questions" />
       </View>
     );
   }

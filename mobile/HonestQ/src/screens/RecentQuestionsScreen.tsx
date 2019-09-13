@@ -28,7 +28,7 @@ interface State {
 class RecentQuestionsScreen extends React.Component<Props, State> {
 
   protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Recent Questions',
+    title: 'Recent questions',
   };
 
   constructor(props: Props) {

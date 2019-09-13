@@ -64,7 +64,7 @@ class WatchingQuestionsScreen extends React.Component<Props> {
             </View>
           }
           ListEmptyComponent={
-            <HQText style={[hqStyles.mh1, hqStyles.textAlignCenter]}>Not watching any Questions.</HQText>
+            <HQText style={[hqStyles.mh1, hqStyles.textAlignCenter]}>Not watching any questions.</HQText>
           }
         />
       </View>
