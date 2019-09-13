@@ -88,7 +88,7 @@ export default class ThemeService {
       textInput: {
         backgroundColor: '#FFFFFF',
         borderColor: textColor,
-        borderRadius: 30,
+        borderRadius: 5,
         borderWidth: 1,
         padding: 10,
       } as TextStyle,

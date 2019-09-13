@@ -1,6 +1,6 @@
 import React from 'react';
 // tslint:disable-next-line:max-line-length
-import { ActivityIndicator, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
+import { ActivityIndicator, Platform, StyleProp, StyleSheet, Text, TextInput, TextInputProps, TextProps, TextStyle, TouchableOpacity, TouchableOpacityProps, View, ViewProps, ViewStyle } from 'react-native';
 import hqColors from './hq-colors';
 import hqStyles from './hq-styles';
 import ThemeService from './ThemeService';
@@ -159,7 +159,7 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
   }
 
   public render() {
-    const { containerStyle, helpText, error, submitted, maxLength, value } = this.props;
+    const { containerStyle, helpText, error, submitted, maxLength, value, style } = this.props;
     const { widthForCopyPasteHackFix: widthHack } = this.state;
 
     const exceededCharacterCount = value && value.length > maxLength;
@@ -172,6 +172,8 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
 
     const remainingCharacterCount = maxLength - (value ? value.length : 0);
     const themeStyles = ThemeService.getStyles();
+    const numberOfLines = 4;
+    const minHeightiOS = (Platform.OS === 'ios' && numberOfLines) ? { minHeight: (20 * numberOfLines) } : null;
 
     return (
       <View style={containerStyle}>
@@ -179,11 +181,11 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
         <TextInput
           placeholderTextColor={ThemeService.getTextColor()}
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={numberOfLines}
           textAlignVertical="top"
           {...this.props}
           maxLength={undefined} // Must be after {...this.props} to override
-          style={[themeStyles.text, themeStyles.textInput, this.props.style, errorStyle, { width: widthHack }]}
+          style={[themeStyles.text, themeStyles.textInput, minHeightiOS, style, errorStyle, { width: widthHack }]}
         >
           {this.props.children}
         </TextInput>
