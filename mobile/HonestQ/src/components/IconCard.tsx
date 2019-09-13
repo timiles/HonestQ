@@ -17,7 +17,7 @@ export default class IconCard extends React.Component<Props> {
     const { type } = this.props;
 
     return (
-      <HQCard style={hqStyles.row}>
+      <HQCard style={hqStyles.rowAlignStart}>
         {this.renderIcon(type)}
         <View style={[hqStyles.fillSpace, hqStyles.mv1, hqStyles.mr1]}>
           {this.props.children}
