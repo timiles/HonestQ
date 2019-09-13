@@ -12,9 +12,16 @@ import * as WatchingAnswersStore from '../store/WatchingAnswers';
 import ThemeService from '../ThemeService';
 import { AnswerNavigationProps } from './AnswerScreen';
 
-type Props = WatchingAnswersStore.State
-  & typeof WatchingAnswersStore.actionCreators
-  & { updateWatchAnswer: (watching: boolean, questionId: number, answerId: number) => void };
+const mapStateToProps = (state: ApplicationState) => (state.watchingsAnswers);
+
+const mapDispatchToProps = {
+  ...WatchingAnswersStore.actionCreators,
+  updateWatchAnswer: QuestionStore.actionCreators.updateWatchAnswer,
+};
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 class WatchingAnswersScreen extends React.Component<Props> {
 
@@ -76,9 +83,4 @@ class WatchingAnswersScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.watchingsAnswers);
-const actions = {
-  ...WatchingAnswersStore.actionCreators,
-  updateWatchAnswer: QuestionStore.actionCreators.updateWatchAnswer,
-};
-export default connect(mapStateToProps, actions)(WatchingAnswersScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(WatchingAnswersScreen);

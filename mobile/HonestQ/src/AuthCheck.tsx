@@ -5,10 +5,12 @@ import { LoggedInUserContext } from './LoggedInUserContext';
 import { createMainNavigator, UnauthNavigator } from './MainNavigator';
 import NavigationService from './NavigationService';
 import { ApplicationState } from './store';
-import * as AuthStore from './store/Auth';
 import * as ThemeSettingStore from './store/ThemeSetting';
 
-class AuthCheck extends React.Component<AuthStore.AuthState & ThemeSettingStore.ThemeSettingState> {
+const mapStateToProps = (state: ApplicationState) => ({ ...state.auth, ...state.themeSetting });
+type StateProps = ReturnType<typeof mapStateToProps>;
+
+class AuthCheck extends React.Component<StateProps> {
 
   public componentDidUpdate(prevProps: ThemeSettingStore.ThemeSettingState) {
     if (prevProps.theme !== this.props.theme) {
@@ -37,5 +39,4 @@ class AuthCheck extends React.Component<AuthStore.AuthState & ThemeSettingStore.
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => ({ ...state.auth, ...state.themeSetting });
-export default connect(mapStateToProps)(AuthCheck);
+export default connect<StateProps>(mapStateToProps)(AuthCheck);

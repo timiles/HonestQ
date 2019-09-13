@@ -25,9 +25,12 @@ export interface TagNavigationProps {
   handleWatch?: (watching: boolean) => void;
 }
 
-type Props = TagStore.TagState
-  & typeof TagStore.actionCreators
-  & NavigationScreenProps<TagNavigationProps>;
+const mapStateToProps = (state: ApplicationState) => (state.tag);
+const mapDispatchToProps = TagStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps & NavigationScreenProps<TagNavigationProps>;
 
 class TagScreen extends React.Component<Props> {
 
@@ -165,5 +168,4 @@ class TagScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.tag);
-export default connect(mapStateToProps, TagStore.actionCreators)(TagScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(TagScreen);

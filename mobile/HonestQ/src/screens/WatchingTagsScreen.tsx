@@ -12,9 +12,12 @@ import * as TagsStore from '../store/Tags';
 import ThemeService from '../ThemeService';
 import { TagNavigationProps } from './TagScreen';
 
-type Props = TagsStore.ListState
-  & typeof TagsStore.actionCreators
-  & { updateWatch: (watching: boolean, tagSlug: string) => any };
+const mapStateToProps = (state: ApplicationState) => (state.tags);
+const mapDispatchToProps = { ...TagsStore.actionCreators, updateWatch: TagStore.actionCreators.updateWatch };
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 class WatchingTagsScreen extends React.Component<Props> {
 
@@ -84,6 +87,4 @@ class WatchingTagsScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.tags);
-const actions = { ...TagsStore.actionCreators, updateWatch: TagStore.actionCreators.updateWatch };
-export default connect(mapStateToProps, actions)(WatchingTagsScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(WatchingTagsScreen);

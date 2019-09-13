@@ -5,18 +5,21 @@ import KeyboardPaddedScrollView from '../../components/KeyboardPaddedScrollView'
 import { HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
-import { LoggedInUserModel, LogInFormModel } from '../../server-models';
+import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LogInStore from '../../store/LogIn';
 import ThemeService from '../../ThemeService';
 
-type LogInProps = LogInStore.LogInState
-  & typeof LogInStore.actionCreators
-  & { loggedInUser?: LoggedInUserModel };
+const mapStateToProps = (state: ApplicationState) => (state.logIn);
+const mapDispatchToProps = LogInStore.actionCreators;
 
-class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
-  constructor(props: LogInProps) {
+class LogInScreen extends React.Component<Props, LogInFormModel> {
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -79,7 +82,4 @@ class LogInScreen extends React.Component<LogInProps, LogInFormModel> {
   }
 }
 
-export default connect(
-  (state: ApplicationState) => (state.logIn),
-  LogInStore.actionCreators,
-)(LogInScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(LogInScreen);

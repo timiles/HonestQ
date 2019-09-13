@@ -6,10 +6,14 @@ import { HQLabel } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as NotificationsCountStore from '../store/NotificationsCount';
 
-type Props = NotificationsCountStore.NotificationsCountState
-  & typeof NotificationsCountStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.notificationsCount);
+const mapDispatchToProps = NotificationsCountStore.actionCreators;
 
-class NotificationsCount extends React.Component<Props, {}> {
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
+
+class NotificationsCount extends React.Component<Props> {
 
   public componentDidMount() {
     if (!this.props.notificationsCount) {
@@ -33,8 +37,7 @@ class NotificationsCount extends React.Component<Props, {}> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.notificationsCount);
-export default connect(mapStateToProps, NotificationsCountStore.actionCreators)(NotificationsCount);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(NotificationsCount);
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({

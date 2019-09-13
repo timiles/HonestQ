@@ -11,8 +11,12 @@ import { ApplicationState } from '../../store';
 import * as SignUpStore from '../../store/SignUp';
 import ThemeService from '../../ThemeService';
 
-type Props = SignUpStore.SignUpState
-  & typeof SignUpStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.signUp);
+const mapDispatchToProps = SignUpStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPassword?: string }> {
 
@@ -111,8 +115,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
   }
 }
 
-const mapStateToProps = (state: ApplicationState, ownProps: any) => (state.signUp);
-export default connect(mapStateToProps, SignUpStore.actionCreators)(SignUpScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(SignUpScreen);
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({

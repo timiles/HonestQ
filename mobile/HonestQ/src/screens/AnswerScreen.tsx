@@ -26,9 +26,12 @@ export interface AnswerNavigationProps {
   shareUrl?: string;
 }
 
-type Props = QuestionStore.QuestionState
-  & typeof QuestionStore.actionCreators
-  & NavigationScreenProps<AnswerNavigationProps>;
+const mapStateToProps = (state: ApplicationState) => (state.question);
+const mapDispatchToProps = QuestionStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps & NavigationScreenProps<AnswerNavigationProps>;
 
 class AnswerScreen extends React.Component<Props> {
 
@@ -159,5 +162,4 @@ class AnswerScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.question);
-export default connect(mapStateToProps, QuestionStore.actionCreators)(AnswerScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(AnswerScreen);

@@ -14,12 +14,17 @@ import ThemeService from '../ThemeService';
 import { NewQuestionNavigationProps } from './NewQuestionScreen';
 import { QuestionNavigationProps } from './QuestionScreen';
 
-type Props = QuestionsStore.ListState
-  & typeof QuestionsStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.questions);
+const mapDispatchToProps = QuestionsStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 interface State {
   loadingMore: boolean;
 }
+
 class RecentQuestionsScreen extends React.Component<Props, State> {
 
   protected static navigationOptions: NavigationScreenOptions = {
@@ -143,5 +148,4 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
   }
 }
 
-const mapStateToPros = (state: ApplicationState) => (state.questions);
-export default connect(mapStateToPros, QuestionsStore.actionCreators)(RecentQuestionsScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(RecentQuestionsScreen);

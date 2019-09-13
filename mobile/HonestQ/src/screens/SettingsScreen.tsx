@@ -9,8 +9,12 @@ import { ApplicationState } from '../store';
 import * as SettingsStore from '../store/ThemeSetting';
 import ThemeService from '../ThemeService';
 
-type Props = SettingsStore.ThemeSettingState
-  & typeof SettingsStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.themeSetting);
+const mapDispatchToProps = SettingsStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 class SettingsScreen extends React.Component<Props> {
 
@@ -38,5 +42,4 @@ class SettingsScreen extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.themeSetting);
-export default connect(mapStateToProps, SettingsStore.actionCreators)(SettingsScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(SettingsScreen);

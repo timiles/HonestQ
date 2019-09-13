@@ -24,9 +24,13 @@ export interface NewCommentNavigationProps {
   submit?: () => void;
   submitting?: boolean;
 }
-type Props = NewCommentStore.NewCommentState
-  & typeof NewCommentStore.actionCreators
-  & NavigationScreenProps<NewCommentNavigationProps>;
+
+const mapStateToProps = (state: ApplicationState) => (state.newComment);
+const mapDispatchToProps = NewCommentStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps & NavigationScreenProps<NewCommentNavigationProps>;
 
 class NewCommentScreen extends React.Component<Props, CommentFormModel> {
 
@@ -138,5 +142,4 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.newComment);
-export default connect(mapStateToProps, NewCommentStore.actionCreators)(NewCommentScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(NewCommentScreen);

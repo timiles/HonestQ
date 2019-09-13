@@ -5,8 +5,12 @@ import { HQSubmitButton } from '../hq-components';
 import { ApplicationState } from '../store';
 import * as LogOutStore from '../store/LogOut';
 
-type Props = LogOutStore.LogOutState
-  & typeof LogOutStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.logOut);
+const mapDispatchToProps = LogOutStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 class LogOutButton extends React.Component<Props> {
 
@@ -31,5 +35,4 @@ class LogOutButton extends React.Component<Props> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.logOut);
-export default connect(mapStateToProps, LogOutStore.actionCreators)(LogOutButton);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(LogOutButton);

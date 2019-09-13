@@ -11,8 +11,12 @@ import { ApplicationState } from '../store';
 import * as NewTagStore from '../store/NewTag';
 import ThemeService from '../ThemeService';
 
-type Props = NewTagStore.NewTagState
-  & typeof NewTagStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.newTag);
+const mapDispatchToProps = NewTagStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 class NewTagScreen extends React.Component<Props, TagFormModel> {
 
@@ -87,4 +91,4 @@ class NewTagScreen extends React.Component<Props, TagFormModel> {
   }
 }
 
-export default connect((state: ApplicationState) => (state.newTag), NewTagStore.actionCreators)(NewTagScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(NewTagScreen);

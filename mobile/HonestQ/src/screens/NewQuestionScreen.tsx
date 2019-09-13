@@ -15,9 +15,13 @@ import ThemeService from '../ThemeService';
 export interface NewQuestionNavigationProps {
   initialTagValues?: TagValueModel[];
 }
-type Props = NewQuestionStore.NewQuestionState
-  & typeof NewQuestionStore.actionCreators
-  & NavigationScreenProps<NewQuestionNavigationProps>;
+
+const mapStateToProps = (state: ApplicationState) => (state.newQuestion);
+const mapDispatchToProps = NewQuestionStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps & NavigationScreenProps<NewQuestionNavigationProps>;
 
 class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
 
@@ -95,5 +99,4 @@ class NewQuestionScreen extends React.Component<Props, QuestionFormModel> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.newQuestion);
-export default connect(mapStateToProps, NewQuestionStore.actionCreators)(NewQuestionScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(NewQuestionScreen);

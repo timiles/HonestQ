@@ -16,9 +16,14 @@ export interface NewAnswerNavigationProps {
   questionId: number;
   questionText: string;
 }
-type Props = NewAnswerStore.NewAnswerState
-  & typeof NewAnswerStore.actionCreators
-  & NavigationScreenProps<NewAnswerNavigationProps>;
+
+const mapStateToProps = (state: ApplicationState) => (state.newAnswer);
+const mapDispatchToProps = NewAnswerStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+
+type Props = StateProps & DispatchProps & NavigationScreenProps<NewAnswerNavigationProps>;
 
 class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
 
@@ -105,5 +110,4 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState) => (state.newAnswer);
-export default connect(mapStateToProps, NewAnswerStore.actionCreators)(NewAnswerScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(NewAnswerScreen);

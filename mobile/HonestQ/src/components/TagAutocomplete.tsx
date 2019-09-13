@@ -11,21 +11,25 @@ interface OwnProps {
   selectedTags: TagValueModel[];
   onChange: (selectedTags: TagValueModel[]) => void;
 }
-type TagAutocompleteProps = TagAutocompleteStore.TagAutocompleteState
-  & typeof TagAutocompleteStore.actionCreators
-  & OwnProps;
+
+const mapStateToProps = (state: ApplicationState) => (state.tagAutocomplete);
+const mapDispatchToProps = TagAutocompleteStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps & OwnProps;
 
 interface State {
   query: string;
   selectedTags: TagValueModel[];
 }
 
-class TagAutocomplete extends React.Component<TagAutocompleteProps, State> {
+class TagAutocomplete extends React.Component<Props, State> {
 
   private readonly inputDelayMilliseconds = 500;
   private waitForInputTimeoutId: number | null = null;
 
-  constructor(props: TagAutocompleteProps) {
+  constructor(props: Props) {
     super(props);
 
     this.state = { query: props.query, selectedTags: props.selectedTags };
@@ -134,5 +138,4 @@ class TagAutocomplete extends React.Component<TagAutocompleteProps, State> {
   }
 }
 
-const mapStateToProps = (state: ApplicationState, ownProps: OwnProps) => (state.tagAutocomplete);
-export default connect(mapStateToProps, TagAutocompleteStore.actionCreators)(TagAutocomplete);
+export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, mapDispatchToProps)(TagAutocomplete);

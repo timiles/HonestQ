@@ -16,12 +16,17 @@ import ThemeService from '../ThemeService';
 import { AnswerNavigationProps } from './AnswerScreen';
 import { QuestionNavigationProps } from './QuestionScreen';
 
-type Props = NotificationsStore.ListState
-  & typeof NotificationsStore.actionCreators;
+const mapStateToProps = (state: ApplicationState) => (state.notifications);
+const mapDispatchToProps = NotificationsStore.actionCreators;
+
+type StateProps = ReturnType<typeof mapStateToProps>;
+type DispatchProps = typeof mapDispatchToProps;
+type Props = StateProps & DispatchProps;
 
 interface State {
   loadingMore: boolean;
 }
+
 class NotificationScreen extends React.Component<Props, State> {
 
   protected static navigationOptions: NavigationScreenOptions = {
@@ -195,7 +200,4 @@ class NotificationScreen extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  (state: ApplicationState) => (state.notifications),
-  NotificationsStore.actionCreators,
-)(NotificationScreen);
+export default connect<StateProps, DispatchProps>(mapStateToProps, mapDispatchToProps)(NotificationScreen);
