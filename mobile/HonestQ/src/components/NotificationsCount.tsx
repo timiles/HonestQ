@@ -23,7 +23,7 @@ class NotificationsCount extends React.Component<Props> {
 
   public render() {
     const { notificationsCount } = this.props;
-    if (!notificationsCount) {
+    if (!notificationsCount || notificationsCount.count === 0) {
       return null;
     }
 
