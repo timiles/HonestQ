@@ -3,8 +3,10 @@ import { StyleSheet, TextStyle, View, ViewStyle } from 'react-native';
 import { connect } from 'react-redux';
 import hqColors from '../hq-colors';
 import { HQLabel } from '../hq-components';
+import hqStyles from '../hq-styles';
 import { ApplicationState } from '../store';
 import * as NotificationsCountStore from '../store/NotificationsCount';
+import NotificationIcon from '../svg-icons/NotificationIcon';
 
 const mapStateToProps = (state: ApplicationState) => (state.notificationsCount);
 const mapDispatchToProps = NotificationsCountStore.actionCreators;
@@ -28,10 +30,13 @@ class NotificationsCount extends React.Component<Props> {
     }
 
     return (
-      <View style={styles.countLabel}>
-        <HQLabel style={styles.countLabelText}>
-          {notificationsCount.count}
-        </HQLabel>
+      <View style={hqStyles.row}>
+        <NotificationIcon />
+        <View style={styles.countLabel}>
+          <HQLabel style={styles.countLabelText}>
+            {notificationsCount.count}
+          </HQLabel>
+        </View>
       </View>
     );
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import NotificationsCount from '../components/NotificationsCount';
-import { HQNavigationButton, HQText } from '../hq-components';
+import { HQNavigationButton } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import MenuIcon from '../svg-icons/MenuIcon';
@@ -19,6 +19,11 @@ export default class HomeScreen extends React.Component {
             <MenuIcon fill={tintColor} />
           </TouchableOpacity>
         ),
+        headerRight: (
+          <TouchableOpacity style={hqStyles.mr1} onPress={() => navigation.navigate('Notifications')}>
+            <NotificationsCount />
+          </TouchableOpacity>
+        ),
       };
     }
 
@@ -26,12 +31,6 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={[ThemeService.getStyles().contentView, hqStyles.p1]}>
         <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToWatching} title="Watching" />
-        <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToNotifications}>
-          <View style={hqStyles.row}>
-            <HQText>Notifications </HQText>
-            <NotificationsCount />
-          </View>
-        </HQNavigationButton>
         <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToAllTags} title="Browse all tags" />
         <HQNavigationButton onPress={this.navigateToRecentQuestions} title="Recent questions" />
       </View>
@@ -40,10 +39,6 @@ export default class HomeScreen extends React.Component {
 
   private navigateToAllTags() {
     NavigationService.navigate('AllTags');
-  }
-
-  private navigateToNotifications() {
-    NavigationService.navigate('Notifications');
   }
 
   private navigateToRecentQuestions() {
