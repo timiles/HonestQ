@@ -19,13 +19,19 @@ export async function registerForPushNotificationsAsync(loggedInUser?: LoggedInU
   }
 
   // Get the token that uniquely identifies this device
-  const token = await Notifications.getExpoPushTokenAsync();
-  const payload: PushTokenModel = { token };
-
-  return postJson('/api/notifications/pushtoken', payload, loggedInUser)
+  const token = await Notifications.getExpoPushTokenAsync()
     .catch((reason: string) => {
       // TODO log
     });
+
+  if (token) {
+    const payload: PushTokenModel = { token };
+
+    return postJson('/api/notifications/pushtoken', payload, loggedInUser)
+      .catch((reason: string) => {
+        // TODO log
+      });
+  }
 }
 
 // Not sure why this isn't exported from expo Notifications?
