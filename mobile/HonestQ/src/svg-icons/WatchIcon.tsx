@@ -3,14 +3,14 @@ import Svg, { Path } from 'react-native-svg';
 
 interface Props {
   fill?: string;
+  width?: string | number;
 }
 export default class WatchIcon extends React.Component<Props> {
 
   public static getWidth(): number { return 23; }
 
   public render() {
-    const { fill = '#fff' } = this.props;
-    const width = WatchIcon.getWidth();
+    const { fill = '#fff', width = WatchIcon.getWidth() } = this.props;
 
     // tslint:disable:max-line-length
     return (

@@ -1,9 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
 import hqColors from '../hq-colors';
+import ThemeService from '../ThemeService';
 
+type CircleIconType = '?' | 'Q' | 'A' | '#';
 interface OwnProps {
-  type: 'Q' | 'A';
+  type: CircleIconType;
 }
 type Props = OwnProps
   & ViewProps;
@@ -12,13 +14,23 @@ export default class CircleIcon extends React.Component<Props> {
 
   public render() {
     const { type } = this.props;
-    const backgroundColor = type === 'Q' ? hqColors.Orange : hqColors.Green;
+    const backgroundColor = this.getBackgroundColor(type);
 
     return (
       <View style={[styles.circleIcon, { backgroundColor }, this.props.style]}>
         <Text style={styles.circleText}>{type}</Text>
       </View>
     );
+  }
+
+  private getBackgroundColor(type: CircleIconType) {
+    switch (type) {
+      case '?':
+      case '#':
+      case 'Q': return hqColors.Orange;
+      case 'A': return hqColors.Green;
+      default: return ThemeService.getNavTextColor();
+    }
   }
 }
 

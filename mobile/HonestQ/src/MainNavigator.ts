@@ -33,7 +33,7 @@ export function createMainNavigator() {
   },
     {
       navigationOptions: {
-        title: 'Watching',
+        title: 'Watch list',
       },
       tabBarOptions: {
         indicatorStyle: {
@@ -72,11 +72,11 @@ export function createMainNavigator() {
     });
 
   return createDrawerNavigator({
-    AllTags: { screen: AllTagsScreen, navigationOptions: { drawerLabel: 'Browse all tags' } },
+    AllTags: { screen: AllTagsScreen },
     App: { screen: AppStack },
     Home: { screen: HomeScreen },
     Notifications: { screen: Notifications },
-    RecentQuestions: { screen: RecentQuestionsScreen, navigationOptions: { drawerLabel: 'Recent questions' } },
+    RecentQuestions: { screen: RecentQuestionsScreen },
     Watching: { screen: WatchingTabNavigator },
     Settings: { screen: SettingsScreen },
   },
