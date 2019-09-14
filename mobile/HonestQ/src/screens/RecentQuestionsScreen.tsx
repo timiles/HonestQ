@@ -4,7 +4,7 @@ import { FlatList, NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import IconCard from '../components/IconCard';
 import hqColors from '../hq-colors';
-import { HQActivityIndicator, HQHeader, HQLoadingView, HQPrimaryButton, HQText } from '../hq-components';
+import { HQActivityIndicator, HQLoadingView, HQPrimaryButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { QuestionListItemModel } from '../server-models';
@@ -60,26 +60,11 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
       return <HQLoadingView />;
     }
 
-    const newQuestionButton = (
-      <HQPrimaryButton
-        title="Ask a question"
-        style={hqStyles.mb1}
-        onPress={this.navigateToNewQuestion}
-      />
-    );
-
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
           style={hqStyles.mt1}
           data={questionsList && questionsList.questions}
-          ListHeaderComponent={
-            questionsList &&
-            <View style={hqStyles.mh1}>
-              {newQuestionButton}
-              <HQHeader>Recent questions</HQHeader>
-            </View>
-          }
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             this.renderQuestion(item)
@@ -99,10 +84,17 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
               progressBackgroundColor={ThemeService.getBorderColor()}
             />
           }
-          ListFooterComponent={this.state.loadingMore ?
-            <HQActivityIndicator />
-            : (questionsList.lastTimestamp === 0) &&
-            <View style={hqStyles.mh1}>{newQuestionButton}</View>
+          ListFooterComponent={
+            this.state.loadingMore ?
+              <HQActivityIndicator />
+              : (questionsList.lastTimestamp === 0) &&
+              <View style={hqStyles.mh1}>
+                <HQPrimaryButton
+                  title="Ask a question"
+                  style={hqStyles.mb1}
+                  onPress={this.navigateToNewQuestion}
+                />
+              </View>
           }
         />
       </View>
