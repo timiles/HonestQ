@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Web.Models.Tags;
 
@@ -43,7 +43,7 @@ namespace Pobs.Web.Models.Activity
             this.CommentId = x.Id;
             this.CommentText = x.Text;
             this.PostedAt = x.PostedAt.UtcDateTime;
-            this.AgreementRating = x.AgreementRating.ToString();
+            this.IsAgree = x.AgreementRating == AgreementRating.Agree;
             this.ChildCount = null;
         }
 
@@ -67,7 +67,7 @@ namespace Pobs.Web.Models.Activity
 
         public DateTime PostedAt { get; set; }
         public int? ChildCount { get; set; }
-        public string AgreementRating { get; set; }
+        public bool? IsAgree { get; set; }
 
         public TagValueModel[] Tags { get; set; }
     }

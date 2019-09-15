@@ -15,12 +15,7 @@ export function getCommentScores(comments: CommentModel[]): [number, number] {
   let agreeCount = 0;
   let disagreeCount = 0;
   for (const comment of comments) {
-    if (comment.agreementRating === 'Agree') {
-      agreeCount++;
-    }
-    if (comment.agreementRating === 'Disagree') {
-      disagreeCount++;
-    }
+    comment.isAgree ? agreeCount++ : disagreeCount++;
   }
   return [agreeCount, disagreeCount];
 }

@@ -19,7 +19,7 @@ type Props = CommentModel
   };
 
 interface State {
-  replyWithAgreementRating?: string;
+  replyIsAgree?: boolean;
 }
 
 export default class Comment extends React.Component<Props, State> {
@@ -35,9 +35,9 @@ export default class Comment extends React.Component<Props, State> {
 
   public render(): any {
     const { questionId, answerId } = this.props;
-    const { id, text, source, agreementRating, comments, upvotes, upvotedByMe } = this.props;
+    const { id, text, source, isAgree, comments, upvotes, upvotedByMe } = this.props;
     const { postedAt, postedBy } = this.props;
-    const { replyWithAgreementRating } = this.state;
+    const { replyIsAgree } = this.state;
 
     return (
       <>
@@ -54,7 +54,7 @@ export default class Comment extends React.Component<Props, State> {
               }
             </LoggedInUserContext.Consumer>
             <div className="mb-3">
-              <AgreementRatingLabel value={agreementRating} />
+              <AgreementRatingLabel value={isAgree} />
               <span className="ml-2">
                 {postedBy}, {}
               </span>
@@ -85,14 +85,14 @@ export default class Comment extends React.Component<Props, State> {
             </div>
           </div>
         </div>
-        {((comments && comments.length > 0) || replyWithAgreementRating) &&
+        {((comments && comments.length > 0) || replyIsAgree !== undefined) &&
           <ol className="list-unstyled list-comments-nested">
-            {replyWithAgreementRating &&
+            {replyIsAgree !== undefined &&
               <li className="mb-2">
                 <NewComment
                   questionId={questionId}
                   answerId={answerId}
-                  agreementRating={replyWithAgreementRating}
+                  isAgree={replyIsAgree}
                   parentCommentId={id}
                   onCancel={this.handleNewCommentClose}
                 />
@@ -112,11 +112,11 @@ export default class Comment extends React.Component<Props, State> {
     );
   }
 
-  private handleNewCommentButtonClick(agreementRating: string) {
-    this.setState({ replyWithAgreementRating: agreementRating });
+  private handleNewCommentButtonClick(isAgree: boolean) {
+    this.setState({ replyIsAgree: isAgree });
   }
 
   private handleNewCommentClose() {
-    this.setState({ replyWithAgreementRating: undefined });
+    this.setState({ replyIsAgree: undefined });
   }
 }

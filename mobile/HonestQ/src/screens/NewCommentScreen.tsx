@@ -45,7 +45,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
     this.state = {
       text: '',
       source: '',
-      agreementRating: 'Agree',
+      isAgree: true,
       parentCommentId: parentComment ? parentComment.id : null,
       isAnonymous: false,
     };
@@ -76,14 +76,14 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
     const { answer, parentComment } = this.props.navigation.state.params;
 
     const { submitted, submitting, error } = this.props;
-    const { text: commentText, source, agreementRating } = this.state;
+    const { text: commentText, source, isAgree } = this.state;
 
     return (
       <KeyboardPaddedScrollView style={ThemeService.getStyles().contentView} contentContainerStyle={hqStyles.p1}>
         {parentComment ? this.renderParentComment(parentComment) : this.renderAnswer(answer)}
         <HQCard style={[hqStyles.mb1, hqStyles.p1, (parentComment ? hqStyles.ml1 : null)]}>
           <View style={[hqStyles.row, hqStyles.mb1]}>
-            <AgreementLabel onSwitch={this.handleAgreementSwitch} isAgree={agreementRating === 'Agree'} size="medium" />
+            <AgreementLabel onSwitch={this.handleAgreementSwitch} isAgree={isAgree} size="medium" />
             <LoggedInUserContext.Consumer>
               {(user) =>
                 <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{user.username}</HQText>
@@ -133,7 +133,7 @@ class NewCommentScreen extends React.Component<Props, CommentFormModel> {
   }
 
   private handleAgreementSwitch(isAgree: boolean): void {
-    this.setState({ agreementRating: isAgree ? 'Agree' : 'Disagree' });
+    this.setState({ isAgree });
   }
 
   private handleSubmit(): void {

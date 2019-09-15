@@ -19,7 +19,7 @@ type Props = AnswerModel
   };
 
 interface State {
-  replyWithAgreementRating?: string;
+  replyIsAgree?: boolean;
 }
 
 export default class Answer extends React.Component<Props, State> {
@@ -42,7 +42,7 @@ export default class Answer extends React.Component<Props, State> {
   public render() {
     const { questionId, id, text, comments } = this.props;
     const { upvotes, upvotedByMe, watching } = this.props;
-    const { replyWithAgreementRating } = this.state;
+    const { replyIsAgree } = this.state;
 
     return (
       <div>
@@ -90,12 +90,12 @@ export default class Answer extends React.Component<Props, State> {
           </div>
         </div>
         <ol className="list-unstyled mb-3">
-          {replyWithAgreementRating &&
+          {replyIsAgree !== undefined &&
             <li className="mb-2">
               <NewComment
                 questionId={questionId}
                 answerId={id}
-                agreementRating={replyWithAgreementRating}
+                isAgree={replyIsAgree}
                 onCancel={this.handleNewCommentClose}
               />
             </li>
@@ -122,11 +122,11 @@ export default class Answer extends React.Component<Props, State> {
     this.props.onWatch(on, this.props.id);
   }
 
-  private handleNewCommentButtonClick(agreementRating: string) {
-    this.setState({ replyWithAgreementRating: agreementRating });
+  private handleNewCommentButtonClick(isAgree: boolean) {
+    this.setState({ replyIsAgree: isAgree });
   }
 
   private handleNewCommentClose() {
-    this.setState({ replyWithAgreementRating: undefined });
+    this.setState({ replyIsAgree: undefined });
   }
 }

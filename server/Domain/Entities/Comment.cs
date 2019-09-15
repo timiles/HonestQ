@@ -14,13 +14,13 @@ namespace Pobs.Domain.Entities
             this.Reactions = new Collection<Reaction>();
             this.Watches = new Collection<Watch>();
         }
-        public Comment(string text, User postedByUser, DateTimeOffset postedAt, AgreementRating agreementRating, long? parentCommentId)
+        public Comment(string text, User postedByUser, DateTimeOffset postedAt, bool isAgree, long? parentCommentId)
             : this()
         {
             this.Text = text.CleanText();
             this.PostedByUser = postedByUser;
             this.PostedAt = postedAt;
-            this.AgreementRating = agreementRating;
+            this.AgreementRating = isAgree ? AgreementRating.Agree : AgreementRating.Disagree;
             if (parentCommentId.HasValue)
             {
                 this.ParentComment = new Comment { Id = parentCommentId.Value };

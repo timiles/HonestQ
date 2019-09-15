@@ -11,7 +11,7 @@ type Props = FormProps<CommentFormModel>
   & CommentFormProps;
 
 interface CommentFormProps {
-  agreementRating: string;
+  isAgree: boolean;
   onCancel?: () => void;
   parentCommentId?: number;
 }
@@ -28,7 +28,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
       : {
         text: '',
         source: '',
-        agreementRating: this.props.agreementRating,
+        isAgree: this.props.isAgree,
         parentCommentId: this.props.parentCommentId,
         isAnonymous: false,
       };
@@ -56,14 +56,14 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
   public componentDidUpdate(prevProps: Props) {
     enableConfirmOnLeave(this.shouldConfirmOnLeave());
-    if (prevProps.agreementRating !== this.props.agreementRating) {
-      this.setState({ agreementRating: this.props.agreementRating });
+    if (prevProps.isAgree !== this.props.isAgree) {
+      this.setState({ isAgree: this.props.isAgree });
     }
   }
 
   public render() {
     const { onCancel, submitting, submitted, error } = this.props;
-    const { text, source, agreementRating } = this.state;
+    const { text, source, isAgree } = this.state;
 
     return (
       <div className="card light-dark-bg slide-down" ref={this.containerDivRef}>
@@ -71,7 +71,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
           <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
             {error && <div className="alert alert-danger" role="alert">{error}</div>}
             <div className="form-group">
-              <AgreementRatingLabel value={agreementRating} />
+              <AgreementRatingLabel value={isAgree} />
               <LoggedInUserContext.Consumer>
                 {(user) => user && <span className="ml-2">{user.username}</span>}
               </LoggedInUserContext.Consumer>

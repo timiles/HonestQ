@@ -38,7 +38,7 @@ export interface ActivityListItemModel {
   commentText?: string;
   postedAt: string;
   childCount?: number;
-  agreementRating?: string;
+  isAgree?: boolean;
   tags: TagValueModel[];
 }
 
@@ -60,7 +60,7 @@ export interface NotificationModel {
   commentId?: number;
   commentText?: string;
   postedAt: string;
-  agreementRating?: string;
+  isAgree?: boolean;
   tags: TagValueModel[];
 }
 
@@ -127,7 +127,7 @@ export interface AnswersListModel {
 export interface CommentFormModel {
   text: string;
   source?: string;
-  agreementRating: string;
+  isAgree: boolean;
   parentCommentId?: number;
   isAnonymous: boolean;
 }
@@ -136,7 +136,7 @@ export interface CommentModel {
   id: number;
   text: string;
   source?: string;
-  agreementRating: string;
+  isAgree: boolean;
   postedAt: string;
   postedBy: string;
   isAnonymous: boolean;

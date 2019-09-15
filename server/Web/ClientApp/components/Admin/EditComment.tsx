@@ -61,7 +61,7 @@ class EditComment extends React.Component<EditCommentProps, {}> {
             {initialState && (
               <CommentForm
                 initialState={initialState}
-                agreementRating={initialState.agreementRating}
+                isAgree={initialState.isAgree}
                 submit={this.handleSubmit}
               />
             )}

@@ -31,7 +31,7 @@ export default class CommentCard extends React.Component<Props> {
 
   public render() {
     const { comment, isNested, renderChildComments = true, questionId, answerId, onUpvote } = this.props;
-    const { id: commentId, agreementRating, text, source, postedBy, postedAt, comments } = comment;
+    const { id: commentId, isAgree, text, source, postedBy, postedAt, comments } = comment;
     const { upvotes, upvotedByMe } = comment;
     const showActions = questionId && answerId && onUpvote;
 
@@ -40,7 +40,7 @@ export default class CommentCard extends React.Component<Props> {
         <HQCard style={hqStyles.p1}>
           <View style={[hqStyles.rowJustifySpace, hqStyles.mb1]}>
             <View style={hqStyles.row}>
-              <AgreementLabel isAgree={agreementRating === 'Agree'} />
+              <AgreementLabel isAgree={isAgree} />
               <HQText style={[hqStyles.ml1, hqStyles.vAlignCenter]}>{postedBy}, </HQText>
               <FriendlyDateTime style={hqStyles.vAlignCenter} value={postedAt} />
             </View>

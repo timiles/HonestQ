@@ -155,7 +155,7 @@ class NotificationScreen extends React.Component<Props, State> {
             <QuotationMarks size="xsmall">
               <HQText>{notification.answerText}</HQText>
             </QuotationMarks>
-            <IconCard type={notification.agreementRating === 'Agree' ? 'Agree' : 'Disagree'}>
+            <IconCard type={notification.isAgree ? 'Agree' : 'Disagree'}>
               <HQText>{notification.commentText}</HQText>
             </IconCard>
           </>

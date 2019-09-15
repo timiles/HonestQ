@@ -115,7 +115,7 @@ namespace Pobs.Tests.Integration.Helpers
             {
                 // Stagger PostedAt times
                 var postedAt = DateTime.UtcNow.AddHours(-1.0 * (i + 1) / numberOfComments);
-                newComments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, AgreementRating.Agree, null)
+                newComments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, true, null)
                 {
                     Status = commentStatus
                 });
@@ -143,7 +143,7 @@ namespace Pobs.Tests.Integration.Helpers
             {
                 // Stagger PostedAt times
                 var postedAt = DateTime.UtcNow.AddHours(-1.0 * (i + 1) / numberOfComments);
-                newChildComments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, AgreementRating.Agree, null)
+                newChildComments.Add(new Comment(Utils.GenerateRandomString(10), commentUser, postedAt, true, null)
                 {
                     Status = commentStatus,
                     ParentComment = comment,

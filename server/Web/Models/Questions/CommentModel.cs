@@ -15,7 +15,7 @@ namespace Pobs.Web.Models.Questions
             this.Id = comment.Id;
             this.Text = comment.Text;
             this.Source = comment.Source;
-            this.AgreementRating = comment.AgreementRating.ToString();
+            this.IsAgree = comment.AgreementRating == AgreementRating.Agree;
             this.PostedAt = comment.PostedAt.UtcDateTime;
 
             if (comment.IsAnonymous)
@@ -47,8 +47,7 @@ namespace Pobs.Web.Models.Questions
         [Required]
         public string Text { get; set; }
         public string Source { get; set; }
-        [Required]
-        public string AgreementRating { get; set; }
+        public bool IsAgree { get; set; }
         public DateTime PostedAt { get; set; }
         [Required]
         public string PostedBy { get; set; }

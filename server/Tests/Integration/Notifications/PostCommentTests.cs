@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
@@ -31,7 +30,7 @@ namespace Pobs.Tests.Integration.Notifications
             var payload = new CommentFormModel
             {
                 Text = "My honest comment",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

@@ -9,7 +9,7 @@ interface OwnProps {
   questionId: number;
   answerId: number;
   parentCommentId?: number;
-  agreementRating: string;
+  isAgree: boolean;
   onCancel?: () => void;
 }
 type Props = NewCommentStore.NewCommentState
@@ -33,12 +33,12 @@ class NewComment extends React.Component<Props> {
   }
 
   public render() {
-    const { commentForm, parentCommentId, agreementRating, onCancel } = this.props;
+    const { commentForm, parentCommentId, isAgree, onCancel } = this.props;
 
     return (
       <CommentForm
         {...commentForm}
-        agreementRating={agreementRating}
+        isAgree={isAgree}
         parentCommentId={parentCommentId}
         onCancel={onCancel}
         submit={this.handleSubmit}

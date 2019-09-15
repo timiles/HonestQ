@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Notifications;
@@ -111,7 +112,7 @@ namespace Pobs.Tests.Integration.Notifications
                                 Comment c = (responseNotification.CommentText == _comment.Text) ? _comment : _childComment;
                                 Assert.Equal(c.Text, responseNotification.CommentText);
                                 AssertHelpers.Equal(c.PostedAt, responseNotification.PostedAt, 10);
-                                Assert.Equal(c.AgreementRating.ToString(), responseNotification.AgreementRating);
+                                Assert.Equal(c.AgreementRating == AgreementRating.Agree, responseNotification.IsAgree);
                                 break;
                             }
                         default:

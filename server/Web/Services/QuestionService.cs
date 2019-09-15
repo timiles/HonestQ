@@ -201,7 +201,7 @@ namespace Pobs.Web.Services
             if (!string.IsNullOrWhiteSpace(answerForm.CommentText) ||
               !string.IsNullOrWhiteSpace(answerForm.CommentSource))
             {
-                var comment = new Comment(answerForm.CommentText, user, DateTime.UtcNow, AgreementRating.Agree, null)
+                var comment = new Comment(answerForm.CommentText, user, DateTime.UtcNow, true, null)
                 {
                     Source = answerForm.CommentSource.CleanText(),
                 };
@@ -291,8 +291,8 @@ namespace Pobs.Web.Services
                 return null;
             }
 
-            Enum.TryParse<AgreementRating>(commentForm.AgreementRating, out AgreementRating agreementRating);
-            var comment = new Comment(commentForm.Text.CleanText(), await postedByUserTask, DateTime.UtcNow, agreementRating, commentForm.ParentCommentId)
+            var comment = new Comment(commentForm.Text.CleanText(), await postedByUserTask, DateTime.UtcNow,
+                commentForm.IsAgree, commentForm.ParentCommentId)
             {
                 Source = commentForm.Source.CleanText(),
                 IsAnonymous = commentForm.IsAnonymous,
@@ -305,7 +305,8 @@ namespace Pobs.Web.Services
             return new CommentModel(comment, postedByUserId);
         }
 
-        public async Task<CommentModel> UpdateComment(int questionId, int answerId, long commentId, CommentFormModel commentForm, int? loggedInUserId)
+        public async Task<CommentModel> UpdateComment(int questionId, int answerId, long commentId,
+            CommentFormModel commentForm, int? loggedInUserId)
         {
             var comment = await _context.Questions
                 .SelectMany(x => x.Answers).SelectMany(x => x.Comments)
@@ -319,8 +320,7 @@ namespace Pobs.Web.Services
 
             comment.Text = commentForm.Text.CleanText();
             comment.Source = commentForm.Source.CleanText();
-            Enum.TryParse<AgreementRating>(commentForm.AgreementRating, out AgreementRating agreementRating);
-            comment.AgreementRating = agreementRating;
+            comment.AgreementRating = commentForm.IsAgree ? AgreementRating.Agree : AgreementRating.Disagree;
 
             await _context.SaveChangesAsync();
             return new CommentModel(comment, loggedInUserId);

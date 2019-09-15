@@ -5,7 +5,7 @@ import Icon, { IconValue } from '../shared/SvgIcons/Icon';
 interface Props {
   className?: string;
   hideLabelOnMobile?: boolean;
-  onClick: (agreementRating: string) => void;
+  onClick: (isAgree: boolean) => void;
 }
 
 export default class NewCommentButtons extends React.Component<Props> {
@@ -47,10 +47,10 @@ export default class NewCommentButtons extends React.Component<Props> {
   }
 
   private handleOpenAgree() {
-    this.props.onClick('Agree');
+    this.props.onClick(true);
   }
 
   private handleOpenDisagree() {
-    this.props.onClick('Disagree');
+    this.props.onClick(false);
   }
 }

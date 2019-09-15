@@ -35,12 +35,11 @@ namespace Pobs.Tests.Integration.Questions
         {
             var text = Utils.GenerateRandomString(10);
             var source = Utils.GenerateRandomString(10);
-            var agreementRating = AgreementRating.Disagree;
             var payload = new CommentFormModel
             {
                 Text = $"  {text}  ",
                 Source = $" {source} ",
-                AgreementRating = agreementRating.ToString(),
+                IsAgree = false,
             };
 
             using (var server = new IntegrationTestingServer())
@@ -56,7 +55,7 @@ namespace Pobs.Tests.Integration.Questions
                 var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
                 Assert.Equal(text, responseModel.Text);
                 Assert.Equal(source, responseModel.Source);
-                Assert.Equal(agreementRating.ToString(), responseModel.AgreementRating);
+                Assert.False(responseModel.IsAgree);
                 // These properties should not have changed
                 Assert.Equal(_comment.PostedByUser.Username, responseModel.PostedBy);
                 AssertHelpers.Equal(_comment.PostedAt.UtcDateTime, responseModel.PostedAt, 10);
@@ -70,7 +69,7 @@ namespace Pobs.Tests.Integration.Questions
                 var comment = question.Answers.SelectMany(x => x.Comments).Single(x => x.Id == _comment.Id);
                 Assert.Equal(text, comment.Text);
                 Assert.Equal(source, comment.Source);
-                Assert.Equal(agreementRating, comment.AgreementRating);
+                Assert.Equal(AgreementRating.Disagree, comment.AgreementRating);
                 // These properties should not have changed
                 Assert.Equal(_comment.PostedByUserId, comment.PostedByUserId);
                 AssertHelpers.Equal(_comment.PostedAt, comment.PostedAt, 10);
@@ -83,7 +82,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = " ",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -100,33 +99,12 @@ namespace Pobs.Tests.Integration.Questions
         }
 
         [Fact]
-        public async Task NoAgreementRating_ShouldGetBadRequest()
-        {
-            var payload = new CommentFormModel
-            {
-                Text = "My honest comment",
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(1, Role.Admin);
-
-                var url = _generateUrl(_question.Id, _answer.Id, _comment.Id);
-                var response = await client.PutAsync(url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal("Invalid AgreementRating: .", responseContent);
-            }
-        }
-
-        [Fact]
         public async Task InvalidQuestionId_ShouldGetNotFound()
         {
             var payload = new CommentFormModel
             {
                 Text = "My honest comment",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -145,7 +123,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My honest comment",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -164,7 +142,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My honest comment",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -183,7 +161,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My honest comment",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

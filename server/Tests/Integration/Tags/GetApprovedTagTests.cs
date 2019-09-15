@@ -153,7 +153,7 @@ namespace Pobs.Tests.Integration.Tags
                 dbContext.Attach(question);
                 // An Answer with a Comment
                 var answer = new Answer(Utils.GenerateRandomString(10), _user, commentPostedAt);
-                answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, commentPostedAt, AgreementRating.Agree, null));
+                answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, commentPostedAt, true, null));
                 question.Answers.Add(answer);
                 // A more recent Answer
                 question.Answers.Add(new Answer(Utils.GenerateRandomString(10), _user, answerPostedAt));
@@ -189,7 +189,7 @@ namespace Pobs.Tests.Integration.Tags
                 dbContext.Attach(question);
                 // An Answer with a more recent Comment
                 var answer = new Answer(Utils.GenerateRandomString(10), _user, answerPostedAt);
-                answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, commentPostedAt, AgreementRating.Agree, null));
+                answer.Comments.Add(new Comment(Utils.GenerateRandomString(10), _user, commentPostedAt, true, null));
                 question.Answers.Add(answer);
                 dbContext.SaveChanges();
             }

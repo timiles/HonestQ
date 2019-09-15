@@ -8,7 +8,6 @@ using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Questions;
-using Pobs.Web.Models.Tags;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Questions
@@ -34,7 +33,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = "Here's a poop emoji: 💩",
                 Source = "https://example.com/💩",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -55,7 +54,7 @@ namespace Pobs.Tests.Integration.Questions
                     var comment = reloadedAnswer.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
                     Assert.Equal(payload.Source, comment.Source);
-                    Assert.Equal(payload.AgreementRating, comment.AgreementRating.ToString());
+                    Assert.Equal(AgreementRating.Agree, comment.AgreementRating);
                     Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.False(comment.IsAnonymous);
@@ -82,7 +81,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = "    \tMy awesome comment\r\n   ",
                 Source = "   \t\r\n   ",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -104,6 +103,47 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Equal("My awesome comment", comment.Text);
                     Assert.Null(comment.Source);
                 }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
+
+                Assert.Equal("My awesome comment", responseModel.Text);
+                Assert.Null(responseModel.Source);
+            }
+        }
+
+        [Fact]
+        public async Task IsAgreeFalse_ShouldSetAgreementRatingDisagree()
+        {
+            var answer = _question.Answers.First();
+            var payload = new CommentFormModel
+            {
+                Text = "My awesome comment",
+                IsAgree = false,
+            };
+            using (var server = new IntegrationTestingServer())
+            using (var client = server.CreateClient())
+            {
+                client.AuthenticateAs(_user.Id);
+
+                var url = _generateUrl(_question.Id, answer.Id);
+                var response = await client.PostAsync(url, payload.ToJsonContent());
+                response.EnsureSuccessStatusCode();
+
+                using (var dbContext = TestSetup.CreateDbContext())
+                {
+                    var reloadedQuestion = dbContext.Questions
+                        .Include(x => x.Answers).ThenInclude(x => x.Comments)
+                        .First(x => x.Id == _question.Id);
+                    var reloadedAnswer = reloadedQuestion.Answers.First(x => x.Id == answer.Id);
+                    var comment = reloadedAnswer.Comments.Single();
+                    Assert.Equal(AgreementRating.Disagree, comment.AgreementRating);
+                }
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseModel = JsonConvert.DeserializeObject<CommentModel>(responseContent);
+
+                Assert.False(responseModel.IsAgree);
             }
         }
 
@@ -114,7 +154,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "Here's a poop emoji: 💩",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
                 IsAnonymous = true,
             };
             using (var server = new IntegrationTestingServer())
@@ -135,7 +175,7 @@ namespace Pobs.Tests.Integration.Questions
                     var comment = reloadedAnswer.Comments.Single();
                     Assert.Equal(payload.Text, comment.Text);
                     Assert.Equal(payload.Source, comment.Source);
-                    Assert.Equal(payload.AgreementRating, comment.AgreementRating.ToString());
+                    Assert.Equal(AgreementRating.Agree, comment.AgreementRating);
                     Assert.Equal(_user.Id, comment.PostedByUser.Id);
                     Assert.True(comment.PostedAt > DateTime.UtcNow.AddMinutes(-1));
                     Assert.True(comment.IsAnonymous);
@@ -161,7 +201,7 @@ namespace Pobs.Tests.Integration.Questions
             using (var dbContext = TestSetup.CreateDbContext())
             {
                 dbContext.Attach(answer);
-                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, AgreementRating.Agree, null);
+                var comment = new Comment("Parent", _user, DateTimeOffset.UtcNow, true, null);
                 answer.Comments.Add(comment);
                 dbContext.SaveChanges();
             }
@@ -170,7 +210,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My insightful child comment on this parent comment",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
                 ParentCommentId = parentComment.Id,
             };
             using (var server = new IntegrationTestingServer())
@@ -215,7 +255,7 @@ namespace Pobs.Tests.Integration.Questions
             {
                 Text = " ",
                 Source = "https://www.example.com",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -228,29 +268,6 @@ namespace Pobs.Tests.Integration.Questions
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Assert.Equal("Comment Text is required.", responseContent);
-            }
-        }
-
-        [Fact]
-        public async Task InvalidAgreementRating_ShouldGetBadRequest()
-        {
-            var answer = _question.Answers.First();
-            var payload = new CommentFormModel
-            {
-                Text = "My insightful comment on this answer",
-                AgreementRating = "NotReallySureToBeHonest",
-            };
-            using (var server = new IntegrationTestingServer())
-            using (var client = server.CreateClient())
-            {
-                client.AuthenticateAs(_user.Id);
-
-                var url = _generateUrl(_question.Id, answer.Id);
-                var response = await client.PostAsync(url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-
-                var responseContent = await response.Content.ReadAsStringAsync();
-                Assert.Equal($"Invalid AgreementRating: {payload.AgreementRating}.", responseContent);
             }
         }
 
@@ -287,7 +304,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
@@ -307,7 +324,7 @@ namespace Pobs.Tests.Integration.Questions
             var payload = new CommentFormModel
             {
                 Text = "My insightful comment on this answer",
-                AgreementRating = AgreementRating.Agree.ToString(),
+                IsAgree = true,
             };
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())

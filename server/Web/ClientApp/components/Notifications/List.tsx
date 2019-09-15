@@ -187,7 +187,7 @@ class NotificationList extends React.Component<Props> {
         );
       }
       case 'Comment': {
-        const iconValue = IconValue[notification.agreementRating as keyof typeof IconValue];
+        const iconValue = notification.isAgree ? IconValue.Agree : IconValue.Disagree;
         return (
           <>
             <div>

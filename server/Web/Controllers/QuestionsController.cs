@@ -258,11 +258,6 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest($"Comment {nameof(payload.Text)} is required.");
             }
-            if (string.IsNullOrEmpty(payload.AgreementRating) ||
-                !Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
-            {
-                return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}.");
-            }
 
             try
             {
@@ -292,11 +287,6 @@ namespace Pobs.Web.Controllers
             if (string.IsNullOrWhiteSpace(payload.Text))
             {
                 return BadRequest($"Comment {nameof(payload.Text)} is required.");
-            }
-            if (string.IsNullOrEmpty(payload.AgreementRating) ||
-                !Enum.TryParse<AgreementRating>(payload.AgreementRating, out AgreementRating a))
-            {
-                return BadRequest($"Invalid {nameof(payload.AgreementRating)}: {payload.AgreementRating}.");
             }
 
             try

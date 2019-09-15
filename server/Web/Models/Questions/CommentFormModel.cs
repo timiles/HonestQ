@@ -10,8 +10,7 @@ namespace Pobs.Web.Models.Questions
 
         public string Source { get; set; }
 
-        [Required]
-        public string AgreementRating { get; set; }
+        public bool IsAgree { get; set; }
 
         public long? ParentCommentId { get; set; }
 

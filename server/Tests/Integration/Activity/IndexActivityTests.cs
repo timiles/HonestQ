@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
 using Pobs.Web.Models.Activity;
-using Pobs.Web.Models.Questions;
 using Xunit;
 
 namespace Pobs.Tests.Integration.Activity
@@ -128,7 +125,7 @@ namespace Pobs.Tests.Integration.Activity
                                     Assert.Equal(answer.Text, responseActivity.AnswerText);
                                     Assert.Equal(comment.Text, responseActivity.CommentText);
                                     AssertHelpers.Equal(comment.PostedAt, responseActivity.PostedAt, 10);
-                                    Assert.Equal(comment.AgreementRating.ToString(), responseActivity.AgreementRating);
+                                    Assert.Equal(comment.AgreementRating == AgreementRating.Agree, responseActivity.IsAgree);
                                     Assert.Null(responseActivity.ChildCount);
                                 }
                                 break;
