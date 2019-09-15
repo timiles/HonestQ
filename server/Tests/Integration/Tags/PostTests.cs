@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using Pobs.Comms;
 using Pobs.Domain;
 using Pobs.Domain.Entities;
 using Pobs.Tests.Integration.Helpers;
@@ -22,7 +24,7 @@ namespace Pobs.Tests.Integration.Tags
         }
 
         [Fact]
-        public async Task AuthenticatedAsAdmin_ShouldCreateUnapprovedTag()
+        public async Task AuthenticatedAsAdmin_ShouldCreateApprovedTag()
         {
             var payload = new TagFormModel
             {
@@ -30,7 +32,8 @@ namespace Pobs.Tests.Integration.Tags
                 Description = "This is a quick blurb about the tag",
                 MoreInfoUrl = "https://www.example.com/Tag_(1982)"
             };
-            using (var server = new IntegrationTestingServer())
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id, Role.Admin);
@@ -52,9 +55,12 @@ namespace Pobs.Tests.Integration.Tags
                 Assert.Equal(payload.MoreInfoUrl, tag.MoreInfoUrl);
                 Assert.Equal(_user.Id, tag.PostedByUser.Id);
                 Assert.True(tag.PostedAt > DateTime.UtcNow.AddMinutes(-1));
-                Assert.False(tag.IsApproved);
+                Assert.True(tag.IsApproved);
                 Assert.NotEmpty(tag.Watches.Where(x => x.UserId == _user.Id));
             }
+            emailSenderMock.Verify(
+                x => x.SendTagAwaitingApprovalEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+                Times.Never);
         }
 
         [Fact]
@@ -68,7 +74,7 @@ namespace Pobs.Tests.Integration.Tags
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id, Role.Admin);
+                client.AuthenticateAs(_user.Id);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
                 response.EnsureSuccessStatusCode();
@@ -116,7 +122,7 @@ namespace Pobs.Tests.Integration.Tags
             using (var server = new IntegrationTestingServer())
             using (var client = server.CreateClient())
             {
-                client.AuthenticateAs(_user.Id, Role.Admin);
+                client.AuthenticateAs(_user.Id);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
 
@@ -127,27 +133,43 @@ namespace Pobs.Tests.Integration.Tags
         }
 
         [Fact]
-        public async Task AuthenticatedAsNonAdmin_ShouldBeDenied()
+        public async Task AuthenticatedAsNonAdmin_ShouldCreateUnapprovedTag()
         {
             var payload = new TagFormModel
             {
                 Name = Utils.GenerateRandomString(10),
+                Description = "This is a quick blurb about the tag",
+                MoreInfoUrl = "https://www.example.com/Tag_(1982)"
             };
-            using (var server = new IntegrationTestingServer())
+            var emailSenderMock = new Mock<IEmailSender>();
+            using (var server = new IntegrationTestingServer(emailSenderMock.Object))
             using (var client = server.CreateClient())
             {
                 client.AuthenticateAs(_user.Id);
 
                 var response = await client.PostAsync(Url, payload.ToJsonContent());
-                Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+                response.EnsureSuccessStatusCode();
             }
 
             using (var dbContext = TestSetup.CreateDbContext())
             {
-                var user = dbContext.Users.Find(_user.Id);
-                dbContext.Entry(user).Collection(b => b.Tags).Load();
+                var tag = dbContext.Tags
+                    .Include(x => x.PostedByUser)
+                    .Include(x => x.Watches)
+                    .Single(x => x.PostedByUser.Id == _user.Id);
 
-                Assert.Empty(user.Tags);
+                Assert.NotNull(tag.Slug);
+                Assert.Equal(payload.Name, tag.Name);
+                Assert.Equal(payload.Description, tag.Description);
+                Assert.Equal(payload.MoreInfoUrl, tag.MoreInfoUrl);
+                Assert.Equal(_user.Id, tag.PostedByUser.Id);
+                Assert.True(tag.PostedAt > DateTime.UtcNow.AddMinutes(-1));
+                Assert.False(tag.IsApproved);
+                Assert.NotEmpty(tag.Watches.Where(x => x.UserId == _user.Id));
+
+                emailSenderMock.Verify(
+                    x => x.SendTagAwaitingApprovalEmail("honestq@pm.me", tag.Slug, tag.Name),
+                    Times.Once);
             }
         }
 

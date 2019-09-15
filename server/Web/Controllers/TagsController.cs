@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Pobs.Comms;
 using Pobs.Domain;
 using Pobs.Web.Helpers;
 using Pobs.Web.Models.Tags;
@@ -14,14 +15,17 @@ namespace Pobs.Web.Controllers
         private readonly ITagService _tagService;
         private readonly INotificationsService _notificationsService;
         private readonly IWatchingService _watchingService;
+        private readonly IEmailSender _emailSender;
 
         public TagsController(ITagService tagService,
             INotificationsService notificationsService,
-            IWatchingService watchingService)
+            IWatchingService watchingService,
+            IEmailSender emailSender)
         {
             _tagService = tagService;
             _notificationsService = notificationsService;
             _watchingService = watchingService;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -47,18 +51,26 @@ namespace Pobs.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Post([FromBody] TagFormModel payload)
         {
-            if (!User.IsInRole(Role.Admin))
-            {
-                return Forbid();
-            }
-
             try
             {
                 var userId = User.Identity.ParseUserId();
-                var tagModel = await _tagService.SaveTag(payload.Name, payload.Description, payload.MoreInfoUrl, userId);
+                var isAdmin = User.IsInRole(Role.Admin);
+                var tagModel = await _tagService.SaveTag(payload.Name, payload.Description, payload.MoreInfoUrl, userId, isAdmin);
                 if (tagModel != null)
                 {
                     await _watchingService.AddWatchToTag(userId, tagModel.Slug);
+                }
+
+                if (!isAdmin)
+                {
+                    try
+                    {
+                        // Email admin to say a new tag has been posted
+                        _emailSender.SendTagAwaitingApprovalEmail("honestq@pm.me", tagModel.Slug, tagModel.Name);
+                    }
+                    catch
+                    {
+                    }
                 }
 
                 return Ok();

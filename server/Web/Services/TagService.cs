@@ -14,7 +14,7 @@ namespace Pobs.Web.Services
     public interface ITagService
     {
         Task<TagsListModel> GetAllTags(bool isApproved, int? loggedInUserId = null);
-        Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId);
+        Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId, bool isApproved);
         Task<AdminTagModel> UpdateTag(string tagSlug, string newSlug, string name, string description, string moreInfoUrl, bool isApproved);
         Task<TagModel> GetTag(string tagSlug, int? loggedInUserId, bool isAdmin);
         Task<TagAutocompleteResultsModel> Query(string q);
@@ -42,7 +42,7 @@ namespace Pobs.Web.Services
             return new TagsListModel(tags, watchingTagIds);
         }
 
-        public async Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId)
+        public async Task<TagModel> SaveTag(string name, string description, string moreInfoUrl, int postedByUserId, bool isApproved)
         {
             var slug = name.ToSlug(true);
             var tagWithSameSlug = _context.Tags.FirstOrDefault(x => x.Slug == slug);
@@ -60,7 +60,7 @@ namespace Pobs.Web.Services
             {
                 Description = description,
                 MoreInfoUrl = moreInfoUrl,
-                IsApproved = false
+                IsApproved = isApproved,
             };
             _context.Tags.Add(tag);
             await _context.SaveChangesAsync();

@@ -8,6 +8,7 @@ namespace Pobs.Comms
         void SendEmailVerification(string to, string username, string confirmationUrl);
         void SendNewUserSignedUpNotification(string to, string username);
         void SendQuestionAwaitingApprovalEmail(string to, int questionId, string questionText);
+        void SendTagAwaitingApprovalEmail(string to, string tagSlug, string tagName);
     }
     public class EmailSender : IEmailSender
     {
@@ -58,6 +59,11 @@ namespace Pobs.Comms
         public void SendQuestionAwaitingApprovalEmail(string to, int questionId, string questionText)
         {
             Send(to, new QuestionAwaitingApprovalEmailMessage(questionId, questionText));
+        }
+
+        public void SendTagAwaitingApprovalEmail(string to, string tagSlug, string tagName)
+        {
+            Send(to, new TagAwaitingApprovalEmailMessage(tagSlug, tagName));
         }
     }
 }
