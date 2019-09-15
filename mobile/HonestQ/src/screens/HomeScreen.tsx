@@ -4,8 +4,9 @@ import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation
 import CircleIcon from '../components/CircleIcon';
 import NotificationsCount from '../components/NotificationsCount';
 import hqColors from '../hq-colors';
-import { HQLabel, HQNavigationButton } from '../hq-components';
+import { HQLabel, HQNavigationButton, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
+import { LoggedInUserContext } from '../LoggedInUserContext';
 import NavigationService from '../NavigationService';
 import MenuIcon from '../svg-icons/MenuIcon';
 import WatchIcon from '../svg-icons/WatchIcon';
@@ -33,6 +34,9 @@ export default class HomeScreen extends React.Component {
   public render() {
     return (
       <View style={[ThemeService.getStyles().contentView, hqStyles.p1]}>
+        <LoggedInUserContext.Consumer>
+          {(user) => <HQText style={[hqStyles.mb1, styles.hi]}>Hi, {user.username}!</HQText>}
+        </LoggedInUserContext.Consumer>
         <HQNavigationButton style={hqStyles.mb1} onPress={this.navigateToNewQuestion}>
           <View style={hqStyles.row}>
             <CircleIcon type="?" />
@@ -82,6 +86,10 @@ export default class HomeScreen extends React.Component {
 
 // tslint:disable:no-object-literal-type-assertion
 const styles = StyleSheet.create({
+  hi: {
+    fontSize: 24,
+  } as TextStyle,
+
   buttonLabel: {
     fontSize: 24,
     marginLeft: 5,
