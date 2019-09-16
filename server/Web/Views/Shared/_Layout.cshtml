@@ -7,14 +7,26 @@
 
     <style>
     body {
-    font-family: sans-serif;
-    max-width: 600px;
-    margin: auto;
-}
-</style>
+        font-family: sans-serif;
+        max-width: 600px;
+        margin: auto;
+        background-color: #EDF6FB;
+    }
+    h1 a {
+        color: #FF5A00;
+        text-decoration: none;
+    }
+    .content {
+        background-color: #FFF;
+        padding: 0 20px;
+        margin: 20px;
+        border: 1px black solid;
+        border-radius: 20px;
+    }
+    </style>
 </head>
 <body>
-    <div>
+    <div class="content">
         <h1><a href="/">HonestQ.com</a></h1>
         @RenderBody()
         <hr />
