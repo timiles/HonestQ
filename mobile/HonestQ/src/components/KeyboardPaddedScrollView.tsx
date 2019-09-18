@@ -31,12 +31,6 @@ export default class KeyboardPaddedScrollView extends Component<ScrollViewProps,
     this.keyboardDidHideSub.remove();
   }
 
-  public componentDidUpdate() {
-    if (this.state.keyboardHeight > 0) {
-      this.scrollViewRef.current.scrollToEnd({ animated: true });
-    }
-  }
-
   public render() {
     const { style, contentContainerStyle, children } = this.props;
     const { keyboardHeight } = this.state;
