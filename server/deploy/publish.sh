@@ -42,3 +42,6 @@ aws ecs deregister-task-definition --task-definition "pobsweb:$((buildNumber-num
 start chrome https://eu-west-2.console.aws.amazon.com/ecs/home?region=eu-west-2#/clusters/pobsweb/services/pobsweb/tasks
 
 echo "Pushed to $imageUri"
+
+read -p "docker-machine stop (y/n)? " stopDockerMachine
+if [ $stopDockerMachine = 'y' ]; then docker-machine stop; fi
