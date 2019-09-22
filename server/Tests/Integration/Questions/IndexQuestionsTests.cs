@@ -33,8 +33,9 @@ namespace Pobs.Tests.Integration.Questions
             var answerUser = DataHelpers.CreateUser();
             _answerUserId = answerUser.Id;
             // Create multiple Questions and Answers
-            _questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3);
-            _unapprovedQuestion = DataHelpers.CreateQuestions(questionUser, 1, questionStatus: PostStatus.AwaitingApproval).Single();
+            var postedAt = DateTime.UtcNow;
+            _questions = DataHelpers.CreateQuestions(questionUser, 2, answerUser, 3, postedAt: postedAt);
+            _unapprovedQuestion = DataHelpers.CreateQuestions(questionUser, 1, questionStatus: PostStatus.AwaitingApproval, postedAt: postedAt).Single();
 
             _approvedTag = DataHelpers.CreateTag(questionUser, isApproved: true, questions: _questions.ToArray());
             _unapprovedTag = DataHelpers.CreateTag(questionUser, isApproved: false, questions: _questions.ToArray());
@@ -52,6 +53,10 @@ namespace Pobs.Tests.Integration.Questions
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var responseModel = JsonConvert.DeserializeObject<QuestionsListModel>(responseContent);
 
+                foreach (var expectedQuestion in _questions)
+                {
+                    Assert.Contains(expectedQuestion.Id, responseModel.Questions.Select(x => x.Id));
+                }
                 foreach (var responseQuestion in responseModel.Questions)
                 {
                     var question = _questions.FirstOrDefault(x => x.Id == responseQuestion.Id);

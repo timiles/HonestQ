@@ -57,13 +57,14 @@ namespace Pobs.Tests.Integration.Helpers
         public static IEnumerable<Question> CreateQuestions(
             User questionUser, int numberOfQuestions = 1,
             User answerUser = null, int numberOfAnswersPerQuestion = 0,
-            PostStatus questionStatus = PostStatus.OK)
+            PostStatus questionStatus = PostStatus.OK,
+            DateTime? postedAt = null)
         {
             var questions = new List<Question>();
             for (int questionIndex = 0; questionIndex < numberOfQuestions; questionIndex++)
             {
                 // Stagger PostedAt times
-                var questionPostedAt = DateTime.UtcNow.AddHours(-1.0 * (questionIndex + 1) / numberOfQuestions);
+                var questionPostedAt = postedAt ?? DateTime.UtcNow.AddHours(-1.0 * (questionIndex + 1) / numberOfQuestions);
                 // 3 random words for the Question text
                 var questionText = $"{Utils.GenerateRandomString(4)} {Utils.GenerateRandomString(4)} {Utils.GenerateRandomString(4)}";
                 var question = new Question(questionText, questionUser, questionPostedAt)
