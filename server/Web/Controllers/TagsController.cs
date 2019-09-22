@@ -66,7 +66,7 @@ namespace Pobs.Web.Controllers
                     try
                     {
                         // Email admin to say a new tag has been posted
-                        _emailSender.SendTagAwaitingApprovalEmail("honestq@pm.me", tagModel.Slug, tagModel.Name);
+                        _emailSender.SendTagAwaitingApprovalEmail(tagModel.Slug, tagModel.Name);
                     }
                     catch
                     {

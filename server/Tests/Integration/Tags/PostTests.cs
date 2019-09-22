@@ -59,7 +59,7 @@ namespace Pobs.Tests.Integration.Tags
                 Assert.NotEmpty(tag.Watches.Where(x => x.UserId == _user.Id));
             }
             emailSenderMock.Verify(
-                x => x.SendTagAwaitingApprovalEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
+                x => x.SendTagAwaitingApprovalEmail(It.IsAny<string>(), It.IsAny<string>()),
                 Times.Never);
         }
 
@@ -168,7 +168,7 @@ namespace Pobs.Tests.Integration.Tags
                 Assert.NotEmpty(tag.Watches.Where(x => x.UserId == _user.Id));
 
                 emailSenderMock.Verify(
-                    x => x.SendTagAwaitingApprovalEmail("honestq@pm.me", tag.Slug, tag.Name),
+                    x => x.SendTagAwaitingApprovalEmail(tag.Slug, tag.Name),
                     Times.Once);
             }
         }

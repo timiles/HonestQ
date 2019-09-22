@@ -65,7 +65,7 @@ namespace Pobs.Tests.Integration.Questions
                 }
             }
             emailSenderMock.Verify(
-                x => x.SendQuestionAwaitingApprovalEmail(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()),
+                x => x.SendQuestionAwaitingApprovalEmail(It.IsAny<int>(), It.IsAny<string>()),
                 Times.Never);
         }
 
@@ -164,7 +164,7 @@ namespace Pobs.Tests.Integration.Questions
                     Assert.Empty(responseContent);
 
                     emailSenderMock.Verify(
-                        x => x.SendQuestionAwaitingApprovalEmail("honestq@pm.me", question.Id, question.Text),
+                        x => x.SendQuestionAwaitingApprovalEmail(question.Id, question.Text),
                         Times.Once);
                 }
             }

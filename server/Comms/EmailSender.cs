@@ -6,12 +6,13 @@ namespace Pobs.Comms
     public interface IEmailSender
     {
         void SendEmailVerification(string to, string username, string confirmationUrl);
-        void SendNewUserSignedUpNotification(string to, string username);
-        void SendQuestionAwaitingApprovalEmail(string to, int questionId, string questionText);
-        void SendTagAwaitingApprovalEmail(string to, string tagSlug, string tagName);
+        void SendNewUserSignedUpNotification(string username);
+        void SendQuestionAwaitingApprovalEmail(int questionId, string questionText);
+        void SendTagAwaitingApprovalEmail(string tagSlug, string tagName);
     }
     public class EmailSender : IEmailSender
     {
+        private const string SupportEmailAddress = "honestq@pm.me";
         private readonly string _username;
         private readonly string _password;
         private readonly string _host;
@@ -51,19 +52,19 @@ namespace Pobs.Comms
             Send(to, new EmailVerificationEmailMessage(username, verifyUrl));
         }
 
-        public void SendNewUserSignedUpNotification(string to, string username)
+        public void SendNewUserSignedUpNotification(string username)
         {
-            Send(to, new NewUserSignedUpNotificationEmailMessage(username));
+            Send(SupportEmailAddress, new NewUserSignedUpNotificationEmailMessage(username));
         }
 
-        public void SendQuestionAwaitingApprovalEmail(string to, int questionId, string questionText)
+        public void SendQuestionAwaitingApprovalEmail(int questionId, string questionText)
         {
-            Send(to, new QuestionAwaitingApprovalEmailMessage(questionId, questionText));
+            Send(SupportEmailAddress, new QuestionAwaitingApprovalEmailMessage(questionId, questionText));
         }
 
-        public void SendTagAwaitingApprovalEmail(string to, string tagSlug, string tagName)
+        public void SendTagAwaitingApprovalEmail(string tagSlug, string tagName)
         {
-            Send(to, new TagAwaitingApprovalEmailMessage(tagSlug, tagName));
+            Send(SupportEmailAddress, new TagAwaitingApprovalEmailMessage(tagSlug, tagName));
         }
     }
 }

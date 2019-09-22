@@ -95,7 +95,7 @@ namespace Pobs.Web.Controllers
                     try
                     {
                         // Email admin to say a new question has been posted
-                        _emailSender.SendQuestionAwaitingApprovalEmail("honestq@pm.me", questionModel.Id, questionModel.Text);
+                        _emailSender.SendQuestionAwaitingApprovalEmail(questionModel.Id, questionModel.Text);
                     }
                     catch
                     {

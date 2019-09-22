@@ -134,7 +134,7 @@ namespace WebApi.Controllers
 
                 try
                 {
-                    _emailSender.SendNewUserSignedUpNotification("honestq@pm.me", signUpFormModel.Username);
+                    _emailSender.SendNewUserSignedUpNotification(signUpFormModel.Username);
                 }
                 catch
                 {
