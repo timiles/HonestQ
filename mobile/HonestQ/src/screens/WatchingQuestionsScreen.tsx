@@ -50,7 +50,7 @@ class WatchingQuestionsScreen extends React.Component<Props> {
           data={orderedQuestions}
           keyExtractor={(item) => item.watchId.toString()}
           renderItem={({ item }) =>
-            <View style={[hqStyles.row, hqStyles.mh1, hqStyles.mb1]}>
+            <View style={[hqStyles.row, hqStyles.mx1, hqStyles.mb1]}>
               <HQNavigationButton
                 style={[hqStyles.fillSpace, hqStyles.mr1]}
                 onPress={() => this.navigateToQuestion(item.questionId)}
@@ -64,7 +64,7 @@ class WatchingQuestionsScreen extends React.Component<Props> {
             </View>
           }
           ListEmptyComponent={
-            <HQText style={[hqStyles.mh1, hqStyles.textAlignCenter]}>Not watching any questions.</HQText>
+            <HQText style={[hqStyles.mx1, hqStyles.textAlignCenter]}>Not watching any questions.</HQText>
           }
         />
       </View>

@@ -19,7 +19,7 @@ export default class IconCard extends React.Component<Props> {
     return (
       <HQCard style={hqStyles.rowAlignStart}>
         {this.renderIcon(type)}
-        <View style={[hqStyles.fillSpace, hqStyles.mv1, hqStyles.mr1]}>
+        <View style={[hqStyles.fillSpace, hqStyles.my1, hqStyles.mr1]}>
           {this.props.children}
         </View>
       </HQCard>

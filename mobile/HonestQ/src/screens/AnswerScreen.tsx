@@ -117,7 +117,7 @@ class AnswerScreen extends React.Component<Props> {
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
           ListHeaderComponent={(
-            <View style={[hqStyles.mh1]}>
+            <View style={[hqStyles.mx1]}>
               <TopCircleIconCard type="Q">
                 <HQHeader>{questionText}</HQHeader>
               </TopCircleIconCard>
@@ -134,7 +134,7 @@ class AnswerScreen extends React.Component<Props> {
           data={comments.filter((x) => !x.parentCommentId)}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+            <View style={[hqStyles.mb1, hqStyles.mx1]}>
               <CommentCard questionId={questionId} answerId={answerId} comment={item} onUpvote={this.handleUpvote} />
             </View>
           )}

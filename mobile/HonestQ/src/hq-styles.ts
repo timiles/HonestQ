@@ -29,10 +29,6 @@ export default StyleSheet.create({
     marginBottom: 10,
   } as ViewStyle,
 
-  mh1: {
-    marginHorizontal: 10,
-  } as ViewStyle,
-
   ml1: {
     marginLeft: 10,
   } as ViewStyle,
@@ -57,7 +53,11 @@ export default StyleSheet.create({
     marginTop: 30,
   } as ViewStyle,
 
-  mv1: {
+  mx1: {
+    marginHorizontal: 10,
+  } as ViewStyle,
+
+  my1: {
     marginVertical: 10,
   } as ViewStyle,
 
@@ -81,7 +81,7 @@ export default StyleSheet.create({
     paddingTop: 0,
   } as ViewStyle,
 
-  pv1: {
+  py1: {
     paddingVertical: 10,
   } as ViewStyle,
 

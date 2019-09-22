@@ -107,7 +107,7 @@ class TagScreen extends React.Component<Props> {
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
           ListHeaderComponent={
-            <View style={hqStyles.mh1}>
+            <View style={hqStyles.mx1}>
               <View style={hqStyles.mb1}>
                 {(description || moreInfoUrl) ?
                   <InfoCard style={hqStyles.mt1}>
@@ -142,13 +142,13 @@ class TagScreen extends React.Component<Props> {
           data={orderedQuestions}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+            <View style={[hqStyles.mb1, hqStyles.mx1]}>
               <QuestionCard question={item} />
             </View>
           )}
           ListFooterComponent={
             orderedQuestions.length >= 5 &&
-            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+            <View style={[hqStyles.mb1, hqStyles.mx1]}>
               {newQuestionButton}
             </View>
           }

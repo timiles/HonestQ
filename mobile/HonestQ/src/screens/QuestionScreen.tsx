@@ -114,7 +114,7 @@ class QuestionScreen extends React.Component<Props> {
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
           ListHeaderComponent={(
-            <View style={hqStyles.mh1}>
+            <View style={hqStyles.mx1}>
               <TopCircleIconCard type="Q" style={hqStyles.mb1}>
                 <HQHeader>{text}</HQHeader>
               </TopCircleIconCard>
@@ -131,13 +131,13 @@ class QuestionScreen extends React.Component<Props> {
           data={answers}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+            <View style={[hqStyles.mb1, hqStyles.mx1]}>
               <AnswerCard questionId={questionId} answer={item} onUpvote={this.handleUpvote} />
             </View>
           )}
           ListFooterComponent={
             answers.length >= 5 &&
-            <View style={[hqStyles.mb1, hqStyles.mh1]}>
+            <View style={[hqStyles.mb1, hqStyles.mx1]}>
               {newAnswerButton}
             </View>
           }

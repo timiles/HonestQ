@@ -88,7 +88,7 @@ class RecentQuestionsScreen extends React.Component<Props, State> {
             this.state.loadingMore ?
               <HQActivityIndicator />
               : (questionsList.lastTimestamp === 0) &&
-              <View style={hqStyles.mh1}>
+              <View style={hqStyles.mx1}>
                 <HQPrimaryButton
                   title="Ask a question"
                   style={hqStyles.mb1}

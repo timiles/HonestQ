@@ -43,11 +43,11 @@ class AllTagsScreen extends React.Component<Props> {
     return (
       <View style={ThemeService.getStyles().contentView}>
         <FlatList
-          style={hqStyles.mv1}
+          style={hqStyles.my1}
           data={orderedTags}
           keyExtractor={(item) => item.slug}
           renderItem={({ item }) =>
-            <View style={[hqStyles.row, hqStyles.mh1, hqStyles.mb1]}>
+            <View style={[hqStyles.row, hqStyles.mx1, hqStyles.mb1]}>
               <HQNavigationButton
                 style={[hqStyles.fillSpace, hqStyles.mr1]}
                 onPress={() => this.navigateToTag(item.slug, item.name)}
@@ -61,7 +61,7 @@ class AllTagsScreen extends React.Component<Props> {
             </View>
           }
           ListFooterComponent={
-            <HQPrimaryButton style={hqStyles.mh1} title="Suggest a new tag" onPress={this.navigateToNewTag} />
+            <HQPrimaryButton style={hqStyles.mx1} title="Suggest a new tag" onPress={this.navigateToNewTag} />
           }
         />
       </View>

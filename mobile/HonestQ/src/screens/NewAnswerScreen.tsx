@@ -63,7 +63,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
           <HQHeader>{questionText}</HQHeader>
         </TopCircleIconCard>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
-        <HQLabel style={hqStyles.mv1}>
+        <HQLabel style={hqStyles.my1}>
           Provide a generic, short summary of your answer
         </HQLabel>
         <HQSuperTextInput
@@ -76,7 +76,7 @@ class NewAnswerScreen extends React.Component<Props, AnswerFormModel> {
           submitted={submitted && !error}
           error={!answerText ? 'Answer is required' : null}
         />
-        <HQLabel style={hqStyles.mv1}>
+        <HQLabel style={hqStyles.my1}>
           You can add a comment and source too, if you want to provide more specific detail
         </HQLabel>
         <HQSuperTextInput

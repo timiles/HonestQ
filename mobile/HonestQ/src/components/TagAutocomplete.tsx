@@ -54,7 +54,7 @@ class TagAutocomplete extends React.Component<Props, State> {
       <>
         {selectedTags.length > 0 &&
           <FlatList
-            style={hqStyles.pv1}
+            style={hqStyles.py1}
             horizontal={true}
             data={selectedTags}
             keyExtractor={(item) => item.slug}
@@ -75,7 +75,7 @@ class TagAutocomplete extends React.Component<Props, State> {
         />
         {newSuggestedTags && newSuggestedTags.length > 0 &&
           <FlatList
-            style={hqStyles.pv1}
+            style={hqStyles.py1}
             horizontal={true}
             data={newSuggestedTags}
             keyExtractor={(item) => item.slug}
