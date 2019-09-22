@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,7 +24,15 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.honestq.app",
       "supportsTablet": true
-    }
+    },
+    "android": {
+      "versionCode": 2,
+      "package": "com.honestq.app",
+      "permissions": []
+    },
+    "primaryColor": "#FF5A00",
+    "description": "HonestQ is a Q&A site based on freedom of speech, critical thinking, and citing your sources. Find out how people can disagree, honestly."
   }
 }
