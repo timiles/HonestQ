@@ -151,6 +151,25 @@ namespace Pobs.Web.Controllers
             return NotFound();
         }
 
+        [HttpPost, Route("{questionId}/report"), Authorize]
+        public async Task<IActionResult> ReportQuestion(int questionId, [FromBody] ReportModel payload)
+        {
+            if (string.IsNullOrWhiteSpace(payload?.Reason))
+            {
+                return BadRequest("Reason is required.");
+            }
+
+            var userId = User.Identity.ParseUserId();
+            var question = await _questionService.GetQuestion(questionId, null, false);
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            // _emailSender.SendReportQuestionEmail(userId, payload.Reason, questionId, question.Text);
+            return Ok();
+        }
+
         [HttpPost, Route("{questionId}/answers"), Authorize]
         public async Task<IActionResult> AddAnswer(int questionId, [FromBody] AnswerFormModel payload)
         {
@@ -204,6 +223,26 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost, Route("{questionId}/answers/{answerId}/report"), Authorize]
+        public async Task<IActionResult> ReportAnswer(int questionId, int answerId, [FromBody] ReportModel payload)
+        {
+            if (string.IsNullOrWhiteSpace(payload?.Reason))
+            {
+                return BadRequest("Reason is required.");
+            }
+
+            var userId = User.Identity.ParseUserId();
+            var question = await _questionService.GetQuestion(questionId, null, false);
+            var answer = question?.Answers?.FirstOrDefault(x => x.Id == answerId);
+            if (answer == null)
+            {
+                return NotFound();
+            }
+
+            _emailSender.SendReportAnswerEmail(userId, payload.Reason, questionId, question.Text, answerId, answer.Text);
+            return Ok();
         }
 
         [HttpPost, Route("{questionId}/answers/{answerId}/reactions/{reactionType}"), Authorize]
@@ -303,6 +342,27 @@ namespace Pobs.Web.Controllers
             {
                 return BadRequest(e.Message);
             }
+        }
+
+        [HttpPost, Route("{questionId}/answers/{answerId}/comments/{commentId}/report"), Authorize]
+        public async Task<IActionResult> ReportComment(int questionId, int answerId, long commentId, [FromBody] ReportModel payload)
+        {
+            if (string.IsNullOrWhiteSpace(payload?.Reason))
+            {
+                return BadRequest("Reason is required.");
+            }
+
+            var userId = User.Identity.ParseUserId();
+            var question = await _questionService.GetQuestion(questionId, null, false);
+            var answer = question?.Answers?.FirstOrDefault(x => x.Id == answerId);
+            var comment = answer?.Comments?.FirstOrDefault(x => x.Id == commentId);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            _emailSender.SendReportCommentEmail(userId, payload.Reason, questionId, question.Text, answerId, answer.Text, commentId, comment.Text);
+            return Ok();
         }
 
         [HttpPost, Route("{questionId}/answers/{answerId}/comments/{commentId}/reactions/{reactionType}"), Authorize]

@@ -81,6 +81,10 @@ export default StyleSheet.create({
     paddingTop: 0,
   } as ViewStyle,
 
+  px1: {
+    paddingHorizontal: 10,
+  } as ViewStyle,
+
   py1: {
     paddingVertical: 10,
   } as ViewStyle,

@@ -14,6 +14,7 @@ import NewTagScreen from './screens/NewTagScreen';
 import Notifications from './screens/NotificationsScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import RecentQuestionsScreen from './screens/RecentQuestionsScreen';
+import ReportScreen from './screens/ReportScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
 import WatchingAnswersScreen from './screens/WatchingAnswersScreen';
@@ -54,6 +55,7 @@ export function createMainNavigator() {
     Notifications: { screen: Notifications },
     Question: { screen: QuestionScreen },
     RecentQuestions: { screen: RecentQuestionsScreen },
+    Report: { screen: ReportScreen },
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
     Watching: { screen: WatchingTabNavigator },

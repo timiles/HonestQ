@@ -1,11 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { HQCard, HQLabel, HQText } from '../hq-components';
 import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { NewCommentNavigationProps } from '../screens/NewCommentScreen';
+import { ReportNavigationProps } from '../screens/ReportScreen';
 import { CommentModel } from '../server-models';
+import FlagIcon from '../svg-icons/FlagIcon';
 import AgreementLabel from './AgreementLabel';
 import FriendlyDateTime from './FriendlyDateTime';
 import ReplyButton from './ReplyButton';
@@ -27,6 +29,7 @@ export default class CommentCard extends React.Component<Props> {
     super(props);
 
     this.handleNewComment = this.handleNewComment.bind(this);
+    this.navigateToReport = this.navigateToReport.bind(this);
   }
 
   public render() {
@@ -45,13 +48,22 @@ export default class CommentCard extends React.Component<Props> {
               <FriendlyDateTime style={hqStyles.vAlignCenter} value={postedAt} />
             </View>
             {showActions && (
-              <UpvoteButton
-                answerId={answerId}
-                commentId={commentId}
-                count={upvotes}
-                isUpvotedByLoggedInUser={upvotedByMe}
-                onUpvote={onUpvote}
-              />
+              <View style={hqStyles.row}>
+                <View style={hqStyles.mr2}>
+                  <TouchableOpacity
+                    onPress={this.navigateToReport}
+                  >
+                    <FlagIcon />
+                  </TouchableOpacity>
+                </View>
+                <UpvoteButton
+                  answerId={answerId}
+                  commentId={commentId}
+                  count={upvotes}
+                  isUpvotedByLoggedInUser={upvotedByMe}
+                  onUpvote={onUpvote}
+                />
+              </View>
             )}
           </View>
           <HQText style={hqStyles.mb1}>{text}</HQText>
@@ -92,5 +104,11 @@ export default class CommentCard extends React.Component<Props> {
     const { questionId, answerId, comment } = this.props;
     const params: NewCommentNavigationProps = { questionId, answerId, parentComment: comment };
     NavigationService.navigate('NewComment', params);
+  }
+
+  private navigateToReport() {
+    const { questionId, answerId, comment: { id: commentId } } = this.props;
+    const navProps: ReportNavigationProps = { questionId, answerId, commentId };
+    NavigationService.navigate('Report', navProps);
   }
 }

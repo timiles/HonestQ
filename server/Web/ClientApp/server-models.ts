@@ -198,6 +198,10 @@ export interface ReactionModel {
   isMyReaction: boolean;
 }
 
+export interface ReportModel {
+  reason: string;
+}
+
 export interface AdminTagModel {
   isApproved: boolean;
   slug: string;

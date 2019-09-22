@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { NavigationScreenOptions, NavigationScreenProps } from 'react-navigation';
 import { connect } from 'react-redux';
@@ -14,15 +14,18 @@ import hqStyles from '../hq-styles';
 import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as QuestionStore from '../store/Question';
+import FlagIcon from '../svg-icons/FlagIcon';
 import ThemeService from '../ThemeService';
 import { buildQuestionUrl } from '../utils/route-utils';
 import { getItemCountText } from '../utils/string-utils';
 import { NewAnswerNavigationProps } from './NewAnswerScreen';
+import { ReportNavigationProps } from './ReportScreen';
 
 export interface QuestionNavigationProps {
   questionId: number;
   watching?: boolean;
   handleWatch?: (watching: boolean) => void;
+  navigateToReport?: () => void;
   shareUrl?: string;
 }
 
@@ -42,6 +45,15 @@ class QuestionScreen extends React.Component<Props> {
         title: 'Question',
         headerRight: (
           <>
+            {(navigation.getParam('navigateToReport') !== undefined) && (
+              <View style={hqStyles.mr2}>
+                <TouchableOpacity
+                  onPress={navigation.getParam('navigateToReport')}
+                >
+                  <FlagIcon />
+                </TouchableOpacity>
+              </View>
+            )}
             {(navigation.getParam('watching') !== undefined) && (
               <View style={hqStyles.mr2}>
                 <WatchButton
@@ -65,7 +77,10 @@ class QuestionScreen extends React.Component<Props> {
 
     this.navigateToNewAnswer = this.navigateToNewAnswer.bind(this);
     this.handleUpvote = this.handleUpvote.bind(this);
-    this.props.navigation.setParams({ handleWatch: this.handleWatch.bind(this) });
+    this.props.navigation.setParams({
+      handleWatch: this.handleWatch.bind(this),
+      navigateToReport: this.navigateToReport.bind(this),
+    });
   }
 
   public componentDidMount() {
@@ -151,6 +166,12 @@ class QuestionScreen extends React.Component<Props> {
     const { text } = this.props.question;
     const navProps: NewAnswerNavigationProps = { questionId, questionText: text };
     NavigationService.navigate('NewAnswer', navProps);
+  }
+
+  private navigateToReport() {
+    const { questionId } = this.props.navigation.state.params;
+    const navProps: ReportNavigationProps = { questionId };
+    NavigationService.navigate('Report', navProps);
   }
 
   private handleUpvote(on: boolean, answerId: number): void {

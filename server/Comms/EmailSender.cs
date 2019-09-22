@@ -9,6 +9,9 @@ namespace Pobs.Comms
         void SendNewUserSignedUpNotification(string username);
         void SendQuestionAwaitingApprovalEmail(int questionId, string questionText);
         void SendTagAwaitingApprovalEmail(string tagSlug, string tagName);
+        void SendReportQuestionEmail(int reportingUserId, string reason, int questionId, string questionText);
+        void SendReportAnswerEmail(int reportingUserId, string reason, int questionId, string questionText, int answerId, string answerText);
+        void SendReportCommentEmail(int reportingUserId, string reason, int questionId, string questionText, int answerId, string answerText, long commentId, string commentText);
     }
     public class EmailSender : IEmailSender
     {
@@ -65,6 +68,21 @@ namespace Pobs.Comms
         public void SendTagAwaitingApprovalEmail(string tagSlug, string tagName)
         {
             Send(SupportEmailAddress, new TagAwaitingApprovalEmailMessage(tagSlug, tagName));
+        }
+
+        public void SendReportQuestionEmail(int reportingUserId, string reason, int questionId, string questionText)
+        {
+            Send(SupportEmailAddress, new ReportQuestionEmailMessage(reportingUserId, reason, questionId, questionText));
+        }
+
+        public void SendReportAnswerEmail(int reportingUserId, string reason, int questionId, string questionText, int answerId, string answerText)
+        {
+            Send(SupportEmailAddress, new ReportAnswerEmailMessage(reportingUserId, reason, questionId, questionText, answerId, answerText));
+        }
+
+        public void SendReportCommentEmail(int reportingUserId, string reason, int questionId, string questionText, int answerId, string answerText, long commentId, string commentText)
+        {
+            Send(SupportEmailAddress, new ReportCommentEmailMessage(reportingUserId, reason, questionId, questionText, answerId, answerText, commentId, commentText));
         }
     }
 }
