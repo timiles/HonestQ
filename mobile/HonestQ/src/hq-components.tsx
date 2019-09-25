@@ -164,11 +164,11 @@ export class HQSuperTextInput extends React.Component<TextInputProps & HQSuperTe
 
     const exceededCharacterCount = value && value.length > maxLength;
     const remainingCharacterCountStyle: StyleProp<TextStyle> =
-      exceededCharacterCount ? { color: 'red' } :
-        submitted && !error ? { color: 'green' } : null;
+      exceededCharacterCount ? { color: hqColors.ValidationError } :
+        submitted && !error ? { color: hqColors.ValidationOk } : null;
     const errorStyle: StyleProp<TextStyle> =
-      exceededCharacterCount ? { borderColor: 'red' } :
-        submitted ? { borderColor: error ? 'red' : 'green' } : null;
+      exceededCharacterCount ? { borderColor: hqColors.ValidationError } :
+        submitted ? { borderColor: error ? hqColors.ValidationError : hqColors.ValidationOk } : null;
 
     const remainingCharacterCount = maxLength - (value ? value.length : 0);
     const themeStyles = ThemeService.getStyles();
@@ -215,7 +215,8 @@ interface HQTextInputProps {
 export class HQTextInput extends React.Component<TextInputProps & HQTextInputProps> {
   public render() {
     const { containerStyle, helpText, error, submitted } = this.props;
-    const errorStyle: StyleProp<TextStyle> = submitted ? { borderColor: error ? 'red' : 'green' } : null;
+    const errorStyle: StyleProp<TextStyle> = submitted ?
+      { borderColor: error ? hqColors.ValidationError : hqColors.ValidationOk } : null;
 
     return (
       <View style={containerStyle}>

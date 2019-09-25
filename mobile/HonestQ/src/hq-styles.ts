@@ -1,5 +1,6 @@
 import Constants from 'expo-constants';
 import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import hqColors from './hq-colors';
 
 // tslint:disable:no-object-literal-type-assertion
 export default StyleSheet.create({
@@ -8,7 +9,7 @@ export default StyleSheet.create({
   } as ViewStyle,
 
   error: {
-    color: 'red',
+    color: hqColors.ValidationError,
   } as TextStyle,
 
   fillSpace: {
