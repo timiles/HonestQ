@@ -3,8 +3,9 @@ import { Switch, View } from 'react-native';
 import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import LogOutButton from '../components/LogOutButton';
-import { HQHeader } from '../hq-components';
+import { HQHeader, HQNavigationButton } from '../hq-components';
 import hqStyles from '../hq-styles';
+import NavigationService from '../NavigationService';
 import { ApplicationState } from '../store';
 import * as SettingsStore from '../store/ThemeSetting';
 import ThemeService from '../ThemeService';
@@ -19,7 +20,7 @@ type Props = StateProps & DispatchProps;
 class SettingsScreen extends React.Component<Props> {
 
   protected static navigationOptions: NavigationScreenOptions = {
-    title: 'Settings',
+    title: 'Settings etc',
   };
 
   public render() {
@@ -35,10 +36,24 @@ class SettingsScreen extends React.Component<Props> {
           />
         </View>
         <View style={hqStyles.m1}>
+          <HQNavigationButton title="Terms of service" onPress={this.navigateToTermsOfService} />
+        </View>
+        <View style={hqStyles.m1}>
+          <HQNavigationButton title="Privacy policy" onPress={this.navigateToPrivacyPolicy} />
+        </View>
+        <View style={hqStyles.m1}>
           <LogOutButton />
         </View>
       </View>
     );
+  }
+
+  private navigateToTermsOfService() {
+    NavigationService.navigate('TermsOfService');
+  }
+
+  private navigateToPrivacyPolicy() {
+    NavigationService.navigate('PrivacyPolicy');
   }
 }
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
+import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../../components/KeyboardPaddedScrollView';
-import { HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
+import { HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
-import NavigationService from '../../NavigationService';
 import { LogInFormModel } from '../../server-models';
 import { ApplicationState } from '../../store';
 import * as LogInStore from '../../store/LogIn';
@@ -18,6 +18,10 @@ type DispatchProps = typeof mapDispatchToProps;
 type Props = StateProps & DispatchProps;
 
 class LogInScreen extends React.Component<Props, LogInFormModel> {
+
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Log in to HonestQ',
+  };
 
   constructor(props: Props) {
     super(props);
@@ -44,7 +48,6 @@ class LogInScreen extends React.Component<Props, LogInFormModel> {
         style={ThemeService.getStyles().contentView}
         contentContainerStyle={[hqStyles.p1, hqStyles.fillSpace, hqStyles.center]}
       >
-        <HQHeader style={hqStyles.mb1}>Log in to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
           containerStyle={hqStyles.mb1}
@@ -65,16 +68,11 @@ class LogInScreen extends React.Component<Props, LogInFormModel> {
           submitted={submitted && !error}
           error={!password ? 'Password is required' : null}
         />
-        <View style={hqStyles.rowJustifySpace}>
-          <HQNavigationButton title="Or create a new account" onPress={this.navigateToSignUp} />
+        <View style={[hqStyles.row, hqStyles.center, hqStyles.mb1]}>
           <HQSubmitButton title="Log in" onPress={this.handleSubmit} submitting={submitting} />
         </View>
       </KeyboardPaddedScrollView>
     );
-  }
-
-  private navigateToSignUp() {
-    NavigationService.navigate('SignUp');
   }
 
   private handleSubmit(): void {

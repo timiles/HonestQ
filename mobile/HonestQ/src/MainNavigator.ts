@@ -12,11 +12,13 @@ import NewCommentScreen from './screens/NewCommentScreen';
 import NewQuestionScreen from './screens/NewQuestionScreen';
 import NewTagScreen from './screens/NewTagScreen';
 import Notifications from './screens/NotificationsScreen';
+import PrivacyPolicyScreen from './screens/PrivacyPolicyScreen';
 import QuestionScreen from './screens/QuestionScreen';
 import RecentQuestionsScreen from './screens/RecentQuestionsScreen';
 import ReportScreen from './screens/ReportScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TagScreen from './screens/TagScreen';
+import TermsOfServiceScreen from './screens/TermsOfServiceScreen';
 import WatchingAnswersScreen from './screens/WatchingAnswersScreen';
 import WatchingQuestionsScreen from './screens/WatchingQuestionsScreen';
 import WatchingTagsScreen from './screens/WatchingTagsScreen';
@@ -59,6 +61,8 @@ export function createMainNavigator() {
     Settings: { screen: SettingsScreen },
     Tag: { screen: TagScreen },
     Watching: { screen: WatchingTabNavigator },
+    TermsOfService: { screen: TermsOfServiceScreen },
+    PrivacyPolicy: { screen: PrivacyPolicyScreen },
   },
     {
       initialRouteName: 'Home',
@@ -82,6 +86,8 @@ export function createMainNavigator() {
     RecentQuestions: { screen: RecentQuestionsScreen },
     Watching: { screen: WatchingTabNavigator },
     Settings: { screen: SettingsScreen },
+    TermsOfService: { screen: TermsOfServiceScreen },
+    PrivacyPolicy: { screen: PrivacyPolicyScreen },
   },
     {
       contentComponent: CustomDrawer,
@@ -94,14 +100,30 @@ export function createMainNavigator() {
     });
 }
 
-export const UnauthNavigator = createStackNavigator(
-  {
-    Unauth: { screen: UnauthScreen },
+export function createUnauthNavigator() {
+
+  const backgroundColor = ThemeService.getBackgroundColor();
+  const navTextColor = ThemeService.getNavTextColor();
+
+  const UnauthNavigator = createStackNavigator({
+    Unauth: { screen: UnauthScreen, navigationOptions: { header: null } },
     LogIn: { screen: LogInScreen },
     SignUp: { screen: SignUpScreen },
+    TermsOfService: { screen: TermsOfServiceScreen },
+    PrivacyPolicy: { screen: PrivacyPolicyScreen },
   }, {
-  initialRouteName: 'Unauth',
-  defaultNavigationOptions: {
-    header: null,
-  },
-});
+    initialRouteName: 'Unauth',
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor,
+      },
+      headerTintColor: navTextColor,
+      headerTitleStyle: {
+        fontFamily: 'Nexa Bold',
+        fontWeight: 'normal',
+      },
+    },
+  });
+
+  return UnauthNavigator;
+}

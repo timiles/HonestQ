@@ -48,12 +48,13 @@ type KnownAction =
 
 export const actionCreators = {
 
-  submit: (form: SignUpFormModel, confirmPassword: string):
+  submit: (form: SignUpFormModel, confirmPassword: string, agree: boolean):
     AppThunkAction<KnownAction> => (dispatch, getState) => {
       return (async () => {
         dispatch({ type: 'SIGNUP_FORM_REQUEST' });
 
-        if (!form.username || !form.password || form.password.length < 7 || form.password !== confirmPassword) {
+        if (!agree || !form.username ||
+          !form.password || form.password.length < 7 || form.password !== confirmPassword) {
           // Don't set an error message, the validation properties will display instead
           dispatch({ type: 'SIGNUP_FORM_FAILURE', payload: { reason: null } });
           return;

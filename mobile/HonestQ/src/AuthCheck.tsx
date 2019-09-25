@@ -2,7 +2,7 @@ import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { connect } from 'react-redux';
 import { LoggedInUserContext } from './LoggedInUserContext';
-import { createMainNavigator, UnauthNavigator } from './MainNavigator';
+import { createMainNavigator, createUnauthNavigator } from './MainNavigator';
 import NavigationService from './NavigationService';
 import { ApplicationState } from './store';
 import * as ThemeSettingStore from './store/ThemeSetting';
@@ -31,6 +31,7 @@ class AuthCheck extends React.Component<StateProps> {
         </LoggedInUserContext.Provider>
       );
     } else {
+      const UnauthNavigator = createUnauthNavigator();
       const UnauthNavigation = createAppContainer(UnauthNavigator);
       return (
         <UnauthNavigation ref={(navigatorRef) => { NavigationService.setTopLevelNavigator(navigatorRef); }} />

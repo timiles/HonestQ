@@ -1,9 +1,9 @@
-import { Linking } from 'expo';
 import React from 'react';
-import { StyleSheet, Text, TextStyle, View } from 'react-native';
+import { CheckBox, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { NavigationScreenOptions } from 'react-navigation';
 import { connect } from 'react-redux';
 import KeyboardPaddedScrollView from '../../components/KeyboardPaddedScrollView';
-import { HQHeader, HQNavigationButton, HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
+import { HQSubmitButton, HQText, HQTextInput } from '../../hq-components';
 import hqStyles from '../../hq-styles';
 import NavigationService from '../../NavigationService';
 import { SignUpFormModel } from '../../server-models';
@@ -18,7 +18,11 @@ type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 type Props = StateProps & DispatchProps;
 
-class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPassword?: string }> {
+class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPassword?: string, agree: boolean }> {
+
+  protected static navigationOptions: NavigationScreenOptions = {
+    title: 'Sign up to HonestQ',
+  };
 
   constructor(props: Props) {
     super(props);
@@ -26,6 +30,7 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
     this.state = {
       username: '',
       password: '',
+      agree: false,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,14 +42,13 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
 
   public render() {
     const { submitting = false, submitted, error } = this.props;
-    const { username, password, confirmPassword, email } = this.state;
+    const { username, password, confirmPassword, email, agree } = this.state;
 
     return (
       <KeyboardPaddedScrollView
         style={ThemeService.getStyles().contentView}
-        contentContainerStyle={[hqStyles.p1, hqStyles.fillSpace, hqStyles.center]}
+        contentContainerStyle={hqStyles.p1}
       >
-        <HQHeader style={hqStyles.mb1}>Sign up to HonestQ</HQHeader>
         {error && <HQText style={[hqStyles.error, hqStyles.mb1]}>{error}</HQText>}
         <HQTextInput
           containerStyle={hqStyles.mb1}
@@ -86,32 +90,37 @@ class SignUpScreen extends React.Component<Props, SignUpFormModel & { confirmPas
           onChangeText={(text) => this.setState({ email: text })}
           submitted={submitted && !error}
         />
-        <HQText style={[hqStyles.p1, hqStyles.small]}>
-          By clicking Sign up below, you are agreeing to our {}
-          <Text style={styles.link} onPress={() => Linking.openURL('https://www.honestq.com/docs/TermsOfService')}>
-            Terms of Service
-          </Text>
-          {} and {}
-          <Text style={styles.link} onPress={() => Linking.openURL('https://www.honestq.com/docs/PrivacyPolicy')}>
-            Privacy Policy
-          </Text>
-          .
-        </HQText>
-        <View style={hqStyles.rowJustifySpace}>
-          <HQNavigationButton title="Already have an account? Log in" onPress={this.navigateToLogIn} />
+        <View style={[hqStyles.row, hqStyles.p1]}>
+          <CheckBox
+            style={hqStyles.mr1}
+            value={agree}
+            onValueChange={(value) => this.setState({ agree: value })}
+          />
+          <HQText style={[hqStyles.fillSpace, submitted && !agree && hqStyles.error]}>
+            I have read and accept the {}
+            <Text style={styles.link} onPress={this.navigateToTermsOfService}>Terms of Service</Text>
+            {} and {}
+            <Text style={styles.link} onPress={this.navigateToPrivacyPolicy}>Privacy Policy</Text>.
+          </HQText>
+        </View>
+        <View style={[hqStyles.row, hqStyles.center]}>
           <HQSubmitButton title="Sign up" onPress={this.handleSubmit} submitting={submitting} />
         </View>
       </KeyboardPaddedScrollView>
     );
   }
 
-  private navigateToLogIn() {
-    NavigationService.navigate('LogIn');
+  private navigateToTermsOfService() {
+    NavigationService.navigate('TermsOfService');
+  }
+
+  private navigateToPrivacyPolicy() {
+    NavigationService.navigate('PrivacyPolicy');
   }
 
   private handleSubmit(): void {
-    const { confirmPassword } = this.state;
-    this.props.submit(this.state, confirmPassword!);
+    const { confirmPassword, agree } = this.state;
+    this.props.submit(this.state, confirmPassword!, agree);
   }
 }
 
