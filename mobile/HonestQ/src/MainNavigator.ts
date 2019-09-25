@@ -68,7 +68,8 @@ export function createMainNavigator() {
         },
         headerTintColor: navTextColor,
         headerTitleStyle: {
-          fontWeight: 'bold',
+          fontFamily: 'Nexa Bold',
+          fontWeight: 'normal',
         },
       },
     });
