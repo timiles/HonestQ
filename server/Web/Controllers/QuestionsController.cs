@@ -166,7 +166,7 @@ namespace Pobs.Web.Controllers
                 return NotFound();
             }
 
-            // _emailSender.SendReportQuestionEmail(userId, payload.Reason, questionId, question.Text);
+            _emailSender.SendReportQuestionEmail(userId, payload.Reason, questionId, question.Text);
             return Ok();
         }
 
