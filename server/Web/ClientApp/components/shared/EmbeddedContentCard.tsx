@@ -13,6 +13,7 @@ export default class EmbeddedContentCard extends React.Component<Props, {}> {
     'instagram.com',
     'twitter.com',
     'vimeo.com',
+    'youtu.be',
     'youtube.com',
   ];
 
