@@ -176,7 +176,7 @@ namespace Pobs.Tests.Integration.Helpers
         }
 
         public static IEnumerable<Notification> CreateNotifications(User notificationOwnerUser,
-            Question question = null, Answer answer = null, Comment comment = null, Comment childComment = null)
+            Question question = null, Answer answer = null, Comment comment = null, Comment childComment = null, bool seen = false)
         {
             var notifications = new List<Notification>();
 
@@ -190,6 +190,7 @@ namespace Pobs.Tests.Integration.Helpers
                     {
                         OwnerUser = notificationOwnerUser,
                         Question = question,
+                        Seen = seen,
                     });
                 }
                 if (answer != null)
@@ -199,6 +200,7 @@ namespace Pobs.Tests.Integration.Helpers
                     {
                         OwnerUser = notificationOwnerUser,
                         Answer = answer,
+                        Seen = seen,
                     });
                 }
                 if (comment != null)
@@ -208,6 +210,7 @@ namespace Pobs.Tests.Integration.Helpers
                     {
                         OwnerUser = notificationOwnerUser,
                         Comment = comment,
+                        Seen = seen,
                     });
                 }
                 if (childComment != null)
@@ -217,6 +220,7 @@ namespace Pobs.Tests.Integration.Helpers
                     {
                         OwnerUser = notificationOwnerUser,
                         Comment = childComment,
+                        Seen = seen,
                     });
                 }
 

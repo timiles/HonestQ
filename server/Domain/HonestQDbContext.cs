@@ -26,6 +26,7 @@ namespace Pobs.Domain
 
         // Query objects
         public DbQuery<QuestionSearchResult> QuestionSearch { get; set; }
+        public DbQuery<QuestionNotificationToPush> QuestionNotificationsToPush { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -74,25 +75,27 @@ namespace Pobs.Domain
 
             // Cascade all the deletes
             modelBuilder.Entity<Comment>().HasOne(x => x.ParentComment).WithMany(x => x.ChildComments)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Notification>().HasOne(x => x.Answer).WithMany(x => x.Notifications)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Notification>().HasOne(x => x.Comment).WithMany(x => x.Notifications)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Notification>().HasOne(x => x.Question).WithMany(x => x.Notifications)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+            modelBuilder.Entity<PushToken>().HasOne(x => x.User).WithMany(x => x.PushTokens)
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Reaction>().HasOne(x => x.Answer).WithMany(x => x.Reactions)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Reaction>().HasOne(x => x.Comment).WithMany(x => x.Reactions)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Watch>().HasOne(x => x.Answer).WithMany(x => x.Watches)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Watch>().HasOne(x => x.Comment).WithMany(x => x.Watches)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Watch>().HasOne(x => x.Question).WithMany(x => x.Watches)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
             modelBuilder.Entity<Watch>().HasOne(x => x.Tag).WithMany(x => x.Watches)
-                    .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
+                .Metadata.DeleteBehavior = DeleteBehavior.Cascade;
 
             // Many-to-many relationships
             modelBuilder.Entity<QuestionTag>().HasKey(x => new { x.QuestionId, x.TagId });

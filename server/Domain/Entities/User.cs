@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pobs.Domain.Entities
 {
@@ -34,5 +33,7 @@ namespace Pobs.Domain.Entities
         public string EmailVerificationToken { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; }
+
+        public virtual ICollection<PushToken> PushTokens { get; set; }
     }
 }
