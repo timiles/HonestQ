@@ -28,6 +28,7 @@ namespace Pobs.Domain
         public DbQuery<QuestionSearchResult> QuestionSearch { get; set; }
         public DbQuery<QuestionNotificationToPush> QuestionNotificationsToPush { get; set; }
         public DbQuery<AnswerNotificationToPush> AnswerNotificationsToPush { get; set; }
+        public DbQuery<CommentNotificationToPush> CommentNotificationsToPush { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
