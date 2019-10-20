@@ -18,5 +18,12 @@ namespace Pobs.Domain.QueryObjects
                 .FromSql("CALL GetQuestionNotificationsToPush(@p0)", sinceNotificationId)
                 .ToArrayAsync();
         }
+
+        public async Task<AnswerNotificationToPush[]> GetAnswerNotificationsToPushAsync(long sinceNotificationId)
+        {
+            return await _dbContext.AnswerNotificationsToPush
+                .FromSql("CALL GetAnswerNotificationsToPush(@p0)", sinceNotificationId)
+                .ToArrayAsync();
+        }
     }
 }
