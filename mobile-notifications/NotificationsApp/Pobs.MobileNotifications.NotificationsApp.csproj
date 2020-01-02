@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Core" Version="1.1.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.6.0" />
+    <PackageReference Include="AWSSDK.KeyManagementService" Version="3.3.101.79" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.6" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Pobs.MobileNotifications.Domain.csproj" />
+    <ProjectReference Include="..\ExpoClient\ExpoClient.csproj" />
+  </ItemGroup>
+</Project>
