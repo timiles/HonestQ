@@ -1,6 +1,5 @@
 using Xunit;
 using Pobs.Domain.Utils;
-using System;
 
 namespace Pobs.Tests.Unit
 {
@@ -16,7 +15,7 @@ namespace Pobs.Tests.Unit
         public void ConvertsMillisecondsCorrectly()
         {
             long? value = 1541500846000;
-            Assert.Equal("Tuesday, November 6, 2018 10:40:46", value.ToUnixDateTime().Value.ToString("F"));
+            Assert.Equal("2018-11-06T10:40:46.0000000", value.ToUnixDateTime().Value.ToString("o"));
         }
     }
 }
