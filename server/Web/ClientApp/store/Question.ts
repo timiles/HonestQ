@@ -2,7 +2,7 @@
 import { AppThunkAction } from '.';
 import { deleteJson, fetchJson, getJson, postJson } from '../utils/http-utils';
 import { findComment } from '../utils/model-utils';
-import { QuestionModel, ReactionModel, WatchResponseModel } from './../server-models';
+import { QuestionModel, ReactionModel } from './../server-models';
 import { NewAnswerFormSuccessAction } from './NewAnswer';
 import { NewCommentFormSuccessAction } from './NewComment';
 
@@ -44,7 +44,7 @@ export interface UpdateWatchSuccessAction {
   type: 'UPDATE_WATCH_SUCCESS';
   payload: {
     answerId?: number;
-    response: WatchResponseModel;
+    watching: boolean;
   };
 }
 
@@ -140,11 +140,11 @@ export const actionCreators = {
           `/api/questions/${questionId}/watch`;
 
         const method = on ? 'POST' : 'DELETE';
-        fetchJson<WatchResponseModel>(method, url, null, getState().login.loggedInUser)
+        fetchJson(method, url, null, getState().login.loggedInUser)
           .then((watchResponse) => {
             dispatch({
               type: 'UPDATE_WATCH_SUCCESS',
-              payload: { answerId, response: watchResponse },
+              payload: { answerId, watching: on },
             });
           })
           .catch((reason) => {
@@ -193,7 +193,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
       }
       const questionModel = state.question!;
       // Slice for immutability
-      const answersNext = questionModel.answers;
+      const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === action.payload.answerId)[0];
       if (action.payload.comment.parentCommentId) {
         const parentComment = findComment(answerModel.comments, action.payload.comment.parentCommentId);
@@ -213,7 +213,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
       const reaction = action.payload.reaction;
       const questionModel = state.question!;
       // Slice for immutability
-      const answersNext = questionModel.answers;
+      const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === reaction.answerId)[0];
 
       if (reaction.commentId) {
@@ -236,7 +236,7 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
       const reaction = action.payload.reaction;
       const questionModel = state.question!;
       // Slice for immutability
-      const answersNext = questionModel.answers;
+      const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === reaction.answerId)[0];
 
       if (reaction.commentId) {
@@ -256,16 +256,16 @@ export const reducer: Reducer<ContainerState> = (state: ContainerState, anyActio
       };
     }
     case 'UPDATE_WATCH_SUCCESS': {
-      const { answerId, response } = action.payload;
+      const { answerId, watching } = action.payload;
       const questionModel = state.question!;
       // Slice for immutability
-      const answersNext = questionModel.answers;
+      const answersNext = questionModel.answers.slice();
       const answerModel = answersNext.filter((x) => x.id === answerId)[0];
 
       if (answerId) {
-        answerModel.watching = response.watching;
+        answerModel.watching = watching;
       } else {
-        questionModel.watching = response.watching;
+        questionModel.watching = watching;
       }
 
       const questionNext = { ...questionModel, answers: answersNext };

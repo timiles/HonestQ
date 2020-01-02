@@ -65,7 +65,7 @@ export const reducer: Reducer<ToastState> = (state: ToastState, action: KnownAct
       case 'UPDATE_WATCH_SUCCESS':
         const watchedObject = (action.payload.answerId) ? 'answer' : 'question';
 
-        if (action.payload.response.watching) {
+        if (action.payload.watching) {
           const newObject = (action.payload.answerId) ? 'comment on' : 'answer to';
 
           return {
