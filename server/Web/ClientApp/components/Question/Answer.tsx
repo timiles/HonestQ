@@ -5,7 +5,7 @@ import { AnswerModel, CommentModel } from '../../server-models';
 import { isUserInRole } from '../../utils/auth-utils';
 import Comment from '../Comment/Comment';
 import NewComment from '../Comment/NewComment';
-import NewCommentButtons from '../Comment/NewCommentButtons';
+import NewCommentButton from '../Comment/NewCommentButton';
 import CircleIcon, { CircleIconValue } from '../shared/CircleIcon';
 import QuotationMarks from '../shared/QuotationMarks';
 import UpvoteButton from '../shared/UpvoteButton';
@@ -19,7 +19,7 @@ type Props = AnswerModel
   };
 
 interface State {
-  replyIsAgree?: boolean;
+  showNewComment: boolean;
 }
 
 export default class Answer extends React.Component<Props, State> {
@@ -27,7 +27,7 @@ export default class Answer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = {};
+    this.state = { showNewComment: false };
 
     this.handleReaction = this.handleReaction.bind(this);
     this.handleWatch = this.handleWatch.bind(this);
@@ -42,7 +42,7 @@ export default class Answer extends React.Component<Props, State> {
   public render() {
     const { questionId, id, text, comments } = this.props;
     const { upvotes, upvotedByMe, watching } = this.props;
-    const { replyIsAgree } = this.state;
+    const { showNewComment } = this.state;
 
     return (
       <div>
@@ -83,19 +83,18 @@ export default class Answer extends React.Component<Props, State> {
         <hr />
         <div className="mb-3 clearfix">
           <div className="float-right">
-            <NewCommentButtons
+            <NewCommentButton
               className="btn btn-lg btn-primary shadow-lg"
               onClick={this.handleNewCommentButtonClick}
             />
           </div>
         </div>
         <ol className="list-unstyled mb-3">
-          {replyIsAgree !== undefined &&
+          {showNewComment &&
             <li className="mb-2">
               <NewComment
                 questionId={questionId}
                 answerId={id}
-                isAgree={replyIsAgree}
                 onCancel={this.handleNewCommentClose}
               />
             </li>
@@ -122,11 +121,11 @@ export default class Answer extends React.Component<Props, State> {
     this.props.onWatch(on, this.props.id);
   }
 
-  private handleNewCommentButtonClick(isAgree: boolean) {
-    this.setState({ replyIsAgree: isAgree });
+  private handleNewCommentButtonClick() {
+    this.setState({ showNewComment: true });
   }
 
   private handleNewCommentClose() {
-    this.setState({ replyIsAgree: undefined });
+    this.setState({ showNewComment: false });
   }
 }

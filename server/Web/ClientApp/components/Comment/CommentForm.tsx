@@ -11,7 +11,7 @@ type Props = FormProps<CommentFormModel>
   & CommentFormProps;
 
 interface CommentFormProps {
-  isAgree: boolean;
+  isAgree?: boolean;
   onCancel?: () => void;
   parentCommentId?: number;
 }
@@ -28,7 +28,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
       : {
         text: '',
         source: '',
-        isAgree: this.props.isAgree,
+        isAgree: this.props.isAgree || true,
         parentCommentId: this.props.parentCommentId,
         isAnonymous: false,
       };
@@ -37,6 +37,7 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     this.containerDivRef = React.createRef<HTMLDivElement>();
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeAgreementRating = this.handleChangeAgreementRating.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -56,9 +57,6 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
 
   public componentDidUpdate(prevProps: Props) {
     enableConfirmOnLeave(this.shouldConfirmOnLeave());
-    if (prevProps.isAgree !== this.props.isAgree) {
-      this.setState({ isAgree: this.props.isAgree });
-    }
   }
 
   public render() {
@@ -70,8 +68,8 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
         <div className="card-body">
           <form name="form" autoComplete="off" noValidate={true} onSubmit={this.handleSubmit}>
             {error && <div className="alert alert-danger" role="alert">{error}</div>}
-            <div className="form-group">
-              <AgreementRatingLabel value={isAgree} />
+            <div className="form-group d-flex align-items-center">
+              <AgreementRatingLabel value={isAgree} onChange={this.handleChangeAgreementRating} />
               <LoggedInUserContext.Consumer>
                 {(user) => user && <span className="ml-2">{user.username}</span>}
               </LoggedInUserContext.Consumer>
@@ -143,6 +141,10 @@ export default class CommentForm extends React.Component<Props, CommentFormModel
     } else {
       this.setState((prevState) => ({ ...prevState, [name]: value }));
     }
+  }
+
+  private handleChangeAgreementRating(isAgree: boolean): void {
+    this.setState({ isAgree });
   }
 
   private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {

@@ -9,7 +9,7 @@ import EmbeddedContent from '../shared/EmbeddedContent';
 import Source from '../shared/Source';
 import UpvoteButton from '../shared/UpvoteButton';
 import NewComment from './NewComment';
-import NewCommentButtons from './NewCommentButtons';
+import NewCommentButton from './NewCommentButton';
 
 type Props = CommentModel
   & {
@@ -19,7 +19,7 @@ type Props = CommentModel
   };
 
 interface State {
-  replyIsAgree?: boolean;
+  showNewComment: boolean;
 }
 
 export default class Comment extends React.Component<Props, State> {
@@ -27,7 +27,7 @@ export default class Comment extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    this.state = {};
+    this.state = { showNewComment: false };
 
     this.handleNewCommentButtonClick = this.handleNewCommentButtonClick.bind(this);
     this.handleNewCommentClose = this.handleNewCommentClose.bind(this);
@@ -37,7 +37,7 @@ export default class Comment extends React.Component<Props, State> {
     const { questionId, answerId } = this.props;
     const { id, text, source, isAgree, comments, upvotes, upvotedByMe } = this.props;
     const { postedAt, postedBy } = this.props;
-    const { replyIsAgree } = this.state;
+    const { showNewComment } = this.state;
 
     return (
       <>
@@ -53,9 +53,9 @@ export default class Comment extends React.Component<Props, State> {
                 </Link>
               }
             </LoggedInUserContext.Consumer>
-            <div className="mb-3">
+            <div className="mb-3 d-flex align-items-center">
               <AgreementRatingLabel value={isAgree} />
-              <span className="ml-2">
+              <span className="ml-2 mr-1">
                 {postedBy}, {}
               </span>
               <DateTimeTooltip dateTime={postedAt} />
@@ -76,23 +76,20 @@ export default class Comment extends React.Component<Props, State> {
               />
             </div>
             <div>
-              <label className="mr-2">Reply:</label>
-              <NewCommentButtons
+              <NewCommentButton
                 className="btn btn-outline-secondary"
-                hideLabelOnMobile={true}
                 onClick={this.handleNewCommentButtonClick}
               />
             </div>
           </div>
         </div>
-        {((comments && comments.length > 0) || replyIsAgree !== undefined) &&
+        {((comments && comments.length > 0) || showNewComment) &&
           <ol className="list-unstyled list-comments-nested">
-            {replyIsAgree !== undefined &&
+            {showNewComment &&
               <li className="mb-2">
                 <NewComment
                   questionId={questionId}
                   answerId={answerId}
-                  isAgree={replyIsAgree}
                   parentCommentId={id}
                   onCancel={this.handleNewCommentClose}
                 />
@@ -112,11 +109,11 @@ export default class Comment extends React.Component<Props, State> {
     );
   }
 
-  private handleNewCommentButtonClick(isAgree: boolean) {
-    this.setState({ replyIsAgree: isAgree });
+  private handleNewCommentButtonClick() {
+    this.setState({ showNewComment: true });
   }
 
   private handleNewCommentClose() {
-    this.setState({ replyIsAgree: undefined });
+    this.setState({ showNewComment: false });
   }
 }

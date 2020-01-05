@@ -743,3 +743,35 @@ body.dark .modal-header .close, body.dark .modal-header .close:hover {
     transform: translate(100vw, 45px) rotate(1440deg);
   }
 }
+
+/* Android-style Switch */
+.switch {
+	position: relative;
+	width: 40px;
+	height: 12px;
+	cursor: pointer;
+}
+.switch-input {
+	position: absolute;
+  opacity: 0;
+  cursor: inherit;
+}
+.switch-label {
+	display: block;
+	height: inherit;
+	background: lightgray;
+	border-radius: 10px;
+}
+.switch-handle {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #2293A5;
+  border-radius: 100%;
+  transition: all 0.3s ease;
+}
+.switch-input:not(:checked) ~ .switch-handle {
+	left: 20px;
+}
