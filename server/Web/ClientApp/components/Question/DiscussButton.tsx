@@ -22,23 +22,14 @@ export default class DiscussButton extends React.Component<Props> {
           className="btn btn-outline-secondary"
           to={linkToCommentsUrl}
         >
-          <span>Discuss</span>
+          <span>Sources</span>
         </Link>
-        {upvotes > 0 &&
-          <span className="badge badge-pill badge-reaction ml-1">
-            <Icon value={IconValue.Upvote} />
-            <label>
-              {upvotes}
-              <span className="sr-only">upvotes</span>
-            </label>
-          </span>
-        }
         {agreeCount > 0 &&
           <span className="badge badge-pill badge-reaction ml-1">
             <Icon value={IconValue.Agree} />
             <label>
               {agreeCount}
-              <span className="sr-only">agree</span>
+              <span className="d-none d-sm-block float-right">&nbsp;× Agree</span>
             </label>
           </span>
         }
@@ -47,7 +38,16 @@ export default class DiscussButton extends React.Component<Props> {
             <Icon value={IconValue.Disagree} />
             <label>
               {disagreeCount}
-              <span className="sr-only">disagree</span>
+              <span className="d-none d-sm-block float-right">&nbsp;× Disagree</span>
+            </label>
+          </span>
+        }
+        {upvotes > 0 &&
+          <span className="badge badge-pill badge-reaction ml-1">
+            <Icon value={IconValue.Upvote} />
+            <label>
+              {upvotes}
+              <span className="sr-only">Upvotes</span>
             </label>
           </span>
         }
