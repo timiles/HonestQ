@@ -11,3 +11,4 @@ HonestQ was a Q&A site, run as a personal project to experiment and learn new te
 - Entity Framework Core with MySQL.
 - Back-end test suite using xUnit.net and Moq.
 - Docker to run in AWS ECS.
+- AWS Lambda Function to send mobile app notifications.
